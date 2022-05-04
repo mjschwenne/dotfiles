@@ -1,14 +1,22 @@
 from pathlib import Path
+import math
 import networkx as nx
 import pandas as pd
 import sklearn as sk
 from sklearn import cluster
 import numpy as np
 from scipy.spatial import ConvexHull
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 def hex_to_rgb(hex_color):
     return (int(hex_color[1:3], 16), int(hex_color[3:5], 16), int(hex_color[5:7], 16))
+
+def display_color(rgb):
+    possible_colors = [(0,0,0), (255,255,255)]
+    distance = {}
+    for pc in possible_colors:
+        distance[pc] = math.sqrt((rgb[0] - pc[0])**2 + (rgb[1] - pc[1])**2 + (rgb[2] - pc[2])**2)
+    return max(distance, key=distance.get)
 
 def generate_colors(pixels):
     """
@@ -31,6 +39,8 @@ def generate_colors(pixels):
 
 def main():
     path = Path(".")
+    font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", 16)
+
     for img in path.iterdir():
         if img.suffix != ".jpeg":
             print(f"Skipping {str(img)}, not JPEG\n")
@@ -47,6 +57,7 @@ def main():
             rgb = hex_to_rgb(c)
             palatte_d = ImageDraw.Draw(palatte)
             palatte_d.rectangle(xy=[0, i*50, 400, (i+1)*50], fill=rgb, outline=rgb)
+            palatte_d.text(xy=(200, i*50 + 25), text=c, fill=display_color(rgb), anchor="mm", font=font)
 
         palatte.save(f"{img.stem}_palatte.jpeg")
         
