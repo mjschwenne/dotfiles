@@ -45,8 +45,15 @@ def dbus_register():
                       'org.gnome.SessionManager.RegisterClient',
                       'string:qtile',
                       'string:' + id])
+
+@hook.subscribe.startup_once
+def autostart():
+    home = os.path.expanduser('~/.config/qtile/autostart.sh')
+    subprocess.run([home])
+
+
 mod = "mod4"
-terminal = guess_terminal()
+terminal = "kitty"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
