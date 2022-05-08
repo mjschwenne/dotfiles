@@ -29,7 +29,6 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 import subprocess
 import os
-from copy import deepcopy
 from libqtile import hook
 
 terminal = "kitty"
@@ -96,6 +95,47 @@ keys = [
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     # Close current window
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
+    # Media Keys
+    Key(
+        [],
+        "XF86AudioLowerVolume",
+        lazy.spawn("amixer sset Master 2%-"),
+        desc="Lower volume",
+    ),
+    Key(
+        [],
+        "XF86AudioRaiseVolume",
+        lazy.spawn("amixer sset Master 2%+"),
+        desc="Raise volume",
+    ),
+    Key(
+        [],
+        "XF86AudioMute",
+        lazy.spawn("amixer -D pulse set Master toggle"),
+        desc="Mute volume",
+    ),
+    Key(
+        [],
+        "XF86AudioPlay",
+        lazy.spawn("playerctl play-pause"),
+        desc="Play or pause music",
+    ),
+    Key([], "XF86AudioNext", lazy.spawn("playerctl next"), desc="Next track"),
+    Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), desc="Previous track"),
+    Key([], "XF86AudioStop", lazy.spawn("playerctl stop"), desc="Stop track"),
+    # Screen brightness
+    Key(
+        [],
+        "XF86MonBrightnessUp",
+        lazy.spawn("brightnessctl set +5%"),
+        desc="Raise screen brightness",
+    ),
+    Key(
+        [],
+        "XF86MonBrightnessDown",
+        lazy.spawn("brightnessctl set 5%-"),
+        desc="Lower screen brightness",
+    ),
     # Lock computer
     Key([mod], "l", lazy.spawn("dm-tool lock"), desc="Lock the Computer"),
     # Qtile controls
@@ -235,7 +275,7 @@ def get_widgets(primary=False):
         widget.TextBox(
             text="", padding=0, fontsize=30, foreground=catppuccin["peach"]
         ),
-        widget.WindowName(fontsize=12, foreground=catppuccin["white"]),
+        widget.WindowName(fontsize=12, foreground=catppuccin["black1"]),
         widget.TextBox(text="", padding=0, fontsize=30, foreground=catppuccin["teal"]),
         widget.Volume(
             fmt="墳 {}",
@@ -251,7 +291,7 @@ def get_widgets(primary=False):
         ),
         widget.CPU(
             format=" {load_percent:04}%",
-            mouse_callbacks={"Button1": lazy.spawn("htop")},
+            mouse_callbacks={"Button1": lazy.spawn("kitty -e htop")},
             background=catppuccin["green"],
         ),
         widget.TextBox(
@@ -330,7 +370,7 @@ screens = [
         top=bar.Bar(
             get_widgets(primary=True),
             24,
-            background="#00000099",
+            background="#00000000",
         ),
     ),
     Screen(
@@ -338,7 +378,7 @@ screens = [
             # Use everything except the systray, which would crash
             get_widgets(primary=False),
             24,
-            background="#00000099",
+            background="#00000000",
         )
     ),
 ]
