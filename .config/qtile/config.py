@@ -137,7 +137,7 @@ keys = [
         desc="Lower screen brightness",
     ),
     # Lock computer
-    Key([mod], "l", lazy.spawn("dm-tool lock"), desc="Lock the Computer"),
+    Key([mod], "z", lazy.spawn("dm-tool lock"), desc="Lock the Computer"),
     # Qtile controls
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),

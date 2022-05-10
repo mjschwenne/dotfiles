@@ -5,16 +5,16 @@ if not status_ok then
 end
 
 local formatting = null_ls.builtins.formatting
-local diagnostics = null_ls.builtins.diagonistics
+-- local diagnostics = null_ls.builtins.diagnostics
 
 null_ls.setup {
 	debug = false,
 	sources = {
 		-- python
 		formatting.black,
-		diagnostics.flake8,
+		-- diagnostics.flake8,
 		-- C / C++
-		formatting.clang_format.with {extra_args = { "-style='{IndentWidth: 4, BreakBeforeBraces: Allman}" } },
+		formatting.clang_format.with { extra_args = { "-style='{IndentWidth: 4, BreakBeforeBraces: Allman}" } },
 		-- LaTeX
 		formatting.latexindent,
 		-- lua
