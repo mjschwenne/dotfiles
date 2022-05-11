@@ -11,3 +11,6 @@ if test -z (pgrep ssh-agent)
 	set -Ux SSH_AUTH_SOCK $SSH_AUTH_SOCK
   	set -Ux SSH_AGENT_PID $SSH_AGENT_PID
 end
+
+# set the EDITOR variable to be nvim
+export EDITOR="/usr/bin/nvim"

@@ -90,7 +90,7 @@ keys = [
     # Application switcher
     Key([mod], "space", lazy.spawn("rofi -show"), desc="Launch Application Switcher"),
     # Application launcher
-    Key([mod], "r", lazy.spawn("rofi -show run"), desc="Launch Application Launcher"),
+    Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Launch Application Launcher"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     # Close current window
