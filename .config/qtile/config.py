@@ -136,6 +136,8 @@ keys = [
         lazy.spawn("brightnessctl set 5%-"),
         desc="Lower screen brightness",
     ),
+    # Take a screenshot
+    Key([], "Print", lazy.spawn("flameshot gui"), desc="Take a screenshot"),
     # Lock computer
     Key([mod], "z", lazy.spawn("dm-tool lock"), desc="Lock the Computer"),
     # Qtile controls
