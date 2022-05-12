@@ -140,6 +140,13 @@ keys = [
     Key([], "Print", lazy.spawn("flameshot gui"), desc="Take a screenshot"),
     # Lock computer
     Key([mod], "z", lazy.spawn("dm-tool lock"), desc="Lock the Computer"),
+    # Eject flash drive
+    Key(
+        [mod],
+        "e",
+        lazy.spawn("fish /home/mjs/.config/qtile/eject.fish"),
+        desc="Eject flash drive '/dev/sdb1'",
+    ),
     # Qtile controls
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
@@ -163,7 +170,7 @@ for g, k in zip(groups, group_hotkeys):
             Key(
                 [mod, "shift"],
                 k,
-                lazy.window.togroup(g.name, switch_group=True),
+                lazy.window.togroup(g.name, switch_group=False),
                 desc=f"Switch to & move focused window to group {g.name}",
             ),
             # Or, use below if you prefer not to switch to that group.
@@ -340,7 +347,7 @@ def get_widgets(primary=False):
             text="﫼",
             mouse_callbacks={
                 "Button1": lazy.spawn("dm-tool lock"),
-                "Button2": lazy.shutdown(),
+                "Button3": lazy.shutdown(),
             },
             background=catppuccin["pink"],
         ),
@@ -348,8 +355,9 @@ def get_widgets(primary=False):
         widget.TextBox(
             text="",
             mouse_callbacks={
-                "Button1": lazy.spawan("systemctl suspend"),
-                "Button2": lazy.spawn("systemctl poweroff"),
+                "Button1": lazy.spawn("systemctl suspend"),
+                "Button2": lazy.spawn("systemctl restart"),
+                "Button3": lazy.spawn("systemctl poweroff"),
             },
             background=catppuccin["pink"],
         ),
