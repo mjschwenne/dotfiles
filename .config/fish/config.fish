@@ -14,4 +14,4 @@ end
 
 # set the EDITOR variable to be nvim
 export EDITOR="/usr/bin/nvim"
-fish_add_path /home/mjs/.spicetify
+export PATH="$PATH:/home/mjs/.spicetify"
