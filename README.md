@@ -88,6 +88,12 @@ Exec=qtile start
 Type=Application 
 Keywords=wm;tiling
 ```
+In order to get the brightness keys working, make sure that `brightnessctl` is installed and your user is part of the video 
+group, which can be done with 
+```
+sudo usermod -a -G video $LOGNAME
+```
+Note that you will have to log out and log back in for the change to take effect.
 
 ### lightdm 
 
