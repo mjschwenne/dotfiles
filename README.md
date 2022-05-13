@@ -2,6 +2,8 @@
 
 Hello, this repo holds my configurations for my ubuntu laptops!
 
+![A few screenshots](/Pictures/screenshots/screenshot_collection.png)
+
 Currently I am enjoying the [Catppuccin](https://github.com/catppuccin/catppuccin) theme system-wide.
 Here is an overview of the software that I use:
 
@@ -163,11 +165,7 @@ up to date version would require building it from source, which I may do later.
 ```
 sudo apt install btop
 ```
-However, it is not part of the ubuntu repo for 20.04. Since I still mostly use `htop`, I'm ok installing it as a snap 
-until I move my second laptop to 22.04.
-```
-sudo snap isntall btop
-```
+Note that it is not part of the ubuntu 20.04 repository.
 
 ### rofi 
 
