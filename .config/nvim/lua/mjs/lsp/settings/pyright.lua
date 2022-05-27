@@ -3,7 +3,9 @@ return {
 
     	python = {
       		analysis = {
-				typeCheckingMode = "off"
+				typeCheckingMode = "off",
+				useLibraryCodeForType = true,
+				autoImportCompletions = true,
 			}
 		}
 	},

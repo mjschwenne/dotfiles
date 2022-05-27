@@ -49,6 +49,7 @@ return packer.startup(function(use)
 	-- Syntax highlighting
 	use "fladson/vim-kitty"				-- Kitty conf syntax highlighting
 	use "lervag/vimtex" 				-- LaTex
+	use "luizribeiro/vim-cooklang"      -- cooklang
 
 	-- cmp plugins
 	use "hrsh7th/nvim-cmp" 				-- Completion plugin
