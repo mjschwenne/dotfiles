@@ -33,11 +33,12 @@ map("n", "<C-Left>", ":vertical resize -2<cr>", opts)
 map("n", "<C-Right>", ":vertical resize +2<cr>", opts)
 
 -- Telescope
-map("n", "<leader>f", "<cmd>lua require'telescope.builtin'.find_files(require('telescope.themes').get_dropdown({ previewer = false }))<cr>", opts)
-map("n", "<leader>t", "<cmd>Telescope live_grep<cr>", opts)
+map("n", "<leader>o", "<cmd>lua require'telescope.builtin'.find_files(require('telescope.themes').get_dropdown({ previewer = false }))<cr>", opts)
+map("n", "<leader>s", "<cmd>Telescope live_grep<cr>", opts)
 
--- Format the file
-map("n", "<leader>r", "<cmd>Format<cr>", opts)
+-- LSP related
+map("n", "<leader>f", "<cmd>Format<cr>", opts)
+map("n", "<leader>r", "<cmd>vim.lsp.buf.rename()<cr>", opts)
 
 -- Visual Mode --
 -- Stay in indent mode
