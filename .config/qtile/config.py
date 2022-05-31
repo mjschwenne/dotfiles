@@ -381,6 +381,7 @@ screens = [
             get_widgets(primary=True),
             24,
             background="#00000000",
+            margin=[2, 0, 0, 0],
         ),
     ),
     Screen(
@@ -389,6 +390,7 @@ screens = [
             get_widgets(primary=False),
             24,
             background="#00000000",
+            margin=[2, 0, 0, 0],
         )
     ),
 ]
