@@ -147,6 +147,12 @@ keys = [
         lazy.spawn("fish /home/mjs/.config/qtile/eject.fish"),
         desc="Eject flash drive '/dev/sdb1'",
     ),
+    Key(
+        [mod, "control"],
+        "p",
+        lazy.spawn("fish /home/mjs/.config/qtile/reset_picom.fish"),
+        desc="Restart the compositor",
+    ),
     # Qtile controls
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),

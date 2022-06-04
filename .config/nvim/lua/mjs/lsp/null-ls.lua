@@ -13,8 +13,6 @@ null_ls.setup {
 		-- python
 		formatting.black,
 		-- diagnostics.flake8,
-		-- C / C++
-		formatting.clang_format.with { extra_args = { "-style='{IndentWidth: 4, BreakBeforeBraces: Allman}" } },
 		-- LaTeX
 		formatting.latexindent,
 		-- lua
