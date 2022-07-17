@@ -5,6 +5,10 @@ end
 # alias for dotfile tracking
 alias config="git --git-dir=$HOME/.dotfiles --work-tree=$HOME"
 
+# alias for kitty kittens
+alias icat="kitty +kitten icat"
+alias kssh="kitty +kitten ssh"
+
 # start the ssh-agent
 if test -z (pgrep ssh-agent)
 	eval (ssh-agent -c)
