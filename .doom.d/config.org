@@ -1,0 +1,432 @@
+#+title: DOOM Emacs Configuration
+#+property: header-args:emacs-lisp :tangle config.el
+
+This is my DOOM Emacs configuration. Using DOOM Emacs wasn't my first choice,
+I'd rather use a custom or at least more minimal configuration. Their is a lot
+of things here that I don't exactly think that I need. I am only interested in
+Emacs for org mode and Emacs lisp mode (which is of course required for doing
+anything in Emacs). I have tried several times to create such a configuration,
+but so far I have not been able to create one which is as clean as DOOM Emacs
+(which is an unrealistic goal I know) or even functional. My latest attempt
+was definitely my best one, but has this weird problem where the org mode
+source blocks would not follow correct indentation and (this is the real problem)
+hitting ~<return>~ at the end of the last line of such a block would not create a
+new line. It just did /nothing/.
+
+That was during the second day of configuring stuff. I searched for hours for a
+solution and tried several of them, but was not able to find any. Because of
+that, I was back to DOOM Emacs which at least works out of the box which being
+/too/ fiddly. It quickly lets me work on the things that I am actually interested in,
+creating a powerful note taking and task management system, but one day I will try
+to do back to a completely custom configuration when my Emacs Lisp skills improve.
+
+Let's get started.
+
+The default =config.el= file as a lot of comments with little substance, but I would
+still like to preserve it just in case.
+
+* User Information
+#+begin_src emacs-lisp
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+
+;; Place your private configuration here! Remember, you do not need to run 'doom
+;; sync' after modifying this file!
+
+
+;; Some functionality uses this to identify you, e.g. GPG configuration, email
+;; clients, file templates and snippets. It is optional.
+(setq user-full-name "Matt Schwennesen"
+      user-mail-address "mjschwenne@gmail.com")
+#+end_src
+
+* Visuals
+** Font Configuration
+
+#+begin_src emacs-lisp
+;;; Doom exposes five (optional) variables for controlling fonts in Doom:
+;;
+;; - `doom-font' -- the primary font to use
+;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
+;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;; - `doom-unicode-font' -- for unicode glyphs
+;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
+;;
+;; See 'C-h v doom-font' for documentation and more examples of what they
+;; accept. For example:
+;;
+;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
+;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
+;;
+;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
+;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
+;; refresh your font settings. If Emacs still can't find your font, it likely
+;; wasn't installed correctly. Font issues are rarely Doom issues!
+
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15 :weight 'light))
+#+end_src
+
+** Theme
+
+Normally I'd use the Catppuccin theme for everything, but the Catppuccin theme for
+Emacs just doesn't look quite right to me, so I'm using my back-up option which is
+Tokyo Night.
+
+#+begin_src emacs-lisp
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+;; (setq doom-theme 'doom-one)
+(load-theme 'doom-tokyo-night t)
+
+;; Transparency
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+#+end_src
+
+** Line Numbers
+
+#+begin_src emacs-lisp
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type t)
+#+end_src
+
+* Keybindings
+
+I have been using vim and neovim for about a year and while I still have a lot
+to learn about those editors, I've found that even rudimentary knowledge about
+their fantastic keybindings in enough to make a an Evil user here in Emacs.
+However, I've made some changes in my configuration over here that I'd like to
+have here as well.
+
+#+begin_src emacs-lisp
+(map! :n "C-h" #'evil-window-left
+      :n "C-j" #'evil-window-down
+      :n "C-k" #'evil-window-up
+      :n "C-l" #'evil-window-right)
+#+end_src
+
+* Package Configuration
+
+#+begin_src emacs-lisp
+;; Whenever you reconfigure a package, make sure to wrap your config in an
+;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
+;;
+;;   (after! PACKAGE
+;;     (setq x y))
+;;
+;; The exceptions to this rule:
+;;
+;;   - Setting file/directory variables (like `org-directory')
+;;   - Setting variables which explicitly tell you to set them before their
+;;     package is loaded (see 'C-h v VARIABLE' to look up their documentation).
+;;   - Setting doom variables (which start with 'doom-' or '+').
+;;
+;; Here are some additional functions/macros that will help you configure Doom.
+;;
+;; - `load!' for loading external *.el files relative to this one
+;; - `use-package!' for configuring packages
+;; - `after!' for running code after a package has loaded
+;; - `add-load-path!' for adding directories to the `load-path', relative to
+;;   this file. Emacs searches the `load-path' when you load packages with
+;;   `require' or `use-package'.
+;; - `map!' for binding new keys
+;;
+;; To get information about any of these functions/macros, move the cursor over
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
+;; This will open documentation for it, including demos of how they are used.
+;; Alternatively, use `C-h o' to look up a symbol (functions, variables, faces,
+;; etc).
+;;
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+;; they are implemented.
+#+end_src
+
+* Org Mode
+
+Start by setting the location of the org files.
+
+#+begin_src emacs-lisp
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/org/")
+#+end_src
+
+** Built-in Modes
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook 'auto-fill-mode)
+;; Image previewing in org mode
+(customize-set-variable 'org-startup-with-inline-images t)
+;; Normally, this would be set with `customize-set-variable`, but DOOM Emacs has a function
+;; which is loaded as part of their org initialization which overrides this variable.
+;; While I could change that, I want to be able to pull the DOOM repo without issue so
+;; I'm using advice to update that value after anytime the function in question is called.
+(advice-add '+org-init-appearance-h :after (lambda () (customize-set-variable 'org-image-actual-width '(600))))
+#+end_src
+
+** Org Agenda
+
+One of the big reasons why I was interested in Org mode was that it has
+first-class support for task management, which is only supported in Obsidian via
+a plugin.
+
+#+begin_src emacs-lisp
+(setq org-agenda-start-with-log-mode t)
+;; Log the time a task is completed in a property drawer.
+(setq org-log-done 'time)
+(setq org-log-into-drawer t)
+
+(advice-add 'org-refile :after 'org-save-all-org-buffers) ;; Save the buffers after refile
+
+(customize-set-variable 'org-agenda-files '("~/org/tasks/"))
+
+(customize-set-variable 'org-agenda-custom-commands
+                        '(("d" "Daily Schedule"
+                          ((agenda ""
+                                   ((org-agenda-span 'day)
+                                    (org-agenda-use-time-grid nil)
+                                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'deadline))))))))
+#+end_src
+
+** Structure Templates
+
+Org structure templates are things like the source blocks with Emacs lisp in
+them. Be default, Emacs lisp is the only language which works with =org-babel=.
+Below I've enabled babel for some other languages that I work with on a regular
+basis. I've also added shortcuts for these templates. Particularly for =C=, I
+prepended all of the shortcuts with "s" to avoid conflicts with existing names.
+
+#+begin_src emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((C . t)
+   (cpp . t)
+   (emacs-lisp . t)
+   (latex . t)
+   (python . t)
+   (R . t)))
+
+(require 'org-tempo)
+;; There should be a better way to do this, but I haven't found it yet
+(add-to-list 'org-structure-template-alist '("sC" . "src C"))
+(add-to-list 'org-structure-template-alist '("scpp" . "src cpp"))
+(add-to-list 'org-structure-template-alist '("sel" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("sl" . "src latex"))
+(add-to-list 'org-structure-template-alist '("spy" . "src python"))
+(add-to-list 'org-structure-template-alist '("sR" . "src R"))
+#+end_src
+
+** Org Capture Templates
+
+Org capture is a great way to quickly create and capture information. Them can
+even be populated with automatic information like the date, some common headers,
+etc.
+
+However there are no default evil keybindings for finishing the capture. Well,
+time to fix that. Also set the header message at the top of the buffer to use
+the new keybindings.
+
+#+begin_src emacs-lisp
+(map! :map org-capture-map
+      :leader
+      :prefix ("C" . "Capture")
+      :desc "Finsh Capture" :n "f" #'org-capture-finalize
+      :desc "Abort Capture" :n "k" #'org-capture-kill
+      :desc "Refile Capture" :n "r" #'org-capture-refile)
+
+;; DOOM already modifies the header line to add the target file to the header line.
+;; This function is ripped from that with the addition of the `concat' portion which I
+;; wrote.
+(defun mjs/org-capture-update-header ()
+  (setq header-line-format
+        (format "%s%s%s"
+                (propertize (abbreviate-file-name (buffer-file-name (buffer-base-buffer)))
+                                'face 'font-lock-string-face)
+                org-eldoc-breadcrumb-separator
+                (concat
+                 "Capture Buffer. Finish "
+                 (propertize "SPC C f" 'face 'help-key-binding)
+                 ", refile "
+                 (propertize "SPC C k" 'face 'help-key-binding)
+                 ", abort "
+                 (propertize "SPC C k" 'face 'help-key-binding)
+                 " in normal mode."
+                 ))))
+
+(advice-add '+org-show-target-in-capture-header-h :override 'mjs/org-capture-update-header)
+#+end_src
+
+** Org Appear
+
+This package performs automatic hiding of emphasis markers like Obsidian's live
+preview feature. Currently it is not working?
+
+#+begin_src emacs-lisp
+(use-package! org-appear
+  :config (custom-set-variables '(org-hide-emphasis-markers t)
+                                '(org-appear-autolinks t)
+                                '(org-appear-trigger 'manual))
+  :hook (org-mode . (lambda ()
+                       (org-appear-mode t)
+                       (add-hook 'evil-insert-state-entry-hook
+                                 #'org-appear-manual-start nil t)
+                       (add-hook 'evil-insert-state-exit-hook
+                                 #'org-appear-manual-stop nil t)))
+  )
+#+end_src
+
+** Org Fragtog
+
+This package is similar to =org-appear= but works with LaTeX previews for math
+equations. It is currently configured to always preview all LaTeX fragments in a
+document upon opening it, and then I have a cheeky method to simulate the manual
+mode from =org-appear= for evil insert state hooks. Finally, the exit hook is
+configured to preview the current LaTeX fragment if we ~<escape>~ while inside it.
+
+Below is a test fragment.
+
+$$ \binom{n}{k} = \frac{n!}{k! \times (n-k)!} $$
+
+#+begin_src emacs-lisp
+(customize-set-variable 'org-startup-with-latex-preview t)
+
+(use-package! org-fragtog
+ :hook (org-mode . (lambda ()
+                     (add-hook 'evil-insert-state-entry-hook (lambda ()
+                                                               (when (eq major-mode 'org-mode)
+                                                                 (org-fragtog-mode +1))))
+                     (add-hook 'evil-insert-state-exit-hook (lambda ()
+                                                              (when (eq major-mode 'org-mode)
+                                                                (progn
+                                                                  (org-fragtog-mode -1)
+                                                                  (if (org-inside-LaTeX-fragment-p) (org-latex-preview))))))))
+)
+#+end_src
+
+** Org Roam
+
+This is the crux of my note taking plans and I haven't had time (yet) to get everything
+set up for the upcoming semester. As an overview, =org-roam= facilitates the fast linking
+and zettlekasten method that Obsidian uses via an sqlite database which it syncs with
+the regular org files and maintains. It is named after Roam Research, one of the first
+digital zettlekasten tools an inspiration for Obsidian I believe.
+
+#+begin_src emacs-lisp
+;; Org-roam settings are directory local variables set for various directory similar to
+;; Obsidian vaults.
+(setq org-roam-directory "~/org")
+(setq org-roam-dailies-directory "~/org/daily")
+(setq org-roam-dailies-capture-templates
+      (let ((head
+             (concat "#+title: %<%Y-%m-%d (%A)>\n#+startup: showall\n* Daily Overview\n"
+                     "#+begin_src emacs-lisp :results value raw\n"
+                     "(mjs/get-daily-agenda \"%<%Y-%m-%d>\")\n"
+                     "#+end_src\n"
+                     "* [/] Do Today\n* [/] Possibly Today\n* Journal\n")))
+        `(("j" "journal" entry
+           "* %<%H:%M> %?"
+           :if-new (file+head+olp "%<%Y-%m-%d>.org" ,head ("Journal")))
+          ("t" "do today" item
+           "[ ] %a"
+           :if-new (file+head+olp "%<%Y-%m-%d>.org" ,head ("Do Today"))
+           :immediate-finish t)
+          ("m" "possibly today" item
+           "[ ] %a"
+           :if-new (file+head+olp "%<%Y-%m-%d>.org" ,head ("Possibly Today"))
+           :immediate-finish t))))
+;; (setq org-roam-dailies-capture-templates
+;;       '(("d" "default" entry
+;;          "* TODO Today [/]\n- [ ] %?\n\n* Actions\n\n* Reflections\n"
+;;          :target (file+head "%<%Y-%m-%d>.org"
+;;                             "#+title: %<%A, %d %B %Y>\n"))))
+
+;; Make a quick, easy to access keybinding to insert a link with roam
+(map! :map org-mode-map
+      :i "C-f" #'org-roam-node-insert)
+#+end_src
+
+*** Integration with Org Agenda
+
+It is possible to pull links to tasks from the agenda into the daily notes and
+furthermore it is possible to mark these tasks as complete from the daily note.
+Most of this comes from [[https://org-roam.discourse.group/t/daily-task-management-with-org-agenda-and-org-roam-dailies/989/18][this thread on the org-roam discourse]].
+
+#+begin_src emacs-lisp
+(defun mjs/toggle-and-mark-done ()
+  "Toggle the current checkbox, follow the link under point and mark it as done"
+  (interactive)
+  (org-toggle-checkbox)
+  (org-open-at-point)
+  (org-todo 'done))
+
+(map! :map org-mode-map
+      :leader
+      :localleader
+      :prefix ("r" . "roam")
+      :desc "Mark Daily Complete" :n "x" #'mjs/toggle-and-mark-done)
+
+(defun mjs/get-daily-agenda (&optional date)
+  "Return the agenda for requested day as a string"
+  (interactive)
+  (let ((file (make-temp-file "daily-agenda" nil ".txt")))
+    (org-agenda nil "d" nil)
+    (when date (org-agenda-goto-date date))
+    (org-agenda-write file nil nil "*Org Agenda*")
+    (kill-buffer)
+    (with-temp-buffer
+      (insert-file-contents file)
+      (goto-char (point-min))
+      (kill-line 2)
+      (while (re-search-forward "^  " nil t)
+        (replace-match "- " nil nil))
+      (buffer-string))))
+
+(defun mjs/org-roam-make-agenda-link ()
+  (interactive)
+  (let* ((marker (or (org-get-at-bol 'org-marker)
+                     (org-agenda-error)))
+         (buffer (marker-buffer marker))
+         (pos (marker-position marker)))
+    (with-current-buffer buffer
+      (save-excursion
+        (goto-char pos)
+        (org-roam-dailies-capture-today)))))
+
+(map! :map org-agenda-mode-map
+      :leader
+      :localleader
+      :desc "Perform a task Today" :n "t" #'mjs/org-roam-make-agenda-link)
+#+end_src
+
+** Olivetti Mode
+
+This is a simple mode which centers the text on the screen. I have noticed a few
+times that when a new window is opened, the centered text doesn't adjust and
+becomes truncated, but this seems to be an intermittent issue and I will
+investigate when and if it becomes a larger problem.
+
+#+begin_src emacs-lisp
+(use-package! olivetti-mode
+  :init (setq olivetti-body-width 100)
+  :hook org-mode)
+#+end_src
+
+** Transclusions
+
+A transclusion is when instead of just having a link, we display the contents of
+that link as well. This is a very powerful feature that I only used occasionally
+in Obsidian, but since I have the option of using that same feature via
+=org-transclusions=, I might as well use it!
+
+#+begin_src emacs-lisp
+(map! :map org-mode-map
+      :leader
+      :localleader
+      :prefix ("u" . "transclusions")
+      :desc "Add Transclusion" :n "a" #'org-transclusion-add
+      :desc "Activate All Transclusions" :n "u" #'org-transclusion-mode
+      :desc "Remove Transclusion" :n "r" #'org-transclusion-remove)
+#+end_src
+
