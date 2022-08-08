@@ -324,7 +324,7 @@ def get_widgets(primary=False):
             foreground=catppuccin["peach"],
             background=catppuccin["yellow"],
         ),
-        widget.Clock(format=" %a %d %b %Y, %I:%M %p", background=catppuccin["peach"]),
+        widget.Clock(format=" %a %d %b %Y, %H:%M", background=catppuccin["peach"]),
         widget.TextBox(
             text="",
             padding=0,
