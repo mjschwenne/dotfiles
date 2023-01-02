@@ -30,5 +30,10 @@ for _, server in ipairs(lsp_installer.get_installed_servers()) do
 	 	opts = vim.tbl_deep_extend("force", pyright_opts, opts)
 	 end
 
+	if server.name == "clangd" then
+		local clangd_opts = require("mjs.lsp.settings.clangd")
+		opts = vim.tbl_deep_extend("force", clangd_opts, opts)
+	end
+
 	lspconfig[server.name].setup(opts)
 end

@@ -53,3 +53,9 @@
 (package! org-fragtog)
 (package! olivetti)
 (package! org-transclusion)
+(package! vulpea)
+(package! ess)
+(package! autothemer)
+; Theme package
+(package! catppuccin
+  :recipe (:host github :repo "catppuccin/emacs"))

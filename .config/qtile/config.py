@@ -83,6 +83,10 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
+    Key([mod, "shift"], "t",
+        lazy.window.toggle_floating(),
+        desc="Toggle floating",
+    ),
     # Terminal
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Browser

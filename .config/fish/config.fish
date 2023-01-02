@@ -19,3 +19,6 @@ end
 # set the EDITOR variable to be nvim
 export EDITOR="/usr/bin/nvim"
 export PATH="$PATH:/home/mjs/.spicetify"
+alias m="math"
+alias vi="vim"
+alias vim="nvim"
