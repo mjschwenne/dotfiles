@@ -22,3 +22,5 @@ export PATH="$PATH:/home/mjs/.spicetify"
 alias m="math"
 alias vi="vim"
 alias vim="nvim"
+
+starship init fish | source

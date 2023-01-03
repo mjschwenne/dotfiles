@@ -1,0 +1,114 @@
+format = """
+$username\
+[](fg:peach bg:green)\
+$directory\
+[](fg:green bg:red)\
+$git_branch\
+[](fg:red bg:sapphire)\
+$c\
+$rust\
+$python\
+$custom\
+$java\
+[](fg:sapphire) \
+"""
+
+right_format = """
+[ ](fg:peach)\
+$time
+"""
+
+palette = "catppuccin"
+
+[palettes.catppuccin]
+text = '#1e1e2e' # Mocha Base
+rosewater = '#f5e0dc'
+flamingo = '#f2cdcd'
+pink = '#f5c2e7'
+mauve = '#cba6f7'
+red = '#e78284' # Frappe
+maroon = '#eba0ac'
+peach = '#ef9f76' # Frappe
+yellow = '#f9e2af'
+green = '#a6d189' # Frappe
+teal = '#94e2d5'
+sky = '#89dceb'
+sapphire = '#85c1dc' # Frappe
+blue = '#89b4fa'
+lavender = '#b4befe'
+
+
+# Disable the blank line at the start of the prompt
+# add_newline = false
+
+# You can also replace your username with a neat symbol like   or disable this
+# and use the os module below
+[username]
+show_always = true
+style_user = "bg:peach fg:text"
+style_root = "bg:peach fg:text"
+format = '[  $user ]($style)'
+disabled = false
+
+[directory]
+style = "bg:green fg:text"
+format = "[   $path ]($style)"
+truncation_length = 1
+truncation_symbol = "…/"
+home_symbol = " "
+fish_style_pwd_dir_length = 2
+
+# Here is how you can shorten some long paths by text replacement
+# [directory.substitutions]
+# "Documents" = " "
+# "Downloads" = " "
+# "Music" = " "
+# "Pictures" = " "
+# Keep in mind that the order matters. For example:
+# "Important Documents" = "  "
+# will not be replaced, because "Documents" was already substituted before.
+# So either put "Important Documents" before "Documents" or use the substituted version:
+# "Important  " = "  "
+
+[git_branch]
+symbol = ""
+style = "bg:red fg:text"
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style = "bg:red fg:text"
+format = '[$all_status$ahead_behind ]($style)'
+
+[c]
+symbol = " "
+style = "bg:sapphire fg:text"
+format = '[ $symbol ($version) ]($style)'
+
+[java]
+symbol = " "
+style = "bg:sapphire fg:text"
+format = '[ $symbol ($version) ]($style)'
+
+[rust]
+symbol = ""
+style = "bg:sapphire fg:text" 
+format = '[ $symbol ($version) ]($style)'
+
+[custom.cpp]
+symbol = " "
+style = "bg:sapphire fg:text" 
+command = "gcc --version | grep ^gcc | sed 's/^.* //g'"
+detect_extensions = ['cpp']
+format = '[ $symbol($output) ]($style)'
+
+[python]
+symbol = " "
+style = "bg:sapphire fg:text"
+version_format = '${major}.${minor}'
+format = '[ $symbol($version) (\($virtualenv\)) ]($style)'
+
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:peach fg:text"
+format = '[  $time ]($style)'
