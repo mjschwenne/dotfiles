@@ -111,10 +111,7 @@ local n_mappings = {
 		b = {
 			name = "Buffer",
 
-			b = {
-				"<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>",
-				"Search Buffer",
-			},
+			b = { "<cmd>Telescope buffers theme=dropdown<CR>", "Search Buffer" },
 			n = { "<cmd>bnext<CR>", "Next Buffer" },
 			p = { "<cmd>bprevious<CR>", "Pervious Buffer" },
 			s = { "<cmd>w<CR>", "Save Buffer" }, -- parity with my emacs bindings
@@ -148,23 +145,13 @@ local n_mappings = {
 
 			i = { "<cmd>LspInfo<CR>", "Info" },
 			I = { "<cmd>LspInstallInfo<CR>", "Installer Info" },
-
-			a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
-			d = { "<cmd>Telescope lsp_document_diagnostics<CR>", "Document Diagnostics" },
-			w = { "<cmd>Telescope lsp_workspace_diagnostics<CR>", "Workspace Diagnostics" },
-			f = { "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", "Format" },
-			n = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Next Diagnostic" },
-			p = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "Previous Diagnostic" },
-			r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename" },
-			s = { "<cmd>Telescope lsp_document_symbols<CR>", "Document Symbols" },
-			S = { "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>", "Workspace Symbols" },
-			["/"] = { '<Plug>(comment_toggle_linewise)', "Comment" },
 		},
 
 		-- Telescope Based Searches
 		s = {
 			name = "Search",
 
+			b = { "<cmd>Telescope buffers theme=dropdown<CR>", "Search Buffer" },
 			C = { "<cmd>Telescope colorscheme<CR>", "Colorscheme" },
 			h = { "<cmd>Telescope help_tags<CR>", "Find Help" },
 			M = { "<cmd>Telescope man_pages<CR>", "Man Pages" },

@@ -60,26 +60,36 @@ local function lsp_highlight_document(client)
 end
 
 local function lsp_keymaps(bufnr)
-	local opts = { noremap = true, silent = true }
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-S-K>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-	-- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-	-- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-	-- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>f", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "[d", '<cmd>lua vim.diagnostic.goto_prev({ border = "rounded" })<CR>', opts)
-	vim.api.nvim_buf_set_keymap(
-		bufnr,
-		"n",
-		"gl",
-		'<cmd>lua vim.diagnostic.open_float({ border = "rounded" })<CR>',
-		opts
-	)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "]d", '<cmd>lua vim.diagnostic.goto_next({ border = "rounded" })<CR>', opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>q", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
+	local status_ok, which_key = pcall(require, "which-key")
+	if not status_ok then
+		print("Failed to load which-key...")
+		return
+	end
+
+	which_key.register({
+		["<leader><localleader>"] = {
+			a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
+			d = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Goto Declaration"},
+			D = { "<cmd>lua vim.lsp.buf.definition()<CR>", "Goto Definition"},
+			f = { "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", "Format" },
+			h = { "<cmd>lua vim.lsp.buf.hover()<CR>", "Show Context"},
+			H = { "<cmd>lua vim.lsp.buf.signature_help()<CR>", "Signature Help"},
+			i = { "<cmd>lua vim.diagnostic.open_float()<CR>", "Open Diagnostic"},
+			I = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Goto Implementation"},
+			n = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Next Diagnostic" },
+			p = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "Previous Diagnostic" },
+			r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename" },
+			R = { "<cmd>lua vim.lsp.buf.references()<CR>", "References"},
+			s = { "<cmd>Telescope lsp_document_symbols<CR>", "Document Symbols" },
+			S = { "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>", "Workspace Symbols" },
+			w = { "<cmd>Telescope lsp_document_diagnostics<CR>", "Document Diagnostics" },
+			W = { "<cmd>Telescope lsp_workspace_diagnostics<CR>", "Workspace Diagnostics" },
+			["/"] = { '<Plug>(comment_toggle_linewise)', "Comment" },
+		},
+		["[d"] = {"<cmd>lua vim.diagnostic.goto_next()<CR>", "Next Diagnostic"},
+		["]d"] = {"<cmd>lua vim.diagnostic.goto_prev()<CR>", "Next Diagnostic"}
+	}, { mode = "n", buffer = bufnr })
+
 	vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting_sync()' ]]
 end
 
