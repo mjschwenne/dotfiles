@@ -1,0 +1,5 @@
+(("default" . ((user-emacs-directory . "~/.config/emacs-configs/mjs/")))
+ ("doom" . ((user-emacs-directory . "~/.config/emacs-configs/doom/")
+			(env . (("DOOMDIR" . "~/.config/emacs-configs/doom-config/")))))
+ ("crafted" . ((user-emacs-directory . "~/.config/emacs-configs/crafted/")
+			   (env . (("CRAFTED_EMACS_HOME" . "~/.config/emacs-configs/crafted-config/"))))))

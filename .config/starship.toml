@@ -82,17 +82,19 @@ format = '[$all_status$ahead_behind ]($style)'
 [c]
 symbol = " "
 style = "bg:sapphire fg:text"
-format = '[ $symbol ($version) ]($style)'
+version_format = '${major}.${minor}'
+format = '[ $symbol($version) ]($style)'
 
 [java]
 symbol = " "
 style = "bg:sapphire fg:text"
-format = '[ $symbol ($version) ]($style)'
+format = '[ $symbol($version) ]($style)'
 
 [rust]
 symbol = ""
 style = "bg:sapphire fg:text" 
-format = '[ $symbol ($version) ]($style)'
+version_format = '${major}.${minor}'
+format = '[ $symbol($version) ]($style)'
 
 [custom.cpp]
 symbol = " "

@@ -1,9 +1,13 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
+	starship init fish | source
+
+	# alias for dotfile tracking
+	alias config="git --git-dir=$HOME/.dotfiles --work-tree=$HOME"
+	alias vi="nvim"
+	alias dup-files="find . -type f -printf '%p -> %f\n' | sort -k2 | uniq -f1 --all-repeated=separate"
 end
 
-# alias for dotfile tracking
-alias config="git --git-dir=$HOME/.dotfiles --work-tree=$HOME"
 
 # alias for kitty kittens
 alias icat="kitty +kitten icat"
@@ -20,7 +24,4 @@ end
 export EDITOR="/usr/bin/nvim"
 export PATH="$PATH:/home/mjs/.spicetify"
 alias m="math"
-alias vi="vim"
-alias vim="nvim"
 
-starship init fish | source

@@ -34,20 +34,20 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;; (setq doom-theme 'doom-one)
-;; (load-theme 'doom-tokyo-night t)
+;;(setq doom-theme 'doom-one)
+(load-theme 'doom-tokyo-night t)
 
-(use-package! autothemer
-  :ensure t)
+;;(use-package! autothemer
+;;  :ensure t)
 
-(load-theme 'catppuccin-mocha t)
+;;(load-theme 'catppuccin-mocha t)
 
-(set-face-underline 'link t)
-(custom-theme-set-faces 'catppuccin-mocha
-                       '(org-block ((t (:background "#181825"))))
-                       '(org-block-begin-line ((t (:background "#181825" :foreground "#7f849c"))))
-                       '(org-block-end-line ((t (:background "#181825" :foreground "#7f849c"))))
-                       '(evil-goggles-default-face ((t (:background "#313244" :extend t)))))
+;;(set-face-underline 'link t)
+;;(custom-theme-set-faces 'catppuccin-mocha
+;;                      '(org-block ((t (:background "#181825"))))
+;;                       '(org-block-begin-line ((t (:background "#181825" :foreground "#7f849c"))))
+;;                       '(org-block-end-line ((t (:background "#181825" :foreground "#7f849c"))))
+;;                       '(evil-goggles-default-face ((t (:background "#313244" :extend t)))))
 
 ;; Transparency
 (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
@@ -224,10 +224,24 @@
            :if-new (file+head+olp "%<%Y-%m-%d>.org" ,head ("Possibly Today"))
            :immediate-finish t))))
 
-(defun mjs/create-lecture-note ()
+(add-to-list 'org-capture-templates
+             `("s" "Great Basin Session Record" plain
+               (file ,(format "%s03-TTRPG/pathfinder/Sessions/great-basin-%s"
+                             org-directory
+                             (format-time-string "%Y-%m-%d.org" (current-time))))
+               ,(concat "#+title: Great Basin Session (" (format-time-string "%d %B %Y" (current-time)) ")\n"
+                       (format-time-string "#+date: %Y-%m-%d\n" (current-time))
+                       "#+filetags: :session:\n\n"
+                       )
+               :immediate-finish t
+               :jump-to-captured t))
+
+(add-hook 'org-capture-mode-hook #'org-id-get-create)
+
+(defun mjs/create-class-note ()
   (interactive)
   (let ((class (completing-read "Class: "
-                                '("cs3000" "ma4710" "ma4790" "hu3120" "hu3693")))
+                                '("cs1121" "cs3411" "cs5311" )))
         (buffer (get-buffer-create "Lecture Notes")))
     (set-buffer buffer)
     (insert (concat "#+filetags: " class "\n#+title: " class
@@ -237,17 +251,59 @@
     (org-id-get-create)
     (switch-to-buffer buffer)))
 
+(defun mjs/strip-org-roam-links ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "\\[\\[id:[^]]*\\]\\[\\([^]]*\\)\\]\\]" nil t)
+      (progn
+        (message "Match detected")
+        (replace-match "\\1" nil nil)))
+    ))
+
+(defun mjs/org-refile-dwim (target)
+  (interactive "FDestination File: \n")
+  (unless (org-at-heading-p)
+    (error "Point not at org heading! Aborting"))
+  (if (file-exists-p target)
+      (org-refile nil nil target) ;; File does exist, use regular `org-refile'
+    (let ((org-tags (map 'list #'substring-no-properties (org-get-tags)))
+          (org-heading (substring-no-properties (org-get-heading)))
+          (new-node-id nil)
+          (old-buf (current-buffer))
+          (new-buf (get-buffer-create (file-name-nondirectory target))))
+      (org-copy-subtree nil 'cut)
+      (switch-to-buffer new-buf)
+      (when org-tags ; Insert tags when then exist
+        (insert "#+filetags: ")
+        (dolist (tag org-tags)
+          (insert (concat ":" tag ": ")))
+        (insert "\n"))
+      (insert (concat "#+title: " org-heading "\n\n"))
+      (write-file target) ; org-roam can only create ids for buffers visiting a file
+      (org-id-get-create)
+      (setq new-node-id (org-roam-id-at-point))
+      (org-paste-subtree)
+      (kill-whole-line 2) ; Assumed format is heading followed by blank line
+      (org-next-visible-heading 1)
+      (when (org-at-heading-p) ; If there is another heading, promote it to first level
+        (while (not (eql 1 (nth 0 (org-heading-components))))
+          (org-promote-subtree)))
+      (goto-char (point-min))
+      (write-file target)
+      (with-current-buffer old-buf
+        (insert (concat "[[id:" new-node-id "][" org-heading "]]\n\n")))
+      )))
+
 (map! :map doom-leader-map
-      "l" #'mjs/create-lecture-note)
+      "l" #'mjs/create-class-note)
 
 ;; Turn off link completeion everywhere
 (setq org-roam-completion-everywhere nil)
 ;; Make a quick, easy to access keybinding to insert a link with roam
 (map! :map org-mode-map
       :i "C-f" #'org-roam-node-insert
-      "C-S-f" (lambda () (interactive)
-                (let ((curent-prefix-arg '(4)))
-                  (call-interactively #'org-insert-link))))
+      "C-S-f" #'org-insert-link)
 
 (defun mjs/toggle-and-mark-done ()
   "Toggle the current checkbox, follow the link under point and mark it as done"
@@ -301,6 +357,9 @@
   :init (setq olivetti-body-width 100)
   :hook org-mode)
 
+(use-package! org-transclusion
+  :after org)
+
 (map! :map org-mode-map
       :leader
       :localleader
@@ -308,3 +367,90 @@
       :desc "Add Transclusion" :n "a" #'org-transclusion-add
       :desc "Activate All Transclusions" :n "u" #'org-transclusion-mode
       :desc "Remove Transclusion" :n "r" #'org-transclusion-remove)
+
+(defun mjs/search-org-files (query)
+  "Return a list of files in the org directory containing QUERY"
+  (split-string
+   (shell-command-to-string (format "rg \"%s\" %s" query org-directory))
+   ":.*\n" t))
+
+(defun mjs/move-and-update-file-links (source-file dest-dir &optional search-dir)
+  "Move SOURCE-FILE to DEST-DIR, updating all org file links in SEARCH-DIR"
+    (interactive "fSource File: \nDDestination Directory: \n")
+    (let* ((search-dir (if (stringp search-dir) search-dir org-directory))
+           (source-file-name (file-name-nondirectory source-file))
+           (dest-file (file-name-concat dest-dir source-file-name))
+           (file-regexp
+            (format
+             "\\[\\[\\(file\\|pdf\\):\\([^]:]*%s\\)\\(::[0-9]+\\)?\\]\\[\\([^]]*\\)\\]\\]"
+                             source-file-name)))
+
+      (rename-file source-file dest-file t)
+      ; Iterate over all files in the search directory referencing the source file
+      (dolist (file (mjs/search-org-files source-file-name))
+        (with-current-buffer (find-file-noselect file) ; Open that file as a buffer
+        ;; Here is where the find and replace can happen
+        (let ((relative-dest-file (file-relative-name dest-file
+                                                      (file-name-directory file))))
+          (message (concat "Searching with: " file-regexp))
+          (goto-char (point-min))
+          (while (re-search-forward file-regexp nil t)
+            (replace-match relative-dest-file nil nil nil 2)
+            )
+        (save-buffer)
+        ))
+      )))
+
+(defun mjs/move-dir-update-file-links (source-dir dest-dir &optional search-dir)
+  "Move SOURCE-DIR into DEST-DIR, updating all file links in SEARCH-DIR referencing files in SOURCE-DIR"
+  (interactive "DSource Directory: \nDDestination Directory: \n")
+  (let ((search-dir (if (stringp search-dir) search-dir org-directory))
+        (dest-file-base (file-name-concat dest-dir
+                                          (file-name-nondirectory
+                                           (directory-file-name source-dir)))))
+    (dolist (file (directory-files-recursively source-dir ".*"))
+      (let ((dest-file-dir (expand-file-name
+                            (file-relative-name (file-name-directory file) source-dir)
+                            dest-file-base)))
+        (unless (file-directory-p dest-file-dir)
+          (make-directory dest-file-dir))
+        (mjs/move-and-update-file-links file dest-file-dir search-dir)
+      ))
+    (delete-directory source-dir)
+  ))
+
+(defun mjs/regenerate-file-links (src &optional search-dir kill)
+  "Regenerate file links in SRC org file by searching SEARCH-DIR and updating file paths"
+  (interactive (list (current-buffer)))
+  (let* ((search-dir (if (stringp search-dir) search-dir org-directory))
+         (src-buf (cond
+               ((bufferp src) src)
+               ((stringp src) (find-file-noselect src)) ; Assume this is a filename
+               (t (current-buffer))))
+         (src-file (buffer-file-name src-buf))
+         (file-link-regexp
+          "\\[\\[\\(file\\|pdf\\):\\([^]:]*\\)\\(::[0-9]+\\)?\\]\\(\\[[^]]*\\]\\)\\]"))
+    (with-current-buffer src-buf
+      (save-excursion (goto-char (point-min)) ; Move the point to start of buffer
+                      (while (re-search-forward file-link-regexp nil t)
+                        (let ((rel-dest-file (string-trim (file-relative-name
+                                                           (shell-command-to-string
+                                                            (format "find %s -name \"%s\""
+                                                                    search-dir
+                                                                    (file-name-nondirectory
+                                                                     (match-string 2))))
+                                                           (file-name-directory src-file)))))
+                          (replace-match rel-dest-file nil nil nil 2) ; Replace only the file path
+                          ))
+                      (save-buffer)
+                      ))
+    (when kill (kill-buffer src-buf))
+    ))
+
+(defun mjs/regenerate-file-links-globally (&optional dir)
+  (interactive "DDirectory: \n")
+  (let ((dir (if (stringp dir) dir org-directory)))
+    (dolist (file (directory-files-recursively dir ".*\\.org"))
+      (mjs/regenerate-file-links file nil 'kill)
+    )
+))
