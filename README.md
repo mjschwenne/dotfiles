@@ -1,5 +1,7 @@
 # Dotfiles
 
+**ATTENTION! THIS BRANCH IS NO LONGER UPDATED, I HAVE CHANGED DISTRO AND WM. IT WILL REMAIN HERE FOR POSTERITY, UNCHANGED.**
+
 Hello, this repo holds my configurations for my ubuntu laptops!
 
 ![A few screenshots](/Pictures/screenshots/screenshot_collection.png)
