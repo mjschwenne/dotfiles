@@ -1,0 +1,136 @@
+#+TITLE: Emacs Configuration
+#+PROPTERTY: header-args:emacs-lisp :tangle init.el
+
+* Motativation and Objectives
+
+** TODO
+
+* Configuration
+
+** Emacs Setup
+
+*** Identity 
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+  (setq user-full-name "Matt Schwennesen"
+	user-login-name "matt"
+	user-real-login-name "mjs"
+	user-mail-address "mjschwenne@gmail.com")
+#+END_SRC
+
+*** Packages
+
+I will be using the =use-package= marco with =package.el= for package configuration.
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+	;; Configure Package Sources
+	(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+				 ("melpa-stable" . "https://stable.melpa.org/packages/")
+				 ("melpa" . "https://melpa.org/packages/")
+				 ("org" . "https://orgmode.org/elpa/")))
+
+	;; Load and configure the package manager
+	(require 'package)
+	(unless (bound-and-true-p package--initialized)
+	  (setq package-enable-at-startup nil) ; To prevent multiple initializations
+	  (package-initialize)
+	  (package-refresh-contents t))
+
+	;; set use-package-verbose to t for interpreted .emacs,
+	;; and to nil for byte-compiled .emacs.elc.
+	(eval-and-compile
+	  (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
+
+	;; Define install-package wrapper
+	(defun install-package (package)
+	  (unless (package-installed-p package)
+		(package-install package)))
+  
+	;; Install use-package if it isn't already 
+	(install-package 'use-package)
+	(eval-and-compile
+	  (require 'use-package)
+	  (require 'bind-key))
+
+	;;; Configure use-package
+	(use-package use-package
+	  :custom
+	  (use-package-verbose t)
+	  (use-package-always-defer nil)        ; :defer t by default
+	  (use-package-always-ensure t)         ; :ensure t by default
+	  (use-package-expand-minimally t)
+	  (use-package-compute-statistics t)
+	  (use-package-enable-imenu-support t))
+#+END_SRC
+
+*** Global Emacs Behavior
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+  (setq-default
+   confirm-kill-emacs 'y-or-n-p
+   cursor-in-non-selected-widows nil
+   speedbar t
+   load-prefer-new t
+   make-backup-files nil ; Do not create backup files
+   compilation-always-kill t
+   compilation-ask-about-save nil
+   compilation-scroll-output t
+   tab-width 4
+   indent-tabs-mode t ; Use tabs, not spaces
+   require-final-newline t
+   x-select-enable-clipboard t
+   fill-column 80
+   initial-scratch-message nil
+   column-number-mode t
+   enable-recursive-minibuffers t
+   use-dialog-box nil
+   )
+#+END_SRC
+
+*** Evil Mode
+
+Maw-haw-haw!
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+  (install-package 'evil)
+  (install-package 'evil-collection)
+
+  (customize-set-variable 'evil-want-integration t)
+  (customize-set-variable 'evil-respect-visual-line-mode t)
+  (customize-set-variable 'evil-want-C-h-delete t)
+  (customize-set-variable 'evil-want-keybinding nil)
+
+  ;; Enable global evil mode
+  (require 'evil)
+  (evil-mode 1)
+
+  ;; Make evil search similar to vim
+  (evil-select-search-module 'evil-search-module 'evil-search)
+
+  ;; Rebind `universal-argument` to 'C-M-u' since 'C-u' now scrolls the buffer
+  (global-set-key (kbd "C-M-u") 'universal-argument)
+
+  ;; Use visual line movements by default
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+#+END_SRC
+
+** Appearance
+
+These code blocks control the appearance of Emacs. 
+
+*** Menu
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+#+END_SRC
+
+*** Fonts 
+
+*** Cursor and Current Line 
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+  (when window-system (global-hl-line-mode 1))
+#+END_SRC
