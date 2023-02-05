@@ -17,6 +17,7 @@ function run {
 # $HOME/.config/polybar/launch.sh &
 
 eww daemon
+fish -c ~/.config/bspwm/scripts/setup-monitors.fish > /dev/null
 run fish -c ./scripts/hide-panels.sh &
 run polybar -c ~/.config/bspwm/poly.ini
 
