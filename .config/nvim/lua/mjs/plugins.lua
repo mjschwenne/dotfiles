@@ -48,6 +48,7 @@ return packer.startup(function(use)
 
 	-- Syntax highlighting
 	use("fladson/vim-kitty") -- Kitty conf syntax highlighting
+	use("baskerville/vim-sxhkdrc") -- sxhkd syntax highlighting
 	use({
 		"lervag/vimtex",
 		config = function()
@@ -59,6 +60,8 @@ return packer.startup(function(use)
 		ft = "tex",
 	})
 	use("luizribeiro/vim-cooklang") -- cooklang
+	use("elkowar/yuck.vim") -- eww config
+	use("chrisbra/Colorizer") -- highlight color strings
 
 	-- grammar
 	use("rhysd/vim-grammarous")

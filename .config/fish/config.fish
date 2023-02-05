@@ -6,6 +6,7 @@ if status is-interactive
 	alias config="git --git-dir=$HOME/.dotfiles --work-tree=$HOME"
 	alias vi="nvim"
 	alias dup-files="find . -type f -printf '%p -> %f\n' | sort -k2 | uniq -f1 --all-repeated=separate"
+	export DOOMDIR="/home/mjs/.config/emacs-configs/doom-config/"
 end
 
 
@@ -22,6 +23,6 @@ end
 
 # set the EDITOR variable to be nvim
 export EDITOR="/usr/bin/nvim"
-export PATH="$PATH:/home/mjs/.spicetify"
+export PATH="$PATH:/home/mjs/.spicetify:/home/mjs/.local/bin:/home/mjs/.cargo/bin"
 alias m="math"
 

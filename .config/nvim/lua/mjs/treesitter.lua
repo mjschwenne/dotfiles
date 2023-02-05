@@ -12,6 +12,7 @@ configs.setup {
 		"cpp",
 		"css",
 		"fish",
+		"java",
 		"latex",
 		"lua",
 		"make",

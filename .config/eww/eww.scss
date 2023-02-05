@@ -1,0 +1,140 @@
+// Catppuccin Frappe 
+$cf-base: #303446;
+$cf-text: #C6D0F5;
+$cf-rosewater: #F2D5CF;
+$cf-flamingo: #EEBEBE;
+$cf-pink: #F4B8E4;
+$cf-mauve: #CA9EE6;
+$cf-red: #E78284;
+$cf-maroon: #EA999C;
+$cf-peach: #EF9F76;
+$cf-yellow: #E5C890;
+$cf-green: #A6D189;
+$cf-teal: #81C8BE;
+$cf-sky: #99D1DB;
+$cf-sapphire: #85C1DC;
+$cf-blue: #8CAAEE;
+$cf-lavendar: #BABBF1;
+$cf-surface2: #626880;
+
+* {
+	all: unset;
+	font-family: "JetBrainsMono Nerd Font";
+}
+
+.panel {
+	background-color: $cf-base;
+	color: $cf-text;
+	border-radius: 5px;
+}
+
+.secondary-panel {
+	background-color: $cf-base;
+	color: $cf-text;
+	border-radius: 5px;
+}
+
+.desktops {
+	padding: 5px;
+}
+
+.desktops button {
+	min-width: 25px;
+	min-height: 25px;
+	border-radius: 25px;
+}
+
+.desktop-free {
+
+}
+
+.desktop-active {
+	background-color: $cf-yellow;
+	color: $cf-base;
+}
+
+.desktop-focused {
+	background-color: $cf-green;
+	color: $cf-base;
+}
+
+.desktop-occupied {
+	background-color: $cf-peach;
+	color: $cf-base;
+}
+
+.desktop-urgent {
+	background-color: $cf-red;
+	color: $cf-base;
+}
+
+.right-cluster {
+	padding-right: 5px;
+}
+
+.volume-unmuted {
+	color: $cf-sapphire;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.volume-muted {
+	color: $cf-red;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.cpu {
+	color: $cf-mauve;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.ram {
+	color: $cf-green;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.not-charging {
+	color: $cf-yellow;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.charging {
+	color: $cf-yellow;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.clock {
+	color: $cf-teal;
+	font-size: 16px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.date {
+	color: $cf-lavendar;
+	font-size: 16px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.updates {
+	color: $cf-sky;
+	font-size: 16px;
+	padding-left: 5px;
+	padding-right: 10px;
+}
+
+.power {
+	color: $cf-base;
+	background-color: $cf-red;
+	border-radius: 25px;
+	min-width: 16px;
+	min-height: 25px;
+	padding-left: 5px;
+	padding-right: 5px;
+}

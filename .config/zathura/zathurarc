@@ -1,1 +1,2 @@
-include catppuccin
+include catppuccin-frappe
+set recolor

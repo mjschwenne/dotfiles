@@ -50,8 +50,8 @@
 ;;                       '(evil-goggles-default-face ((t (:background "#313244" :extend t)))))
 
 ;; Transparency
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'alpha '(80 . 80))
+(add-to-list 'default-frame-alist '(alpha . (80 . 80)))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -64,6 +64,7 @@
 
 ; Make evil-snipe search the whole buffer by default
 (customize-set-variable 'evil-snipe-scope 'buffer)
+(customize-set-variable 'evil-want-C-u-scroll nil)
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -99,7 +100,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/Documents/")
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
 ;; Image previewing in org mode
@@ -117,7 +118,7 @@
 
 (advice-add 'org-refile :after 'org-save-all-org-buffers) ;; Save the buffers after refile
 
-(customize-set-variable 'org-agenda-files '("~/org/tasks/"))
+(customize-set-variable 'org-agenda-files (list (concat org-directory "tasks/")))
 
 (customize-set-variable 'org-agenda-custom-commands
                         '(("d" "Daily Schedule"
@@ -133,7 +134,8 @@
    (emacs-lisp . t)
    (latex . t)
    (python . t)
-   (R . t)))
+   (R . t)
+   (java . t)))
 
 (require 'org-tempo)
 ;; There should be a better way to do this, but I haven't found it yet
@@ -203,8 +205,8 @@
 
 ;; Org-roam settings are directory local variables set for various directory similar to
 ;; Obsidian vaults.
-(setq org-roam-directory "~/org")
-(setq org-roam-dailies-directory "~/org/daily")
+(setq org-roam-directory org-directory)
+(setq org-roam-dailies-directory (concat org-roam-directory "/dailies/"))
 (setq org-roam-dailies-capture-templates
       (let ((head
              (concat "#+title: %<%Y-%m-%d (%A)>\n#+startup: showall\n* Daily Overview\n"
@@ -226,13 +228,12 @@
 
 (add-to-list 'org-capture-templates
              `("s" "Great Basin Session Record" plain
-               (file ,(format "%s03-TTRPG/pathfinder/Sessions/great-basin-%s"
+               (file ,(format "%s03-TTRPG/pathfinder/Sessions/great-basin-%s.org"
                              org-directory
-                             (format-time-string "%Y-%m-%d.org" (current-time))))
-               ,(concat "#+title: Great Basin Session (" (format-time-string "%d %B %Y" (current-time)) ")\n"
-                       (format-time-string "#+date: %Y-%m-%d\n" (current-time))
-                       "#+filetags: :session:\n\n"
-                       )
+                             (org-read-date nil nil "Sun")))
+               ,(concat "#+title: Great Basin Session (" (org-read-date nil nil "Sun")
+                        ")\n#+date: " (org-read-date nil nil "Sun") "\n"
+                        "#+filetags: :session:\n\n")
                :immediate-finish t
                :jump-to-captured t))
 
@@ -241,12 +242,13 @@
 (defun mjs/create-class-note ()
   (interactive)
   (let ((class (completing-read "Class: "
-                                '("cs1121" "cs3411" "cs5311" )))
+                                '("cs1121" "cs2321" "cs3411" "cs5311" )))
         (buffer (get-buffer-create "Lecture Notes")))
     (set-buffer buffer)
     (insert (concat "#+filetags: " class "\n#+title: " class
-                    " (" (format-time-string "%d %B %Y" (current-time)) ")\n\n"))
-    (write-file (concat "/home/mjs/org/01-classes/" class "/"
+                    " (" (format-time-string "%d %B %Y" (current-time)) ")\n"
+                    "#+author: Matt Schwennesen\n\n"))
+    (write-file (concat org-directory "01-classes/" class "/"
                         (format-time-string "%Y-%m-%d" (current-time)) "-" class ".org"))
     (org-id-get-create)
     (switch-to-buffer buffer)))
