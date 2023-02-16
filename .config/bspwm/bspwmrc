@@ -33,6 +33,11 @@ bspc config focused_border_color	"#8caaee"
 bspc config presel_feedback_color	"#8caaee"
 #bspc config urgent_border_color 	"#dd2727"
 
+eww daemon
+
+INTERNAL_MONITOR="eDP-1"
+EXTERNAL_MONITOR="HDMI-1"
+
 # Only run this on the first time BSPWM loads
 if [[ "$1" = 0 ]]
 then 
@@ -40,14 +45,16 @@ then
 	then 
 		bspc monitor "$INTERNAL_MONITOR" -d 1 2 3 4 5 
 		bspc monitor "$EXTERNAL_MONITOR" -d 6 7 8 9 10
+		eww open panel
+		eww open secondary-panel
 	else 
 		bspc monitor "$INTERNAL_MONITOR" -d 1 2 3 4 5 6 7 8 9 10
+		eww open panel
 	fi 
 fi 
 
 #Fullscreen applications
 bspc rule -a inkscape state=fullscreen
-bspc rule -a Spotify state=fullscreen
 bspc rule -a Vlc state=fullscreen
 bspc rule -a VirtualBox Manager state=fullscreen
 bspc rule -a VirtualBox Machine state=fullscreen
@@ -62,7 +69,7 @@ bspc rule -a feh state=floating
 #bspc rule -a mpv state=floating sticky=on
 #bspc rule -a Font-manager state=floating
 bspc rule -a Galculator state=floating
-bspc rule -a qalculate-gtk state=floating
+bspc rule -a Qalculate-gtk state=floating
 #bspc rule -a Gpick state=floating sticky=on
 #bspc rule -a Nitrogen state=floating
 bspc rule -a Oblogout state=floating

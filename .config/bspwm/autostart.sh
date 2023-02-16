@@ -16,9 +16,8 @@ function run {
 
 # $HOME/.config/polybar/launch.sh &
 
-eww daemon
 fish -c ~/.config/bspwm/scripts/setup-monitors.fish > /dev/null
-run fish -c ./scripts/hide-panels.sh &
+run ~/.config/bspwm/scripts/hide-panels.fish &
 run polybar -c ~/.config/bspwm/poly.ini
 
 #change your keyboard if you need it
@@ -54,7 +53,7 @@ picom --config $HOME/.config/bspwm/picom.conf &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 /usr/lib/xfce4/notifyd/xfce4-notifyd &
 #run volumeicon &
-run syncthing &
+run syncthing  --no-browser &
 #nitrogen --restore &
 #run caffeine &
 #run vivaldi-stable &

@@ -38,6 +38,14 @@ function monitor_remove
 end
 
 if xrandr -q | grep -q "$EXTERNAL_MONITOR connected"
+	if test (bspc query -M | wc -l) -ne 2 
+		# bspwm and X have not properly reconigzed the monitor.
+		xrandr --output HDMI-1 --mode 1920x1080 --right-of eDP-1
+		# Toggle twice to ensure there is a backround on the second monitor 
+		# without changing the pause/play state of veriety
+		variety --toggle-pause
+		variety --toggle-pause
+	end
 	if test (bspc query -D -m $EXTERNAL_MONITOR | wc -l) -ne 5
 		echo "Adding monitor"
 		monitor_add 

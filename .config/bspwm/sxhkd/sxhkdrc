@@ -13,10 +13,10 @@ super + F1
 	dolphin
 
 super + F2
-	thunar
+    meld
 
 super + F3
-    meld
+	flatpak run org.keepassxc.KeePassXC
 
 # BROWER ROW 
 super + F4
@@ -38,7 +38,7 @@ super + F9
 	emacs --with-profile crafted
 
 super + F10
-    spotify
+    LD_PRELOAD=/home/mjs/applications/spotifywm/spotifywm.so /opt/spotify/spotify
 
 super + F11
 	discord
@@ -55,7 +55,7 @@ super + Return
 
 # Browser
 super + b 
-	brave
+	firefox
 
 #################################################################
 # SYSTEM CONFIGURATION
@@ -63,7 +63,7 @@ super + b
 
 # Session Manager
 super + z
-    archlinux-logout
+	systemctl suspend
 
 super + ctrl + z 
 	archlinux-logout
@@ -94,7 +94,13 @@ super + ctrl + r
 
 # Reload eww 
 super + ctrl + e
-	eww reload
+	eww reload ;\
+	xdotool search --class Polybar windowraise ;\
+	xdotool search --class Polybar windowraise
+
+# Eject usb 
+super + e
+	fish -c ~/.config/bspwm/scripts/eject.fish
 
 # Reload xmodmap 
 super + ctrl + x 
@@ -132,13 +138,13 @@ super + alt + Left
 super + alt + Right
     variety -n
 
-# Wallpaper toggle-pause
-super + alt + Up
-    variety --toggle-pause
-
 # Wallpaper resume
-super + alt + Down
+super + alt + Up
     variety --resume
+
+# Wallpaper pause
+super + alt + Down
+    variety --pause
 
 #################################################################
 #VARIETY KEYS WITH PYWAL

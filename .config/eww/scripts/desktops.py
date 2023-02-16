@@ -3,8 +3,7 @@
 import subprocess as sp
 from string import Template
 
-desktop_order = [i for i in range(1, 11)]
-eww_template = Template('(button :class "$css_class" :onclick "~/.config/bspwm/scripts/select-desktop.fish $id" :width 25 "$id") ')
+eww_template = Template('(button :class "$css_class" :onclick "~/.config/bspwm/scripts/select-desktop.fish $id" :width 25 "$disp") ')
 
 def process_report (report):
     """
@@ -49,19 +48,19 @@ def process_report (report):
             # Desktop is occupied but not active or focused
             case 'o':
                 desktop_eww += eww_template.substitute(css_class="desktop-occupied",
-                                                       id=k)
+                                                       id=k, disp=k)
             case 'f':
                 desktop_eww += eww_template.substitute(css_class="desktop-free", 
-                                                       id="")
+                                                       id=k, disp="")
             case 'u':
                 desktop_eww += eww_template.substitute(css_class="desktop-urgent", 
-                                                       id=k)
+                                                       id=k, disp=k)
             case 'F':
                 desktop_eww += eww_template.substitute(css_class="desktop-focused",
-                                                       id=k)
+                                                       id=k, disp=k)
             case 'A':
                 desktop_eww += eww_template.substitute(css_class="desktop-active",
-                                                       id=k)
+                                                       id=k, disp=k)
 
     print(desktop_eww + ")", flush=True)
 

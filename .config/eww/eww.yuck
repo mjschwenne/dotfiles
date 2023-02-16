@@ -10,11 +10,11 @@
 (defpoll updates :interval "4h"
   `checkupdates | wc -l`)
 
-(deflisten desktop-status :initial "(label :text 'failed to start python script')"
-  `~/.config/eww/scripts/desktops.py`)
+(deflisten desktop-status :initial "(label :text '󰈺 starting fish script...')"
+  `~/.config/eww/scripts/desktops.fish`)
 
-(deflisten volume-widget :initial "(label :text 'failed to start python script')"
-  `~/.config/eww/scripts/volume.py`)
+(deflisten volume-widget :initial "(label :text '󰈺 starting fish script...')"
+  `fish -c ~/.config/eww/scripts/volume.fish`)
 
 (defwidget desktop-monitor []
   (literal :content desktop-status :valign "center"))

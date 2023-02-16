@@ -237,6 +237,7 @@ prepended all the shortcuts with "s" to avoid conflicts with existing names.
 (add-to-list 'org-structure-template-alist '("sl" . "src latex"))
 (add-to-list 'org-structure-template-alist '("spy" . "src python"))
 (add-to-list 'org-structure-template-alist '("sR" . "src R"))
+(add-to-list 'org-structure-template-alist '("sj" . "src java"))
 #+end_src
 
 ** Org Capture Templates
@@ -324,6 +325,8 @@ $$ \binom{n}{k} = \frac{n!}{k! \times (n-k)!} $$
 
 #+begin_src emacs-lisp
 (customize-set-variable 'org-startup-with-latex-preview t)
+(add-to-list 'org-latex-packages-alist '("" "sfmath" t))
+(add-to-list 'org-latex-packages-alist '("margin=1in" "geometry" t))
 
 (use-package! org-fragtog
  :hook (org-mode . (lambda ()
