@@ -1,3 +1,27 @@
+#+title: Eww Yuck
+#+author: Matt Schwennesen
+
+* mjs-surface Settings
+
+#+begin_src yuck :tangle (if (string= "mjs-surface" system-name) "eww.yuck" "no")
+(defvar bat-name "BAT1")
+(defvar title-character-limit 50)
+(defvar circular-metric-size 50)
+(defvar circular-metric-thickness 3)
+#+end_src
+
+* ilsensine Settings
+
+#+begin_src yuck :tangle (if (string= "ilsensine" system-name) "eww.yuck" "no")
+(defvar bat-name "BAT0")
+(defvar title-character-limit 100)
+(defvar circular-metric-size 25)
+(defvar circular-metric-thickness 1.5)
+#+end_src
+
+* Combined Configuration
+
+#+begin_src yuck :tangle eww.yuck
 (deflisten node-name :initial ""
   `xtitle -s`)
 
@@ -15,62 +39,61 @@
 
 (deflisten volume-widget :initial "(label :text '󰈺 starting fish script...')"
   `fish -c ~/.config/eww/scripts/volume.fish`)
-
 (defwidget desktop-monitor []
   (literal :content desktop-status :valign "center"))
 
 (defwidget left-cluster []
-  (box 
+  (box
     :space-evenly false
     (desktop-monitor)))
 
 (defwidget center-cluster []
-  (label :text node-name :limit-width 100 :show_truncated true))
+  (label :text node-name :limit-width "${title-character-limit}" :show_truncated true))
 
 (defwidget circular-metric [icon value tooltip ?cmd ?css-class]
   (button :onclick cmd
     :class css-class
-    (overlay 
-      :tooltip tooltip 
-      (circular-progress 
+    (overlay
+      :tooltip tooltip
+      (circular-progress
         :value value
         :start-at 75
-        :width 25
-        :height 25
-        :thickness 1.5)
+        :width "${circular-metric-size}"
+        :height "${circular-metric-size}"
+        :thickness "${circular-metric-thickness}")
       (label :text icon))))
 
 (defwidget right-cluster []
-  (box 
-    :space-evenly false 
+  (box
+    :space-evenly false
     :valign "center"
     :halign "end"
     :class "right-cluster"
     (literal :content volume-widget)
-    (circular-metric 
+    (circular-metric
       :icon ""
       :value "${EWW_CPU['avg']}"
       :tooltip "CPU: ${round(EWW_CPU['avg'], 2)}%"
       :cmd "kitty -e htop &"
       :css-class "cpu")
-    (circular-metric 
+    (circular-metric
       :icon ""
       :value "${EWW_RAM['used_mem_perc']}"
       :tooltip "RAM: ${round(EWW_RAM['used_mem_perc'], 2)}%"
       :css-class "ram")
-    (circular-metric 
-      :icon "${EWW_BATTERY['BAT0'].status == 'Charging' ? '󱐋' : ' '}"  
-      :value "${EWW_BATTERY['BAT0'].capacity}"
-      :tooltip "BAT: ${EWW_BATTERY['BAT0'].capacity}%"
-      :css-class "${EWW_BATTERY['BAT0'].status == 'Charging' ? 'charging' : 'not-charging'}")
+    (circular-metric
+      :icon "${EWW_BATTERY['${bat-name}'].status == 'Charging' ? '󱐋' : ' '}"
+      :value "${EWW_BATTERY['${bat-name}'].capacity}"
+      :tooltip "BAT: ${EWW_BATTERY['${bat-name}'].capacity}%"
+      :css-class "${EWW_BATTERY['${bat-name}'].status == 'Charging' ? 'charging' : 'not-charging'}")
     (label :text " ${time}" :class "clock")
     (label :text " ${date}" :class "date")
     (button :onclick '${EWW_CMD} update updates=0; kitty sudo pacman -Syu &'
       (label :text "  ${updates}" :class "updates"))
-    (button 
+    (button
       :onclick "archlinux-logout"
       :class "power"
-      (label :text "⏻" :style "margin-right: 2px;"))))
+      (label :text " "))))
 
 (defwidget bar []
   (centerbox :orientation "h"
@@ -84,12 +107,12 @@
   :geometry (geometry :x "0%"
                       :y "5px"
                       :width "99%"
-                      :height "40px"
+                      :height "4%"
                       :anchor "top center")
   :stacking "bg"
-  :reserve (struts :distance "50px" :side "top")
+  :reserve (struts :distance "5%" :side "top")
   :windowtype "dock" ; While you think this should be "dock"
-                        ; that will cause the bar to be on top of all 
+                        ; that will cause the bar to be on top of all
                         ; windows, including fullscreen ones
   :wm-ignore false
   (bar))
@@ -99,10 +122,12 @@
   :geometry (geometry :x "0%"
               :y "5px"
               :width "99%"
-              :height "40px"
+              :height "4%"
               :anchor "top center")
   :stacking "bg"
-  :reserve (struts :distance "50px" :side "top")
+  :reserve (struts :distance "5%" :side "top")
   :windowtype "dock"
   :wm-ignore false
   (bar))
+
+#+end_src

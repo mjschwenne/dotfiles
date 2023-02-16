@@ -64,7 +64,9 @@ still like to preserve it just in case.
 ;; refresh your font settings. If Emacs still can't find your font, it likely
 ;; wasn't installed correctly. Font issues are rarely Doom issues!
 
-(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15 :weight 'light))
+(if (string= system-name "mjs-surface")
+    (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 25 :weight 'light))
+  (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15 :weight 'light)))
 #+end_src
 
 ** Theme

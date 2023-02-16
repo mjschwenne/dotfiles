@@ -38,7 +38,7 @@ super + F9
 	emacs --with-profile crafted
 
 super + F10
-    LD_PRELOAD=/home/mjs/applications/spotifywm/spotifywm.so /opt/spotify/spotify
+	dex /usr/share/applications/spotify.desktop
 
 super + F11
 	discord
@@ -75,6 +75,14 @@ super + ctrl + Escape
 # reload sxhkd
 super + ctrl + k
 	pkill -USR1 -x sxhkd
+
+# Make all device dependent config files
+super + ctrl + b 
+	make -f ~/.config/bspwm/scripts/makefile
+
+# Force make all device dependent config files
+super + ctrl + shift + b
+	make -Bf ~/.config/bspwm/scripts/makefile 
 
 # Arch Tweak Tool 
 super + ctrl + t 
