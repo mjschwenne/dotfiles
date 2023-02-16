@@ -26,7 +26,7 @@ super + F5
 	librewolf
 
 super + F6
-	firefox
+	dex /usr/share/applications/firefox.desktop
 
 super + F7
 	emacs --with-profile doom
@@ -55,7 +55,7 @@ super + Return
 
 # Browser
 super + b 
-	firefox
+	dex /usr/share/applications/firefox.desktop
 
 #################################################################
 # SYSTEM CONFIGURATION

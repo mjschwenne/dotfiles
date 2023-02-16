@@ -51,7 +51,7 @@ numlockx on &
 blueberry-tray &
 picom --config $HOME/.config/bspwm/picom.conf &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-/usr/lib/xfce4/notifyd/xfce4-notifyd &
+run dunst &
 #run volumeicon &
 run syncthing  --no-browser &
 #nitrogen --restore &
