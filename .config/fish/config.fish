@@ -23,6 +23,6 @@ end
 
 # set the EDITOR variable to be nvim
 export EDITOR="/usr/bin/nvim"
-export PATH="$PATH:/home/mjs/.spicetify:/home/mjs/.local/bin:/home/mjs/.cargo/bin"
+export PATH="$PATH:/home/mjs/.spicetify:/home/mjs/.local/bin:/home/mjs/.cargo/bin:/home/mjs/.local/share/gem/ruby/3.0.0/bin:"
 alias m="math"
 

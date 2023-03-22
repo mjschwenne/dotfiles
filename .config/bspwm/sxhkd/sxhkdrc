@@ -31,8 +31,7 @@ super + F6
 super + F7
 	emacs --with-profile doom
 
-super + F8
-	emacs --with-profile default
+super + F8 emacs --with-profile default
 
 super + F9
 	emacs --with-profile crafted
@@ -63,7 +62,7 @@ super + b
 
 # Session Manager
 super + z
-	systemctl suspend
+	betterlockscreen -l &; systemctl suspend
 
 super + ctrl + z 
 	archlinux-logout
@@ -137,6 +136,10 @@ super + alt + p
 # Wallpaper favorite
 super + alt + f
     variety -f
+
+# Wallpaper selector 
+super + alt + s 
+	variety --selector
 
 # Wallpaper previous
 super + alt + Left

@@ -10,9 +10,9 @@ make -f ~/.config/bspwm/scripts/makefile > /dev/null
 bspc config border_width         2
 bspc config window_gap           5
 bspc config top_padding          30
-bspc config bottom_padding       5
-bspc config left_padding         5
-bspc config right_padding        5
+# bspc config bottom_padding       5
+# bspc config left_padding         5
+# bspc config right_padding        5
 bspc config single_monocle       false
 #bspc config click_to_focus       true
 bspc config split_ratio          0.50
@@ -68,6 +68,7 @@ bspc rule -a Arandr state=floating
 bspc rule -a Arcolinux-welcome-app.py state=floating
 bspc rule -a Arcolinux-calamares-tool.py state=floating
 bspc rule -a feh state=floating
+bspc rule -a Variety state=floating
 #bspc rule -a mpv state=floating sticky=on
 #bspc rule -a Font-manager state=floating
 bspc rule -a Galculator state=floating
@@ -88,7 +89,7 @@ bspc rule -a biz-papercut-pcng-client-uit-UserClient state=floating
 bspc rule -a Gnome-disks state=tiled
 bspc rule -a Xfce4-settings-manager state=tiled
 bspc rule -a Emacs state=tiled
-
+bspc rule -a Zathura state=tiled
 #open applications on specific workspaces
 #bspc rule -a Firefox desktop='^1' follow=on
 #bspc rule -a Google-chrome desktop='^1' follow=on
