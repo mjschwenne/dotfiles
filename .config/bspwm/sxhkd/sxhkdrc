@@ -87,10 +87,6 @@ super + ctrl + shift + b
 super + ctrl + t 
 	archlinux-tweak-tool
 
-#Pamac-manager
-super + ctrl + p
-    pamac-manager
-
 # Picom Toggle
 super + ctrl + o
     ~/.config/bspwm/scripts/picom-toggle.sh
@@ -102,6 +98,11 @@ super + ctrl + r
 # Reload eww 
 super + ctrl + e
 	eww reload ;\
+	xdotool search --class Polybar windowraise ;\
+	xdotool search --class Polybar windowraise
+
+# Raise Polybar
+super + ctrl + p
 	xdotool search --class Polybar windowraise ;\
 	xdotool search --class Polybar windowraise
 

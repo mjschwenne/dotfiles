@@ -69,6 +69,8 @@ local function lsp_keymaps(bufnr)
 	which_key.register({
 		["<leader><localleader>"] = {
 			a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
+			c = { "<cmd>LspInfo<CR>", "Info" },
+			C = { "<cmd>LspInstallInfo<CR>", "Installer Info" },
 			d = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Goto Declaration"},
 			D = { "<cmd>lua vim.lsp.buf.definition()<CR>", "Goto Definition"},
 			f = { "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", "Format" },

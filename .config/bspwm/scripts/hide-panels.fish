@@ -10,25 +10,25 @@ set -l bars_laptop "eww-panel" "Polybar"
 set -l monitor_external "0x00200004"
 set -l bars_external "eww-secondary-panel"
 
-bspc subscribe node_state | while read -d " " _ mon _ _ state flag 
+bspc subscribe node_state | while read -d " " __ mon __ __ state flag 
 	if test $mon = $monitor_laptop && test $state = "fullscreen"
 		for bar in $bars_laptop 
-			echo Hiding $bar
+			# echo Hiding $bar
 			xdotool search --class "$bar" windowunmap
 		end
 	else if test $mon = $monitor_laptop && test $state != "fullscreen"
 		for bar in $bars_laptop 
-			echo Showing $bar
+			# echo Showing $bar
 			xdotool search --class "$bar" windowmap 
 		end
 	else if test $mon != $monitor_laptop && test $state = "fullscreen"
 		for bar in $bars_external 
-			echo Hiding $bar
+			# echo Hiding $bar
 			xdotool search --class "$bar" windowunmap 
 		end 
 	else if test $mon != $monitor_laptop && test $state != "fullscreen"
 		for bar in $bars_external 
-			echo Showing $bar
+			# echo Showing $bar
 			xdotool search --class "$bar" windowmap 
 		end 
 	end

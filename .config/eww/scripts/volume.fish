@@ -16,12 +16,6 @@ function format_volume
 end
 
 format_volume
-set count 0
-stdbuf -oL amixer sevents Master | while read _
-	if test $count -gt 2
-		format_volume
-		set count 0
-	else 
-		set count (math $count + 1)
-	end
+stdbuf -oL amixer sevents Master | while read __
+	format_volume
 end

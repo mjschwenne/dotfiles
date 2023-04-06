@@ -186,6 +186,9 @@ not underline org mode links, so add that.
 ;; While I could change that, I want to be able to pull the DOOM repo without issue so
 ;; I'm using advice to update that value after anytime the function in question is called.
 (advice-add '+org-init-appearance-h :after (lambda () (customize-set-variable 'org-image-actual-width '(600))))
+;; The default font scaling for org-tree-slide is one step too large. The defualt value is 5
+;; so we should set it to 4.
+(customize-set-variable '+org-present-text-scale 4)
 #+end_src
 
 ** Org Agenda
