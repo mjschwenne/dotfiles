@@ -101,6 +101,10 @@ super + ctrl + e
 	xdotool search --class Polybar windowraise ;\
 	xdotool search --class Polybar windowraise
 
+# Re-make all org config files 
+super + ctrl + u 
+	make -B -f ~/.config/bspwm/scripts/makefile
+
 # Raise Polybar
 super + ctrl + p
 	xdotool search --class Polybar windowraise ;\

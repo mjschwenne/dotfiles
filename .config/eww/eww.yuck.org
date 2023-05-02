@@ -71,7 +71,7 @@
     :class "right-cluster"
     (literal :content volume-widget)
     (circular-metric
-      :icon ""
+      :icon "󰍛"
       :value "${EWW_CPU['avg']}"
       :tooltip "CPU: ${round(EWW_CPU['avg'], 2)}%"
       :cmd "kitty -e htop &"
@@ -86,14 +86,14 @@
       :value "${EWW_BATTERY['${bat-name}'].capacity}"
       :tooltip "BAT: ${EWW_BATTERY['${bat-name}'].capacity}%"
       :css-class "${EWW_BATTERY['${bat-name}'].status == 'Charging' ? 'charging' : 'not-charging'}")
-    (label :text " ${time}" :class "clock")
+    (label :text "󱑏 ${time}" :class "clock")
     (label :text " ${date}" :class "date")
     (button :onclick '${EWW_CMD} update updates=0; kitty sudo pacman -Syu &'
       (label :text "  ${updates}" :class "updates"))
     (button
       :onclick "archlinux-logout"
       :class "power"
-      (label :text " "))))
+      (label :text "⏻"))))
 
 (defwidget bar []
   (centerbox :orientation "h"

@@ -4,7 +4,7 @@ function format_volume
 	set fmt "(circular-metric :icon \"%s\" :value %d :tooltip \"%s\" :css-class \"%s\" :cmd \"%s\")\n"
 	string match -rq "Right: .* \[(?<vol>[0-9]+)\%\] \[(?<mute>on|off)\]" (amixer sget Master)
 	if test $mute = "off"
-		set icon "ﱝ"
+		set icon "󰝟"
 		set tooltip (printf "VOL: MUTED (%d%%)" $vol)
 		set css "volume-muted"
 	else 

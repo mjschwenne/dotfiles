@@ -53,10 +53,10 @@ disabled = false
 
 [directory]
 style = "bg:green fg:text"
-format = "[   $path ]($style)"
+format = "[ 󰉋  $path ]($style)"
 truncation_length = 1
 truncation_symbol = "…/"
-home_symbol = " "
+home_symbol = "󰋜 "
 fish_style_pwd_dir_length = 2
 
 # Here is how you can shorten some long paths by text replacement
@@ -105,7 +105,7 @@ detect_extensions = ['cpp']
 format = '[ $symbol($output) ]($style)'
 
 [python]
-symbol = " "
+symbol = " "
 style = "bg:sapphire fg:text"
 version_format = '${major}.${minor}'
 format = '[ $symbol($version) (\($virtualenv\)) ]($style)'
