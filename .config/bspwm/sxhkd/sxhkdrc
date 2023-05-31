@@ -18,7 +18,6 @@ super + F2
 super + F3
 	flatpak run org.keepassxc.KeePassXC
 
-# BROWER ROW 
 super + F4
 	brave 
 
@@ -26,20 +25,18 @@ super + F5
 	librewolf
 
 super + F6
-	dex /usr/share/applications/firefox.desktop
+	dex ~/.local/share/applications/firefox.desktop
 
 super + F7
 	emacs --with-profile doom
 
-super + F8 emacs --with-profile default
+super + F8 
+	emacs --with-profile (printf "mjs\ndoom\nnano\ncrafted\nspacemacs" | rofi -dmenu -p emacs)
 
 super + F9
-	emacs --with-profile crafted
-
-super + F10
 	dex /usr/share/applications/spotify.desktop
 
-super + F11
+super + F10
 	discord
 
 super + F12
@@ -54,7 +51,7 @@ super + Return
 
 # Browser
 super + b 
-	dex /usr/share/applications/firefox.desktop
+	dex ~/.local/share/applications/firefox.desktop
 
 #################################################################
 # SYSTEM CONFIGURATION

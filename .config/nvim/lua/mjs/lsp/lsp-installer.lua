@@ -1,6 +1,12 @@
-local status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
+local status_ok, mason = pcall(require, "mason")
 if not status_ok then
-	print "Failed to load lsp installer..."
+	print "Failed to load mason..."
+	return
+end
+
+local status_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+if not status_ok then 
+	print "Failed to load mason-lspconfig bridge..."
 	return
 end
 
@@ -10,30 +16,35 @@ if not status_ok then
 	return
 end
 
-lsp_installer.setup{}
+mason.setup(
+	{ui = {
+    	icons = {
+     	 	package_installed = "✓",
+     		package_pending = "➜",
+      		package_uninstalled = "✗"
+     	}
+  	}
+})
 
--- Register a handler that will be called for all installed servers.
--- Alternatively, you may also register handlers on specific server instances instead (see example below).
-for _, server in ipairs(lsp_installer.get_installed_servers()) do
-	local opts = {
-		on_attach = require("mjs.lsp.handlers").on_attach,
-		capabilities = require("mjs.lsp.handlers").capabilities,
-	}
+mason_lspconfig.setup_handlers {
+  	function(server_name)
+		local server_settings
+		if server_name == "lua_ls" then
+			server_settings = require("mjs.lsp.settings.sumneko_lua")
+		end
 
-	 if server.name == "sumneko_lua" then
-	 	local sumneko_opts = require("mjs.lsp.settings.sumneko_lua")
-	 	opts = vim.tbl_deep_extend("force", sumneko_opts, opts)
-	 end
+		if server_name == "pyright" then
+			server_settings = require("mjs.lsp.settings.pyright")
+		end
 
-	 if server.name == "pyright" then
-	 	local pyright_opts = require("mjs.lsp.settings.pyright")
-	 	opts = vim.tbl_deep_extend("force", pyright_opts, opts)
-	 end
+		if server_name == "clangd" then
+			server_settings = require("mjs.lsp.settings.clangd")
+		end
 
-	if server.name == "clangd" then
-		local clangd_opts = require("mjs.lsp.settings.clangd")
-		opts = vim.tbl_deep_extend("force", clangd_opts, opts)
-	end
-
-	lspconfig[server.name].setup(opts)
-end
+    	lspconfig[server_name].setup {
+      		capabilities = require("mjs.lsp.handlers").capabilities,
+      		on_attach = require("mjs.lsp.handlers").on_attach,
+			settings = server_settings,
+    	}
+ 	 end,
+}

@@ -144,7 +144,7 @@ local n_mappings = {
 			name = "Local",
 
 			i = { "<cmd>LspInfo<CR>", "Info" },
-			I = { "<cmd>LspInstallInfo<CR>", "Installer Info" },
+			I = { "<cmd>Mason<CR>", "LSP Installer" },
 		},
 
 		-- Telescope Based Searches

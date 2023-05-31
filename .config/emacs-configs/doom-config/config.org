@@ -104,7 +104,7 @@ Tokyo Night.
 #+begin_src emacs-lisp
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
 #+end_src
 
 * Keybindings
@@ -213,6 +213,15 @@ a plugin.
                                    ((org-agenda-span 'day)
                                     (org-agenda-use-time-grid nil)
                                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'deadline))))))))
+
+(defun mjs/org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from
+           (org-element-property :begin (org-element-at-point))))
+   "/DONE" 'agenda))
 #+end_src
 
 ** Structure Templates
@@ -332,6 +341,7 @@ $$ \binom{n}{k} = \frac{n!}{k! \times (n-k)!} $$
 (customize-set-variable 'org-startup-with-latex-preview t)
 (add-to-list 'org-latex-packages-alist '("" "sfmath" t))
 (add-to-list 'org-latex-packages-alist '("margin=1in" "geometry" t))
+(add-to-list 'org-latex-packages-alist '("" "parskip" t))
 
 (use-package! org-fragtog
  :hook (org-mode . (lambda ()
@@ -423,7 +433,7 @@ digital zettlekasten tools an inspiration for Obsidian I believe.
   (unless (org-at-heading-p)
     (error "Point not at org heading! Aborting"))
   (if (file-exists-p target)
-      (org-refile nil nil target) ;; File does exist, use regular `org-refile'
+      (org-refile nil nil target nil) ;; File does exist, use regular `org-refile'
     (let ((org-tags (map 'list #'substring-no-properties (org-get-tags)))
           (org-heading (substring-no-properties (org-get-heading)))
           (new-node-id nil)
@@ -434,8 +444,8 @@ digital zettlekasten tools an inspiration for Obsidian I believe.
       (when org-tags ; Insert tags when then exist
         (insert "#+filetags: ")
         (dolist (tag org-tags)
-          (insert (concat ":" tag ": ")))
-        (insert "\n"))
+          (insert (concat ":" tag)))
+        (insert ":\n"))
       (insert (concat "#+title: " org-heading "\n\n"))
       (write-file target) ; org-roam can only create ids for buffers visiting a file
       (org-id-get-create)

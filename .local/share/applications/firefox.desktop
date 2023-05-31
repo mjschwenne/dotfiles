@@ -1,0 +1,24 @@
+[Desktop Entry]
+Version=1.0
+Name=Firefox
+GenericName=Web Browser
+Comment=Browse the World Wide Web
+Keywords=Internet;WWW;Browser;Web;Explorer
+Exec=env MOZ_USE_XINPUT2=1 /usr/lib/firefox/firefox %u
+Icon=firefox
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;application/x-xpinstall;application/pdf;application/json;
+StartupNotify=true
+StartupWMClass=firefox
+Categories=Network;WebBrowser;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=env MOZ_USE_XINPUT2=1 /usr/lib/firefox/firefox --new-window %u
+
+[Desktop Action new-private-window]
+Name=New Private Window
+Exec=env MOZ_USE_XINPUT2=1 /usr/lib/firefox/firefox --private-window %u
