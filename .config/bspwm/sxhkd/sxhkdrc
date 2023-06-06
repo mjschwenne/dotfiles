@@ -28,7 +28,7 @@ super + F6
 	dex ~/.local/share/applications/firefox.desktop
 
 super + F7
-	emacs --with-profile doom
+	emacs --with-profile mjs
 
 super + F8 
 	emacs --with-profile (printf "mjs\ndoom\nnano\ncrafted\nspacemacs" | rofi -dmenu -p emacs)

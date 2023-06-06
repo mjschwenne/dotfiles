@@ -423,10 +423,7 @@ digital zettlekasten tools an inspiration for Obsidian I believe.
   (save-excursion
     (goto-char (point-min))
     (while (re-search-forward "\\[\\[id:[^]]*\\]\\[\\([^]]*\\)\\]\\]" nil t)
-      (progn
-        (message "Match detected")
-        (replace-match "\\1" nil nil)))
-    ))
+        (replace-match "\\1" nil nil))))
 
 (defun mjs/org-refile-dwim (target)
   (interactive "FDestination File: \n")
