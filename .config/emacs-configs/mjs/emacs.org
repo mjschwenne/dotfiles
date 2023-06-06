@@ -1050,6 +1050,8 @@ TODO: Fix the 2 space indentation which is reset when =<tab>= is pressed.
                "B n"    '("Next Src Block" . org-babel-next-src-block)
                "B p"    '("Pervious Src Block" . org-babel-previous-src-block)
                "c"      '(nil :which-key "Clock")
+               "c e"    '("Set Effort" . org-set-effort)
+               "c E"    '("Increase Effort" . org-inc-effort)
                "c i"    '("Clock-in" . org-clock-in)
                "c o"    '("Clock-out" . org-clock-out)
                "c g"    '("Goto Current Clock" . org-clock-goto)
@@ -1683,7 +1685,7 @@ which tells you how to save the capture, normally =C-c C-f=, =C-c C-k= and =C-c 
 (I think). I've changed those to display the =evil= keybidings defined below.
 
 #+begin_src emacs-lisp :tangle init.el
-  (mjs-leader-def :keymaps 'org-capture-mode-map
+  (mjs-leader-def :states '(normal insert) :keymaps 'org-capture-mode-map
     "C"   '(nil :which-key "Capture")
     "C f" '("Finish Capture" . org-capture-finalize)
     "C k" '("Abort Capture" . org-capture-kill)
