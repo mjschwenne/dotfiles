@@ -53,6 +53,7 @@ picom --config $HOME/.config/bspwm/picom.conf &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 run dunst &
 #run volumeicon &
+#run emacs --daemon --with-profile default
 run syncthing  --no-browser &
 #nitrogen --restore &
 #run caffeine &

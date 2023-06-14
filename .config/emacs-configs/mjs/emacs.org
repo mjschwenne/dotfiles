@@ -25,6 +25,7 @@ there are several reasons why I would like to create my own configuration.
     - [[#theme][Theme]]
     - [[#modeline][Modeline]]
     - [[#gutter][Gutter]]
+    - [[#dashboard][Dashboard]]
   - [[#keybindings][Keybindings]]
     - [[#which-key-and-general][Which-key and General]]
     - [[#evil-mode][Evil Mode]]
@@ -311,6 +312,33 @@ Turn on relative line numbers and the vim tilde fringe.
     :config (global-vi-tilde-fringe-mode))
 #+END_SRC
 
+*** Dashboard
+
+#+begin_src emacs-lisp :tangle init.el
+  (use-package nerd-icons)
+
+  (use-package dashboard
+    :init (defun mjs/dashboard-next-items ()
+            (unless (and (org-entry-is-todo-p)
+                         (not (org-entry-is-done-p))
+                         (not (org-in-archived-heading-p))
+                         (string= (org-get-todo-state) "NEXT"))
+              (point)))
+    :custom (dashboard-startup-banner 'logo)
+            (dashboard-display-icons-p t)
+            (dashboard-icon-type 'nerd-icons)
+            (dashboard-set-navigator t)
+            (dashbaord-set-heading-icons t)
+            (dashboard-set-file-icons t)
+            (dashboard-filter-agenda-entry #'mjs/dashboard-next-items)
+            (dashboard-items '((recents . 5)
+                               (agenda . 10)))
+            (dashboard-item-names '(("Recent Files:" . "Recently Opened:")
+                                    ("Agenda for the coming week:" . "NEXT Items:")))
+            (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs"))
+    :config (dashboard-setup-startup-hook))
+#+end_src
+
 ** Keybindings
 
 *** Which-key and General
@@ -372,7 +400,7 @@ brings more of that modal editing goodness to Emacs.
   ;; Use visual line movements by default
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-  (general-define-key :states 'normal :map 'override
+  (general-define-key :states '(normal motion) :map 'override
                       "C-h" #'evil-window-left
                       "C-j" #'evil-window-down
                       "C-k" #'evil-window-up
@@ -554,10 +582,10 @@ Emacs so I have not bothered to enable them here.
     (interactive)
     (restart-emacs (list "--with-profile" chemacs-profile-name)))
 
-  (mjs-leader-def :states '(normal insert)
+  (mjs-leader-def :states '(normal insert visual motion)
                   "q" '(nil :which-key "Quit")
                   "q d" '("Restart Emacs Server" . mjs/restart-server)
-                  "q f" '("Delete Frame" . delete-frame)
+                  "q f" '("Delete Frame" . save-buffers-kill-emacs)
                   "q F" '("Clear Current Frame" . mjs/kill-all-buffers)
                   "q K" '("Kill Emacs (and Daemon)" . save-buffers-kill-emacs)
                   ;; "q l" '("Restore Last Session" . )
@@ -678,7 +706,7 @@ with =<leader> f=.
             (user-error "Could not copy filename in current buffer.")))
       (error "Couldn't find filename in current buffer.")))
 
-  (mjs-leader-def :states '(normal insert) :keymaps 'override
+  (mjs-leader-def :states '(normal insert visual motion) :keymaps 'override
     "b"   '(nil :which-key "Buffer")
     "b b" '("Switch Buffer" . mjs/switch-buffer)
     "b B" '("Switch Buffer (all)" . consult-buffer)
@@ -728,7 +756,7 @@ Starting with =<leader> i=, insert things like Unicode characters.
   (use-package emojify
     :hook (after-init . global-emojify-mode))
   
-  (mjs-leader-def :states '(normal insert) :keymaps 'override
+  (mjs-leader-def :states '(normal insert visual motion) :keymaps 'override
     "i"  '(nil :which-key "Insert")
     "i u" '("Character" . insert-char)
     "i r" '("Evil Registers" . evil-show-registers)
@@ -743,7 +771,7 @@ Starting with =<leader> i=, insert things like Unicode characters.
   (use-package helpful
     :commands (helpful-callable helpful-function helpful-macro helpful-command
                helpful-key helpful-variable helpful-at-point)
-    :general (mjs-leader-def :states '(normal insert)
+    :general (mjs-leader-def :states '(normal insert visual motion)
                              "h" '(nil :which-key "Help")
                              "h f" '("Callable" . helpful-callable)
                              "h F" '("Function" . helpful-function)
@@ -837,7 +865,7 @@ navigations.
       :init (recentf-mode 1)
       :custom (register-preview-function #'consult-register-format)
               (register-preview-delay 0.5)
-      :general (mjs-leader-def :states '(normal insert)
+      :general (mjs-leader-def :states '(normal insert visual motion)
                  "c"     '(nil :which-key "Consult")
                  "c b"   '("Buffer" . consult-buffer)
                  "c c"   '("Complex Command" . consult-complex-command)
@@ -888,7 +916,7 @@ of =embark-act= is a keyboard-based right-click contextual menu.
 #+BEGIN_SRC emacs-lisp :tangle init.el
   (use-package embark
     :commands embark-act embark-dwim embark-bindings
-    :general (mjs-leader-def :states '(normal insert)
+    :general (mjs-leader-def :states '(normal insert visual motion)
                "E" '(nil :which-key "Embark")
                "E a" '("Embark Act"       . embark-act)
                "E A" '("Embark DWIM"      . embark-dwim)
@@ -955,13 +983,13 @@ but I don't need those yet so I'm choicing to procrastinate.
 #+BEGIN_SRC emacs-lisp :tangle init.el
   (use-package macrostep
     :commands marcostep-expand
-    :general (mjs-leader-def :states '(normal insert)
+    :general (mjs-leader-def :states '(normal insert visual motion)
                :keymaps 'emacs-lisp-mode-map
                "e" '("Expand Macro" . macrostep-expand)))
 
   (use-package elisp-def
     :commands elisp-def
-    :general (mjs-leader-def :states '(normal insert)
+    :general (mjs-leader-def :states '(normal insert visual motion)
                :keymaps 'emacs-lisp-mode-map
                "d" '("Find Definition" . elisp-def)))
 
@@ -1002,20 +1030,21 @@ TODO: Fix the 2 space indentation which is reset when =<tab>= is pressed.
         (if (or remove-all (< pos end-block))
             (org-bable-remove-results)))))
 
+  (mjs-leader-def :states '(normal insert visual motion) :keymaps 'override
+    "a"   '("Agenda" . org-agenda)
+    "A"   '("GTD Agenda" . (lambda () (interactive) (org-agenda nil "g")))
+    "n"   '(nil :which-key "Notes")
+    "n a" '("Agenda" . org-agenda)
+    "n c" '("Capture" . org-capture)
+    "n l" '("Store Link" . org-store-link)
+    "n R" '("Refile DWIM" . mjs/org-refile-dwim)
+    "n s" '("Search Notes" . org-search-view)
+    "n t" '("TODO List" . org-todo-list)
+    "n T" '("Tag View" . org-tags-view))
+
   (use-package org
-    :general (mjs-leader-def :states '(normal insert visual)
-               :keymaps 'org-mode-map
-               "a" '("Agenda" . org-agenda)
-               "A" '("GTD Agenda" . (lambda () (interactive) (org-agenda nil "g")))
-               "n"     '(nil :which-key "Notes")
-               "n a"   '("Agenda" . org-agenda)
-               "n c"   '("Capture" . org-capture)
-               "n l"   '("Store Link" . org-store-link)
-               "n R"   '("Refile DWIM" . mjs/org-refile-dwim)
-               "n s"   '("Search Notes" . org-search-view)
-               "n t"   '("TODO List" . org-todo-list)
-               "n T"   '("Tag View" . org-tags-view))
-             (mjs-local-leader-def :states '(normal insert visual)
+    :general 
+             (mjs-local-leader-def :states '(normal insert visual motion)
                :keymaps 'org-mode-map
                "a"      '("Archive" . org-archive-subtree)
                "A"      '("Attach" . org-attach)
@@ -1685,11 +1714,13 @@ which tells you how to save the capture, normally =C-c C-f=, =C-c C-k= and =C-c 
 (I think). I've changed those to display the =evil= keybidings defined below.
 
 #+begin_src emacs-lisp :tangle init.el
-  (mjs-leader-def :states '(normal insert) :keymaps 'org-capture-mode-map
+  (mjs-leader-def :states '(normal insert visual motion) :keymaps 'org-capture-mode-map
     "C"   '(nil :which-key "Capture")
     "C f" '("Finish Capture" . org-capture-finalize)
     "C k" '("Abort Capture" . org-capture-kill)
     "C r" '("Refile Capture" . org-capture-refile))
+  (mjs-leader-def :states '(normal insert visual motion) 
+    "C" '("Capture" . org-capture))
 
   (defun mjs/org-capture-update-header ()
     (setq header-line-format
@@ -1936,7 +1967,7 @@ investigate when and if it becomes a larger problem.
               (olivetti-lighter " 󰘞")
       :hook org-mode
       :init (diminish 'visual-line-mode)
-      :general (mjs-local-leader-def :states '(normal insert)
+      :general (mjs-local-leader-def :states '(normal insert visual motion)
                  :keymaps 'org-mode-map
                  "o" '("Toggle Olivetti" . olivetti-mode)))
 #+end_src
@@ -2158,7 +2189,7 @@ my Pathfinder game require =vulpea=, an additional library which extends
 
   (use-package org-roam
     :custom (org-roam-directory (file-truename org-directory))
-    :general (mjs-leader-def :states '(normal insert)
+    :general (mjs-leader-def :states '(normal insert visual motion)
                "n r"   '(nil :which-key "Roam")
                "n r b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
                "n r f" '("Find Node" . org-roam-node-find)
@@ -2171,7 +2202,7 @@ my Pathfinder game require =vulpea=, an additional library which extends
                "n r d" '("Daily" . org-roam-dailies-capture-today)
                "n r r" '("Random Node" . org-roam-node-random)
                "i U"   '("Update Roam IDs" . org-roam-update-org-id-locations))
-             (:states 'insert :keymaps 'org-roam-mode-map
+             (:states 'insert :keymaps 'org-mode-map
                       "C-f" #'org-roam-node-insert
                       "C-S-f" #'org-insert-link)
     :hook (org-mode . org-roam-db-autosync-mode))
@@ -2270,7 +2301,7 @@ my Pathfinder game require =vulpea=, an additional library which extends
       )
   ))
 
-  (mjs-leader-def :states '(normal insert) :keymaps 'org-mode-map
+  (mjs-leader-def :states '(normal insert visual motion) :keymaps 'org-mode-map
     "f M" '("Move File & Update Links" . mjs/move-and-update-file-links))
 #+end_src
 
@@ -2283,13 +2314,14 @@ in Obsidian, but since I have the option of using that same feature via
 =org-transclusions=, I might as well use it!
 
 #+begin_src emacs-lisp
-  (use-package org-transclusion
-    :after org
-    :general (mjs-local-leader-def :states 'normal :keymaps 'org-mode-map
-               "u" '(nil :which-key "Transclusions")
-               "u a" '("Add Transclusion" . org-transclusion-add)
-               "u u" '("Activate All Transclusions" . org-transclusion-mode)
-               "u r" '("Remove Transclusion" . org-transclusion-remove))
+    (use-package org-transclusion
+      :after org
+      :general (mjs-local-leader-def :states '(normal visual insert motion)
+                 :keymaps 'org-mode-map
+                 "u" '(nil :which-key "Transclusions")
+                 "u a" '("Add Transclusion" . org-transclusion-add)
+                 "u u" '("Activate All Transclusions" . org-transclusion-mode)
+                 "u r" '("Remove Transclusion" . org-transclusion-remove))
 #+end_src
 
 *** Media Handling
@@ -2299,7 +2331,8 @@ easier.
 
 #+begin_src emacs-lisp :tangle init.el
   (use-package org-cliplink
-    :general (mjs-local-leader-def :states 'normal :keymaps 'org-mode-map
+    :general (mjs-local-leader-def :states '(normal insert visual motion)
+               :keymaps 'org-mode-map
                "l c" '("Paste URL" . mjs/clean-org-cliplink)
                "l C" '("Paste Raw URL" . org-cliplink))
     :init (defun mjs/clean-org-cliplink ()
@@ -2355,7 +2388,7 @@ or to =hugo= markdown to publish on a website.
 #+begin_src emacs-lisp :tangle init.el
   (use-package ox-pandoc
     :after ox
-    :general (mjs-local-leader-def :states '(normal insert)
+    :general (mjs-local-leader-def :states '(normal insert visual motion)
                :keymap 'org-mode-map
                "e" '(nil :which-key "Export")
                "e e" '("Export Dispatcher" . org-export-dispatch) 
@@ -2388,7 +2421,7 @@ or to =hugo= markdown to publish on a website.
 
   (use-package ox-hugo
     :after ox
-    :general (mjs-local-leader-def :states '(normal insert)
+    :general (mjs-local-leader-def :states '(normal insert visual motion)
                :keymaps 'org-mode-map
                "e h" '(nil :which-key "Hugo")
                "e h d" '("DWIM" . org-hugo-export-wim-to-md)
@@ -2404,10 +2437,10 @@ Yes, you can give presentations directly from Emacs using =org-tree-slide=!
   (use-package org-tree-slide
     :commands org-tree-slide-mode
     :diminish " 󰐨"
-    :general (mjs-local-leader-def :states '(normal insert)
+    :general (mjs-local-leader-def :states '(normal insert visual motion)
                :keymaps 'org-mode-map
                       "p" '("Present" . org-tree-slide-mode))
-             (:states '(normal insert) :keymaps 'org-tree-slide-mode-map
+             (:states '(normal insert motion) :keymaps 'org-tree-slide-mode-map
                       "C-<right>" #'org-tree-slide-move-next-tree
                       "C-<left>" #'org-tree-slide-move-previous-tree)
     :custom (org-tree-slide-activate-message " ")

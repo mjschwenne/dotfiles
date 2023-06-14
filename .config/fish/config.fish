@@ -5,7 +5,7 @@ if status is-interactive
 	# alias for dotfile tracking
 	alias config="git --git-dir=$HOME/.dotfiles --work-tree=$HOME"
 	alias vi="nvim"
-	alias mjs-emacs="emacs --with-profile mjs"
+	alias mjs-emacs="emacs --with-profile default"
 	alias doom-emacs="emacs --with-profile doom"
 	alias nano-emacs="emacs --with-profile nano"
 	alias spacemacs="emacs --with-profile spacemacs"
