@@ -62,6 +62,7 @@ lualine.setup({
 		disabled_filetypes = { "dashboard", "NvimTree", "Outline" },
 		always_divide_middle = true,
 	},
+
 	sections = {
 		lualine_a = { diagnostics },
 		lualine_b = { mode },

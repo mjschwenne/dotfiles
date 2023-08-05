@@ -34,7 +34,7 @@ null_ls.setup({
 		formatting.stylua,
 
 		-- markdown
-		diagnostics.write_good,
+		-- diagnostics.write_good,
 
 		-- python
 		formatting.black,

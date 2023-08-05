@@ -84,6 +84,8 @@ bspc rule -a rofi state=floating sticky=on
 bspc rule -a Xfce4-appfinder state=floating sticky=on
 bspc rule -a Xfce4-terminal state=floating
 bspc rule -a biz-papercut-pcng-client-uit-UserClient state=floating
+bspc rule -a thunderbird desktop='8' follow=on
+bspc rule -a thunderbird:Msgcompose state=floating
 
 #Tiled applications
 bspc rule -a Gnome-disks state=tiled
@@ -125,3 +127,4 @@ bspc rule -a Spotify desktop='9' follow=on
 
 #LAUNCHERS
 $HOME/.config/bspwm/autostart.sh
+export BROWSER=librewolf

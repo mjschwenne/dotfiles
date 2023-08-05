@@ -85,6 +85,7 @@ return packer.startup(function(use)
 	-- LSP
 	use("neovim/nvim-lspconfig") -- Enable LSP
 	use("williamboman/mason.nvim") -- language server installer``
+	use("RubixDev/mason-update-all") -- update all LSPs
 	use("williamboman/mason-lspconfig.nvim") -- Brigde between nvim-lspconfig and mason
 	use("jose-elias-alvarez/null-ls.nvim") -- for formatters and linters
 

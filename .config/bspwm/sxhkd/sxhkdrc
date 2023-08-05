@@ -13,7 +13,7 @@ super + F1
 	dolphin
 
 super + F2
-    meld
+    thunar
 
 super + F3
 	flatpak run org.keepassxc.KeePassXC
@@ -30,14 +30,17 @@ super + F6
 super + F7
 	emacs --with-profile mjs
 
-super + F8 
-	emacs --with-profile (printf "mjs\ndoom\nnano\ncrafted\nspacemacs" | rofi -dmenu -p emacs)
+super + F8
+	thunderbird
 
 super + F9
 	dex /usr/share/applications/spotify.desktop
 
 super + F10
 	discord
+
+super + F11
+	emacs --with-profile (printf "mjs\ndoom\nnano\ncrafted\nspacemacs" | rofi -dmenu -p emacs)
 
 super + F12
     pavucontrol
@@ -51,6 +54,9 @@ super + Return
 
 # Browser
 super + b 
+	librewolf
+
+super + shift + b
 	dex ~/.local/share/applications/firefox.desktop
 
 #################################################################

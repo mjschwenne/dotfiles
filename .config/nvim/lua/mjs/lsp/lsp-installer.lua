@@ -4,6 +4,11 @@ if not status_ok then
 	return
 end
 
+local status_ok, mason_update_all = pcall(require, "mason-update-all")
+if not status_ok then 
+	print "Failed to load mason_update_all"
+end
+
 local status_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
 if not status_ok then 
 	print "Failed to load mason-lspconfig bridge..."
@@ -48,3 +53,5 @@ mason_lspconfig.setup_handlers {
     	}
  	 end,
 }
+
+mason_update_all.setup()
