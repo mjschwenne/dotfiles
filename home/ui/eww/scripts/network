@@ -1,0 +1,22 @@
+#!/etc/profiles/per-user/mjs/bin/fish
+
+function get 
+	iwconfig wlp3s0 | jc --iwconfig | jq -c '.[0] | {name: .essid, bit_rate: .bit_rate, bit_rate_unit: .bit_rate_unit, link_quality: .link_quality}'
+end
+
+function get_icon
+	set -f quality (math (echo $(get) | jq -r '.link_quality'))
+	if test $quality -ge 0.8
+		echo '󰤨'
+	else if test $quality -ge 0.6
+		echo '󰤥'
+	else if test $quality -ge 0.4
+		echo '󰤢'
+	else if test $quality -ge 0.2
+		echo '󰤟'
+	else 
+		echo '󰤯'
+	end
+end
+
+echo $(get) | jq -c "{name: .name, bit_rate: .bit_rate, bit_rate_unit: .bit_rate_unit, link_quality: .link_quality, icon: \"$(get_icon)\"}"

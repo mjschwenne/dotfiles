@@ -1,0 +1,10 @@
+(deflisten workspaces `scripts/hyprland.fish workspaces`)
+(deflisten bluetooth `scripts/bluetooth`)
+(deflisten volume `scripts/volumed`)
+(deflisten brightness `scripts/brightnessd`)
+(deflisten notifications `stdbuf -oL swaync-client -s`)
+
+(defpoll network :interval "2s" `scripts/network`)
+(defpoll battery :interval "2s" `scripts/battery`)
+
+(include "./windows/bar.yuck")

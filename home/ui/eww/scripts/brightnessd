@@ -1,0 +1,28 @@
+#!/etc/profiles/per-user/mjs/bin/fish 
+
+function get
+	brightnessctl i intel_backlight | string match -q -r "\((?<current>[0-9]+)%\)"
+
+	# Set icon
+	set -l icons 󰛩 󱩎 󱩏 󱩐 󱩑 󱩒 󱩓 󱩔 󱩕 󱩖 󰛨
+	set -l idx (math "ceil(($current + 1) / 10)")
+
+	echo "{\"icon\":\"$icons[$idx]\",\"percentage\":$current}"
+end
+
+mkfifo brightness.fifo
+get
+while read -t -a args < brightness.fifo
+	switch $args[1] 
+		case up 
+			brightnessctl s 10%+ > /dev/null
+		case down 
+			brightnessctl s 10%- > /dev/null
+		case set 
+			brightnessctl s $args[2]% > /dev/null
+		case exit 
+			break
+	end
+	get
+end
+rm brightness.fifo

@@ -1,0 +1,35 @@
+#! /etc/profiles/per-user/mjs/bin/fish 
+
+set -l bat_json (
+	upower -i /org/freedesktop/UPower/devices/battery_BAT0 |
+	jc --upower
+)
+set -l percentage (echo $bat_json | jq -r '.[0].detail.percentage')
+set -l plugged_in (
+	upower -i /org/freedesktop/UPower/devices/line_power_AC |
+	jc --upower |
+	jq -r '.[0].detail.online'
+)
+
+# set icon and class
+set -l icons 󰂎 󰁺 󰁻 󰁼 󰁽 󰁾 󰁿 󰂀 󰂁 󰂂 󰁹 󰢟 󰢜 󰂆 󰂇 󰂈 󰢝 󰂉 󰢞 󰂊 󰂋 󰂅 
+set -l idx (math "ceil(($percentage + 1) / 10)")
+if test $plugged_in = 'true'
+	set idx (math "$idx+11")
+end
+
+if test $idx -ge 20 
+	set class "battery charging full"
+else if test $idx -ge 15
+	set class "battery charging normal"
+else if test $idx -ge 12
+	set class "battery charging low"
+else if test $idx -ge 9
+	set class "battery full"
+else if test $idx -ge 4
+	set class "battery normal"
+else 
+	set class "battery low"
+end
+
+echo "{\"percentage\":$percentage,\"icon\":\"$icons[$idx]\",\"class\":\"$class\"}"

@@ -1,0 +1,87 @@
+#!/etc/profiles/per-user/mjs/bin/fish
+
+function level 
+	math (wpctl get-volume @DEFAULT_SINK@ | string sub -s 9 -l 4) x 100
+end
+
+function icon 
+	set -f vol $(level)
+	if test $vol -ge 66
+		echo 󰕾
+	else if test $vol -ge 33
+		echo 󰖀
+	else if test $vol -gt 00
+		echo 󰕿
+	else 
+		echo 󰝟
+	end
+end
+
+function lower 
+	wpctl set-volume @DEFAULT_SINK@ 0.05-
+end
+
+function raise
+	wpctl set-volume @DEFAULT_SINK@ 0.05+
+end
+
+function source_icon 
+	set -f sink (pactl get-default-sink)
+	if string match -q "*bluez_output*" $sink 
+		echo 󰥰
+	else 
+		echo 󰋋
+	end
+end
+
+function mute_state
+	if test "$(wpctl get-volume @DEFAULT_SINK@ | string split -f 3 --allow-empty " ")" = "[MUTED]"
+		echo on
+	else 
+		echo off
+	end
+end
+
+function mute_icon 
+	if test (mute_state) = 'off'
+		echo 󰍬
+	else 
+		echo 󰍭
+	end
+end
+
+function mute_toggle
+	wpctl set-mute @DEFAULT_SINK@ toggle 
+end
+
+function set_vol 
+	wpctl set-volume @DEFAULT_SINK@ (math round\($argv[1]\))%
+end
+
+function get 
+	echo "{\"level\":\"$(level)\",\"icon\":\"$(icon)\",\"source_icon\":\"$(source_icon)\",\"mute\":{\"state\":\"$(mute_state)\",\"icon\":\"$(mute_icon)\"}}"
+end
+
+mkfifo volume.fifo
+get
+while read -t -a args < volume.fifo
+	switch $args[1]
+		case up 
+			raise
+			get
+		case down 
+			lower 
+			get 
+		case toggle 
+			mute_toggle 
+			get 
+		case get 
+			get 
+		case set 
+			set_vol $args[2]
+			get
+		case exit
+			break
+	end
+end
+rm volume.fifo

@@ -1,8 +1,0 @@
-(("mjs" . ((user-emacs-directory . "~/.config/emacs-configs/mjs/")))
- ("doom" . ((user-emacs-directory . "~/.config/emacs-configs/doom/")
-			(env . (("DOOMDIR" . "~/.config/emacs-configs/doom-config/")))))
- ("crafted" . ((user-emacs-directory . "~/.config/emacs-configs/crafted/")
-			   (env . (("CRAFTED_EMACS_HOME" . "~/.config/emacs-configs/crafted-config/")))))
- ("nano" . ((user-emacs-directory . "~/.config/emacs-configs/nano-config/")))
- ("spacemacs" . ((user-emacs-directory . "~/.config/emacs-configs/spacemacs/")
-				 (env . (("SPACEMACSDIR" . "~/.config/emacs-configs/spacemacs-config/"))))))

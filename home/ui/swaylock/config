@@ -1,0 +1,55 @@
+# general
+fade-in=0.3
+effect-blur=5x5
+ignore-empty-password
+clock
+timestr=%H:%M
+datestr=%a, %d %B %Y
+daemonize
+image=~/.config/swaylock/swaylock.png
+
+# indicator
+indicator
+indicator-radius=180
+indicator-thickness=15
+indicator-caps-lock
+
+# grace
+grace=3
+grace-no-touch
+
+# colors 
+color=1e1e2e20
+separator-color=00000000
+key-hl-color=fab387
+bs-hl-color=fab387
+
+# text
+font="JetBrainsMono Nerd Font"
+font-size=64
+text-caps-lock-color=f9e2af
+text-clear-color=cdd6f4
+text-color=cdd6f4
+text-ver-color=cdd6f4
+text-wrong-color=f38ba8
+
+# inside
+inside-clear-color=1e1e2e80
+inside-color=1e1e2e80
+inside-ver-color=1e1e2e80
+inside-wrong-color=1e1e2e80
+
+# line
+line-clear-color=11111b
+line-color=11111b
+line-ver-color=11111b
+line-wrong-color=11111b
+line-caps-lock-color=89b4fa
+
+# ring
+ring-clear-color=f9e2af
+ring-color=cdd6f4
+ring-ver-color=a6e3a1
+ring-wrong-color=f38ba8
+ring-caps-lock-color=f9e2af
+
