@@ -1,7 +1,7 @@
 #!/etc/profiles/per-user/mjs/bin/fish
 
 set -l transitions simple fade left right top bottom wipe wave grow center any outer
-set -l wallpapers (ls ~/nixos-config/home/ui/wallpapers/*)
+set -l wallpapers (ls ~/.dotfiles/home/ui/wallpapers/*)
 
 if ! pgrep swww-daemon > /dev/null
 	swww init 
