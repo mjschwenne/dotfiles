@@ -1,9 +1,7 @@
 #+title: DOTFILES
 
-Hello, this repo holds my configurations for my linux laptops! I am currently
-running Arco Linux on my primary laptop and a mircosoft surface. If you are
-looking for my old ubuntu rices, check out the =ubuntu-qtile= branch of this
-repo.
+This is an old setup from when I was running Arco Linux and BSPWM.
+It is preserved for posterity.
 
 [[file:Pictures/screenshots/dotfiles_screenshot.jpg]]
 
