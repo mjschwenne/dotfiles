@@ -1,55 +1,7 @@
 #+title: DOTFILES
 
 Hello, this repo holds my configurations for my linux laptops! I am currently
-running Arco Linux on my primary laptop and a mircosoft surface. If you are
-looking for my old ubuntu rices, check out the =ubuntu-qtile= branch of this
+running NixOS on my two laptops and a mircosoft surface. If you are
+looking for my old ubuntu or arco linux rices, check out the other branchs of this
 repo.
 
-[[file:Pictures/screenshots/dotfiles_screenshot.jpg]]
-
-I am using [[https://github.com/catppuccin/catppuccin][Catppuccin Frappe]] for my primary system-theme.
-
-* Installing this Repository
-
-Use the below commands to close this repo. This whole idea and process was
-inspired by [[https://mjones.network/storing-dotfiles-in-a-git-repo][this]] article.
-
-#+begin_src
-git clone --bare git@github.com:mjschwenne/dotfiles.git $HOME/.dotfiles
-git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout
-git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config status.showUntrackedFiles no
-#+end_src
-
-* Software I Use
-
-|-------------------------+-----------------------------|
-| Software                | Purpose                     |
-|-------------------------+-----------------------------|
-| [[https://fishshell.com/][fish]]                    | Shell                       |
-| [[https://sw.kovidgoyal.net/kitty/][kitty]]                   | Terminal Emulator           |
-| [[https://starship.rs/][starship]]                | Shell Prompt                |
-| [[https://github.com/baskerville/bspwm][bspwm]]                   | Window Manager              |
-| [[https://elkowar.github.io/eww/][eww]]                     | Panel and Widgets           |
-| [[https://github.com/yshui/picom][picom]]                   | Compositor                  |
-| [[https://github.com/sddm/sddm][sddm]]                    | Display Manager             |
-| [[https://neovim.io/][neovim]]                  | Text Editor for Programming |
-| [[https://www.gnu.org/software/emacs/][emacs]]                   | Text Editor for Notes       |
-| [[https://pwmt.org/projects/zathura/][zathura]]                 | PDF Viewer                  |
-| [[https://okular.kde.org/][okular]]                  | PDF Viewer                  |
-| [[https://docs.xfce.org/xfce/thunar/start][thunar]]                  | File Manager                |
-| [[https://apps.kde.org/dolphin/][dolphin]]                 | File Manager                |
-| [[https://ranger.github.io/][ranger]]                  | CLI File Manager            |
-| [[https://dunst-project.org/][dunst]]                   | Notification Client         |
-| [[https://github.com/aristocratos/btop][btop]]                    | System Monitor              |
-| [[https://davatorium.github.io/rofi/][rofi]]                    | Application Launcher        |
-| [[https://github.com/catppuccin/gtk][Catppuccin Frappe]]       | GTK Theme                   |
-| [[https://flameshot.org/][flameshot]]               | Screenshots                 |
-| [[https://betterdiscord.app/][BetterDiscord]]           | Themable discord client     |
-| [[https://spicetify.app/][spicetify]]               | Themable Spotify client     |
-| [[https://www.nerdfonts.com/font-downloads][JetBrainsMono Nerd Font]] | Nerd font                   |
-|-------------------------+-----------------------------|
-
-Most of this software is in the Arco repositories or on the AUR so installation
-should be reasonably easy. I will be converting most of my actual dotfiles into
-=org= documents which will tangle into the actual configuration, which will allow
-me to discuss any tricky or confusing parts of the customization.
