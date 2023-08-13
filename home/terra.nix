@@ -157,7 +157,7 @@
   	# autostarts
     exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 	exec-once = ~/.config/hypr/scripts/autostart.fish &
-	exec-once = swayidle -w timeout 600 'swaylock' before-sleep 'swaylock'
+	exec-once = swayidle -w timeout 300 'swaylock' timeout 600 'systemctl suspend' before-sleep 'swaylock'
 
 	# monitor rules
 	monitor = ,preferred,auto,1
