@@ -173,9 +173,18 @@
 	 # (callPackage ./sddm-themes.nix {}).sddm-sugar
 	 libsForQt5.qt5.qtgraphicaleffects
 
+     # Spellcheck 
 	 enchant
 	 hunspell
 	 hunspellDicts.en_US-large
+
+     # Build utils
+     gnumake 
+     cmake
+
+     # libraries
+     pkg-config
+     fontconfig
   ];
 
   # File manager

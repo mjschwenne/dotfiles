@@ -418,6 +418,7 @@
       icat = ''kitty +kitten icat'';
       ssh = ''kitty +kitten ssh'';
       m = ''math'';
+      nix-shell = ''nix-shell --run fish'';
     };
     functions = {
       mjs_rename = ''

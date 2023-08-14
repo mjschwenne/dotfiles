@@ -3,6 +3,7 @@ $username\
 [](fg:peach bg:green)\
 $directory\
 [](fg:green bg:red)\
+$nix_shell\
 $git_branch\
 [](fg:red bg:sapphire)\
 $c\
@@ -70,6 +71,11 @@ fish_style_pwd_dir_length = 2
 # will not be replaced, because "Documents" was already substituted before.
 # So either put "Important Documents" before "Documents" or use the substituted version:
 # "Important  " = "  "
+
+[nix_shell]
+symbol = "󱄅 "
+style = "bg:red fg:text"
+format = '[ $symbol$state]($style)'
 
 [git_branch]
 symbol = ""
