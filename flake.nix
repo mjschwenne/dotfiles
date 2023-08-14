@@ -32,6 +32,8 @@
 	};
 
 	spicetify-nix.url = "github:the-argus/spicetify-nix";
+
+	nixvim.url = "github:nix-community/nixvim";
   };
 
   # `outputs` are all the build result of the flake.

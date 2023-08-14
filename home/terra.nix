@@ -30,10 +30,10 @@
     userEmail = "mjschwenne@gmail.com";
   };
 
-  home.file.".config/nvim" = {
-    source = ./editors/nvim;
-    recursive = true;
-  };
+  # home.file.".config/nvim" = {
+  #   source = ./editors/nvim;
+  #   recursive = true;
+  # };
 
   home.file.".config/eww" = {
 	  source = ./ui/eww;
@@ -321,6 +321,7 @@
   	./ui
 	./applications
 	./editors/emacs
+	./editors/neovim.nix
   ];
 
   # Packages and fonts that should be installed to the user profile.

@@ -126,6 +126,10 @@
   environment.systemPackages = with pkgs; [
      # compilers 
 	 gcc
+	 rustc
+	 rustfmt
+	 rust-analyzer
+	 cargo
 
      # version control
      git 
