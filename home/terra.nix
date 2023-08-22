@@ -31,11 +31,6 @@
     userEmail = "mjschwenne@gmail.com";
   };
 
-  # home.file.".config/nvim" = {
-  #   source = ./editors/nvim;
-  #   recursive = true;
-  # };
-
   home.file.".config/eww" = {
     source = ./ui/eww;
     recursive = true;
@@ -155,8 +150,8 @@
     env = GTK_THEME,Catppuccin-Mocha-Standard-Pink-dark
     env = BROWSER,librewolf
 
-     	# autostarts
-       exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+    # autostarts
+    exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
     exec-once = ~/.config/hypr/scripts/autostart.fish &
     exec-once = swayidle -w timeout 300 'swaylock' timeout 600 'systemctl suspend' before-sleep 'swaylock'
 
@@ -206,6 +201,7 @@
     windowrule=float,title:^(Write:)(.*)(- Thunderbird)$
     windowrule=workspace 9,Spotify
     windowrule=workspace 10,discord
+    windowrule=float,title:^(Open Files)$
 
     # ANIMATIONS
     bezier=overshot,0.05,0.9,0.1,1.1
@@ -229,6 +225,7 @@
     bind = $mod, F12, exec, pavucontrol
     bind = $mod, RETURN, exec, kitty
     bind = $mod, b, exec, librewolf
+    bind = $mod_SHIFT, b, exec, brave
     bind = $mod, r, exec, rofi -show drun
     bind = $mod, t, exec, swaync-client -t
 
@@ -278,10 +275,7 @@
        # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
        ${
       builtins.concatStringsSep "\n" (builtins.genList (x: let
-        ws = let
-          c = (x + 1) / 10;
-        in
-          builtins.toString (x + 1 - (c * 10));
+        ws = let c = (x + 1) / 10; in builtins.toString (x + 1 - (c * 10));
       in ''
         bind = $mod, ${ws}, exec, ~/.config/hypr/scripts/try_swap_workspace ${
           toString (x + 1)
@@ -339,6 +333,7 @@
     protonmail-bridge
     gimp
     wev
+    slack
 
     # utils
     ripgrep # recursively searches directories for a regex pattern
@@ -387,7 +382,20 @@
     pandoc
     wlr-randr
     kanshi
+    gnome.eog
   ];
+
+  xdg.mimeApps = {
+    enable = true;
+
+    defaultApplications = {
+      "text/html" = "librewolf.desktop";
+      "x-scheme-handler/http" = "librewolf.desktop";
+      "x-scheme-handler/https" = "librewolf.desktop";
+      "x-scheme-handler/about" = "librewolf.desktop";
+      "x-scheme-handler/unknown" = "librewolf.desktop";
+    };
+  };
 
   programs.kitty = {
     enable = true;
@@ -411,53 +419,54 @@
   programs.fish = {
     enable = true;
     shellAliases = {
-      vi = ''nvim'';
-      dup-files = ''find . -type f -printf '%p -> %f\n' | sort -k2 | uniq -f1 --all-repeated=separate'';
-      flatten = ''find */ -type f -exec sh -c 'file=''${1#./}; mv "$file" "$(basename $file)"' _ '{}' \; ; find */ -depth -type d -exec rmdir '{}' \;'';
+      vi = "nvim";
+      dup-files = "find . -type f -printf '%p -> %f\\n' | sort -k2 | uniq -f1 --all-repeated=separate";
+      flatten = ''
+        find */ -type f -exec sh -c 'file=''${1#./}; mv "$file" "$(basename $file)"' _ '{}' \; ; find */ -depth -type d -exec rmdir '{}' \;'';
       mjs_bulk_rename = ''find . -depth -exec fish -c 'mjs_rename "{}"' \;'';
-      icat = ''kitty +kitten icat'';
-      ssh = ''kitty +kitten ssh'';
-      m = ''math'';
-      nix-shell = ''nix-shell --run fish'';
+      icat = "kitty +kitten icat";
+      ssh = "kitty +kitten ssh";
+      m = "math";
+      nix-shell = "nix-shell --run fish";
     };
     functions = {
       mjs_rename = ''
-      for src in $argv 
-          set -l filename (string split -r -m 1 -f 1 '.' (basename $src))
-          set -l extension (string split -r -m 1 -f 2 '.' (basename $src))
-          # Remove '(', ')', '_', ' ' and "'" characters from the file name 
-          # Replace all '.' characters with '-'
-          # Replace camelCase with kebab case
-          # Remove extra consecutive '-' characters
-          # Remove leading '-' 
-          # Remove leading '-' from subsequent parts of the file path
-          # Lowercase any remaining capital letters 
-          # Replace '&' with 'and'
-          set -l dest (echo $filename | sed -E \
-              -e "s/[()_']//g" \
-              -e "s/ [a-z]/\-\l&/g" \
-              -e "s/ //g" \
-              -e "s/[\.,]/\-/g" \
-              -e "s/([a-z])([A-Z]+)/\1\-\L\2/g" \
-              -e "s/\-\-+/\-/g" \
-              -e "s/^\-//g" \
-              -e "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/" \
-              -e "s/&/and/g"
-          )
+        for src in $argv
+            set -l filename (string split -r -m 1 -f 1 '.' (basename $src))
+            set -l extension (string split -r -m 1 -f 2 '.' (basename $src))
+            # Remove '(', ')', '_', ' ' and "'" characters from the file name
+            # Replace all '.' characters with '-'
+            # Replace camelCase with kebab case
+            # Remove extra consecutive '-' characters
+            # Remove leading '-'
+            # Remove leading '-' from subsequent parts of the file path
+            # Lowercase any remaining capital letters
+            # Replace '&' with 'and'
+            set -l dest (echo $filename | sed -E \
+                -e "s/[()_']//g" \
+                -e "s/ [a-z]/\-\l&/g" \
+                -e "s/ //g" \
+                -e "s/[\.,]/\-/g" \
+                -e "s/([a-z])([A-Z]+)/\1\-\L\2/g" \
+                -e "s/\-\-+/\-/g" \
+                -e "s/^\-//g" \
+                -e "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/" \
+                -e "s/&/and/g"
+            )
 
-          if test -n $dest
-              set dest (string join ''' (dirname $src) '/' $dest)
-              if test -n $extension
-                  set dest (string join '.' $dest $extension)
-              end
-              
-              if test $src != $dest 
-                  mv -n $src $dest 2>&1 > /dev/null
-              end 
-          end
-      end
+            if test -n $dest
+                set dest (string join ''' (dirname $src) '/' $dest)
+                if test -n $extension
+                    set dest (string join '.' $dest $extension)
+                end
+
+                if test $src != $dest
+                    mv -n $src $dest 2>&1 > /dev/null
+                end
+            end
+        end
       '';
-      fish_greeting = ''pfetch'';
+      fish_greeting = "pfetch";
     };
   };
 
@@ -488,6 +497,7 @@
       package = pkgs.catppuccin-cursors.mochaLight;
     };
     gtk3.extraConfig = { gtk-decoration-layout = "appmenu:none"; };
+    gtk4.extraConfig = { gtk-decoration-layout = "appmenu:none"; };
   };
   home.pointerCursor = {
     package = pkgs.catppuccin-cursors.mochaLight;
