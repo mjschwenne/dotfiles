@@ -10,9 +10,9 @@ function get
 	echo "{\"icon\":\"$icons[$idx]\",\"percentage\":$current}"
 end
 
-mkfifo brightness.fifo
+mkfifo /tmp/brightness.fifo
 get
-while read -t -a args < brightness.fifo
+while read -t -a args < /tmp/brightness.fifo
 	switch $args[1] 
 		case up 
 			brightnessctl s 10%+ > /dev/null
@@ -25,4 +25,4 @@ while read -t -a args < brightness.fifo
 	end
 	get
 end
-rm brightness.fifo
+rm /tmp/brightness.fifo

@@ -36,6 +36,8 @@
     nixvim.url = "github:nix-community/nixvim";
 
     foundry.url = "github:reckenrode/nix-foundryvtt/6c52bfc6824a3dba673df4894a71193ec32aa399";
+
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   # `outputs` are all the build result of the flake.
@@ -115,6 +117,28 @@
 
               home-manager.users.mjs = import ./home/sol.nix;
               home-manager.extraSpecialArgs = inputs;
+            }
+          ];
+        };
+
+        "luna" = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+
+          specialArgs = inputs;
+          modules = [
+            inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
+            inputs.sddm-sugar-candy-nix.nixosModules.default
+            ./system/luna.nix
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+
+              home-manager.users.mjs = import ./home/luna.nix;
+              home-manager.extraSpecialArgs = inputs;
+
+              nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];
             }
           ];
         };

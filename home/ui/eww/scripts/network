@@ -1,7 +1,13 @@
 #!/etc/profiles/per-user/mjs/bin/fish
 
+if test $hostname = terra
+	set net_ad wlp3s0 
+else 
+	set net_ad wlp1s0
+end
+
 function get 
-	iwconfig wlp3s0 | jc --iwconfig | jq -c '.[0] | {name: .essid, bit_rate: .bit_rate, bit_rate_unit: .bit_rate_unit, link_quality: .link_quality}'
+	iwconfig $net_ad | jc --iwconfig | jq -c '.[0] | {name: .essid, bit_rate: .bit_rate, bit_rate_unit: .bit_rate_unit, link_quality: .link_quality}'
 end
 
 function get_icon

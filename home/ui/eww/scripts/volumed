@@ -62,9 +62,9 @@ function get
 	echo "{\"level\":\"$(level)\",\"icon\":\"$(icon)\",\"source_icon\":\"$(source_icon)\",\"mute\":{\"state\":\"$(mute_state)\",\"icon\":\"$(mute_icon)\"}}"
 end
 
-mkfifo volume.fifo
+mkfifo /tmp/volume.fifo
 get
-while read -t -a args < volume.fifo
+while read -t -a args < /tmp/volume.fifo
 	switch $args[1]
 		case up 
 			raise
@@ -84,4 +84,4 @@ while read -t -a args < volume.fifo
 			break
 	end
 end
-rm volume.fifo
+rm /tmp/volume.fifo

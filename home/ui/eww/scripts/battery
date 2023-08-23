@@ -1,12 +1,24 @@
 #! /etc/profiles/per-user/mjs/bin/fish 
 
+if test $hostname = terra
+	set bat "/org/freedesktop/UPower/devices/battery_BAT0"
+else 
+	set bat "/org/freedesktop/UPower/devices/battery_BAT1"
+end
+
+if test $hostname = terra
+	set ac "/org/freedesktop/UPower/devices/line_power_AC"
+else 
+	set ac "/org/freedesktop/UPower/devices/line_power_ADP1"
+end
+
 set -l bat_json (
-	upower -i /org/freedesktop/UPower/devices/battery_BAT0 |
+	upower -i $bat |
 	jc --upower
 )
 set -l percentage (echo $bat_json | jq -r '.[0].detail.percentage')
 set -l plugged_in (
-	upower -i /org/freedesktop/UPower/devices/line_power_AC |
+	upower -i $ac |
 	jc --upower |
 	jq -r '.[0].detail.online'
 )

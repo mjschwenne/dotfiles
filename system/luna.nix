@@ -1,31 +1,27 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# and in the NixOS manual (accessible by running `nixos-help`).
 
 { config, pkgs, lib, ... }@inputs:
 
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./terra-hardware.nix
+      ./luna-hardware.nix
     ];
 
-  # Bootloader.
+  # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.extraModulePackages = with config.boot.kernelPackages; [
-  	v4l2loopback
-  ];
 
-  networking.hostName = "terra"; # Define your hostname.
+  networking.hostName = "luna"; # Define your hostname.
+  # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -72,10 +68,13 @@
   users.users.mjs = {
     isNormalUser = true;
     description = "Matt Schwennesen";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "surface-control"];
 	shell = pkgs.fish;
   };
+
   security.pam.services.swaylock = {};
+
+  microsoft-surface.surface-control.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -97,28 +96,6 @@
   services.xserver = {
     layout = "us";
     xkbVariant = "";
-  };
-
-  # Setup SDDM display manager
-  services.xserver.displayManager.sddm.sugarCandyNix = {
-	  enable = true;
-
-	  settings = {
-		ScreenWidth = 1920;
-		ScreenHeight = 1080;
-		Background = lib.cleanSource ./sddm.png;
-		PartialBlur = true;
-		FormPosition = "left";
-		Font = "JetBrainsMono Nerd Font";
-		ForceHideCompletePassword = true;
-		DateFormat = "dddd, dd MMMM yyyy";
-	  };
-  };
-
-  # Install hyprland wayland compositor
-  programs.hyprland = {
-    enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
   };
 
   # List packages installed in system profile. To search, run:
@@ -186,6 +163,28 @@
      fontconfig
   ];
 
+  # Setup SDDM display manager
+  services.xserver.displayManager.sddm.sugarCandyNix = {
+	  enable = true;
+
+	  settings = {
+		ScreenWidth = 1920;
+		ScreenHeight = 1080;
+		Background = lib.cleanSource ./sddm.png;
+		PartialBlur = true;
+		FormPosition = "left";
+		Font = "JetBrainsMono Nerd Font";
+		ForceHideCompletePassword = true;
+		DateFormat = "dddd, dd MMMM yyyy";
+	  };
+  };
+
+  # Install hyprland wayland compositor
+  programs.hyprland = {
+    enable = true;
+    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+  };
+
   # File manager
   services.gvfs.enable = true;
   services.tumbler.enable = true;
@@ -222,8 +221,6 @@
 	pinentryFlavor = "gnome3";
   };
 
-  # List services that you want to enable:
-
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
@@ -233,11 +230,18 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
+  # Copy the NixOS configuration file and link it from the resulting system
+  # (/run/current-system/configuration.nix). This is useful in case you
+  # accidentally delete configuration.nix.
+  # system.copySystemConfiguration = true;
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system. Before changing this value read the documentation for this option
+  # on your system were taken. It's perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
 
 }
+
