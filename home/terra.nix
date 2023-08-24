@@ -334,6 +334,7 @@
     gimp
     wev
     slack
+    globalprotect-openconnect
 
     # utils
     ripgrep # recursively searches directories for a regex pattern

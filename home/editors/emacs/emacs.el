@@ -1510,7 +1510,7 @@ If on a:
 
 (defun mjs/class-capture ()
   (let* ((class (completing-read "Class: "
-                                 '("cs5311" "cs3411" "cs1121")
+                                 '("cs220" "cs719" "cs760" "cs900")
                                  nil t))
          (file-name (expand-file-name
                      (concat "classes/" class "/"
