@@ -227,11 +227,15 @@
   services.syncthing = {
     enable = true;
     user = "mjs";
-    dataDir = "/home/mjs/syncthing";
+    configDir = "/home/mjs/.syncthing";
 
     settings = {
+      options.globalAnnounceServer = [ "https://discovery.schwennesen.org" ];
+
       devices = {
-        "sol" = { id = ""; };
+        "sol" = {
+          id = "73R7LD7-CE75DOS-QYCX3IN-7MYT33V-W65EKXH-L5Y2HIU-UGUPESG-KZEUYAF";
+        };
         "luna" = {
           id = "43RQHNP-QWSOVCU-32G6M5U-4TSIRY6-Y26QJBR-FT4DNK3-QRIJEAC-TIXHGA4";
         };

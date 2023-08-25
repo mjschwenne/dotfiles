@@ -23,7 +23,7 @@
       #     src = ./emacs.el;
       #     inherit (config.xdg) configHome dataHome;
       #   };
-	  defaultInitFile = true;
+	  defaultInitFile = false;
 
       # Package is optional, defaults to pkgs.emacs
       package = pkgs.emacs-unstable-pgtk;
@@ -60,4 +60,8 @@
       # };
     })
   ];
+
+  home.file.".emacs.d/init.el" = {
+    source = ./emacs.el;
+  };
 }

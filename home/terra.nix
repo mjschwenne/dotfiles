@@ -386,6 +386,7 @@
     gnome.eog
   ];
 
+  xdg.configFile."mimeapps.list".force = true;
   xdg.mimeApps = {
     enable = true;
 
@@ -395,6 +396,10 @@
       "x-scheme-handler/https" = "librewolf.desktop";
       "x-scheme-handler/about" = "librewolf.desktop";
       "x-scheme-handler/unknown" = "librewolf.desktop";
+
+      "image/png" = "org.gnome.eog.desktop";
+      "image/jpeg" = "org.gnome.eog.desktop";
+      "image/jpg" = "org.gnome.eog.desktop";
     };
   };
 

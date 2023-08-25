@@ -746,7 +746,7 @@ a prefix argument."
 		  (savehist-mode)
     ;; Tidy shadowed file names
     :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
-    :general (:keymaps 'vertico-map
+    :general (:keymaps 'vertico-map :states '(normal insert visual motion)
                        "M-RET" #'vertico-exit-input
                        "C-k"   #'vertico-next
                        "C-M-k" #'vertico-next-group
@@ -766,9 +766,23 @@ a prefix argument."
 			 :ensure nil)
 
 (use-package vertico-reverse
-			 :after vertico 
-			 :ensure nil 
-			 :init (vertico-reverse-mode))
+  :after vertico 
+  :ensure nil 
+  :init (vertico-reverse-mode)
+  :general (:keymaps 'vertico-map :states '(normal insert visual motion)
+                     "M-RET" #'vertico-exit-input
+                     "C-k"   #'vertico-next
+                     "C-M-k" #'vertico-next-group
+                     "C-j"   #'vertico-previous
+                     "C-M-j" #'vertico-previous-group
+                     "M-TAB" #'minibuffer-complete
+                     ;; More convenient directory navigation commands
+                     "RET" #'vertico-directory-enter
+                     "DEL" #'vertico-directory-delete-char
+                     "M-DEL" #'vertico-directory-delete-word
+                     "?"     #'minibuffer-completion-help
+                     ;;
+                     "ESC" #'keyboard-escape-quit))
 
 (use-package marginalia
     :general (:keymaps 'minibuffer-local-map
