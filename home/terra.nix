@@ -353,6 +353,7 @@
     wlsunset # day/night color adjustments
     networkmanagerapplet
     pulseaudio
+    ledger
 
     # misc
     cowsay

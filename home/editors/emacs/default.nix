@@ -1,4 +1,4 @@
-{ config, pkgs, callPackage, builtins, ... }@inputs:
+{ config, pkgs, builtins, ... }@inputs:
 
 {
 
@@ -46,18 +46,17 @@
       # which defaults `:tangle` to `yes`.
       alwaysTangle = true;
 
+      override = epkgs: epkgs // {
+        org-timeblock = pkgs.callPackage ./org-timeblock.nix {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) trivialBuild org-ql persist;
+        };
+      };
+
       # Optionally provide extra packages not in the configuration file.
       extraEmacsPackages = epkgs: [
-        epkgs.which-key
-		epkgs.general
+        epkgs.org-timeblock
       ];
-
-      # Optionally override derivations.
-      # override = final: prev: {
-      #   weechat = prev.melpaPackages.weechat.overrideAttrs(old: {
-      #     patches = [ ./weechat-el.patch ];
-      #   });
-      # };
     })
   ];
 

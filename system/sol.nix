@@ -174,6 +174,10 @@
           path = "/home/mjs/kdb";
           devices = [ "terra" "luna" "phone" ];
         };
+        "agenda" = {
+          path = "/home/mjs/Documents/agenda";
+          devices = [ "phone" ];
+        };
       };
     };
   };
