@@ -11,7 +11,6 @@
     # Include the results of the hardware scan.
     ./sol-hardware.nix
     foundry.nixosModules.foundryvtt
-    ./nextcloud.nix
   ];
 
   # Bootloader.
