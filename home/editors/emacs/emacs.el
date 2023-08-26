@@ -725,41 +725,41 @@ a prefix argument."
                            "h q" '("Kill Help Buffers" . helpful-kill-buffers)))
 
 (use-package vertico
-    :custom (vertico-resize t)
-            (vertico-cycle t)
-            (enable-recursive-minibuffers t)
-    :init (defun crm-indicator (args)
-            (cons (format "[CRM%s] %s"
-                          (replace-regexp-in-string
-                           "\\`\\[.*?\\*\\|\\[.*?]\\*\\'" ""
-                           crm-separator)
-                          (car args))
-                  (cdr args)))
-          (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-          (setq minibuffer-prompt-properties
-                '(read-only t cursor-intangible f face minibuffer-prompt))
-          (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-          ;; While my understanding is that this should go in the :config
-          ;; section, it doesn't seem to actually cause the mode to be
-          ;; properly enabled when called from that section for some reason.
-          (vertico-mode)
-		  (savehist-mode)
-    ;; Tidy shadowed file names
-    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
-    :general (:keymaps 'vertico-map :states '(normal insert visual motion)
-                       "S-RET" #'vertico-exit-input
-                       "C-k"   #'vertico-next
-                       "C-S-k" #'vertico-next-group
-                       "C-j"   #'vertico-previous
-                       "C-S-j" #'vertico-previous-group
-                       "S-TAB" #'minibuffer-complete
-                       ;; More convenient directory navigation commands
-                       "RET" #'vertico-directory-enter
-                       "DEL" #'vertico-directory-delete-char
-                       "S-DEL" #'vertico-directory-delete-word
-                       "?"     #'minibuffer-completion-help
-                       ;;
-                       "ESC" #'keyboard-escape-quit))
+  :custom (vertico-resize t)
+  (vertico-cycle t)
+  (enable-recursive-minibuffers t)
+  :init (defun crm-indicator (args)
+          (cons (format "[CRM%s] %s"
+                        (replace-regexp-in-string
+                         "\\`\\[.*?\\*\\|\\[.*?]\\*\\'" ""
+                         crm-separator)
+                        (car args))
+                (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible f face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  ;; While my understanding is that this should go in the :config
+  ;; section, it doesn't seem to actually cause the mode to be
+  ;; properly enabled when called from that section for some reason.
+  (vertico-mode)
+  (savehist-mode)
+  (general-define-key :keymaps 'vertico-map
+		"S-RET" #'vertico-exit-input
+		"C-k"   #'vertico-next
+		"C-S-k" #'vertico-next-group
+		"C-j"   #'vertico-previous
+		"C-S-j" #'vertico-previous-group
+		"S-TAB" #'minibuffer-complete
+		;; More convenient directory navigation commands
+		"RET" #'vertico-directory-enter
+		"DEL" #'vertico-directory-delete-char
+		"S-DEL" #'vertico-directory-delete-word
+		"?"     #'minibuffer-completion-help
+		;;
+		"ESC" #'keyboard-escape-quit)
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 (use-package vertico-directory 
 			 :after vertico 
@@ -2077,4 +2077,4 @@ With a prefix ARG, remove start location."
 
 (require 'org-timeblock)
 (mjs-leader-def :states '(normal insert visual motion)
-				"B" '("Time Blocks" . org-timeblock))
+  "B" '("Time Blocks" . org-timeblock))
