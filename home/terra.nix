@@ -313,7 +313,8 @@
     bindm = $mod, mouse:273, resizewindow
   '';
 
-  imports = [ ./ui ./applications ./editors/emacs ./editors/neovim.nix ];
+  imports = [ ./ui ./applications ./applications/wonderdraft ./applications/dungeondraft ./editors/emacs ./editors/neovim.nix ];
+
 
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
@@ -361,6 +362,9 @@
     # productivity
     hugo # static site generator
     glow # markdown previewer in terminal
+    (texlive.combine {
+      inherit (texlive) scheme-medium wrapfig capt-of sfmath;
+    })
 
     btop # replacement of htop/nmon
     iotop # io monitoring
@@ -415,6 +419,8 @@
       share_connections = "no";
     };
   };
+
+  programs.nix-index.enable = true;
 
   # starship - an customizable prompt for any shell
   programs.starship = { enable = true; };
