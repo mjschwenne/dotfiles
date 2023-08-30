@@ -202,6 +202,8 @@
     windowrule=workspace 9,Spotify
     windowrule=workspace 10,discord
     windowrule=float,title:^(Open Files)$
+    windowrule=float,title:^(Compact folders)$
+    windowrule=float,title:^(KeePassXC - Browser Access Request)$
 
     # ANIMATIONS
     bezier=overshot,0.05,0.9,0.1,1.1
