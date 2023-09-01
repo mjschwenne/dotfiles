@@ -313,7 +313,8 @@
     bindm = $mod, mouse:273, resizewindow
   '';
 
-  imports = [ ./ui ./applications ./editors/emacs ./editors/neovim.nix ];
+  imports = [ ./ui ./applications ./applications/wonderdraft ./applications/dungeondraft ./editors/emacs ./editors/neovim.nix ];
+
 
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
@@ -334,6 +335,7 @@
     gimp
     wev
     slack
+    globalprotect-openconnect
 
     # utils
     ripgrep # recursively searches directories for a regex pattern
@@ -352,6 +354,7 @@
     wlsunset # day/night color adjustments
     networkmanagerapplet
     pulseaudio
+    ledger
 
     # misc
     cowsay
@@ -359,6 +362,9 @@
     # productivity
     hugo # static site generator
     glow # markdown previewer in terminal
+    (texlive.combine {
+      inherit (texlive) scheme-medium wrapfig capt-of sfmath;
+    })
 
     btop # replacement of htop/nmon
     iotop # io monitoring
@@ -385,6 +391,7 @@
     gnome.eog
   ];
 
+  xdg.configFile."mimeapps.list".force = true;
   xdg.mimeApps = {
     enable = true;
 
@@ -394,6 +401,10 @@
       "x-scheme-handler/https" = "librewolf.desktop";
       "x-scheme-handler/about" = "librewolf.desktop";
       "x-scheme-handler/unknown" = "librewolf.desktop";
+
+      "image/png" = "org.gnome.eog.desktop";
+      "image/jpeg" = "org.gnome.eog.desktop";
+      "image/jpg" = "org.gnome.eog.desktop";
     };
   };
 
@@ -408,6 +419,8 @@
       share_connections = "no";
     };
   };
+
+  programs.nix-index.enable = true;
 
   # starship - an customizable prompt for any shell
   programs.starship = { enable = true; };

@@ -725,50 +725,50 @@ a prefix argument."
                            "h q" '("Kill Help Buffers" . helpful-kill-buffers)))
 
 (use-package vertico
-    :custom (vertico-resize t)
-            (vertico-cycle t)
-            (enable-recursive-minibuffers t)
-    :init (defun crm-indicator (args)
-            (cons (format "[CRM%s] %s"
-                          (replace-regexp-in-string
-                           "\\`\\[.*?\\*\\|\\[.*?]\\*\\'" ""
-                           crm-separator)
-                          (car args))
-                  (cdr args)))
-          (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-          (setq minibuffer-prompt-properties
-                '(read-only t cursor-intangible f face minibuffer-prompt))
-          (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-          ;; While my understanding is that this should go in the :config
-          ;; section, it doesn't seem to actually cause the mode to be
-          ;; properly enabled when called from that section for some reason.
-          (vertico-mode)
-		  (savehist-mode)
-    ;; Tidy shadowed file names
-    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
-    :general (:keymaps 'vertico-map
-                       "M-RET" #'vertico-exit-input
-                       "C-k"   #'vertico-next
-                       "C-M-k" #'vertico-next-group
-                       "C-j"   #'vertico-previous
-                       "C-M-j" #'vertico-previous-group
-                       "M-TAB" #'minibuffer-complete
-                       ;; More convenient directory navigation commands
-                       "RET" #'vertico-directory-enter
-                       "DEL" #'vertico-directory-delete-char
-                       "M-DEL" #'vertico-directory-delete-word
-                       "?"     #'minibuffer-completion-help
-                       ;;
-                       "ESC" #'keyboard-escape-quit))
+  :custom (vertico-resize t)
+  (vertico-cycle t)
+  (enable-recursive-minibuffers t)
+  :init (defun crm-indicator (args)
+          (cons (format "[CRM%s] %s"
+                        (replace-regexp-in-string
+                         "\\`\\[.*?\\*\\|\\[.*?]\\*\\'" ""
+                         crm-separator)
+                        (car args))
+                (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible f face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  ;; While my understanding is that this should go in the :config
+  ;; section, it doesn't seem to actually cause the mode to be
+  ;; properly enabled when called from that section for some reason.
+  (vertico-mode)
+  (savehist-mode)
+  (general-define-key :keymaps 'vertico-map
+		"S-RET" #'vertico-exit-input
+		"C-k"   #'vertico-next
+		"C-S-k" #'vertico-next-group
+		"C-j"   #'vertico-previous
+		"C-S-j" #'vertico-previous-group
+		"S-TAB" #'minibuffer-complete
+		;; More convenient directory navigation commands
+		"RET" #'vertico-directory-enter
+		"DEL" #'vertico-directory-delete-char
+		"S-DEL" #'vertico-directory-delete-word
+		"?"     #'minibuffer-completion-help
+		;;
+		"ESC" #'keyboard-escape-quit)
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 (use-package vertico-directory 
 			 :after vertico 
 			 :ensure nil)
 
 (use-package vertico-reverse
-			 :after vertico 
-			 :ensure nil 
-			 :init (vertico-reverse-mode))
+  :after vertico 
+  :ensure nil 
+  :init (vertico-reverse-mode))
 
 (use-package marginalia
     :general (:keymaps 'minibuffer-local-map
@@ -1510,7 +1510,7 @@ If on a:
 
 (defun mjs/class-capture ()
   (let* ((class (completing-read "Class: "
-                                 '("cs5311" "cs3411" "cs1121")
+                                 '("cs220" "cs719" "cs760" "cs900")
                                  nil t))
          (file-name (expand-file-name
                      (concat "classes/" class "/"
@@ -2067,3 +2067,14 @@ With a prefix ARG, remove start location."
           (add-hook 'org-tree-slide-stop-hook
                     (lambda ()
                       (text-scale-mode -1))))
+
+(use-package ledger-mode
+  :custom (ledger-clear-whole-transactions 1)
+  (ledger-mode-should-check-version nil))
+
+(use-package evil-ledger
+  :hook (ledger-mode . evil-ledger-mode))
+
+(require 'org-timeblock)
+(mjs-leader-def :states '(normal insert visual motion)
+  "B" '("Time Blocks" . org-timeblock))
