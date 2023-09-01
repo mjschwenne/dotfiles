@@ -380,6 +380,7 @@
     pandoc
     wlr-randr
     kanshi
+    meld
   ];
 
   xdg.mimeApps = {

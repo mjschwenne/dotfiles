@@ -66,6 +66,7 @@
           (evil-want-integration t)
           (evil-cross-lines t)
           (evil-echo-state nil)
+          (evil-undo-system 'undo-redo)
   :init (evil-mode 1)
   :config (evil-set-initial-state 'org-agenda-mode 'normal))
 
@@ -562,9 +563,9 @@ a prefix argument."
 (when window-system (global-hl-line-mode 1))
 
 (use-package catppuccin-theme
-			 :defer nil
-			 :custom (catppuccin-flavor 'mocha)
-			 :config (load-theme 'catppuccin t))
+  :defer nil
+  :custom (catppuccin-flavor 'mocha)
+  :config (load-theme 'catppuccin t))
 
 (use-package telephone-line
   :init (telephone-line-defsegment* mjs/popup-segment ()
@@ -579,18 +580,15 @@ a prefix argument."
               (if read-only
                   (propertize "󱙃 "
                     'face `(:inherit mode-line-emphasis
-                            :foreground ,(alist-get
-                                          'yellow catppuccin-mocha-colors)))
+                            :foreground ,(catppuccin-get-color 'yellow)))
                 (if modifed
                     (propertize "󰆓 "
                       'face `(:inherit mode-line-emphasis
-                              :foreground ,(alist-get
-                                            'red catppuccin-mocha-colors)))
-                  (propertize "󱣪 "
-                    'face `(:inherit mode-line-emphasis
-                            :foreground ,(alist-get
-                                          'green catppuccin-mocha-colors)))))
-              (propertize (buffer-name) 'face 'mode-line-emphasis))))
+                              :foreground ,(catppuccin-get-color 'red)))
+                    (propertize "󰆓 "
+                      'face `(:inherit mode-line-emphasis
+                              :foreground ,(catppuccin-get-color 'green)))))
+                (propertize (buffer-name) 'face 'mode-line-emphasis))))
         (telephone-line-mode +1)
   :custom telephone-line-lhs
           '((evil . (telephone-line-evil-tag-segment))
@@ -604,27 +602,27 @@ a prefix argument."
             (evil . (telephone-line-airline-position-segment)))
   :config
     (set-face-foreground 'telephone-line-evil
-                         (alist-get 'base catppuccin-mocha-colors))
+                         (catppuccin-get-color 'base))
     (set-face-background 'telephone-line-evil-normal
-                         (alist-get 'blue catppuccin-mocha-colors))
+                         (catppuccin-get-color 'blue))
     (set-face-background 'telephone-line-evil-insert
-                         (alist-get 'green catppuccin-mocha-colors))
+                         (catppuccin-get-color 'green))
     (set-face-background 'telephone-line-evil-visual
-                         (alist-get 'mauve catppuccin-mocha-colors))
+                         (catppuccin-get-color 'mauve))
     (set-face-background 'telephone-line-evil-emacs
-                         (alist-get 'red catppuccin-mocha-colors))
+                         (catppuccin-get-color 'red))
     (set-face-background 'telephone-line-evil-operator
-                         (alist-get 'peach catppuccin-mocha-colors))
+                         (catppuccin-get-color 'peach))
     (set-face-background 'telephone-line-evil-motion
-                         (alist-get 'pink catppuccin-mocha-colors))
+                         (catppuccin-get-color 'pink))
     (set-face-attribute 'telephone-line-accent-active t
                         :foreground
-                          (alist-get 'text catppuccin-mocha-colors)
+                          (catppuccin-get-color 'text)
                         :background
-                          (alist-get 'surface1 catppuccin-mocha-colors))
+                          (catppuccin-get-color 'surface1))
     (set-face-attribute 'mode-line t
-                        :foreground (alist-get 'text catppuccin-mocha-colors)
-                        :background (alist-get 'base catppuccin-mocha-colors))
+                        :foreground (catppuccin-get-color 'text)
+                        :background (catppuccin-get-color 'base))
     )
 
 (setq display-line-numbers-type 'relative
@@ -766,9 +764,9 @@ a prefix argument."
 			 :ensure nil)
 
 (use-package vertico-reverse
-  :after vertico 
-  :ensure nil 
-  :init (vertico-reverse-mode))
+			 :after vertico 
+			 :ensure nil 
+			 :init (vertico-reverse-mode))
 
 (use-package marginalia
     :general (:keymaps 'minibuffer-local-map
@@ -872,7 +870,10 @@ a prefix argument."
 (global-prettify-symbols-mode +1)
 
 (use-package lispy
-  :hook (emacs-lisp-mode . lispy-mode))
+  :hook (emacs-lisp-mode . lispy-mode)
+  :diminish "'󰅲")
+
+(diminish 'eldoc-mode)
 
 (use-package macrostep
   :commands marcostep-expand
@@ -915,103 +916,107 @@ a prefix argument."
 
 (use-package org
   :init (mjs-local-leader-def :states '(normal insert visual motion)
-             :keymaps 'org-mode-map
-             "a"      '("Archive" . org-archive-subtree)
-             "A"      '("Attach" . org-attach)
-             "b"      '(nil :which-key "Tables")
-             "b a"    '("Align" . org-table-align)
-             "b b"    '("Blank" . org-table-blank-field)
-             "b c"    '("Convert to Table" . org-table-create-or-convert-from-region)
-             "b d"    '(nil :which-key "Delete")
-             "b d c"  '("Delete Column" . org-table-delete-column)
-             "b d r"  '("Delere Row" . org-table-kill-row)
-             "b e"    '("Edit" . org-table-edit-field)
-             "b f"    '("Edit Formulas" . org-table-edit-formulas)
-             "b h"    '("Help" . org-table-field-info)
-             "b i"    '(nil :which-key "Insert")
-             "b i c"  '("Insert Column" . org-table-insert-column)
-             "b i r"  '("Insert Row" . org-table-insert-row)
-             "b i h"  '("Insert Hline" . org-table-insert-hline)
-             "b i H"  '("Insert Hline & Move" . org-table-hline-and-move)
-             "b s"    '("Sort Rows" . org-table-sort-lines)
-             "b r"    '("Recalculate Formulas" . org-table-recalculate)
-             "b R"    '("Recalculate All Tables" . org-table-recalculate-buffer-tables)
-             "b t"    '("Toggle Table.el" . org-table-create-with-table.el)
-             "b -"    '("Insert Hline" . org-table-insert-hline)
-             "B"      '(nil :which-key "Babel")
-             "B t"    '("Tangle" . org-babel-tangle)
-             "B e"    '("Execute Block" . org-babel-execute-src-block)
-             "B E"    '("Execute Buffer" . org-babel-execute-buffer)
-             "B h"    '("Hide Result" . org-babel-hide-result-toggle)
-             "B H"    '("Hide All Results" . org-babel-result-hide-all)
-             "B k"    '("Remove Result" . org-babel-remove-result)
-             "B K"    '("Remove All Results" . mjs/org-babel-remove-result-blocks)
-             "B n"    '("Next Src Block" . org-babel-next-src-block)
-             "B p"    '("Pervious Src Block" . org-babel-previous-src-block)
-             "c"      '(nil :which-key "Clock")
-             "c e"    '("Set Effort" . org-set-effort)
-             "c E"    '("Increase Effort" . org-inc-effort)
-             "c i"    '("Clock-in" . org-clock-in)
-             "c o"    '("Clock-out" . org-clock-out)
-             "c g"    '("Goto Current Clock" . org-clock-goto)
-             "c c"    '("Cancel Clock" . org-clock-cancel)
-             "c r"    '("Report" . org-clock-report)
-             "C"      '("Capture" . org-capture)
-             "d"      '(nil :which-key "Date")
-             "d d"    '("Deadline" . org-deadline)
-             "d s"    '("Schedule" . org-schedule)
-             "d t"    '("Time Stamp" . org-time-stamp)
-             "d T"    '("Inactive Time Stamp" . org-time-stamp-inactive)
-             "f"      '(nil :whick-key "File Links")
-             "f m"    '("Move File" . mjs/move-and-update-file-links)
-             "f d"    '("Move Directory" . mjs/move-dir-update-link-links)
-             "f r"    '("Regenerate Links" . mjs/regenerate-file-links)
-             "f R"    '("Regenerate Links Globally" . mjs/regenerate-file-links-globally)
-             "h"      '("Toggle Heading" . org-toggle-heading)
-             "i"      '(nil :which-key "ID")
-             "i c"    '("Copy ID" . org-id-copy)
-             "i i"    '("Create ID" . org-id-get-create)
-             "i g"    '("Goto ID" . org-id-goto)
-             "i u"    '("Update IDs" . org-id-update-id-locations)
-             "I"      '("Create ID" . org-id-get-create)
-             "l"      '(nil :which-key "Links")
-             "l i"    '("Store ID Link" . org-id-store-link)
-             "l l"    '("Insert Link" . org-insert-link)
-             "l L"    '("Insert All Links" . org-insert-all-links)
-             "l t"    '("Toggle Links" . org-toggle-link-display)
-             "l s"    '("Store Link" . org-store-link)
-             "l S"    '("Insert Stored Link" . org-insert-last-stored-link)
-             "m"      '(nil :which-key "Roam")
-             "m b"    '("Toggle Roam Buffer" . org-roam-buffer-toggle)
-             "m f"    '("Find Node" . org-roam-node-find)
-             "m F"    '("Find Ref" . org-roam-ref-find)
-             "m g"    '("Graph" . org-roam-graph)
-             "m i"    '("Insert Link" . org-roam-node-insert)
-             "m c"    '("Roam Capture" . org-roam-capture)
-             "m s"    '("Roam Sync" . org-roam-db-sync)
-             "m S"    '("Stripe Roam Links" . mjs/strip-org-roam-links)
-             "m d"    '("Daily" . org-roam-dailies-capture-today)
-             "m r"    '("Random Node" . org-roam-node-random)
-             "r"      '("Refile" . org-refile)
-             "R"      '("Refile DWIM" . mjs/org-refile-dwim)
-             "s"      '("Search Headings" . consult-org-heading)
-             "S"      '(nil :which-key "Subtree")
-             "S a"    '("Toggle Archive Tag" . org-toggle-archive-tag)
-             "S A"    '("Archive" . org-archive-subtree)
-             "S b"    '("Move to Buffer" . org-tree-to-indirect-buffer)
-             "S c"    '("Clone" . org-clone-subtree-with-time-shift)
-             "S d"    '("Delete" . org-cut-subtree)
-             "S h"    '("Promote" . org-promote-subtree)
-             "S j"    '("Move Down" . org-move-subtree-down)
-             "S k"    '("Move Up" . org-move-subtree-up)
-             "S l"    '("Demote" . org-demote-subtree)
-             "S n"    '("Narrow to Subtree" . org-narrow-to-subtree)
-             "S N"    '("Widen" . widen)
-             "S r"    '("Refile" . org-refile)
-             "S s"    '("Sparse Subtree" . org-sparse-tree)
-             "S S"    '("Sort" . org-sort)
-             "t"      '("Set TODO State" . org-todo)
-             "T"      '("Set Tags" . org-set-tags-command)))
+          :keymaps 'org-mode-map
+          "a"      '("Archive" . org-archive-subtree)
+          "A"      '("Attach" . org-attach)
+          "b"      '(nil :which-key "Tables")
+          "b a"    '("Align" . org-table-align)
+          "b b"    '("Blank" . org-table-blank-field)
+          "b c"    '("Convert to Table" . org-table-create-or-convert-from-region)
+          "b d"    '(nil :which-key "Delete")
+          "b d c"  '("Delete Column" . org-table-delete-column)
+          "b d r"  '("Delere Row" . org-table-kill-row)
+          "b e"    '("Edit" . org-table-edit-field)
+          "b f"    '("Edit Formulas" . org-table-edit-formulas)
+          "b h"    '("Help" . org-table-field-info)
+          "b i"    '(nil :which-key "Insert")
+          "b i c"  '("Insert Column" . org-table-insert-column)
+          "b i r"  '("Insert Row" . org-table-insert-row)
+          "b i h"  '("Insert Hline" . org-table-insert-hline)
+          "b i H"  '("Insert Hline & Move" . org-table-hline-and-move)
+          "b s"    '("Sort Rows" . org-table-sort-lines)
+          "b r"    '("Recalculate Formulas" . org-table-recalculate)
+          "b R"    '("Recalculate All Tables" . org-table-recalculate-buffer-tables)
+          "b t"    '("Toggle Table.el" . org-table-create-with-table.el)
+          "b -"    '("Insert Hline" . org-table-insert-hline)
+          "B"      '(nil :which-key "Babel")
+          "B t"    '("Tangle" . org-babel-tangle)
+          "B e"    '("Execute Block" . org-babel-execute-src-block)
+          "B E"    '("Execute Buffer" . org-babel-execute-buffer)
+          "B h"    '("Hide Result" . org-babel-hide-result-toggle)
+          "B H"    '("Hide All Results" . org-babel-result-hide-all)
+          "B k"    '("Remove Result" . org-babel-remove-result)
+          "B K"    '("Remove All Results" . mjs/org-babel-remove-result-blocks)
+          "B n"    '("Next Src Block" . org-babel-next-src-block)
+          "B p"    '("Pervious Src Block" . org-babel-previous-src-block)
+          "c"      '(nil :which-key "Clock")
+          "c e"    '("Set Effort" . org-set-effort)
+          "c E"    '("Increase Effort" . org-inc-effort)
+          "c i"    '("Clock-in" . org-clock-in)
+          "c o"    '("Clock-out" . org-clock-out)
+          "c g"    '("Goto Current Clock" . org-clock-goto)
+          "c c"    '("Cancel Clock" . org-clock-cancel)
+          "c r"    '("Report" . org-clock-report)
+          "C"      '("Capture" . org-capture)
+          "d"      '(nil :which-key "Date")
+          "d d"    '("Deadline" . org-deadline)
+          "d s"    '("Schedule" . org-schedule)
+          "d t"    '("Time Stamp" . org-time-stamp)
+          "d T"    '("Inactive Time Stamp" . org-time-stamp-inactive)
+          "f"      '(nil :whick-key "File Links")
+          "f m"    '("Move File" . mjs/move-and-update-file-links)
+          "f d"    '("Move Directory" . mjs/move-dir-update-link-links)
+          "f r"    '("Regenerate Links" . mjs/regenerate-file-links)
+          "f R"    '("Regenerate Links Globally" . mjs/regenerate-file-links-globally)
+          "h"      '("Toggle Heading" . org-toggle-heading)
+          "i"      '(nil :which-key "ID")
+          "i c"    '("Copy ID" . org-id-copy)
+          "i i"    '("Create ID" . org-id-get-create)
+          "i g"    '("Goto ID" . org-id-goto)
+          "i u"    '("Update IDs" . org-id-update-id-locations)
+          "I"      '("Create ID" . org-id-get-create)
+          "l"      '(nil :which-key "Links")
+          "l i"    '("Store ID Link" . org-id-store-link)
+          "l l"    '("Insert Link" . org-insert-link)
+          "l L"    '("Insert All Links" . org-insert-all-links)
+          "l t"    '("Toggle Links" . org-toggle-link-display)
+          "l s"    '("Store Link" . org-store-link)
+          "l S"    '("Insert Stored Link" . org-insert-last-stored-link)
+          "m"      '(nil :which-key "Roam")
+          "m b"    '("Toggle Roam Buffer" . org-roam-buffer-toggle)
+          "m f"    '("Find Node" . org-roam-node-find)
+          "m F"    '("Find Ref" . org-roam-ref-find)
+          "m g"    '("Graph" . org-roam-graph)
+          "m i"    '("Insert Link" . org-roam-node-insert)
+          "m c"    '("Roam Capture" . org-roam-capture)
+          "m s"    '("Roam Sync" . org-roam-db-sync)
+          "m S"    '("Stripe Roam Links" . mjs/strip-org-roam-links)
+          "m d"    '("Daily" . org-roam-dailies-capture-today)
+          "m r"    '("Random Node" . org-roam-node-random)
+          "r"      '("Refile" . org-refile)
+          "R"      '("Refile DWIM" . mjs/org-refile-dwim)
+          "s"      '("Search Headings" . consult-org-heading)
+          "S"      '(nil :which-key "Subtree")
+          "S a"    '("Toggle Archive Tag" . org-toggle-archive-tag)
+          "S A"    '("Archive" . org-archive-subtree)
+          "S b"    '("Move to Buffer" . org-tree-to-indirect-buffer)
+          "S c"    '("Clone" . org-clone-subtree-with-time-shift)
+          "S d"    '("Delete" . org-cut-subtree)
+          "S h"    '("Promote" . org-promote-subtree)
+          "S j"    '("Move Down" . org-move-subtree-down)
+          "S k"    '("Move Up" . org-move-subtree-up)
+          "S l"    '("Demote" . org-demote-subtree)
+          "S n"    '("Narrow to Subtree" . org-narrow-to-subtree)
+          "S N"    '("Widen" . widen)
+          "S r"    '("Refile" . org-refile)
+          "S s"    '("Sparse Subtree" . org-sparse-tree)
+          "S S"    '("Sort" . org-sort)
+          "t"      '("Set TODO State" . org-todo)
+          "T"      '("Set Tags" . org-set-tags-command))
+  :custom (org-fontify-quote-and-verse-blocks t)
+          (org-src-fontify-natively nil)
+  :config (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
+  (set-face-attribute 'org-quote nil :background (catppuccin-get-color 'mantle) :extend t))
 
 (defun mjs/org-fix-newline-and-indent (&optional indent _arg _interactive)
   "Mimic `newline-and-indent' in src blocks w/ lang-appropriate indentation."
@@ -1701,15 +1706,29 @@ If on a:
 (use-package svg-tag-mode
   :hook org-mode
   :custom (svg-tag-tags
-           '(("^\\*+ \\(TODO\\)" .
+           '(("^\\*+ \\(TODO\\|BLOCKED\\)" .
               ((lambda (tag)
                  (svg-lib-tag tag nil
-                   :margin 0
-                   :font-family "JetBrainsMono Nerd Font"
-                   :font-weight 500
-                   :background (alist-get 'peach catppuccin-frappe-colors)
-                   :foreground (alist-get 'base catppuccin-frappe-colors)
-                   )))))))
+                              :margin 0
+                              :font-family "JetBrainsMono Nerd Font"
+                              :font-weight 500
+                              :background (catppuccin-get-color 'peach)
+                              :foreground (catppuccin-get-color 'base)
+                              ))))
+                ("^\\*+ \\(NEXT\\)" . ((lambda (tag)
+                                         (svg-lib-tag tag nil
+                                                      :margin 0
+                                                      :font-family "JetBrainsMono Nerd Font"
+                                                      :font-weight 500
+                                                      :background (catppuccin-get-color 'green)
+                                                      :foreground (catppuccin-get-color 'base)))))
+                ("^\\*+ \\(DONE\\|KILLED\\)" . ((lambda (tag)
+                                         (svg-lib-tag tag nil
+                                                      :margin 0
+                                                      :font-family "JetBrainsMono Nerd Font"
+                                                      :font-weight 500
+                                                      :foreground (catppuccin-get-color 'overlay0)))))
+             )))
 
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
