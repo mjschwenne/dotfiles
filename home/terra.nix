@@ -202,6 +202,7 @@
     windowrule=workspace 9,Spotify
     windowrule=workspace 10,discord
     windowrule=float,title:^(Open Files)$
+    windowrule=float,class:^(zenity)$
     windowrule=float,title:^(Compact folders)$
     windowrule=float,title:^(KeePassXC - Browser Access Request)$
 
@@ -391,6 +392,7 @@
     wlr-randr
     kanshi
     gnome.eog
+    mate.engrampa
   ];
 
   xdg.configFile."mimeapps.list".force = true;
