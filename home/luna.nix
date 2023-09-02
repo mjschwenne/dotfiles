@@ -331,6 +331,7 @@
     protonmail-bridge
     gimp
     wev
+    slack
 
     # utils
     ripgrep # recursively searches directories for a regex pattern
@@ -379,7 +380,20 @@
     pandoc
     wlr-randr
     kanshi
+    meld
   ];
+
+  xdg.mimeApps = {
+    enable = true;
+
+    defaultApplications = {
+      "text/html" = "librewolf.desktop";
+      "x-scheme-handler/http" = "librewolf.desktop";
+      "x-scheme-handler/https" = "librewolf.desktop";
+      "x-scheme-handler/about" = "librewolf.desktop";
+      "x-scheme-handler/unknown" = "librewolf.desktop";
+    };
+  };
 
   programs.kitty = {
     enable = true;

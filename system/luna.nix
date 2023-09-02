@@ -1,14 +1,15 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running `nixos-help`).
-
-{ config, pkgs, lib, ... }@inputs:
-
-{
-  imports =
-    [ # Include the results of the hardware scan.
-      ./luna-hardware.nix
-    ];
+{ config
+, pkgs
+, lib
+, ...
+} @ inputs: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./luna-hardware.nix
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -17,7 +18,8 @@
   networking.hostName = "luna"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable =
+    true; # Easiest to use and most distros use this by default.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -68,11 +70,11 @@
   users.users.mjs = {
     isNormalUser = true;
     description = "Matt Schwennesen";
-    extraGroups = [ "networkmanager" "wheel" "surface-control"];
-	shell = pkgs.fish;
+    extraGroups = [ "networkmanager" "wheel" "surface-control" ];
+    shell = pkgs.fish;
   };
 
-  security.pam.services.swaylock = {};
+  security.pam.services.swaylock = { };
 
   microsoft-surface.surface-control.enable = true;
 
@@ -85,7 +87,10 @@
   # Setup cache for hyprland so I don't have to compile it manually every time
   nix.settings = {
     extra-substituters = [ "https://hyprland.cachix.org" "https://nix-community.cachix.org" ];
-    extra-trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
+    extra-trusted-public-keys = [
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
     trusted-users = [ "mjs" ];
   };
 
@@ -100,83 +105,84 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
+  environment.sessionVariables.NIXOS_OZONE_WL = "1"; # enable wayland for electron apps
   environment.systemPackages = with pkgs; [
-     # compilers 
-	 gcc
-	 rustc
-	 rustfmt
-	 rust-analyzer
-	 cargo
+    # compilers
+    gcc
+    rustc
+    rustfmt
+    rust-analyzer
+    cargo
 
-     # version control
-     git 
+    # version control
+    git
 
-     # nix related
-     #
-     # it provides the command `nom` works just like `nix`
-     # with more details log output
-     nix-output-monitor
+    # nix related
+    #
+    # it provides the command `nom` works just like `nix`
+    # with more details log output
+    nix-output-monitor
 
-     # utilities
-     fzf # command line fuzzy finder
-     tree # visualize file tree
-     file # learn more about a file
-     brightnessctl # control backlights at hardware level
-	 wirelesstools
+    # utilities
+    fzf # command line fuzzy finder
+    tree # visualize file tree
+    file # learn more about a file
+    brightnessctl # control backlights at hardware level
+    wirelesstools
 
-     # archives
-     gnutar
-     zip 
-     unzip
-     xz
-     p7zip
+    # archives
+    gnutar
+    zip
+    unzip
+    xz
+    p7zip
 
-     # system monitor
-     htop
+    # system monitor
+    htop
 
-     # networking
-     wget 
-     curl
-     dnsutils
-     ldns
-     nmap
-     iperf3
+    # networking
+    wget
+    curl
+    dnsutils
+    ldns
+    nmap
+    iperf3
 
-     # debug
-     strace
-     ltrace
+    # debug
+    strace
+    ltrace
 
-     # SDDM theme 
-	 libsForQt5.qt5.qtgraphicaleffects
+    # SDDM theme
+    libsForQt5.qt5.qtgraphicaleffects
 
-     # Spellcheck 
-	 enchant
-	 hunspell
-	 hunspellDicts.en_US-large
+    # Spellcheck
+    enchant
+    hunspell
+    hunspellDicts.en_US-large
 
-     # Build utils
-     gnumake 
-     cmake
+    # Build utils
+    gnumake
+    cmake
 
-     # libraries
-     pkg-config
-     fontconfig
+    # libraries
+    pkg-config
+    fontconfig
   ];
 
   # Setup SDDM display manager
   services.xserver.displayManager.sddm.sugarCandyNix = {
-	  enable = true;
+    enable = true;
 
-	  settings = {
-		ScreenWidth = 1920;
-		ScreenHeight = 1080;
-		Background = lib.cleanSource ./sddm.png;
-		PartialBlur = true;
-		FormPosition = "left";
-		Font = "JetBrainsMono Nerd Font";
-		ForceHideCompletePassword = true;
-		DateFormat = "dddd, dd MMMM yyyy";
-	  };
+    settings = {
+      ScreenWidth = 1920;
+      ScreenHeight = 1080;
+      Background = lib.cleanSource ./sddm.png;
+      PartialBlur = true;
+      FormPosition = "left";
+      Font = "JetBrainsMono Nerd Font";
+      ForceHideCompletePassword = true;
+      DateFormat = "dddd, dd MMMM yyyy";
+    };
   };
 
   # Install hyprland wayland compositor
@@ -190,10 +196,7 @@
   services.tumbler.enable = true;
   programs.thunar = {
     enable = true;
-    plugins = with pkgs.xfce; [
-      thunar-archive-plugin
-      thunar-volman
-    ];
+    plugins = with pkgs.xfce; [ thunar-archive-plugin thunar-volman ];
   };
 
   programs.fish.enable = true;
@@ -218,7 +221,36 @@
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
-	pinentryFlavor = "gnome3";
+    pinentryFlavor = "gnome3";
+  };
+
+  services.syncthing = {
+    enable = true;
+    user = "mjs";
+    dataDir = "/home/mjs/syncthing";
+
+    settings = {
+      devices = {
+        "terra" = {
+          id = "SA2KNKU-LTH27QL-OHZSGVW-HCMWWFP-5RYZEER-K3LQKDM-NGF2PNQ-HRVKSQL";
+        };
+        "sol" = {
+          id = "73R7LD7-CE75DOS-QYCX3IN-7MYT33V-W65EKXH-L5Y2HIU-UGUPESG-KZEUYAF";
+        };
+      };
+
+      folders = {
+        "org" = {
+          path = "/home/mjs/Documents";
+          devices = [ "terra" "sol" ];
+        };
+
+        "kdb" = {
+          path = "/home/mjs/kdb";
+          devices = [ "terra" "sol" ];
+        };
+      };
+    };
   };
 
   # Enable the OpenSSH daemon.
@@ -242,6 +274,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
 }
-
