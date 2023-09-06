@@ -393,6 +393,8 @@
     kanshi
     gnome.eog
     mate.engrampa
+
+    google-cloud-sdk
   ];
 
   xdg.configFile."mimeapps.list".force = true;
@@ -445,6 +447,7 @@
       ssh = "kitty +kitten ssh";
       m = "math";
       nix-shell = "nix-shell --run fish";
+      ssh-cs400 = ''gcloud compute ssh --zone "us-central1-a" "cs400-vm" --project "cs-400-398116"'';
     };
     functions = {
       mjs_rename = ''
