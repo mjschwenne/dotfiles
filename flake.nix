@@ -1,6 +1,21 @@
 {
   description = "Matt's Personal NixOS Flake";
 
+  nixConfig = {
+    experimental-features = [ "nix-command" "flakes" ];
+
+    extra-substituters = [
+      # Nix community's cache server
+      "https://nix-community.cachix.org"
+      # Hyprland cache server
+      "https://hyprland.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+    ];
+  };
+
   # This is the standard format for flake.nix. `inputs` are the dependencies of the flake,
   # and `outputs` function will return all the build results of the flake.
   # Each item in `inputs` will be passed as a parameter to the `outputs` function after being pulled and built.
