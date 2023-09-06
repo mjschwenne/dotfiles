@@ -3,7 +3,7 @@
   home.homeDirectory = "/home/mjs";
 
   imports = [
-    ./common
+    ./common.nix
     ./graphical.nix
     ./ui
     ./applications
