@@ -13,9 +13,9 @@
   microsoft-surface.surface-control.enable = true;
 
   # Adjust screen size for SDDM
-  services.xserver.displayManager.sddm.sugarCandyNix.setting = {
-    ScreenWidth = lib.makeDefault 2736;
-    ScreenHeight = lib.makeDefault 1824;
+  services.xserver.displayManager.sddm.sugarCandyNix.settings = {
+    ScreenWidth = lib.mkDefault 2736;
+    ScreenHeight = lib.mkDefault 1824;
   };
 
   services.syncthing = {

@@ -2,7 +2,9 @@
 
 {
 
-  # services.emacs.package = pkgs.emacs-unstable-pgtk;
+  nixpkgs.overlays = [
+    inputs.emacs-overlay.overlay
+  ];
 
   home.packages = [
     (pkgs.emacsWithPackagesFromUsePackage {
@@ -12,7 +14,7 @@
       #     they're being parsed in nix, which lacks unicode
       #     support.
       # config = ./emacs.org;
-      config = ./emacs.el;
+      config = ./init.el;
 
       # Whether to include your config as a default init file.
       # If being bool, the value of config is used.
@@ -61,6 +63,10 @@
   ];
 
   home.file.".emacs.d/init.el" = {
-    source = ./emacs.el;
+    source = ./init.el;
+  };
+
+  home.file.".emacs.d/early-init.el" = {
+    source = ./early-init.el;
   };
 }

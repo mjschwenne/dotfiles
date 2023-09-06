@@ -1,37 +1,17 @@
 ;; -*- lexical-binding: t; -*-
 
-(setq package-enable-at-startup nil)
-
 (setq user-full-name "Matt Schwennesen"
       user-login-name "matt"
       user-real-login-name "mjs"
       user-mail-address "mjschwenne@gmail.com")
 
-;; (setq-default straight-use-package-by-default t)
-;; (defvar bootstrap-version)
-;; (let ((bootstrap-file
-;;    (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-;;   (bootstrap-version 6))
-;;   (unless (file-exists-p bootstrap-file)
-;;     (with-current-buffer
-;;     (url-retrieve-synchronously
-;;     "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-;;     'silent 'inhibit-cookies)
-;;   (goto-char (point-max))
-;;   (eval-print-last-sexp)))
-;;   (load bootstrap-file nil 'nomessage))
-;;
-;; ;; Install use-package
-;; (straight-use-package 'use-package)
-(eval-when-compile (require 'use-package))
-;; Configure use-package
-(use-package use-package
-         :custom (use-package-verbose t)
-                 (use-package-always-defer t)          ; :defer t by default
-                 (use-package-always-ensure t)         ; :ensure t by default
-                 (use-package-expand-minimally t)
-                 (use-package-compute-statistics t)
-                 (use-package-enable-imenu-support t))
+(require 'use-package)
+(setq use-package-verbose t 
+	  use-package-always-defer t 
+	  use-package-always-ensure t 
+	  use-package-expand-minimally t 
+	  use-package-compute-statistics t 
+	  use-package-enable-imenu-support t)
 
 (setq-default cursor-in-non-selected-widows nil
               speedbar t
@@ -64,30 +44,29 @@
   :diminish which-key-mode
   :init (which-key-mode 1))
 
-(use-package general
-  :defer nil
-  :ensure t)
-  ; :config 
-(require 'general)
-          (general-evil-setup)
-          (general-auto-unbind-keys)
-          (general-create-definer mjs-leader-def
-            :prefix "SPC"
-            :non-normal-prefix "M-SPC"
-            :whick-key "Leader")
-          (general-create-definer mjs-local-leader-def
-            :prefix "SPC m"
-            :non-normal-prefix "M-SPC m"
-            :whick-key "Local Leader")
-          (general-unbind :states '(insert motion visual) :keymaps 'global "M-SPC")
+(use-package general :defer nil)
+  
+;; For some reason, the nixos emacs overlay setup doesn't like 
+;; this block inside the :config blocl of the general use-package
+(general-evil-setup)
+(general-auto-unbind-keys)
+(general-create-definer mjs-leader-def
+	:prefix "SPC"
+	:non-normal-prefix "M-SPC"
+	:whick-key "Leader")
+(general-create-definer mjs-local-leader-def
+	:prefix "SPC m"
+	:non-normal-prefix "M-SPC m"
+	:whick-key "Local Leader")
+(general-unbind :states '(insert motion visual) :keymaps 'global "M-SPC")
 
 (use-package evil
   :diminish evil-mode
-  ; :general (:keymaps '(override motion) "ESC" #'evil-force-normal-state)
   :custom (evil-want-keybinding nil)
           (evil-want-integration t)
           (evil-cross-lines t)
           (evil-echo-state nil)
+          (evil-undo-system 'undo-redo)
   :init (evil-mode 1)
   :config (evil-set-initial-state 'org-agenda-mode 'normal))
 
@@ -585,79 +564,66 @@ a prefix argument."
 
 (use-package catppuccin-theme
   :defer nil
-  :straight (catppuccin-theme
-             :type git
-             :host github
-             :repo "catppuccin/emacs"
-             :local-repo "catppuccin-theme")
-  :custom (catppuccin-flavor 'frappe)
-  :init (add-to-list 'custom-theme-load-path
-                     (concat straight-base-dir "catppuccin-theme"))
-  (load-theme 'catppuccin t))
+  :custom (catppuccin-flavor 'mocha)
+  :config (load-theme 'catppuccin t))
 
-; (set-frame-parameter (selected-frame) 'alpha '(80 . 80))
-; (add-to-list 'default-frame-alist '(alpha . (80 . 80)))
-
-;; (use-package telephone-line
-;;   :init (telephone-line-defsegment* mjs/popup-segment ()
-;;           (cond ((not (boundp 'popper-popup-status)) "")
-;;                 ((eq popper-popup-status 'popup) "POPUP")
-;;                 ((eq popper-popup-status 'raised) "RAISED")
-;;                 ((eq popper-popup-status 'user-popper) "U POP")))
-;;         (telephone-line-defsegment* mjs/buffer-mod ()
-;;           (let* ((read-only (or buffer-read-only (string-match-p "\\*.*\\*" (buffer-name))))
-;;                  (modifed (buffer-modified-p)))
-;;             (concat 
-;;               (if read-only
-;;                   (propertize "󱙃 "
-;;                     'face `(:inherit mode-line-emphasis
-;;                             :foreground ,(alist-get
-;;                                           'yellow catppuccin-frappe-colors)))
-;;                 (if modifed
-;;                     (propertize "󰆓 "
-;;                       'face `(:inherit mode-line-emphasis
-;;                               :foreground ,(alist-get
-;;                                             'red catppuccin-frappe-colors)))
-;;                   (propertize "󱣪 "
-;;                     'face `(:inherit mode-line-emphasis
-;;                             :foreground ,(alist-get
-;;                                           'green catppuccin-frappe-colors)))))
-;;               (propertize (buffer-name) 'face 'mode-line-emphasis))))
-;;         (telephone-line-mode +1)
-;;   :custom telephone-line-lhs
-;;           '((evil . (telephone-line-evil-tag-segment))
-;;             (accent . (telephone-line-process-segment
-;;                        telephone-line-minor-mode-segment mjs/popup-segment))
-;;             (nil . (mjs/buffer-mod)))
-;;           telephone-line-rhs
-;;           '((nil . (telephone-line-misc-info-segment
-;;                     telephone-line-atom-encoding-segment))
-;;             (accent . (telephone-line-major-mode-segment))
-;;             (evil . (telephone-line-airline-position-segment)))
-;;   :config
-;;     (set-face-foreground 'telephone-line-evil
-;;                          (alist-get 'base catppuccin-frappe-colors))
-;;     (set-face-background 'telephone-line-evil-normal
-;;                          (alist-get 'blue catppuccin-frappe-colors))
-;;     (set-face-background 'telephone-line-evil-insert
-;;                          (alist-get 'green catppuccin-frappe-colors))
-;;     (set-face-background 'telephone-line-evil-visual
-;;                          (alist-get 'mauve catppuccin-frappe-colors))
-;;     (set-face-background 'telephone-line-evil-emacs
-;;                          (alist-get 'red catppuccin-frappe-colors))
-;;     (set-face-background 'telephone-line-evil-operator
-;;                          (alist-get 'peach catppuccin-frappe-colors))
-;;     (set-face-background 'telephone-line-evil-motion
-;;                          (alist-get 'pink catppuccin-frappe-colors))
-;;     (set-face-attribute 'telephone-line-accent-active t
-;;                         :foreground
-;;                           (alist-get 'text catppuccin-frappe-colors)
-;;                         :background
-;;                           (alist-get 'surface1 catppuccin-frappe-colors))
-;;     (set-face-attribute 'mode-line t
-;;                         :foreground (alist-get 'text catppuccin-frappe-colors)
-;;                         :background (alist-get 'base catppuccin-frappe-colors))
-;;     )
+(use-package telephone-line
+  :init (telephone-line-defsegment* mjs/popup-segment ()
+          (cond ((not (boundp 'popper-popup-status)) "")
+                ((eq popper-popup-status 'popup) "POPUP")
+                ((eq popper-popup-status 'raised) "RAISED")
+                ((eq popper-popup-status 'user-popper) "U POP")))
+        (telephone-line-defsegment* mjs/buffer-mod ()
+          (let* ((read-only (or buffer-read-only (string-match-p "\\*.*\\*" (buffer-name))))
+                 (modifed (buffer-modified-p)))
+            (concat 
+              (if read-only
+                  (propertize "󱙃 "
+                    'face `(:inherit mode-line-emphasis
+                            :foreground ,(catppuccin-get-color 'yellow)))
+                (if modifed
+                    (propertize "󰆓 "
+                      'face `(:inherit mode-line-emphasis
+                              :foreground ,(catppuccin-get-color 'red)))
+                    (propertize "󰆓 "
+                      'face `(:inherit mode-line-emphasis
+                              :foreground ,(catppuccin-get-color 'green)))))
+                (propertize (buffer-name) 'face 'mode-line-emphasis))))
+        (telephone-line-mode +1)
+  :custom telephone-line-lhs
+          '((evil . (telephone-line-evil-tag-segment))
+            (accent . (telephone-line-process-segment
+                       telephone-line-minor-mode-segment mjs/popup-segment))
+            (nil . (mjs/buffer-mod)))
+          telephone-line-rhs
+          '((nil . (telephone-line-misc-info-segment
+                    telephone-line-atom-encoding-segment))
+            (accent . (telephone-line-major-mode-segment))
+            (evil . (telephone-line-airline-position-segment)))
+  :config
+    (set-face-foreground 'telephone-line-evil
+                         (catppuccin-get-color 'base))
+    (set-face-background 'telephone-line-evil-normal
+                         (catppuccin-get-color 'blue))
+    (set-face-background 'telephone-line-evil-insert
+                         (catppuccin-get-color 'green))
+    (set-face-background 'telephone-line-evil-visual
+                         (catppuccin-get-color 'mauve))
+    (set-face-background 'telephone-line-evil-emacs
+                         (catppuccin-get-color 'red))
+    (set-face-background 'telephone-line-evil-operator
+                         (catppuccin-get-color 'peach))
+    (set-face-background 'telephone-line-evil-motion
+                         (catppuccin-get-color 'pink))
+    (set-face-attribute 'telephone-line-accent-active t
+                        :foreground
+                          (catppuccin-get-color 'text)
+                        :background
+                          (catppuccin-get-color 'surface1))
+    (set-face-attribute 'mode-line t
+                        :foreground (catppuccin-get-color 'text)
+                        :background (catppuccin-get-color 'base))
+    )
 
 (setq display-line-numbers-type 'relative
        display-line-numbers-current-absolute t)
@@ -679,9 +645,10 @@ a prefix argument."
                        (string= (org-get-todo-state) "NEXT"))
             (point)))
          (dashboard-setup-startup-hook)
-  :commands (dashboard-jump-to-agenda dashboard-jump-to-recents)
-  :general (mjs-leader-def :states '(normal insert motion visual)
+		 (mjs-leader-def :states '(normal insert motion visual)
              "d" '("Open Dashboard" . dashboard-open))
+  :commands (dashboard-jump-to-agenda dashboard-jump-to-recents)
+  :general 
            (:keymaps #'dashboard-mode-map :states 'normal
                      "a" #'dashboard-jump-to-agenda
                      "r" #'dashboard-jump-to-recents)
@@ -696,16 +663,10 @@ a prefix argument."
                              (agenda . 10)))
           (dashboard-item-names '(("Recent Files:" . "Recently Opened:")
                                   ("Agenda for the coming week:" . "NEXT Items:")))
-          (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs")))
+          (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs"))
+	)
 
 (use-package popper
-  :general (mjs-leader-def :states '(normal insert visual motion)
-             "p" '(nil :which-key "Popup")
-             "p p" '("Toggle Popup" . popper-toggle-latest)
-             "t p" '("Toggle Popup" . popper-toggle-latest)
-             "p c" '("Cycle Popups" . popper-cycle)
-             "p m" '("Make Popup" . popper-toggle-type)
-             "p k" '("Kill Popup" . popper-kill-latest-popup))
   :custom (popper-reference-buffers '("\\*Messages\\*"
                                       "Output\\*$"
                                       "\\*Backtrace\\*"
@@ -732,15 +693,21 @@ a prefix argument."
                                              (window-width 0.5))))
   :init (popper-mode +1)
         (popper-echo-mode +1)
+		(mjs-leader-def :states '(normal insert visual motion)
+					 "p" '(nil :which-key "Popup")
+					 "p p" '("Toggle Popup" . popper-toggle-latest)
+					 "t"   '(nil :which-key "Toggle")
+					 "t p" '("Toggle Popup" . popper-toggle-latest)
+					 "p c" '("Cycle Popups" . popper-cycle)
+					 "p m" '("Make Popup" . popper-toggle-type)
+					 "p k" '("Kill Popup" . popper-kill-latest-popup))
   :config (defun mjs/escape-popups ()
             (if (eq popper-popup-status 'popup)
                 (popper-toggle-latest)))
           (advice-add #'evil-force-normal-state :after #'mjs/escape-popups))
 
 (use-package helpful
-  :commands (helpful-callable helpful-function helpful-macro helpful-command
-             helpful-key helpful-variable helpful-at-point)
-  :general (mjs-leader-def :states '(normal insert visual motion)
+  :init (mjs-leader-def :states '(normal insert visual motion)
                            "h" '(nil :which-key "Help")
                            "h f" '("Callable" . helpful-callable)
                            "h F" '("Function" . helpful-function)
@@ -756,50 +723,52 @@ a prefix argument."
                            "h q" '("Kill Help Buffers" . helpful-kill-buffers)))
 
 (use-package vertico
-    :straight (vertico :files (:defaults "extensions/*")
-                       :includes (vertico-reverse
-                                  vertico-directory))
-    :custom (vertico-resize t)
-            (vertico-cycle t)
-            (enable-recursive-minibuffers t)
-    :init (defun crm-indicator (args)
-            (cons (format "[CRM%s] %s"
-                          (replace-regexp-in-string
-                           "\\`\\[.*?\\*\\|\\[.*?]\\*\\'" ""
-                           crm-separator)
-                          (car args))
-                  (cdr args)))
-          (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-          (setq minibuffer-prompt-properties
-                '(read-only t cursor-intangible f face minibuffer-prompt))
-          (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-          ;; While my understanding is that this should go in the :config
-          ;; section, it doesn't seem to actually cause the mode to be
-          ;; properly enabled when called from that section for some reason.
-          (vertico-mode)
-          (vertico-reverse-mode)
-    ;; Tidy shadowed file names
-    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
-    :general (:keymaps 'vertico-map
-                       "M-RET" #'vertico-exit-input
-                       "C-k"   #'vertico-next
-                       "C-M-k" #'vertico-next-group
-                       "C-j"   #'vertico-previous
-                       "C-M-j" #'vertico-previous-group
-                       "M-TAB" #'minibuffer-complete
-                       ;; More convenient directory navigation commands
-                       "RET" #'vertico-directory-enter
-                       "DEL" #'vertico-directory-delete-char
-                       "M-DEL" #'vertico-directory-delete-word
-                       "?"     #'minibuffer-completion-help
-                       ;;
-                       "ESC" #'keyboard-escape-quit))
+  :custom (vertico-resize t)
+  (vertico-cycle t)
+  (enable-recursive-minibuffers t)
+  :init (defun crm-indicator (args)
+          (cons (format "[CRM%s] %s"
+                        (replace-regexp-in-string
+                         "\\`\\[.*?\\*\\|\\[.*?]\\*\\'" ""
+                         crm-separator)
+                        (car args))
+                (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible f face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  ;; While my understanding is that this should go in the :config
+  ;; section, it doesn't seem to actually cause the mode to be
+  ;; properly enabled when called from that section for some reason.
+  (vertico-mode)
+  (savehist-mode)
+  (general-define-key :keymaps 'vertico-map
+		"S-RET" #'vertico-exit-input
+		"C-k"   #'vertico-next
+		"C-S-k" #'vertico-next-group
+		"C-j"   #'vertico-previous
+		"C-S-j" #'vertico-previous-group
+		"S-TAB" #'minibuffer-complete
+		;; More convenient directory navigation commands
+		"RET" #'vertico-directory-enter
+		"DEL" #'vertico-directory-delete-char
+		"S-DEL" #'vertico-directory-delete-word
+		"?"     #'minibuffer-completion-help
+		;;
+		"ESC" #'keyboard-escape-quit)
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
-  (use-package savehist
-    :after vertico
-    :config (savehist-mode))
+(use-package vertico-directory 
+			 :after vertico 
+			 :ensure nil)
 
-  (use-package marginalia
+(use-package vertico-reverse
+			 :after vertico 
+			 :ensure nil 
+			 :init (vertico-reverse-mode))
+
+(use-package marginalia
     :general (:keymaps 'minibuffer-local-map
                        "M-A" #'marginalia-cycle)
     :init (marginalia-mode))
@@ -814,50 +783,51 @@ a prefix argument."
 
 (use-package consult
   :init (recentf-mode 1)
+	(mjs-leader-def :states '(normal insert visual motion)
+				 "c"     '(nil :which-key "Consult")
+				 "c b"   '("Buffer" . consult-buffer)
+				 "c c"   '("Complex Command" . consult-complex-command)
+				 "c e"   '("Compile Error" . consult-compile-error)
+				 "c f"   '("Recent Files" . consult-recent-file)
+				 "c g"   '(nil :which-key "External Search")
+				 "c g g" '("Grep" . consult-grep)
+				 "c g r" '("Ripgrep" . consult-ripgrep)
+				 "c g f" '("Find" . consult-find)
+				 "c g l" '("Locate" . consult-locate)
+				 "c h"   '(nil :which-key "Help")
+				 "c h i" '("Emacs Info" . consult-info)
+				 "c h m" '("UNIX Manual" . consult-man)
+				 "c m"   '(nil :which-key "Modes")
+				 "c m m" '("Minor Modes" . consult-minor-mode-menu)
+				 "c m c" '("Mode Commands" . consult-mode-command)
+				 "c M"   '("Macro" . consult-kmacro)
+				 "c n"   '(nil :which-key "Navigation")
+				 "c n i" '("imenu" . consult-imenu)
+				 "c n I" '("Multi-imenu" . consult-imenu-multi)
+				 "c n l" '("Goto Line" . consult-goto-line)
+				 "c n m" '("Goto Mark" . consult-mark)
+				 "c n M" '("Goto Global Mark" . consult-global-mark)
+				 "c n o" '("Outline" . consult-outline)
+				 "c o"   '(nil :which-key "Org")
+				 "c o a" '("Agenda" . consult-org-agenda)
+				 "c o h" '("Heading" . consult-org-heading)
+				 "c r"   '("Registers" . consult-register)
+				 "c s"   '(nil :which-key "Search")
+				 "c s l" '("Line" . consult-line)
+				 "c s m" '("Multi-buffer line" . consult-line-multi)
+				 "c t"   '("Themes" . consult-theme)
+				 "c y"   '(nil :which-key "Yank")
+				 "c y k" '("Kill Ring" . consult-yank-from-kill-ring)
+				 "c y p" '("Pop" . consult-yank-pop)
+				 "c y r" '("Replace" . consult-yank-replace))
   :custom (register-preview-function #'consult-register-format)
           (register-preview-delay 0.5)
-  :general (mjs-leader-def :states '(normal insert visual motion)
-             "c"     '(nil :which-key "Consult")
-             "c b"   '("Buffer" . consult-buffer)
-             "c c"   '("Complex Command" . consult-complex-command)
-             "c e"   '("Compile Error" . consult-compile-error)
-             "c f"   '("Recent Files" . consult-recent-file)
-             "c g"   '(nil :which-key "External Search")
-             "c g g" '("Grep" . consult-grep)
-             "c g r" '("Ripgrep" . consult-ripgrep)
-             "c g f" '("Find" . consult-find)
-             "c g l" '("Locate" . consult-locate)
-             "c h"   '(nil :which-key "Help")
-             "c h i" '("Emacs Info" . consult-info)
-             "c h m" '("UNIX Manual" . consult-man)
-             "c m"   '(nil :which-key "Modes")
-             "c m m" '("Minor Modes" . consult-minor-mode-menu)
-             "c m c" '("Mode Commands" . consult-mode-command)
-             "c M"   '("Macro" . consult-kmacro)
-             "c n"   '(nil :which-key "Navigation")
-             "c n i" '("imenu" . consult-imenu)
-             "c n I" '("Multi-imenu" . consult-imenu-multi)
-             "c n l" '("Goto Line" . consult-goto-line)
-             "c n m" '("Goto Mark" . consult-mark)
-             "c n M" '("Goto Global Mark" . consult-global-mark)
-             "c n o" '("Outline" . consult-outline)
-             "c o"   '(nil :which-key "Org")
-             "c o a" '("Agenda" . consult-org-agenda)
-             "c o h" '("Heading" . consult-org-heading)
-             "c r"   '("Registers" . consult-register)
-             "c s"   '(nil :which-key "Search")
-             "c s l" '("Line" . consult-line)
-             "c s m" '("Multi-buffer line" . consult-line-multi)
-             "c t"   '("Themes" . consult-theme)
-             "c y"   '(nil :which-key "Yank")
-             "c y k" '("Kill Ring" . consult-yank-from-kill-ring)
-             "c y p" '("Pop" . consult-yank-pop)
-             "c y r" '("Replace" . consult-yank-replace))
-  :config (advice-add #'register-preview :override #'consult-register-window))
+  :config 
+      (advice-add #'register-preview :override #'consult-register-window))
 
 (use-package embark
   :commands embark-act embark-dwim embark-bindings
-  :general (mjs-leader-def :states '(normal insert visual motion)
+  :init (mjs-leader-def :states '(normal insert visual motion)
              "E" '(nil :which-key "Embark")
              "E a" '("Embark Act"       . embark-act)
              "E A" '("Embark DWIM"      . embark-dwim)
@@ -899,15 +869,21 @@ a prefix argument."
 
 (global-prettify-symbols-mode +1)
 
+(use-package lispy
+  :hook (emacs-lisp-mode . lispy-mode)
+  :diminish "'󰅲")
+
+(diminish 'eldoc-mode)
+
 (use-package macrostep
   :commands marcostep-expand
-  :general (mjs-local-leader-def :states '(normal insert visual motion)
+  :init (mjs-local-leader-def :states '(normal insert visual motion)
              :keymaps 'emacs-lisp-mode-map
              "e" '("Expand Macro" . macrostep-expand)))
 
 (use-package elisp-def
   :commands elisp-def
-  :general (mjs-local-leader-def :states '(normal insert visual motion)
+  :init (mjs-local-leader-def :states '(normal insert visual motion)
              :keymaps 'emacs-lisp-mode-map
              "d" '("Find Definition" . elisp-def)))
 
@@ -939,105 +915,108 @@ a prefix argument."
   "n T" '("Tag View" . org-tags-view))
 
 (use-package org
-  :general 
-           (mjs-local-leader-def :states '(normal insert visual motion)
-             :keymaps 'org-mode-map
-             "a"      '("Archive" . org-archive-subtree)
-             "A"      '("Attach" . org-attach)
-             "b"      '(nil :which-key "Tables")
-             "b a"    '("Align" . org-table-align)
-             "b b"    '("Blank" . org-table-blank-field)
-             "b c"    '("Convert to Table" . org-table-create-or-convert-from-region)
-             "b d"    '(nil :which-key "Delete")
-             "b d c"  '("Delete Column" . org-table-delete-column)
-             "b d r"  '("Delere Row" . org-table-kill-row)
-             "b e"    '("Edit" . org-table-edit-field)
-             "b f"    '("Edit Formulas" . org-table-edit-formulas)
-             "b h"    '("Help" . org-table-field-info)
-             "b i"    '(nil :which-key "Insert")
-             "b i c"  '("Insert Column" . org-table-insert-column)
-             "b i r"  '("Insert Row" . org-table-insert-row)
-             "b i h"  '("Insert Hline" . org-table-insert-hline)
-             "b i H"  '("Insert Hline & Move" . org-table-hline-and-move)
-             "b s"    '("Sort Rows" . org-table-sort-lines)
-             "b r"    '("Recalculate Formulas" . org-table-recalculate)
-             "b R"    '("Recalculate All Tables" . org-table-recalculate-buffer-tables)
-             "b t"    '("Toggle Table.el" . org-table-create-with-table.el)
-             "b -"    '("Insert Hline" . org-table-insert-hline)
-             "B"      '(nil :which-key "Babel")
-             "B t"    '("Tangle" . org-babel-tangle)
-             "B e"    '("Execute Block" . org-babel-execute-src-block)
-             "B E"    '("Execute Buffer" . org-babel-execute-buffer)
-             "B h"    '("Hide Result" . org-babel-hide-result-toggle)
-             "B H"    '("Hide All Results" . org-babel-result-hide-all)
-             "B k"    '("Remove Result" . org-babel-remove-result)
-             "B K"    '("Remove All Results" . mjs/org-babel-remove-result-blocks)
-             "B n"    '("Next Src Block" . org-babel-next-src-block)
-             "B p"    '("Pervious Src Block" . org-babel-previous-src-block)
-             "c"      '(nil :which-key "Clock")
-             "c e"    '("Set Effort" . org-set-effort)
-             "c E"    '("Increase Effort" . org-inc-effort)
-             "c i"    '("Clock-in" . org-clock-in)
-             "c o"    '("Clock-out" . org-clock-out)
-             "c g"    '("Goto Current Clock" . org-clock-goto)
-             "c c"    '("Cancel Clock" . org-clock-cancel)
-             "c r"    '("Report" . org-clock-report)
-             "C"      '("Capture" . org-capture)
-             "d"      '(nil :which-key "Date")
-             "d d"    '("Deadline" . org-deadline)
-             "d s"    '("Schedule" . org-schedule)
-             "d t"    '("Time Stamp" . org-time-stamp)
-             "d T"    '("Inactive Time Stamp" . org-time-stamp-inactive)
-             "f"      '(nil :whick-key "File Links")
-             "f m"    '("Move File" . mjs/move-and-update-file-links)
-             "f d"    '("Move Directory" . mjs/move-dir-update-link-links)
-             "f r"    '("Regenerate Links" . mjs/regenerate-file-links)
-             "f R"    '("Regenerate Links Globally" . mjs/regenerate-file-links-globally)
-             "h"      '("Toggle Heading" . org-toggle-heading)
-             "i"      '(nil :which-key "ID")
-             "i c"    '("Copy ID" . org-id-copy)
-             "i i"    '("Create ID" . org-id-get-create)
-             "i g"    '("Goto ID" . org-id-goto)
-             "i u"    '("Update IDs" . org-id-update-id-locations)
-             "I"      '("Create ID" . org-id-get-create)
-             "l"      '(nil :which-key "Links")
-             "l i"    '("Store ID Link" . org-id-store-link)
-             "l l"    '("Insert Link" . org-insert-link)
-             "l L"    '("Insert All Links" . org-insert-all-links)
-             "l t"    '("Toggle Links" . org-toggle-link-display)
-             "l s"    '("Store Link" . org-store-link)
-             "l S"    '("Insert Stored Link" . org-insert-last-stored-link)
-             "m"      '(nil :which-key "Roam")
-             "m b"    '("Toggle Roam Buffer" . org-roam-buffer-toggle)
-             "m f"    '("Find Node" . org-roam-node-find)
-             "m F"    '("Find Ref" . org-roam-ref-find)
-             "m g"    '("Graph" . org-roam-graph)
-             "m i"    '("Insert Link" . org-roam-node-insert)
-             "m c"    '("Roam Capture" . org-roam-capture)
-             "m s"    '("Roam Sync" . org-roam-db-sync)
-             "m S"    '("Stripe Roam Links" . mjs/strip-org-roam-links)
-             "m d"    '("Daily" . org-roam-dailies-capture-today)
-             "m r"    '("Random Node" . org-roam-node-random)
-             "r"      '("Refile" . org-refile)
-             "R"      '("Refile DWIM" . mjs/org-refile-dwim)
-             "s"      '("Search Headings" . consult-org-heading)
-             "S"      '(nil :which-key "Subtree")
-             "S a"    '("Toggle Archive Tag" . org-toggle-archive-tag)
-             "S A"    '("Archive" . org-archive-subtree)
-             "S b"    '("Move to Buffer" . org-tree-to-indirect-buffer)
-             "S c"    '("Clone" . org-clone-subtree-with-time-shift)
-             "S d"    '("Delete" . org-cut-subtree)
-             "S h"    '("Promote" . org-promote-subtree)
-             "S j"    '("Move Down" . org-move-subtree-down)
-             "S k"    '("Move Up" . org-move-subtree-up)
-             "S l"    '("Demote" . org-demote-subtree)
-             "S n"    '("Narrow to Subtree" . org-narrow-to-subtree)
-             "S N"    '("Widen" . widen)
-             "S r"    '("Refile" . org-refile)
-             "S s"    '("Sparse Subtree" . org-sparse-tree)
-             "S S"    '("Sort" . org-sort)
-             "t"      '("Set TODO State" . org-todo)
-             "T"      '("Set Tags" . org-set-tags-command)))
+  :init (mjs-local-leader-def :states '(normal insert visual motion)
+          :keymaps 'org-mode-map
+          "a"      '("Archive" . org-archive-subtree)
+          "A"      '("Attach" . org-attach)
+          "b"      '(nil :which-key "Tables")
+          "b a"    '("Align" . org-table-align)
+          "b b"    '("Blank" . org-table-blank-field)
+          "b c"    '("Convert to Table" . org-table-create-or-convert-from-region)
+          "b d"    '(nil :which-key "Delete")
+          "b d c"  '("Delete Column" . org-table-delete-column)
+          "b d r"  '("Delere Row" . org-table-kill-row)
+          "b e"    '("Edit" . org-table-edit-field)
+          "b f"    '("Edit Formulas" . org-table-edit-formulas)
+          "b h"    '("Help" . org-table-field-info)
+          "b i"    '(nil :which-key "Insert")
+          "b i c"  '("Insert Column" . org-table-insert-column)
+          "b i r"  '("Insert Row" . org-table-insert-row)
+          "b i h"  '("Insert Hline" . org-table-insert-hline)
+          "b i H"  '("Insert Hline & Move" . org-table-hline-and-move)
+          "b s"    '("Sort Rows" . org-table-sort-lines)
+          "b r"    '("Recalculate Formulas" . org-table-recalculate)
+          "b R"    '("Recalculate All Tables" . org-table-recalculate-buffer-tables)
+          "b t"    '("Toggle Table.el" . org-table-create-with-table.el)
+          "b -"    '("Insert Hline" . org-table-insert-hline)
+          "B"      '(nil :which-key "Babel")
+          "B t"    '("Tangle" . org-babel-tangle)
+          "B e"    '("Execute Block" . org-babel-execute-src-block)
+          "B E"    '("Execute Buffer" . org-babel-execute-buffer)
+          "B h"    '("Hide Result" . org-babel-hide-result-toggle)
+          "B H"    '("Hide All Results" . org-babel-result-hide-all)
+          "B k"    '("Remove Result" . org-babel-remove-result)
+          "B K"    '("Remove All Results" . mjs/org-babel-remove-result-blocks)
+          "B n"    '("Next Src Block" . org-babel-next-src-block)
+          "B p"    '("Pervious Src Block" . org-babel-previous-src-block)
+          "c"      '(nil :which-key "Clock")
+          "c e"    '("Set Effort" . org-set-effort)
+          "c E"    '("Increase Effort" . org-inc-effort)
+          "c i"    '("Clock-in" . org-clock-in)
+          "c o"    '("Clock-out" . org-clock-out)
+          "c g"    '("Goto Current Clock" . org-clock-goto)
+          "c c"    '("Cancel Clock" . org-clock-cancel)
+          "c r"    '("Report" . org-clock-report)
+          "C"      '("Capture" . org-capture)
+          "d"      '(nil :which-key "Date")
+          "d d"    '("Deadline" . org-deadline)
+          "d s"    '("Schedule" . org-schedule)
+          "d t"    '("Time Stamp" . org-time-stamp)
+          "d T"    '("Inactive Time Stamp" . org-time-stamp-inactive)
+          "f"      '(nil :whick-key "File Links")
+          "f m"    '("Move File" . mjs/move-and-update-file-links)
+          "f d"    '("Move Directory" . mjs/move-dir-update-link-links)
+          "f r"    '("Regenerate Links" . mjs/regenerate-file-links)
+          "f R"    '("Regenerate Links Globally" . mjs/regenerate-file-links-globally)
+          "h"      '("Toggle Heading" . org-toggle-heading)
+          "i"      '(nil :which-key "ID")
+          "i c"    '("Copy ID" . org-id-copy)
+          "i i"    '("Create ID" . org-id-get-create)
+          "i g"    '("Goto ID" . org-id-goto)
+          "i u"    '("Update IDs" . org-id-update-id-locations)
+          "I"      '("Create ID" . org-id-get-create)
+          "l"      '(nil :which-key "Links")
+          "l i"    '("Store ID Link" . org-id-store-link)
+          "l l"    '("Insert Link" . org-insert-link)
+          "l L"    '("Insert All Links" . org-insert-all-links)
+          "l t"    '("Toggle Links" . org-toggle-link-display)
+          "l s"    '("Store Link" . org-store-link)
+          "l S"    '("Insert Stored Link" . org-insert-last-stored-link)
+          "m"      '(nil :which-key "Roam")
+          "m b"    '("Toggle Roam Buffer" . org-roam-buffer-toggle)
+          "m f"    '("Find Node" . org-roam-node-find)
+          "m F"    '("Find Ref" . org-roam-ref-find)
+          "m g"    '("Graph" . org-roam-graph)
+          "m i"    '("Insert Link" . org-roam-node-insert)
+          "m c"    '("Roam Capture" . org-roam-capture)
+          "m s"    '("Roam Sync" . org-roam-db-sync)
+          "m S"    '("Stripe Roam Links" . mjs/strip-org-roam-links)
+          "m d"    '("Daily" . org-roam-dailies-capture-today)
+          "m r"    '("Random Node" . org-roam-node-random)
+          "r"      '("Refile" . org-refile)
+          "R"      '("Refile DWIM" . mjs/org-refile-dwim)
+          "s"      '("Search Headings" . consult-org-heading)
+          "S"      '(nil :which-key "Subtree")
+          "S a"    '("Toggle Archive Tag" . org-toggle-archive-tag)
+          "S A"    '("Archive" . org-archive-subtree)
+          "S b"    '("Move to Buffer" . org-tree-to-indirect-buffer)
+          "S c"    '("Clone" . org-clone-subtree-with-time-shift)
+          "S d"    '("Delete" . org-cut-subtree)
+          "S h"    '("Promote" . org-promote-subtree)
+          "S j"    '("Move Down" . org-move-subtree-down)
+          "S k"    '("Move Up" . org-move-subtree-up)
+          "S l"    '("Demote" . org-demote-subtree)
+          "S n"    '("Narrow to Subtree" . org-narrow-to-subtree)
+          "S N"    '("Widen" . widen)
+          "S r"    '("Refile" . org-refile)
+          "S s"    '("Sparse Subtree" . org-sparse-tree)
+          "S S"    '("Sort" . org-sort)
+          "t"      '("Set TODO State" . org-todo)
+          "T"      '("Set Tags" . org-set-tags-command))
+  :custom (org-fontify-quote-and-verse-blocks t)
+          (org-src-fontify-natively nil)
+  :config (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
+  (set-face-attribute 'org-quote nil :background (catppuccin-get-color 'mantle) :extend t))
 
 (defun mjs/org-fix-newline-and-indent (&optional indent _arg _interactive)
   "Mimic `newline-and-indent' in src blocks w/ lang-appropriate indentation."
@@ -1536,7 +1515,7 @@ If on a:
 
 (defun mjs/class-capture ()
   (let* ((class (completing-read "Class: "
-                                 '("cs5311" "cs3411" "cs1121")
+                                 '("cs220" "cs719" "cs760" "cs900")
                                  nil t))
          (file-name (expand-file-name
                      (concat "classes/" class "/"
@@ -1691,7 +1670,7 @@ If on a:
 (use-package olivetti
   :custom (olivetti-body-width 100)
           (olivetti-lighter " 󰘞")
-  :hook org-mode
+  :hook (org-mode . olivetti-mode)
   :init (diminish 'visual-line-mode)
   :init (mjs-local-leader-def :states '(normal insert visual motion)
              :keymaps 'org-mode-map
@@ -1718,25 +1697,38 @@ If on a:
 (add-hook 'org-mode-hook 'org-indent-mode)
 (add-hook 'org-indent-mode-hook (lambda () (diminish 'org-indent-mode)))
 
-(use-package org-superstar-mode
-  :straight (org-superstar :local-repo "org-superstar")
+(use-package org-superstar
   :after org
   :custom (org-superstar-leading-bullet nil)
           (org-hide-leading-stars t)
-  :hook org-mode)
+  :hook (org-mode . org-superstar-mode))
 
 (use-package svg-tag-mode
   :hook org-mode
   :custom (svg-tag-tags
-           '(("^\\*+ \\(TODO\\)" .
+           '(("^\\*+ \\(TODO\\|BLOCKED\\)" .
               ((lambda (tag)
                  (svg-lib-tag tag nil
-                   :margin 0
-                   :font-family "JetBrainsMono"
-                   :font-weight 500
-                   :background (alist-get 'peach catppuccin-frappe-colors)
-                   :foreground (alist-get 'base catppuccin-frappe-colors)
-                   )))))))
+                              :margin 0
+                              :font-family "JetBrainsMono Nerd Font"
+                              :font-weight 500
+                              :background (catppuccin-get-color 'peach)
+                              :foreground (catppuccin-get-color 'base)
+                              ))))
+                ("^\\*+ \\(NEXT\\)" . ((lambda (tag)
+                                         (svg-lib-tag tag nil
+                                                      :margin 0
+                                                      :font-family "JetBrainsMono Nerd Font"
+                                                      :font-weight 500
+                                                      :background (catppuccin-get-color 'green)
+                                                      :foreground (catppuccin-get-color 'base)))))
+                ("^\\*+ \\(DONE\\|KILLED\\)" . ((lambda (tag)
+                                         (svg-lib-tag tag nil
+                                                      :margin 0
+                                                      :font-family "JetBrainsMono Nerd Font"
+                                                      :font-weight 500
+                                                      :foreground (catppuccin-get-color 'overlay0)))))
+             )))
 
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
@@ -1769,16 +1761,15 @@ If on a:
 (use-package saveplace-pdf-view
   :after pdf-view)
 
-(use-package org-noter
-  :config
+(use-package org-noter)
+  ;; :config
   ;; Your org-noter config ........
-  (require 'org-noter-pdf "~/.config/emacs-configs/mjs/straight/repos/org-pdftools/org-noter-pdftools.el"))
+  ;; (require 'org-noter-pdf "~/.config/emacs-configs/mjs/straight/repos/org-pdftools/org-noter-pdftools.el"))
 
 (use-package org-pdftools
   :hook (org-mode . org-pdftools-setup-link))
 
 (use-package org-noter-pdftools
-  :load-path "straight/repos/org-pdftools/"
   :after org-noter
   :config
   ;; Add a function to ensure precise note is inserted
@@ -1857,7 +1848,7 @@ With a prefix ARG, remove start location."
           (org-roam-node-display-template
            (concat "${title:*} "
                    (propertize "${tags:30}" 'face 'org-tag)))
-  :general (mjs-leader-def :states '(normal insert visual motion)
+  :init (mjs-leader-def :states '(normal insert visual motion)
              "n r"   '(nil :which-key "Roam")
              "n r b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
              "n r f" '("Find Node" . org-roam-node-find)
@@ -1870,7 +1861,7 @@ With a prefix ARG, remove start location."
              "n r d" '("Daily" . org-roam-dailies-capture-today)
              "n r r" '("Random Node" . org-roam-node-random)
              "i U"   '("Update Roam IDs" . org-roam-update-org-id-locations))
-           (:states 'insert :keymaps 'org-mode-map
+  :general (:states 'insert :keymaps 'org-mode-map
                     "C-f" #'org-roam-node-insert
                     "C-S-f" #'org-insert-link)
   :hook (org-mode . org-roam-db-autosync-mode))
@@ -1969,11 +1960,11 @@ With a prefix ARG, remove start location."
   "f M" '("Move File & Update Links" . mjs/move-and-update-file-links))
 
 (use-package org-cliplink
-  :general (mjs-local-leader-def :states '(normal insert visual motion)
+  :init (mjs-local-leader-def :states '(normal insert visual motion)
              :keymaps 'org-mode-map
              "l c" '("Paste URL" . mjs/clean-org-cliplink)
              "l C" '("Paste Raw URL" . org-cliplink))
-  :init (defun mjs/clean-org-cliplink ()
+        (defun mjs/clean-org-cliplink ()
           (interactive)
           (org-cliplink-insert-transformed-title
           (org-cliplink-clipboard-content)     ;take the URL from the CLIPBOARD
@@ -2011,7 +2002,7 @@ With a prefix ARG, remove start location."
                                   "** Directions\n\n")) t))
 
 (use-package ox-pandoc
-  :general (mjs-local-leader-def :states '(normal insert visual motion)
+  :init (mjs-local-leader-def :states '(normal insert visual motion)
              :keymap 'org-mode-map
              "e" '(nil :which-key "Export")
              "e e" '("Export Dispatcher" . org-export-dispatch) 
@@ -2043,13 +2034,13 @@ With a prefix ARG, remove start location."
              "e w o" '("Open MediaWiki File" . org-pandoc-export-to-mediawiki-and-open)))
 
 (use-package ox-hugo
-  :general (mjs-local-leader-def :states '(normal insert visual motion)
+  :init (mjs-local-leader-def :states '(normal insert visual motion)
              :keymaps 'org-mode-map
              "e h" '(nil :which-key "Hugo")
              "e h d" '("DWIM" . org-hugo-export-wim-to-md)
              "e h a" '("All Subtrees" . (lambda () (org-hugo-wim-to-md t)))
              "e h o" '("File" . org-hugo-export-to-md))
-  :init (defun mjs/hugo-blowfish-thumbnail (&rest args)
+        (defun mjs/hugo-blowfish-thumbnail (&rest args)
           (interactive)
           (if-let ((hugo-info (org-collect-keywords '("hugo_base_dir" "hugo_section")))
                    (base-dir (nth 1 (nth 0 hugo-info))) 
@@ -2078,10 +2069,10 @@ With a prefix ARG, remove start location."
 (use-package org-tree-slide
   :commands org-tree-slide-mode
   :diminish " 󰐨"
-  :general (mjs-local-leader-def :states '(normal insert visual motion)
+  :init (mjs-local-leader-def :states '(normal insert visual motion)
              :keymaps 'org-mode-map
                     "p" '("Present" . org-tree-slide-mode))
-           (:states '(normal insert motion) :keymaps 'org-tree-slide-mode-map
+  :general (:states '(normal insert motion) :keymaps 'org-tree-slide-mode-map
                     "C-<right>" #'org-tree-slide-move-next-tree
                     "C-<left>" #'org-tree-slide-move-previous-tree)
   :custom (org-tree-slide-activate-message " ")
@@ -2095,3 +2086,14 @@ With a prefix ARG, remove start location."
           (add-hook 'org-tree-slide-stop-hook
                     (lambda ()
                       (text-scale-mode -1))))
+
+(use-package ledger-mode
+  :custom (ledger-clear-whole-transactions 1)
+  (ledger-mode-should-check-version nil))
+
+(use-package evil-ledger
+  :hook (ledger-mode . evil-ledger-mode))
+
+(require 'org-timeblock)
+(mjs-leader-def :states '(normal insert visual motion)
+  "B" '("Time Blocks" . org-timeblock))

@@ -118,24 +118,6 @@
           ];
         };
 
-        "sol" = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-
-          specialArgs = inputs;
-          modules = [
-            ./system/sol.nix
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-
-              home-manager.users.mjs = import ./home/sol.nix;
-              home-manager.extraSpecialArgs = inputs;
-            }
-          ];
-        };
-
         "luna" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
 
@@ -154,6 +136,24 @@
               home-manager.extraSpecialArgs = inputs;
 
               nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];
+            }
+          ];
+        };
+
+        "sol" = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+
+          specialArgs = inputs;
+          modules = [
+            ./system/sol.nix
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+
+              home-manager.users.mjs = import ./home/sol.nix;
+              home-manager.extraSpecialArgs = inputs;
             }
           ];
         };

@@ -4,7 +4,7 @@ effect-blur=5x5
 ignore-empty-password
 clock
 timestr=%H:%M
-datestr=%a, %d %B %Y
+datestr=%a, %d %b %Y
 daemonize
 image=~/.config/swaylock/swaylock.png
 

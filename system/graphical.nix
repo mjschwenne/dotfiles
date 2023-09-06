@@ -7,7 +7,7 @@
 
   # Enable sound with pipewire.
   sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  hardware.pulseaudio.enable = true;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -34,9 +34,13 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.sessionVariables.NIXOS_OZONE_WL = "1"; # enable wayland for electron apps
+  fonts.fontconfig.enable = true;
   environment.systemPackages = with pkgs; [
     # SDDM theme
     libsForQt5.qt5.qtgraphicaleffects
+
+    # Fonts
+    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
   # Setup SDDM display manager

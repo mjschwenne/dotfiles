@@ -37,9 +37,6 @@
   # Need to enable the user shell program
   programs.fish.enable = true;
 
-  # Enable flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
   # Power management
   services.upower.enable = true;
 
@@ -81,7 +78,9 @@
     # CLI Utilities
     fzf
     tree
+    which
     file
+    gawk
     htop
 
     # Networking
@@ -100,6 +99,7 @@
     gnutar
     zip
     unzip
+    zstd
     xz
     p7zip
 
@@ -107,6 +107,9 @@
     enchant
     hunspell
     hunspellDicts.en_US-large
+
+    # Security
+    gnupg
   ];
 
   # Text editor
