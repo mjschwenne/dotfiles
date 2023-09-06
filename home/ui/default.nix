@@ -1,4 +1,4 @@
-{ ... }: {
+{ osConfig, ... }: {
   imports = [ ./swaync ./rofi ./wlogout ./swaylock ];
 
   home.file.".config/eww" = {
@@ -86,7 +86,9 @@
 
     # monitor rules
     monitor = ,preferred,auto,1
-       monitor = eDP-1,1920x1080,0x0,1
+    monitor = ${
+      if osConfig.networking.hostName == "luna" then "eDP-1,2736x1824,0x0,2" else "eDP-1,1920x1080,0x0,1"
+    }
 
     general {
     	cursor_inactive_timeout = 3;
