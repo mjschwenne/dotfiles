@@ -1,7 +1,4 @@
-{ config
-, pkgs
-, ...
-} @ inputs: {
+{ pkgs, ... } @ inputs: {
   # User based config
   imports = [ inputs.nixvim.homeManagerModules.nixvim ];
 
@@ -169,6 +166,7 @@
       };
 
       nvim-colorizer.enable = true;
+      telescope.enable = true;
 
       nvim-tree = {
         enable = true;
@@ -181,9 +179,12 @@
         enable = true;
         servers = {
           clangd.enable = true;
-          rnix-lsp.enable = true;
+          nixd.enable = true;
           pyright.enable = true;
           rust-analyzer.enable = true;
+          java-language-server.enable = true;
+          julials.enable = true;
+          ltex.enable = true;
         };
         keymaps.diagnostic = {
           "<leader><localleader>i" = {
@@ -362,6 +363,7 @@
           "css"
           "fish"
           "java"
+          "julia"
           "latex"
           "ledger"
           "lua"

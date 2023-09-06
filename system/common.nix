@@ -1,7 +1,10 @@
 { pkgs, ... }: {
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -60,7 +63,7 @@
     cargo
 
     # Julia
-    julia
+    julia-bin
 
     # Java
     jdk17

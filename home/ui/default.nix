@@ -2,12 +2,12 @@
   imports = [ ./swaync ./rofi ./wlogout ./swaylock ];
 
   home.file.".config/eww" = {
-    source = ./ui/eww;
+    source = ./eww;
     recursive = true;
   };
 
   home.file.".config/hypr/scripts" = {
-    source = ./ui/scripts;
+    source = ./scripts;
     recursive = true;
   };
 

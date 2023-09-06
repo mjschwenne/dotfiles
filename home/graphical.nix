@@ -30,6 +30,7 @@
   imports = [ ./ui ./applications ./editors/emacs ];
 
   # Packages and fonts that should be installed to the user profile.
+  fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
     # Web browsers
     librewolf 
