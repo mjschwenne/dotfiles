@@ -11,7 +11,7 @@
       ssh = "kitty +kitten ssh";
       m = "math";
       nix-shell = "nix-shell --run fish";
-      ssh-cs400 = ''
+      cs400-ssh = ''
         gcloud compute ssh --zone "us-central1-a" "cs400-vm" --project "cs-400-398116"'';
     };
     functions = {

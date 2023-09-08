@@ -89,4 +89,9 @@
     enableSSHSupport = true;
     pinentryFlavor = "gnome3";
   };
+
+  # Enable CUPS to print documents.
+  services.printing = {
+    enable = true;
+  };
 }

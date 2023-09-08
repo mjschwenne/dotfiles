@@ -1634,9 +1634,9 @@ If on a:
 (setq org-refile-use-outline-path 'file)
 (setq org-outline-path-complete-in-steps nil)
 
-(customize-set-variable 'org-startup-with-latex-preview nil)
+(customize-set-variable 'org-startup-with-latex-preview t)
 (setq org-format-latex-options
-      (plist-put org-format-latex-options :scale 1.5))
+      (plist-put org-format-latex-options :scale 1.1))
 (add-to-list 'org-latex-packages-alist '("" "sfmath" t))
 (add-to-list 'org-latex-packages-alist '("margin=1in" "geometry" t))
 (add-to-list 'org-latex-packages-alist '("" "parskip" t))

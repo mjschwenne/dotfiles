@@ -53,6 +53,7 @@
     # Misc Graphical Applications
     evince
     gimp
+    xournalpp
 
     # LaTeX
     (texlive.combine {
