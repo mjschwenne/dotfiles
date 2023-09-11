@@ -99,6 +99,7 @@
     kanshi
     grim
     slurp
+    hyprpicker
   ];
 
   programs.kitty = {
