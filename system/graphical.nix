@@ -69,6 +69,11 @@
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
   };
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
   # File manager
   services.gvfs.enable = true;
   services.tumbler.enable = true;

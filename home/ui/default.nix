@@ -87,7 +87,9 @@
     # monitor rules
     monitor = ,preferred,auto,1
     monitor = ${
-      if osConfig.networking.hostName == "luna" then "eDP-1,2736x1824,0x0,2" else "eDP-1,1920x1080,0x0,1"
+      if osConfig.networking.hostName == "luna"
+      then "eDP-1,2736x1824,0x0,2"
+      else "eDP-1,1920x1080,0x0,1"
     }
 
     general {
@@ -131,7 +133,7 @@
     windowrule=workspace 8,thunderbird
     windowrule=float,title:^(Write:)(.*)(- Thunderbird)$
     windowrule=workspace 9,Spotify
-    windowrule=workspace 10,discord
+    windowrule=workspace 10,WebCord
     windowrule=float,title:^(Open Files)$
     windowrule=float,class:^(zenity)$
     windowrule=float,title:^(Compact folders)$
@@ -154,7 +156,7 @@
     bind = $mod, F7, exec, emacs
     bind = $mod, F8, exec, thunderbird
     bind = $mod, F9, exec, spotify
-    bind = $mod, F10, exec, discord
+    bind = $mod, F10, exec, webcord
     bind = $mod, F11, exec, evince
     bind = $mod, F12, exec, pavucontrol
     bind = $mod, RETURN, exec, kitty

@@ -26,6 +26,10 @@
     package = pkgs.catppuccin-cursors.mochaLight;
     name = "Catppuccin-Mocha-Light-Cursors";
   };
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
+  };
 
   imports = [ ./ui ./applications ./editors/emacs ];
 
@@ -50,10 +54,13 @@
     pass-secret-service
     protonmail-bridge
 
-    # Misc Graphical Applications
+    # Document-based Applications
     evince
-    gimp
     xournalpp
+    libsForQt5.okular
+
+    # Misc Graphical Applications
+    gimp
 
     # LaTeX
     (texlive.combine {
