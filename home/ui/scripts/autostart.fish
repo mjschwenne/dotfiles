@@ -10,6 +10,7 @@ end
 # autostart programs when hyprland is launched, assuming that they are not already running
 
 /home/mjs/.config/hypr/scripts/wallpaper.fish interval 300 &
+/home/mjs/.config/hypr/scripts/monitor.fish &
 eww daemon; eww open primary_panel; eww open secondary_panel
 swaync &
 nm-applet & 
