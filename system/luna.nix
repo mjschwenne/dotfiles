@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{ pkgs, lib, ... }: {
   imports = [
     # Include the results of the hardware scan.
     ./luna-hardware.nix
@@ -9,8 +9,11 @@
   networking.hostName = "luna"; # Define your hostname.
 
   users.users.mjs.extraGroups = [ "surface-control" ];
+  microsoft-surface.ipts.enable = lib.mkForce true;
 
-  microsoft-surface.surface-control.enable = true;
+  environment.systemPackages = with pkgs; [
+    iptsd
+  ];
 
   # Adjust screen size for SDDM
   services.xserver.displayManager.sddm.sugarCandyNix.settings = {

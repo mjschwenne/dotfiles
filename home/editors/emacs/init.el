@@ -53,10 +53,12 @@
 (general-create-definer mjs-leader-def
 	:prefix "SPC"
 	:non-normal-prefix "M-SPC"
+    :states '(insert montion visual normal)
 	:whick-key "Leader")
 (general-create-definer mjs-local-leader-def
 	:prefix "SPC m"
 	:non-normal-prefix "M-SPC m"
+    :states '(insert montion visual normal)
 	:whick-key "Local Leader")
 (general-unbind :states '(insert motion visual) :keymaps 'global "M-SPC")
 
@@ -222,7 +224,7 @@
      :after evil
      :diminish evil-collection-unimpaired-mode
      :custom (evil-collection-setup-minibuffer t)
-     :config (evil-collection-init))
+     :init (evil-collection-init))
 
    (use-package evil-args
      :after evil
@@ -233,11 +235,11 @@
               (:keymaps 'evil-outer-text-objects-map "a" 'evil-outer-arg)
               (:states 'normal
                        "L" 'evil-forward-arg
-                       "H" 'evil-backwards-arg
+                       "H" 'evil-backward-arg
                        "K" 'evil-jump-out-args)
               (:states 'motion
                        "L" 'evil-forward-arg
-                       "H" 'evil-backwards-arg))
+                       "H" 'evil-backward-arg))
 
 ; (use-package evil-easymotion
 ;   :after evil
@@ -348,7 +350,7 @@
   (interactive)
   (restart-emacs (list "--with-profile" chemacs-profile-name)))
 
-(mjs-leader-def :states '(normal insert visual motion)
+(mjs-leader-def :keymaps 'override
                 "q" '(nil :which-key "Quit")
                 "q d" '("Restart Emacs Server" . mjs/restart-server)
                 "q f" '("Delete Frame" . save-buffers-kill-emacs)
@@ -464,7 +466,7 @@ a prefix argument."
           (user-error "Could not copy filename in current buffer.")))
     (error "Couldn't find filename in current buffer.")))
 
-(mjs-leader-def :states '(normal insert visual motion)
+(mjs-leader-def :keymaps 'override
   "b"   '(nil :which-key "Buffer")
   "b b" '("Switch Buffer" . mjs/switch-buffer)
   "b B" '("Switch Buffer (all)" . consult-buffer)
@@ -511,7 +513,7 @@ a prefix argument."
 (use-package emojify
   :hook (after-init . global-emojify-mode))
 
-(mjs-leader-def :states '(normal insert visual motion) :keymaps 'override
+(mjs-leader-def :keymaps 'override
   "i"  '(nil :which-key "Insert")
   "i u" '("Character" . insert-char)
   "i r" '("Evil Registers" . evil-show-registers)
@@ -645,8 +647,8 @@ a prefix argument."
                        (string= (org-get-todo-state) "NEXT"))
             (point)))
          (dashboard-setup-startup-hook)
-		 (mjs-leader-def :states '(normal insert motion visual)
-             "d" '("Open Dashboard" . dashboard-open))
+		 (mjs-leader-def :keymaps 'override
+           "d" '("Open Dashboard" . dashboard-open))
   :commands (dashboard-jump-to-agenda dashboard-jump-to-recents)
   :general 
            (:keymaps #'dashboard-mode-map :states 'normal
@@ -693,7 +695,7 @@ a prefix argument."
                                              (window-width 0.5))))
   :init (popper-mode +1)
         (popper-echo-mode +1)
-		(mjs-leader-def :states '(normal insert visual motion)
+		(mjs-leader-def :keymaps 'override
 					 "p" '(nil :which-key "Popup")
 					 "p p" '("Toggle Popup" . popper-toggle-latest)
 					 "t"   '(nil :which-key "Toggle")
@@ -707,7 +709,7 @@ a prefix argument."
           (advice-add #'evil-force-normal-state :after #'mjs/escape-popups))
 
 (use-package helpful
-  :init (mjs-leader-def :states '(normal insert visual motion)
+  :init (mjs-leader-def :keymaps 'override
                            "h" '(nil :which-key "Help")
                            "h f" '("Callable" . helpful-callable)
                            "h F" '("Function" . helpful-function)
@@ -783,7 +785,7 @@ a prefix argument."
 
 (use-package consult
   :init (recentf-mode 1)
-	(mjs-leader-def :states '(normal insert visual motion)
+	(mjs-leader-def :keymaps 'override
 				 "c"     '(nil :which-key "Consult")
 				 "c b"   '("Buffer" . consult-buffer)
 				 "c c"   '("Complex Command" . consult-complex-command)
@@ -827,7 +829,7 @@ a prefix argument."
 
 (use-package embark
   :commands embark-act embark-dwim embark-bindings
-  :init (mjs-leader-def :states '(normal insert visual motion)
+  :init (mjs-leader-def :keymaps 'override
              "E" '(nil :which-key "Embark")
              "E a" '("Embark Act"       . embark-act)
              "E A" '("Embark DWIM"      . embark-dwim)
@@ -902,7 +904,7 @@ a prefix argument."
       (if (or remove-all (< pos end-block))
           (org-bable-remove-results)))))
 
-(mjs-leader-def :states '(normal insert visual motion) :keymaps 'override
+(mjs-leader-def :keymaps 'override
   "a"   '("Agenda" . org-agenda)
   "A"   '("GTD Agenda" . (lambda () (interactive) (org-agenda nil "g")))
   "n"   '(nil :which-key "Notes")
@@ -1471,12 +1473,13 @@ If on a:
   :custom (org-contacts-files
            (list (concat org-directory "contacts.org"))))
 
-(mjs-leader-def :states '(normal insert visual motion) :keymaps 'org-capture-mode-map
+(mjs-leader-def :keymaps 'org-capture-mode-map
+  ;; :predicate '(bound-and-true-p org-capture-mode)
   "C"   '(nil :which-key "Capture")
   "C f" '("Finish Capture" . org-capture-finalize)
   "C k" '("Abort Capture" . org-capture-kill)
   "C r" '("Refile Capture" . org-capture-refile))
-(mjs-leader-def :states '(normal insert visual motion) 
+(mjs-leader-def :predicate '(not (bound-and-true-p org-capture-mode))
   "C" '("Capture" . org-capture))
 
 (defun mjs/org-capture-update-header ()
@@ -1635,25 +1638,40 @@ If on a:
 (setq org-outline-path-complete-in-steps nil)
 
 (customize-set-variable 'org-startup-with-latex-preview t)
+(customize-set-variable 'org-preview-latex-default-process 'dvisvgm)
 (setq org-format-latex-options
-      (plist-put org-format-latex-options :scale 1.1))
+      (plist-put org-format-latex-options :scale 1.0))
 (add-to-list 'org-latex-packages-alist '("" "sfmath" t))
 (add-to-list 'org-latex-packages-alist '("margin=1in" "geometry" t))
 (add-to-list 'org-latex-packages-alist '("" "parskip" t))
 
+(defun mjs/resize-org-latex-overlays ()
+  (interactive)
+  (cl-loop for o in (car (overlay-lists))
+           if (eq (overlay-get o 'org-overlay-type) 'org-latex-overlay)
+           do (plist-put (cdr (overlay-get o 'display))
+                         :scale (expt text-scale-mode-step
+                                      text-scale-mode-amount))))
+(add-hook 'text-scale-mode-hook (lambda ()
+                                  (if (and text-scale-mode
+                                           (eq major-mode 'org-mode))
+                                      (mjs/resize-org-latex-overlays)
+                                    (if (eq major-mode 'org-mode)
+                                        (mjs/resize-org-latex-overlays)))))
+
 (use-package org-fragtog
- :hook (org-mode . (lambda ()
-                     (add-hook 'evil-insert-state-entry-hook
-                               (lambda ()
-                                 (when (eq major-mode 'org-mode)
-                                   (org-fragtog-mode +1))))
-                     (add-hook 'evil-insert-state-exit-hook
-                               (lambda ()
-                                 (when (eq major-mode 'org-mode)
-                                   (progn
-                                     (org-fragtog-mode -1)
-                                     (if (org-inside-LaTeX-fragment-p)
-                                         (org-latex-preview)))))))))
+  :hook (org-mode . (lambda ()
+                      (add-hook 'evil-insert-state-entry-hook
+                                (lambda ()
+                                  (when (eq major-mode 'org-mode)
+                                    (org-fragtog-mode +1))))
+                      (add-hook 'evil-insert-state-exit-hook
+                                (lambda ()
+                                  (when (eq major-mode 'org-mode)
+                                    (progn
+                                      (org-fragtog-mode -1)
+                                      (if (org-inside-LaTeX-fragment-p)
+                                          (org-latex-preview)))))))))
 
 (use-package org-appear
   :after org
@@ -1672,8 +1690,7 @@ If on a:
           (olivetti-lighter " 󰘞")
   :hook (org-mode . olivetti-mode)
   :init (diminish 'visual-line-mode)
-  :init (mjs-local-leader-def :states '(normal insert visual motion)
-             :keymaps 'org-mode-map
+  :init (mjs-local-leader-def :keymaps 'org-mode-map
              "o" '("Toggle Olivetti" . olivetti-mode)))
 
 (use-package flycheck
@@ -1739,7 +1756,9 @@ If on a:
   :custom (pdf-view-display-size 'fit-page)
           (pdf-view-use-scaling t)
           (pdf-view-use-imagemagick nil)
+  ;; :hook (pdf-view-mode . (lambda () (evil-collection-init 'pdf)))
   :config
+    (add-to-list 'evil-normal-state-modes 'pdf-view-mode)
     ;; Silence large file prompts for PDFs
     (defun mjs/suppress-large-file-prompts (fn size op-type filename
                                                &optional offer-raw)
@@ -1848,7 +1867,7 @@ With a prefix ARG, remove start location."
           (org-roam-node-display-template
            (concat "${title:*} "
                    (propertize "${tags:30}" 'face 'org-tag)))
-  :init (mjs-leader-def :states '(normal insert visual motion)
+  :init (mjs-leader-def :keymaps 'override
              "n r"   '(nil :which-key "Roam")
              "n r b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
              "n r f" '("Find Node" . org-roam-node-find)
@@ -1956,12 +1975,11 @@ With a prefix ARG, remove start location."
     )
 ))
 
-(mjs-leader-def :states '(normal insert visual motion) :keymaps 'org-mode-map
+(mjs-leader-def :keymaps 'org-mode-map
   "f M" '("Move File & Update Links" . mjs/move-and-update-file-links))
 
 (use-package org-cliplink
-  :init (mjs-local-leader-def :states '(normal insert visual motion)
-             :keymaps 'org-mode-map
+  :init (mjs-local-leader-def :keymaps 'org-mode-map
              "l c" '("Paste URL" . mjs/clean-org-cliplink)
              "l C" '("Paste Raw URL" . org-cliplink))
         (defun mjs/clean-org-cliplink ()
@@ -2002,8 +2020,7 @@ With a prefix ARG, remove start location."
                                   "** Directions\n\n")) t))
 
 (use-package ox-pandoc
-  :init (mjs-local-leader-def :states '(normal insert visual motion)
-             :keymap 'org-mode-map
+  :init (mjs-local-leader-def :keymap 'org-mode-map
              "e" '(nil :which-key "Export")
              "e e" '("Export Dispatcher" . org-export-dispatch) 
              "e l" '(nil :which-key "LaTeX")
@@ -2034,8 +2051,7 @@ With a prefix ARG, remove start location."
              "e w o" '("Open MediaWiki File" . org-pandoc-export-to-mediawiki-and-open)))
 
 (use-package ox-hugo
-  :init (mjs-local-leader-def :states '(normal insert visual motion)
-             :keymaps 'org-mode-map
+  :init (mjs-local-leader-def :keymaps 'org-mode-map
              "e h" '(nil :which-key "Hugo")
              "e h d" '("DWIM" . org-hugo-export-wim-to-md)
              "e h a" '("All Subtrees" . (lambda () (org-hugo-wim-to-md t)))
@@ -2069,9 +2085,8 @@ With a prefix ARG, remove start location."
 (use-package org-tree-slide
   :commands org-tree-slide-mode
   :diminish " 󰐨"
-  :init (mjs-local-leader-def :states '(normal insert visual motion)
-             :keymaps 'org-mode-map
-                    "p" '("Present" . org-tree-slide-mode))
+  :init (mjs-local-leader-def :keymaps 'org-mode-map
+          "p" '("Present" . org-tree-slide-mode))
   :general (:states '(normal insert motion) :keymaps 'org-tree-slide-mode-map
                     "C-<right>" #'org-tree-slide-move-next-tree
                     "C-<left>" #'org-tree-slide-move-previous-tree)
@@ -2085,7 +2100,12 @@ With a prefix ARG, remove start location."
                       (text-scale-set 4)))
           (add-hook 'org-tree-slide-stop-hook
                     (lambda ()
+                      (text-scale-set 1)
                       (text-scale-mode -1))))
+
+(require 'org-timeblock)
+(mjs-leader-def :keymaps 'override
+  "B" '("Time Blocks" . org-timeblock))
 
 (use-package ledger-mode
   :custom (ledger-clear-whole-transactions 1)
@@ -2094,6 +2114,3 @@ With a prefix ARG, remove start location."
 (use-package evil-ledger
   :hook (ledger-mode . evil-ledger-mode))
 
-(require 'org-timeblock)
-(mjs-leader-def :states '(normal insert visual motion)
-  "B" '("Time Blocks" . org-timeblock))
