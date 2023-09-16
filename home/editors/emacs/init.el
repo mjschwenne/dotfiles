@@ -560,7 +560,9 @@ a prefix argument."
                                        "\\\\" "://"))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
-  (global-ligature-mode t))
+  (global-ligature-mode -1)
+  :hook (prog-mode . ligature-mode)
+        (text-mode . ligature-mode))
 
 (when window-system (global-hl-line-mode 1))
 
@@ -591,17 +593,31 @@ a prefix argument."
                       'face `(:inherit mode-line-emphasis
                               :foreground ,(catppuccin-get-color 'green)))))
                 (propertize (buffer-name) 'face 'mode-line-emphasis))))
+        (telephone-line-defsegment* mjs/position ()
+          (if (eq major-mode 'pdf-view-mode)
+              (let* ((current (pdf-view-current-page))
+                     (max (or
+                           (ignore-errors
+                            (pdf-cache-number-of-pages))
+                              " "))
+                     (percent (if (stringp max)
+                                  " "
+                                (format "%d%%%% "
+                                        (floor (* 100 (/ (float current)
+                                                         (float max))))))))
+                (format "%s %s/%s" percent current max))
+            `((-3 "%p") ,(concat " %3l:%" (if (bound-and-true-p column-number-indicator-zero-based) "c" "C")))))
         (telephone-line-mode +1)
-  :custom telephone-line-lhs
+  :custom (telephone-line-lhs
           '((evil . (telephone-line-evil-tag-segment))
             (accent . (telephone-line-process-segment
                        telephone-line-minor-mode-segment mjs/popup-segment))
-            (nil . (mjs/buffer-mod)))
-          telephone-line-rhs
+            (nil . (mjs/buffer-mod))))
+          (telephone-line-rhs
           '((nil . (telephone-line-misc-info-segment
                     telephone-line-atom-encoding-segment))
             (accent . (telephone-line-major-mode-segment))
-            (evil . (telephone-line-airline-position-segment)))
+            (evil . (mjs/position))))
   :config
     (set-face-foreground 'telephone-line-evil
                          (catppuccin-get-color 'base))
@@ -624,8 +640,7 @@ a prefix argument."
                           (catppuccin-get-color 'surface1))
     (set-face-attribute 'mode-line t
                         :foreground (catppuccin-get-color 'text)
-                        :background (catppuccin-get-color 'base))
-    )
+                        :background (catppuccin-get-color 'base)))
 
 (setq display-line-numbers-type 'relative
        display-line-numbers-current-absolute t)
@@ -865,15 +880,16 @@ a prefix argument."
                       (add-to-list 'completion-at-point-functions #'cape-elisp-block)))
   :config (add-to-list 'completion-at-point-functions #'cape-file))
 
-(use-package company-wordfreq
-  :after cape
-  :init (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-wordfreq)))
+;; (use-package company-wordfre q
+;;   :after cape
+;;   :init (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-wordfreq)))
 
 (global-prettify-symbols-mode +1)
 
 (use-package lispy
-  :hook (emacs-lisp-mode . lispy-mode)
-  :diminish "'󰅲")
+  :diminish "'󰅲"
+  :init (mjs-local-leader-def :keymaps 'emacs-lisp-mode-map
+          "l" '("Lispy" . lispy-mode)))
 
 (diminish 'eldoc-mode)
 
@@ -1474,7 +1490,6 @@ If on a:
            (list (concat org-directory "contacts.org"))))
 
 (mjs-leader-def :keymaps 'org-capture-mode-map
-  ;; :predicate '(bound-and-true-p org-capture-mode)
   "C"   '(nil :which-key "Capture")
   "C f" '("Finish Capture" . org-capture-finalize)
   "C k" '("Abort Capture" . org-capture-kill)
@@ -1864,6 +1879,7 @@ With a prefix ARG, remove start location."
 
 (use-package org-roam
   :custom (org-roam-directory (file-truename org-directory))
+          (org-roam-completion-everywhere t)
           (org-roam-node-display-template
            (concat "${title:*} "
                    (propertize "${tags:30}" 'face 'org-tag)))

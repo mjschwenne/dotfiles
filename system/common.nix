@@ -74,6 +74,7 @@
 
     # NixOS
     nix-output-monitor
+    home-manager
 
     # CLI Utilities
     fzf

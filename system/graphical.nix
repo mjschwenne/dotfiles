@@ -37,7 +37,7 @@
     libsForQt5.qt5.qtgraphicaleffects
 
     # Audio Utilities
-    pulseaudio
+    # pulseaudio
   ];
 
   fonts.fontconfig.enable = true;

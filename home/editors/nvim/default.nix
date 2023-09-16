@@ -74,9 +74,9 @@
             }
           ];
           lualine_c = [ "filename" "diff" ];
-          lualine_x = [ "encoding" "filetype" ];
-          lualine_y = [ "location" ];
-          lualine_z = [ "progress" ];
+          lualine_x = [ "encoding" ];
+          lualine_y = [ "filetype" ];
+          lualine_z = [ "progress" "location" ];
         };
       };
 
