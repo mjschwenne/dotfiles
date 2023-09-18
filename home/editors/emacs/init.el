@@ -759,7 +759,7 @@ a prefix argument."
   ;; properly enabled when called from that section for some reason.
   (vertico-mode)
   (savehist-mode)
-  (general-define-key :keymaps 'vertico-map
+  (general-define-key :keymaps 'vertico-map :states '(insert normal visual motion)
 		"S-RET" #'vertico-exit-input
 		"C-k"   #'vertico-next
 		"C-S-k" #'vertico-next-group
