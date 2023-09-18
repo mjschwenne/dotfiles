@@ -37,9 +37,9 @@
   fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
     # Web browsers
-    librewolf 
+    librewolf
     firefox
-    brave 
+    brave
 
     # Instant Communications
     slack
@@ -48,7 +48,7 @@
     # Password Manager
     keepassxc
 
-    # Email 
+    # Email
     thunderbird
     pass-wayland
     pass-secret-service
@@ -61,13 +61,14 @@
 
     # Misc Graphical Applications
     gimp
+    inkscape
 
     # LaTeX
     (texlive.combine {
-      inherit (texlive) scheme-medium wrapfig capt-of sfmath;
+      inherit (texlive) scheme-medium wrapfig capt-of sfmath standalone preview;
     })
 
-    # Graphical Utilities 
+    # Graphical Utilities
     blueberry
     pavucontrol
     playerctl
@@ -79,7 +80,7 @@
     mate.engrampa
     globalprotect-openconnect
 
-    # CLI Utilities 
+    # CLI Utilities
     pandoc
     hugo
     glow
