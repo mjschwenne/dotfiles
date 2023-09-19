@@ -138,13 +138,14 @@
     windowrule=float,class:^(zenity)$
     windowrule=float,title:^(Compact folders)$
     windowrule=float,title:^(KeePassXC - Browser Access Request)$
+    windowrule=float,title:^(Formula \(pdflatex\))$
 
     # ANIMATIONS
     bezier=overshot,0.05,0.9,0.1,1.1
     animation=windows,1,5,default,slide
 
     # KEYBINDINGS
-       $mod = SUPER
+    $mod = SUPER
 
     # Application hotkeys
     bind = $mod, F1, exec, thunar
