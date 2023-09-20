@@ -132,6 +132,7 @@
     windowrule=pin,rofi
     windowrule=workspace 8,thunderbird
     windowrule=float,title:^(Write:)(.*)(- Thunderbird)$
+    windowrule=float,title:^(Write: \(no subject\))$
     windowrule=workspace 9,Spotify
     windowrule=workspace 10,WebCord
     windowrule=float,title:^(Open Files)$

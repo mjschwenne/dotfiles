@@ -83,6 +83,7 @@
     file
     gawk
     htop
+    calc
 
     # Networking
     wget

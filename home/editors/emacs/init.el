@@ -81,7 +81,7 @@
 ;; Use visual line movements by default
 (evil-global-set-key 'motion "j" 'evil-next-visual-line)
 (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-(general-define-key :states '(normal motion) :map 'override
+(general-define-key :states '(normal motion) :keymaps 'override
                     "C-h" #'evil-window-left
                     "C-j" #'evil-window-down
                     "C-k" #'evil-window-up
@@ -1021,9 +1021,15 @@ a prefix argument."
           "t"      '("Set TODO State" . org-todo)
           "T"      '("Set Tags" . org-set-tags-command))
   :custom (org-fontify-quote-and-verse-blocks t)
-          (org-src-fontify-natively nil)
+  (org-src-fontify-natively nil)
+  (org-pretty-entities t)
+  (org-highlight-latex-and-related '(native latex))
+  :hook (org-mode . turn-on-org-cdlatex)
   :config (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
-  (set-face-attribute 'org-quote nil :background (catppuccin-get-color 'mantle) :extend t))
+  (set-face-attribute 'org-quote nil
+                      :background (catppuccin-get-color 'mantle)
+                      :extend t)
+  (diminish 'org-cdlatex-mode " "))
 
 (defun mjs/org-fix-newline-and-indent (&optional indent _arg _interactive)
   "Mimic `newline-and-indent' in src blocks w/ lang-appropriate indentation."
@@ -1315,11 +1321,12 @@ If on a:
 (add-to-list 'org-structure-template-alist '("sC" . "src C"))
 (add-to-list 'org-structure-template-alist '("cp" . "src cpp"))
 (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-(add-to-list 'org-structure-template-alist '("t" . "src latex"))
+(add-to-list 'org-structure-template-alist '("st" . "src latex"))
 (add-to-list 'org-structure-template-alist '("p" . "src python"))
 (add-to-list 'org-structure-template-alist '("r" . "src rust"))
 (add-to-list 'org-structure-template-alist '("R" . "src R"))
 (add-to-list 'org-structure-template-alist '("j" . "src java"))
+(add-to-list 'org-structure-template-alist '("t" . "LaTeX latex"))
 
 (use-package eros
   :after org
@@ -1680,6 +1687,95 @@ If on a:
                                       (org-fragtog-mode -1)
                                       (if (org-inside-LaTeX-fragment-p)
                                           (org-latex-preview)))))))))
+
+;; While it might seem weird to put the LaTeX configuration here,
+;; I primarily expect to be using it in `org-mode', so I'd like it all in
+;; one place
+
+(use-package latex
+  :ensure auctex
+  :hook ((LaTeX-mode . prettify-symbols-mode)
+         (LaTeX-mode . TeX-fold-mode)
+         (LaTeX-mode . mjs/preview-scale-adjustment))
+  :custom (TeX-newline-function 'newline-and-indent)
+  :init 
+  (defun preview-scale-adjustment ()
+    (setq preview-scale-function
+          (lambda ()
+            (* 0.8 (funcall (preview-scale-from-face))))))
+  (defun mjs/latex-math-from-calc ()
+    "Evaluate `calc' on the contents of line at point"
+    (interactive)
+    (cond ((region-active-p)
+            (let* ((beg (region-beginning))
+                    (end (region-end))
+                    (string (buffer-substring-no-properties beg end)))
+            (kill-region beg end)
+            (insert (calc-eval `(,string calc-langauge latex
+                                            calc-prefer-frac t
+                                            calc-angle-mode rad)))))))
+  :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
+                              "C-S-e" #'mjs/latex-math-from-calc)
+  (mjs-local-leader-def :keymaps 'LaTeX-mode-map
+    "e" '("Insert Environment" . LaTeX-environment)
+    "m" '("Insert Macro" . TeX-insert-marco)
+    "s" '("Insert Section" . LaTeX-section)))
+
+(use-package yasnippet
+  :diminish (yas-minor-mode . " 󰁨")
+  :hook ((LaTeX-mode . yas-minor-mode)
+         (org-mode . yas-minor-mode)
+         (post-self-insert . mjs/yas-try-expanding-auto-snippets))
+  :custom (yas-triggers-in-field t)
+          (yas-snippets-dirs '("~/.emacs.d/snippets"))
+  :init (defun mjs/yas-try-expanding-auto-snippets ()
+          (when (bound-and-true-p yas-minor-mode)
+            (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+              (yas-expand))))
+  (defun mjs/cdlatex-in-yas-field ()
+    ;; Check if we're at the end of the Yas field
+    (when-let* ((_ (overlayp yas--active-field-overlay))
+                (end (overlay-end yas--active-field-overlay)))
+      (if (>= (point) end)
+          ;; Call yas-next-field if cdlatex can't expand here
+          (let ((s (thing-at-point 'sexp)))
+            (unless (and s (assoc (substring-no-properties s)
+                                  cdlatex-command-list-comb))
+              (yas-next-field-or-maybe-expand)
+              t))
+        ;; Otherwise expand and jump to the correct location
+        (let (cdlatex-tab-hook minp)
+          (setq minp
+                (min (save-excursion (cdlatex-tab)
+                                     (point))
+                     (overlay-end yas--active-field-overlay)))
+          (goto-char minp) t))))
+  (defun mjs/yas-next-field-or-cdlatex nil
+    "Jump to the next Yas field correctly with cdlatex active"
+    (interactive)
+    (if (or (bound-and-true-p cdlatex-mode)
+            (bound-and-true-p org-cdlatex-mode))
+        (cdlatex-tab)
+      (yas-next-field-or-maybe-expand)))
+  :config (use-package warnings
+            :config
+            (cl-pushnew '(yasnippet backquote-change)
+                        warning-suppress-types
+                        :test 'equal))
+  (general-define-key :keymaps 'yas-keymap :states 'insert
+                      "<tab>" #'yas-next-field-or-cdlatex
+                      "TAB" #'yas-next-field-or-cdlatex))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+(use-package cdlatex
+  :diminish " "
+  :hook ((LaTeX-mode . turn-on-cdlatex)
+         (cdlatex-tab . yas-expand)
+         (cdlatex-tab . mjs/cdlatex-in-yas-field))
+  :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
+                             "<tab>" #'cdlatex-tab))
 
 (use-package org-appear
   :after org
@@ -2142,4 +2238,3 @@ With a prefix ARG, remove start location."
 
 (use-package evil-ledger
   :hook (ledger-mode . evil-ledger-mode))
-

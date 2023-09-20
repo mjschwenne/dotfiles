@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Forall
+# key: FA
+# condition: (and (texmathp) 'auto)
+# group: math
+# --
+\\forall
