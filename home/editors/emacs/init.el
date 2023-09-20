@@ -81,7 +81,7 @@
 ;; Use visual line movements by default
 (evil-global-set-key 'motion "j" 'evil-next-visual-line)
 (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-(general-define-key :states '(normal motion) :map 'override
+(general-define-key :states '(normal motion) :keymaps 'override
                     "C-h" #'evil-window-left
                     "C-j" #'evil-window-down
                     "C-k" #'evil-window-up
@@ -1000,17 +1000,6 @@ a prefix argument."
           "l t"    '("Toggle Links" . org-toggle-link-display)
           "l s"    '("Store Link" . org-store-link)
           "l S"    '("Insert Stored Link" . org-insert-last-stored-link)
-          "m"      '(nil :which-key "Roam")
-          "m b"    '("Toggle Roam Buffer" . org-roam-buffer-toggle)
-          "m f"    '("Find Node" . org-roam-node-find)
-          "m F"    '("Find Ref" . org-roam-ref-find)
-          "m g"    '("Graph" . org-roam-graph)
-          "m i"    '("Insert Link" . org-roam-node-insert)
-          "m c"    '("Roam Capture" . org-roam-capture)
-          "m s"    '("Roam Sync" . org-roam-db-sync)
-          "m S"    '("Stripe Roam Links" . mjs/strip-org-roam-links)
-          "m d"    '("Daily" . org-roam-dailies-capture-today)
-          "m r"    '("Random Node" . org-roam-node-random)
           "r"      '("Refile" . org-refile)
           "R"      '("Refile DWIM" . mjs/org-refile-dwim)
           "s"      '("Search Headings" . consult-org-heading)
@@ -1032,9 +1021,15 @@ a prefix argument."
           "t"      '("Set TODO State" . org-todo)
           "T"      '("Set Tags" . org-set-tags-command))
   :custom (org-fontify-quote-and-verse-blocks t)
-          (org-src-fontify-natively nil)
+  (org-src-fontify-natively nil)
+  (org-pretty-entities t)
+  (org-highlight-latex-and-related '(native latex))
+  :hook (org-mode . turn-on-org-cdlatex)
   :config (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
-  (set-face-attribute 'org-quote nil :background (catppuccin-get-color 'mantle) :extend t))
+  (set-face-attribute 'org-quote nil
+                      :background (catppuccin-get-color 'mantle)
+                      :extend t)
+  (diminish 'org-cdlatex-mode " "))
 
 (defun mjs/org-fix-newline-and-indent (&optional indent _arg _interactive)
   "Mimic `newline-and-indent' in src blocks w/ lang-appropriate indentation."
@@ -1326,11 +1321,12 @@ If on a:
 (add-to-list 'org-structure-template-alist '("sC" . "src C"))
 (add-to-list 'org-structure-template-alist '("cp" . "src cpp"))
 (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-(add-to-list 'org-structure-template-alist '("t" . "src latex"))
+(add-to-list 'org-structure-template-alist '("st" . "src latex"))
 (add-to-list 'org-structure-template-alist '("p" . "src python"))
 (add-to-list 'org-structure-template-alist '("r" . "src rust"))
 (add-to-list 'org-structure-template-alist '("R" . "src R"))
 (add-to-list 'org-structure-template-alist '("j" . "src java"))
+(add-to-list 'org-structure-template-alist '("t" . "LaTeX latex"))
 
 (use-package eros
   :after org
@@ -1359,6 +1355,7 @@ If on a:
         ("linear_algebra")
         ("modeling")
         ("statistics")
+        ("optimization")
         (:endgrouptag)
         (:startgrouptag)
         ("programming")
@@ -1378,6 +1375,11 @@ If on a:
         ("hypthoesis_tests")
         ("probability")
         ("regression")
+        (:endgrouptag)
+        (:startgrouptag)
+        ("optimization")
+        (:grouptags)
+        ("linear_programming")
         (:endgrouptag)
         (:startgrouptag)
         ("modeling")
@@ -1467,9 +1469,7 @@ If on a:
                  (org-deadline-warning-days 0)
                  (org-agenda-span 1)))
         (todo "NEXT"
-              ((org-agenda-skip-function
-                '(org-agenda-skip-entry-if 'deadline))
-               (org-agenda-prefix-format "  %i %-12:c [%e] ")
+              ((org-agenda-prefix-format "  %i %-12:c [%e] ")
                (org-agenda-overriding-header "\nTasks\n")))
         (agenda nil
                 ((org-agenda-entry-types '(:deadline))
@@ -1688,6 +1688,95 @@ If on a:
                                       (if (org-inside-LaTeX-fragment-p)
                                           (org-latex-preview)))))))))
 
+;; While it might seem weird to put the LaTeX configuration here,
+;; I primarily expect to be using it in `org-mode', so I'd like it all in
+;; one place
+
+(use-package latex
+  :ensure auctex
+  :hook ((LaTeX-mode . prettify-symbols-mode)
+         (LaTeX-mode . TeX-fold-mode)
+         (LaTeX-mode . mjs/preview-scale-adjustment))
+  :custom (TeX-newline-function 'newline-and-indent)
+  :init 
+  (defun preview-scale-adjustment ()
+    (setq preview-scale-function
+          (lambda ()
+            (* 0.8 (funcall (preview-scale-from-face))))))
+  (defun mjs/latex-math-from-calc ()
+    "Evaluate `calc' on the contents of line at point"
+    (interactive)
+    (cond ((region-active-p)
+            (let* ((beg (region-beginning))
+                    (end (region-end))
+                    (string (buffer-substring-no-properties beg end)))
+            (kill-region beg end)
+            (insert (calc-eval `(,string calc-langauge latex
+                                            calc-prefer-frac t
+                                            calc-angle-mode rad)))))))
+  :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
+                              "C-S-e" #'mjs/latex-math-from-calc)
+  (mjs-local-leader-def :keymaps 'LaTeX-mode-map
+    "e" '("Insert Environment" . LaTeX-environment)
+    "m" '("Insert Macro" . TeX-insert-marco)
+    "s" '("Insert Section" . LaTeX-section)))
+
+(use-package yasnippet
+  :diminish (yas-minor-mode . " 󰁨")
+  :hook ((LaTeX-mode . yas-minor-mode)
+         (org-mode . yas-minor-mode)
+         (post-self-insert . mjs/yas-try-expanding-auto-snippets))
+  :custom (yas-triggers-in-field t)
+          (yas-snippets-dirs '("~/.emacs.d/snippets"))
+  :init (defun mjs/yas-try-expanding-auto-snippets ()
+          (when (bound-and-true-p yas-minor-mode)
+            (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+              (yas-expand))))
+  (defun mjs/cdlatex-in-yas-field ()
+    ;; Check if we're at the end of the Yas field
+    (when-let* ((_ (overlayp yas--active-field-overlay))
+                (end (overlay-end yas--active-field-overlay)))
+      (if (>= (point) end)
+          ;; Call yas-next-field if cdlatex can't expand here
+          (let ((s (thing-at-point 'sexp)))
+            (unless (and s (assoc (substring-no-properties s)
+                                  cdlatex-command-list-comb))
+              (yas-next-field-or-maybe-expand)
+              t))
+        ;; Otherwise expand and jump to the correct location
+        (let (cdlatex-tab-hook minp)
+          (setq minp
+                (min (save-excursion (cdlatex-tab)
+                                     (point))
+                     (overlay-end yas--active-field-overlay)))
+          (goto-char minp) t))))
+  (defun mjs/yas-next-field-or-cdlatex nil
+    "Jump to the next Yas field correctly with cdlatex active"
+    (interactive)
+    (if (or (bound-and-true-p cdlatex-mode)
+            (bound-and-true-p org-cdlatex-mode))
+        (cdlatex-tab)
+      (yas-next-field-or-maybe-expand)))
+  :config (use-package warnings
+            :config
+            (cl-pushnew '(yasnippet backquote-change)
+                        warning-suppress-types
+                        :test 'equal))
+  (general-define-key :keymaps 'yas-keymap :states 'insert
+                      "<tab>" #'yas-next-field-or-cdlatex
+                      "TAB" #'yas-next-field-or-cdlatex))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+(use-package cdlatex
+  :diminish " "
+  :hook ((LaTeX-mode . turn-on-cdlatex)
+         (cdlatex-tab . yas-expand)
+         (cdlatex-tab . mjs/cdlatex-in-yas-field))
+  :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
+                             "<tab>" #'cdlatex-tab))
+
 (use-package org-appear
   :after org
   :custom (org-hide-emphasis-markers t)
@@ -1885,6 +1974,8 @@ With a prefix ARG, remove start location."
                    (propertize "${tags:30}" 'face 'org-tag)))
   :init (mjs-leader-def :keymaps 'override
              "n r"   '(nil :which-key "Roam")
+             "n r a" '("Add Alias" . org-roam-alias-add)
+             "n r A" '("Remove Alias" . org-roam-alias-remove)
              "n r b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
              "n r f" '("Find Node" . org-roam-node-find)
              "n r F" '("Find Ref" . org-roam-ref-find)
@@ -1895,7 +1986,25 @@ With a prefix ARG, remove start location."
              "n r S" '("Stripe Roam Links" . mjs/strip-org-roam-links)
              "n r d" '("Daily" . org-roam-dailies-capture-today)
              "n r r" '("Random Node" . org-roam-node-random)
+             "n r t" '("Add Tags" . org-roam-tag-add)
+             "n r T" '("Remove Tags" . org-roam-tag-remove)
              "i U"   '("Update Roam IDs" . org-roam-update-org-id-locations))
+        (mjs-local-leader-def :keymaps 'org-mode-map
+             "m"   '(nil :which-key "Roam")
+             "m a" '("Add Alias" . org-roam-alias-add)
+             "m A" '("Remove Alias" . org-roam-alias-remove)
+             "m b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
+             "m f" '("Find Node" . org-roam-node-find)
+             "m F" '("Find Ref" . org-roam-ref-find)
+             "m g" '("Graph" . org-roam-graph)
+             "m i" '("Insert Link" . org-roam-node-insert)
+             "m c" '("Roam Capture" . org-roam-capture)
+             "m s" '("Roam Sync" . org-roam-db-sync)
+             "m S" '("Stripe Roam Links" . mjs/strip-org-roam-links)
+             "m d" '("Daily" . org-roam-dailies-capture-today)
+             "m r" '("Random Node" . org-roam-node-random)
+             "m t" '("Add Tags" . org-roam-tag-add)
+             "m T" '("Remove Tags" . org-roam-tag-remove))
   :general (:states 'insert :keymaps 'org-mode-map
                     "C-f" #'org-roam-node-insert
                     "C-S-f" #'org-insert-link)
@@ -2129,4 +2238,3 @@ With a prefix ARG, remove start location."
 
 (use-package evil-ledger
   :hook (ledger-mode . evil-ledger-mode))
-

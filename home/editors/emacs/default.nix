@@ -66,6 +66,11 @@
     source = ./init.el;
   };
 
+  home.file.".emacs.d/snippets" = {
+    source = ./snippets;
+    recursive = true;
+  };
+
   # home.file.".emacs.d/early-init.el" = {
   #   source = ./early-init.el;
   # };

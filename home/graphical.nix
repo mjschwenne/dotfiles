@@ -65,8 +65,19 @@
 
     # LaTeX
     (texlive.combine {
-      inherit (texlive) scheme-medium wrapfig capt-of sfmath standalone preview;
+      inherit
+        (texlive)
+        scheme-medium
+        wrapfig
+        capt-of
+        sfmath
+        standalone
+        preprint
+        preview
+        paralist
+        ;
     })
+    ghostscript
 
     # Graphical Utilities
     blueberry
