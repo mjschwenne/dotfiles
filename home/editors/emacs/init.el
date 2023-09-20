@@ -47,7 +47,7 @@
 (use-package general :defer nil)
   
 ;; For some reason, the nixos emacs overlay setup doesn't like 
-;; this block inside the :config blocl of the general use-package
+;; this block inside the :config block of the general use-package
 (general-evil-setup)
 (general-auto-unbind-keys)
 (general-create-definer mjs-leader-def
@@ -1660,6 +1660,9 @@ If on a:
 (add-to-list 'org-latex-packages-alist '("margin=1in" "geometry" t))
 (add-to-list 'org-latex-packages-alist '("" "parskip" t))
 
+;; (use-package org-auctex
+;;   :hook (org-mode . org-auctex-mode))
+
 (defun mjs/resize-org-latex-overlays ()
   (interactive)
   (cl-loop for o in (car (overlay-lists))
@@ -1774,8 +1777,11 @@ If on a:
   :hook ((LaTeX-mode . turn-on-cdlatex)
          (cdlatex-tab . yas-expand)
          (cdlatex-tab . mjs/cdlatex-in-yas-field))
+  :custom (texmathp-tex-commands '(("bmatrix" env-on)
+                                   ("pmatrix" env-on)))
   :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
-                             "<tab>" #'cdlatex-tab))
+                              "<tab>" #'cdlatex-tab)
+  (texmathp-compile))
 
 (use-package org-table
   :ensure nil
@@ -1814,7 +1820,7 @@ If on a:
     (unless (org-at-table-p) (user-error "Not at a table"))
     (let* ((table (org-table-to-lisp))
            params
-           (replacement-table (if (texmathp)
+           (replacement-table (if (or t (texmathp))
                                   (lazytab-orgtbl-to-amsmath table params)
                                 (orgtbl-to-latex table params))))
       (kill-region (org-table-begin) (org-table-end))

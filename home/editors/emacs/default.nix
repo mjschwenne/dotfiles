@@ -53,11 +53,15 @@
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) trivialBuild org-ql persist;
         };
+        # org-auctex = pkgs.callPackage ./org-auctex.nix {
+        #   inherit (epkgs) trivialBuild auctex;
+        # };
       };
 
       # Optionally provide extra packages not in the configuration file.
       extraEmacsPackages = epkgs: [
         epkgs.org-timeblock
+        # epkgs.org-auctex
       ];
     })
   ];
