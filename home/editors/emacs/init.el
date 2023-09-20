@@ -1777,6 +1777,83 @@ If on a:
   :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
                              "<tab>" #'cdlatex-tab))
 
+(use-package org-table
+  :ensure nil
+  :demand nil
+  :diminish (orgtbl-mode . " 󱝃")
+  :after cdlatex
+  :init (add-hook 'cdlatex-tab-hook #'lazytab-cdlatex-or-orgtbl-next-field 90)
+  (add-to-list 'cdlatex-command-alist '("smat" "Insert smallmatrix env"
+                                        "\\left( \\begin{smallmatrix} ? \\end{smallmatrix} \\right)"
+                                        lazytab-position-cursor-and-edit
+                                        nil nil t))
+  (add-to-list 'cdlatex-command-alist '("bmat" "Insert bmatrix env"
+                                        "\\begin{bmatrix} ? \\end{bmatrix}"
+                                        lazytab-position-cursor-and-edit
+                                        nil nil t))
+  (add-to-list 'cdlatex-command-alist '("pmat" "Insert pmatrix env"
+                                        "\\begin{pmatrix} ? \\end{pmatrix}"
+                                        lazytab-position-cursor-and-edit
+                                        nil nil t))
+  (add-to-list 'cdlatex-command-alist '("tbl" "Insert tabluar"
+                                        "\\begin{center}\n\\begin{tabular} ? \\end{tabular}\\end{center}"
+                                        lazytab-position-cursor-and-edit
+                                        nil t nil))
+  (defun lazytab-position-cursor-and-edit ()
+    (cdlatex-position-cursor)
+    (lazytab-orgtbl-edit))
+  (defun lazytab-orgtbl-edit ()
+    (if org-cdlatex-mode
+        (advice-add 'org-ctrl-c-ctrl-c :after #'lazytab-orgtbl-replace)
+      (advice-add 'orgtbl-ctrl-c-ctrl-c :after #'lazytab-orgtbl-replace)
+      (orgtbl-mode 1))
+    (open-line 1)
+    (insert "\n|"))
+  (defun lazytab-orgtbl-replace (_)
+    (interactive "P")
+    (unless (org-at-table-p) (user-error "Not at a table"))
+    (let* ((table (org-table-to-lisp))
+           params
+           (replacement-table (if (texmathp)
+                                  (lazytab-orgtbl-to-amsmath table params)
+                                (orgtbl-to-latex table params))))
+      (kill-region (org-table-begin) (org-table-end))
+      (open-line 1)
+      (push-mark)
+      (insert replacement-table)
+      (align-regexp (region-beginning) (region-end) "\\([:space:]*\\)& ")
+      (if org-cdlatex-mode
+          (advice-remove 'org-ctrl-c-ctrl-c #'lazytab-orgtbl-replace)
+        (advice-remove 'orgtbl-ctrl-c-ctrl-c #'lazytab-orgtbl-replace)
+        (orgtbl-mode -1))))
+  (defun lazytab-orgtbl-to-amsmath (table params)
+    (orgtbl-to-generic
+     table
+     (org-combine-plists
+      '(:splice t
+                :lstart ""
+                :lend " \\\\"
+                :sep " & "
+                :hline nil
+                :llend "")
+      params)))
+  (defun lazytab-cdlatex-or-orgtbl-next-field ()
+    (when (and (bound-and-true-p orgtbl-mode)
+               (org-table-p)
+               (looking-at "[[:space:]]*\\(?:|\\|$\\)")
+               (let ((s (thing-at-point 'sexp)))
+                 (not (and s (assoc s cdlatex-command-alist-comb)))))
+      (call-interactively #'org-table-next-field)
+      t))
+  (defun lazytab-org-table-next-field-maybe ()
+    (interactive)
+    (if (bound-and-true-p cdlatex-mode)
+        (cdlatex-tab)
+      (org-table-next-field)))
+  :config (general-define-key :keymaps 'orgtbl-mode-map :states 'insert
+                              "<tab>" #'lazytab-org-table-next-field-maybe
+                              "TAB" #'lazytab-org-table-next-field-maybe))
+
 (use-package org-appear
   :after org
   :custom (org-hide-emphasis-markers t)
