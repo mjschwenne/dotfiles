@@ -58,6 +58,7 @@
     evince
     xournalpp
     libsForQt5.okular
+    poppler_utils
 
     # Misc Graphical Applications
     gimp

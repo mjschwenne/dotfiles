@@ -1699,10 +1699,17 @@ If on a:
   :ensure auctex
   :hook ((LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . TeX-fold-mode)
-         (LaTeX-mode . mjs/preview-scale-adjustment))
-  :custom (TeX-newline-function 'newline-and-indent)
+         (LaTeX-mode . TeX-PDF-mode)
+         (LaTeX-mode . mjs/preview-scale-adjustment)
+         (after-save . (lambda () 
+		  				(when (eq major-mode 'latex-mode)
+						  (TeX-command-run-all nil)))))
+  :custom ((TeX-newline-function 'newline-and-indent)
+           (TeX-view-program-list '(("Zathura" "zathura --synctex-forward :: %o")))
+           (TeX-view-program-selection '((output-pdf "Zathura")))
+           (TeX-save-query nil))
   :init 
-  (defun preview-scale-adjustment ()
+  (defun mjs/preview-scale-adjustment ()
     (setq preview-scale-function
           (lambda ()
             (* 0.8 (funcall (preview-scale-from-face))))))
@@ -1720,9 +1727,11 @@ If on a:
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
   (mjs-local-leader-def :keymaps 'LaTeX-mode-map
+    "c" '("Compile Document" . TeX-command-run-all)
     "e" '("Insert Environment" . LaTeX-environment)
     "m" '("Insert Macro" . TeX-insert-marco)
-    "s" '("Insert Section" . LaTeX-section)))
+    "s" '("Insert Section" . LaTeX-section)
+    "v" '("View PDF" . TeX-view)))
 
 (use-package yasnippet
   :diminish (yas-minor-mode . " 󰁨")
@@ -1730,7 +1739,8 @@ If on a:
          (org-mode . yas-minor-mode)
          (post-self-insert . mjs/yas-try-expanding-auto-snippets))
   :custom (yas-triggers-in-field t)
-          (yas-snippets-dirs '("~/.emacs.d/snippets"))
+  (yas-snippets-dirs '("~/.emacs.d/snippets"))
+  (yas-verbosity 4)
   :init (defun mjs/yas-try-expanding-auto-snippets ()
           (when (bound-and-true-p yas-minor-mode)
             (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
@@ -1761,6 +1771,7 @@ If on a:
         (cdlatex-tab)
       (yas-next-field-or-maybe-expand)))
   :config (use-package warnings
+            :ensure nil
             :config
             (cl-pushnew '(yasnippet backquote-change)
                         warning-suppress-types
@@ -1769,8 +1780,8 @@ If on a:
                       "<tab>" #'yas-next-field-or-cdlatex
                       "TAB" #'yas-next-field-or-cdlatex))
 
-(use-package yasnippet-snippets
-  :after yasnippet)
+;; (use-package yasnippet-snippets
+;;   :after yasnippet)
 
 (use-package cdlatex
   :diminish " "
@@ -1780,8 +1791,7 @@ If on a:
   :custom (texmathp-tex-commands '(("bmatrix" env-on)
                                    ("pmatrix" env-on)))
   :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
-                              "<tab>" #'cdlatex-tab)
-  (texmathp-compile))
+                              "<tab>" #'cdlatex-tab))
 
 (use-package org-table
   :ensure nil

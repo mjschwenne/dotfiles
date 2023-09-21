@@ -1,9 +1,3 @@
-{ config, pkgs, ... }@inputs:
-
-{
-	imports = [
-		./discord 
-		./spotify
-		./obs
-	];
+{ ... }: {
+  imports = [ ./discord ./spotify ./obs ./zathura.nix ];
 }
