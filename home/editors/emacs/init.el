@@ -1790,6 +1790,7 @@ If on a:
          (cdlatex-tab . mjs/cdlatex-in-yas-field))
   :custom (texmathp-tex-commands '(("bmatrix" env-on)
                                    ("pmatrix" env-on)))
+          (cdlatex-insert-auto-labels-in-env-templates nil)
   :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
                               "<tab>" #'cdlatex-tab))
 
