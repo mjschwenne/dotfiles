@@ -2,6 +2,6 @@
 # contributor: Márcio M. Ribeiro <marcio.mr@gmail.com>
 # key: bf
 # group: font
-# name: {\bf ... }
+# name: Bold
 # --
 {\bf $1}$0

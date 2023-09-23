@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# key: VV
-# name: forall
+# key: EXP
+# name: Expectation
 # condition: (and (texmathp) (quote auto))
 # group: math
 # --
-\\forall$0
+\\mathbb{E} \\left[ $1 \\right] $0
