@@ -1704,7 +1704,7 @@ If on a:
          (after-save . (lambda () 
 		  				(when (eq major-mode 'latex-mode)
 						  (TeX-command-run-all nil)))))
-  :custom ((TeX-newline-function 'newline-and-indent)
+  :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
            (TeX-view-program-list '(("Zathura" "zathura --synctex-forward :: %o")))
            (TeX-view-program-selection '((output-pdf "Zathura")))
            (TeX-save-query nil))
@@ -1736,7 +1736,9 @@ If on a:
 (use-package yasnippet
   :diminish (yas-minor-mode . " 󰁨")
   :hook ((LaTeX-mode . yas-minor-mode)
+         (LaTeX-mode . yas-reload-all)
          (org-mode . yas-minor-mode)
+         (org-mode . yas-reload-all)
          (post-self-insert . mjs/yas-try-expanding-auto-snippets))
   :custom (yas-triggers-in-field t)
   (yas-snippets-dirs '("~/.emacs.d/snippets"))
@@ -1787,12 +1789,18 @@ If on a:
   :diminish " "
   :hook ((LaTeX-mode . turn-on-cdlatex)
          (cdlatex-tab . yas-expand)
-         (cdlatex-tab . mjs/cdlatex-in-yas-field))
+         (cdlatex-tab . mjs/cdlatex-in-yas-field)
+         (cdlatex-tab . LaTeX-indent-line))
   :custom (texmathp-tex-commands '(("bmatrix" env-on)
                                    ("pmatrix" env-on)))
+          (cdlatex-env-alist '(("proof" "\\begin{proof}\n?\n\\end{proof}" nil)))
           (cdlatex-insert-auto-labels-in-env-templates nil)
   :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
-                              "<tab>" #'cdlatex-tab))
+                              "<tab>" #'cdlatex-tab)
+  (add-to-list 'cdlatex-command-alist '("proof" "Insert proof env" ""
+                                        cdlatex-environment ("proof") t nil))
+  (add-to-list 'cdlatex-command-alist '("emph" "Insert emphasis" "\\emph{?}"
+                                        cdlatex-position-cursor nil t nil)))
 
 (use-package org-table
   :ensure nil
@@ -1817,6 +1825,7 @@ If on a:
                                         lazytab-position-cursor-and-edit
                                         nil t nil))
   (defun lazytab-position-cursor-and-edit ()
+    (interactive)
     (cdlatex-position-cursor)
     (lazytab-orgtbl-edit))
   (defun lazytab-orgtbl-edit ()

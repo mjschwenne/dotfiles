@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: Column Separator
-# key: ,,
+# name: cdot
+# key: **
 # condition: (and (texmathp) 'auto)
 # group: math
 # --
-& $0
+\\cdot

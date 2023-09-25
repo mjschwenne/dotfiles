@@ -192,6 +192,7 @@
     bind = $mod, u, fullscreen, 0
     bind = $mod_SHIFT, u, fullscreen, 1
     bind = $mod, i, togglefloating
+    bind = $mod, o, fakefullscreen
     bind = $mod, p, pin
     bind = $mod, Left, movewindow, l
     bind = $mod, Right, movewindow, r

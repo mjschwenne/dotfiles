@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# key: VV
-# name: forall
+# key: reals
+# name: Real Numbers
 # condition: (and (texmathp) (quote auto))
 # group: math
 # --
-\\forall$0
+\\mathbb{R} $0
