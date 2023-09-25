@@ -26,9 +26,19 @@
     package = pkgs.catppuccin-cursors.mochaLight;
     name = "Catppuccin-Mocha-Light-Cursors";
   };
+
   qt = {
     enable = true;
-    platformTheme = "gtk";
+    platformTheme = "qtct";
+    style.name = "kvantum";
+    style.package = pkgs.libsForQt5.qtstyleplugin-kvantum;
+  };
+  home.file.".config/Kvantum/Catppuccin-Mocha-Pink" = {
+    source = ./ui/qt/Catppuccin-Mocha-Pink;
+    recursive = true;
+  };
+  xdg.configFile."Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini { }).generate "kvantum.kvconfig" {
+    General.theme = "Catppuccin-Mocha-Pink";
   };
 
   imports = [ ./ui ./applications ./editors/emacs ];
