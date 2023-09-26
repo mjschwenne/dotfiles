@@ -86,6 +86,7 @@
         preprint
         preview
         paralist
+        nicematrix
         ;
     })
     ghostscript

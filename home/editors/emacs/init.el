@@ -1654,6 +1654,14 @@ If on a:
 
 (customize-set-variable 'org-startup-with-latex-preview t)
 (customize-set-variable 'org-preview-latex-default-process 'dvisvgm)
+;; Automatically set the scale depending on the scale of the monitor. Is is so that on `luna'
+;; the fragments are rendered at the correct size and not huge.
+(add-hook 'org-mode-hook (lambda ()
+                           (plist-put org-format-latex-options
+                                      :scale (if-let ((scale (alist-get 'scale-factor
+                                                                        (car (display-monitor-attributes-list)))))
+                                                 (/ 1 scale)
+                                               1.0))))
 (setq org-format-latex-options
       (plist-put org-format-latex-options :scale 1.0))
 (add-to-list 'org-latex-packages-alist '("" "sfmath" t))
@@ -1701,6 +1709,7 @@ If on a:
          (LaTeX-mode . TeX-fold-mode)
          (LaTeX-mode . TeX-PDF-mode)
          (LaTeX-mode . mjs/preview-scale-adjustment)
+         (LaTeX-mode . auto-fill-mode)
          (after-save . (lambda () 
 		  				(when (eq major-mode 'latex-mode)
 						  (TeX-command-run-all nil)))))

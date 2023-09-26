@@ -129,6 +129,7 @@
 
     # WINDOW RULES
     windowrule=float,qalculate-gtk
+    windowrule=size 400 200,qalculate-gtk
     windowrule=pin,rofi
     windowrule=workspace 8,thunderbird
     windowrule=float,title:^(Write:)(.*)(- Thunderbird)$
