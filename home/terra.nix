@@ -9,6 +9,7 @@
     ./applications
     ./applications/wonderdraft
     ./applications/dungeondraft
+    ./applications/r
     ./editors/emacs
   ];
 }
