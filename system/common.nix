@@ -84,6 +84,7 @@
     gawk
     htop
     calc
+    rename
 
     # Networking
     wget
