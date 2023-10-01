@@ -70,7 +70,7 @@
     libsForQt5.okular
     poppler_utils
 
-    # Misc Graphical Applications
+    # Graphics Applications
     gimp
     inkscape
 
