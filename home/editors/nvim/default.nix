@@ -157,7 +157,15 @@
         ];
       };
 
-      which-key.enable = true;
+      which-key = {
+        enable = true;
+        registrations = {
+          "<leader>b" = "Buffer";
+          "<leader>f" = "File";
+          "<leader><localleader>" = "Local";
+          "<leader>s" = "Search";
+        };
+      };
 
       comment-nvim = {
         enable = true;
@@ -230,7 +238,7 @@
             desc = "Signature Help";
           };
           "<leader><localleader>I" = {
-            action = "Implementation";
+            action = "implementation";
             desc = "Goto Implementation";
           };
           "<leader><localleader>r" = {
@@ -394,175 +402,252 @@
 
     extraPlugins = with pkgs.vimPlugins; [ friendly-snippets cmp_luasnip ];
 
-    maps = {
-      normalVisualOp.";" = ":";
+    keymaps = [
+      {
+        key = ";";
+        action = ":";
+      }
 
-      normal = {
-        "<C-h>" = {
-          action = "<C-w>h";
-          desc = "Move Focus Left";
-        };
-        "<C-j>" = {
-          action = "<C-w>j";
-          desc = "Move Focus Down";
-        };
-        "<C-k>" = {
-          action = "<C-w>k";
-          desc = "Move Focus Up";
-        };
-        "<C-l>" = {
-          action = "<C-w>l";
-          desc = "Move Focus Right";
-        };
-        "<C-Up>" = {
-          action = "<cmd>resize +2<CR>";
-          desc = "Heighten Split";
-        };
-        "<C-Down>" = {
-          action = "<cmd>resize -2<CR>";
-          desc = "Shorten Split";
-        };
-        "<C-Left>" = {
-          action = "<cmd>vertical resize -2<CR>";
-          desc = "Narrow Split";
-        };
-        "<C-Right>" = {
-          action = "<cmd>vertical resize +2<CR>";
-          desc = "Widen Split";
-        };
-
-        "<leader>" = { desc = "Leader"; };
-        "<leader>w" = {
-          action = "<cmd>w!<CR>";
-          desc = "Save";
-        };
-        "<leader>q" = {
-          action = "<cmd>q!<CR>";
-          desc = "Quit";
-        };
-        "<leader>h" = {
-          action = "<cmd>noh<CR>";
-          desc = "Remove Highlight";
-        };
-        "<leader>a" = {
-          action = "<cmd>Alpha<CR>";
-          desc = "Return to Dashboard";
-        };
-        "<leader>b" = { desc = "Buffer"; };
-        "<leader>bb" = {
-          action = "<cmd>Telescope buffers theme=dropdown<CR>";
-          desc = "Search Buffers";
-        };
-        "<leader>bn" = {
-          action = "<cmd>bnext<CR>";
-          desc = "Next Buffer";
-        };
-        "<leader>bp" = {
-          action = "<cmd>bprevious<CR>";
-          desc = "Pervious Buffer";
-        };
-        "<leader>bs" = {
-          action = "<cmd>w<CR>";
-          desc = "Save Buffer";
-        };
-        "<leader>bd" = {
-          action = "<cmd>bdelete<CR>";
-          desc = "Close Buffer";
-        };
-        "<leader>bk" = {
-          action = "<cmd>bdelete<CR>";
-          desc = "Close Buffer";
-        };
-        "<leader>f" = { desc = "Files"; };
-        "<leader>ff" = {
-          action = "<cmd>Telescope find_files<CR>";
-          desc = "Find File";
-        };
-        "<leader>fr" = {
-          action = "<cmd>Telescope oldfiles<CR>";
-          desc = "Find Recent File";
-        };
-        "<leader>ft" = {
-          action = "<cmd>NvimTreeToggle<CR>";
-          desc = "Toggle File Tree";
-        };
-        "<leader><localleader>" = { desc = "Local"; };
-        "<leader><localleader>c" = {
-          action = "<cmd>LspInfo<CR>";
-          desc = "Info";
-        };
-        "<leader><localleader>C" = {
-          action = "<cmd>Mason<CR>";
-          desc = "LSP Manager";
-        };
-        "<leader>s" = { desc = "Search"; };
-        "<leader>sb" = {
-          action = "<cmd>Telescope buffers theme=dropdown<CR>";
-          desc = "Search Buffer";
-        };
-        "<leader>sC" = {
-          action = "<cmd>Telescope colorcheme<CR>";
-          desc = "Colorscheme";
-        };
-        "<leader>sh" = {
-          action = "<cmd>Telescope help_tags<CR>";
-          desc = "Find Help";
-        };
-        "<leader>sm" = {
-          action = "<cmd>Telescope find_files<CR>";
-          desc = "Man Pages";
-        };
-        "<leader>sf" = {
-          action = "<cmd>Telescope man_pages<CR>";
-          desc = "Files";
-        };
-        "<leader>sr" = {
-          action = "<cmd>Telescope find_files<CR>";
-          desc = "Recent Files";
-        };
-        "<leader>sR" = {
-          action = "<cmd>Telescope oldfiles<CR>";
-          desc = "Registers";
-        };
-        "<leader>sk" = {
-          action = "<cmd>Telescope registers<CR>";
-          desc = "Keymaps";
-        };
-        "<leader>sc" = {
-          action = "<cmd>Telescope commands<CR>";
-          desc = "Commands";
-        };
-        "<leader>st" = {
-          action = "<cmd>Telescope live_grep theme=ivy<CR>";
-          desc = "Text";
-        };
-      };
-
-      visual = {
-        "<" = {
-          action = "<gv";
-          desc = "Un-Indent";
-        };
-        ">" = {
-          action = ">gv";
-          desc = "Indent";
-        };
-        "/" = {
-          action = "";
-          desc = "Toggle Comment";
-        };
-
-        # Put in visual mode doesn't override the clipboard
-        "p" = {
-          action = ''"_dP'';
-          desc = "Put";
-        };
-      };
-
-      insert."jk" = {
+      {
+        key = "jk";
         action = "<ESC>";
-        desc = "Return to Normal Mode";
-      };
-    };
+        mode = "i";
+      }
+
+      {
+        key = "<";
+        action = "<gv";
+        mode = "v";
+        options.desc = "Un-Indent";
+      }
+      {
+        key = ">";
+        action = ">gv";
+        mode = "v";
+        options.desc = "Indent";
+      }
+      # {
+      #   key = "/";
+      #   action = ""; # TODO
+      #   mode = "v";
+      #   options.desc = "Toggle Comment";
+      # }
+      {
+        key = "p";
+        action = ''"_dP'';
+        mode = "v";
+        options.desc = "Put";
+      }
+
+      {
+        key = "<C-h>";
+        action = "<C-w>h";
+        mode = "n";
+        options.desc = "Move Focus Left";
+      }
+      {
+        key = "<C-j>";
+        action = "<C-w>j";
+        mode = "n";
+        options.desc = "Move Focus Down";
+      }
+      {
+        key = "<C-k>";
+        action = "<C-w>k";
+        mode = "n";
+        options.desc = "Move Focus Up";
+      }
+      {
+        key = "<C-l>";
+        action = "<C-w>l";
+        mode = "n";
+        options.desc = "Move Focus Right";
+      }
+      {
+        key = "<C-Up>";
+        action = "<cmd>resize +2<CR>";
+        mode = "n";
+        options.desc = "Heighten Split";
+      }
+      {
+        key = "<C-Down>";
+        action = "<cmd>resize -2<CR>";
+        mode = "n";
+        options.desc = "Shorten Split";
+      }
+      {
+        key = "<C-Left>";
+        action = "<cmd>vertical resize -2<CR>";
+        mode = "n";
+        options.desc = "Narrow Split";
+      }
+      {
+        key = "<C-Right>";
+        action = "<cmd>vertical resize +2<CR>";
+        mode = "n";
+        options.desc = "Widen Split";
+      }
+
+      {
+        key = "<leader>w";
+        action = "<cmd>w!<CR>";
+        mode = "n";
+        options.desc = "Save";
+      }
+      {
+        key = "<leader>q";
+        action = "<cmd>q!<CR>";
+        mode = "n";
+        options.desc = "Quit";
+      }
+      {
+        key = "<leader>h";
+        action = "<cmd>noh<CR>";
+        mode = "n";
+        options.desc = "Remove Highlight";
+      }
+      {
+        key = "<leader>a";
+        action = "<cmd>Alpha<CR>";
+        mode = "n";
+        options.desc = "Dashboard";
+      }
+      {
+        key = "<leader>bb";
+        action = "<cmd>Telescope buffers theme=dropdown<CR>";
+        mode = "n";
+        options.desc = "Search Buffers";
+      }
+      {
+        key = "<leader>bn";
+        action = "<cmd>bnext<CR>";
+        mode = "n";
+        options.desc = "Next Buffer";
+      }
+      {
+        key = "<leader>bp";
+        action = "<cmd>bprevious<CR>";
+        mode = "n";
+        options.desc = "Pervious Buffer";
+      }
+      {
+        key = "<leader>bs";
+        action = "<cmd>w<CR>";
+        mode = "n";
+        options.desc = "Save buffer";
+      }
+      {
+        key = "<leader>bd";
+        action = "<cmd>bdelete<CR>";
+        mode = "n";
+        options.desc = "Delete Buffer";
+      }
+      {
+        key = "<leader>bk";
+        action = "<cmd>bdelete<CR>";
+        mode = "n";
+        options.desc = "Kill Buffer";
+      }
+      {
+        key = "<leader>ff";
+        action = "<cmd>Telescope find_files<CR>";
+        mode = "n";
+        options.desc = "Find File";
+      }
+      {
+        key = "<leader>fr";
+        action = "<cmd>Telescope oldfiles<CR>";
+        mode = "n";
+        options.desc = "Find Recent File";
+      }
+      {
+        key = "<leader>ft";
+        action = "<cmd>NvimTreeToggle<CR>";
+        mode = "n";
+        options.desc = "Toggle File Tree";
+      }
+      {
+        key = "<leader><localleader>m";
+        action = "<cmd>LspInfo<CR>";
+        mode = "n";
+        options.desc = "LSP Info";
+      }
+      {
+        key = "<leader><localleader>M";
+        action = "<cmd>Mason<CR>";
+        mode = "n";
+        options.desc = "LSP Manager";
+      }
+      {
+        key = "<leader>sb";
+        action = "<cmd>Telescope buffers theme=dropdown<CR>";
+        mode = "n";
+        options.desc = "Search Buffers";
+      }
+      {
+        key = "<leader>sc";
+        action = "<cmd>Telescope commands<CR>";
+        mode = "n";
+        options.desc = "Search Commands";
+      }
+      {
+        key = "<leader>sC";
+        action = "<cmd>Telescope colorscheme<CR>";
+        mode = "n";
+        options.desc = "Search Colorschemes";
+      }
+      {
+        key = "<leader>sh";
+        action = "<cmd>Telescope help_tags<CR>";
+        mode = "n";
+        options.desc = "Search Help";
+      }
+      {
+        key = "<leader>sf";
+        action = "<cmd>Telescope find_files<CR>";
+        mode = "n";
+        options.desc = "Search Files";
+      }
+      {
+        key = "<leader>sm";
+        action = "<cmd>Telescope man_pages<CR>";
+        mode = "n";
+        options.desc = "Search Man Pages";
+      }
+      {
+        key = "<leader>sr";
+        action = "<cmd>Telescope oldfiles<CR>";
+        mode = "n";
+        options.desc = "Search Recent Files";
+      }
+      {
+        key = "<leader>sR";
+        action = "<cmd>Telescope registers<CR>";
+        mode = "n";
+        options.desc = "Search Registers";
+      }
+      {
+        key = "<leader>sk";
+        action = "<cmd>Telescope keymaps<CR>";
+        mode = "n";
+        options.desc = "Search Keymaps";
+      }
+      {
+        key = "<leader>st";
+        action = "<cmd>Telescope live_grep theme=ivy<CR>";
+        mode = "n";
+        options.desc = "Search Text";
+      }
+    ];
+
+    extraConfigLua = ''
+    -- Highlight on Yank
+    vim.cmd([[
+	        augroup highlight_yank
+	        autocmd!
+	        au TextYankPost * silent! lua vim.highlight.on_yank({higroup="Visual", timeout=200})
+	        augroup END
+    ]])
+    '';
   };
 }

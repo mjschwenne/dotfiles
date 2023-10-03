@@ -2,7 +2,7 @@
   gtk = {
     enable = true;
     theme = {
-      name = "Catppuccin-Mocha-Standard-Pink-dark";
+      name = "Catppuccin-Mocha-Standard-Pink-Dark";
       package = pkgs.catppuccin-gtk.override {
         accents = [ "pink" ];
         variant = "mocha";
@@ -16,11 +16,10 @@
       };
     };
     font = { name = "JetBrainsMono Nerd Font"; };
-    # cursorTheme = {
-    #   name = "Catppuccin-Mocha-Light-Cursors";
-    #   package = pkgs.catppuccin-cursors.mochaLight;
-    # };
     gtk3.extraConfig = { gtk-decoration-layout = "appmenu:none"; };
+  };
+  home.sessionVariables = {
+    GTK_THEME = "Catppuccin-Mocha-Standard-Pink-Dark";
   };
   home.pointerCursor = {
     package = pkgs.catppuccin-cursors.mochaLight;

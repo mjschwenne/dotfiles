@@ -76,7 +76,6 @@
     $crust     = 0xff11111b
 
     # environment variables
-    env = GTK_THEME,Catppuccin-Mocha-Standard-Pink-dark
     env = BROWSER,librewolf
 
     # autostarts
