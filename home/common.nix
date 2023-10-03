@@ -37,7 +37,7 @@
 
     # Utilities
     ripgrep
-    exa
+    eza
     ranger
     nix-prefetch-github # helps write derivations hosted on github
 
