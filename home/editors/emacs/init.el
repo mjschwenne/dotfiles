@@ -1550,6 +1550,9 @@ If on a:
     (org-id-get-create)))
 
 (add-hook 'org-capture-mode-hook (lambda () (flycheck-mode -1)))
+(add-hook 'org-capture-mode-hook (lambda () (require 'diminish)
+                                   (diminish 'org-capture-mode " 󰄀")
+                                   (diminish 'narrow " 󰝔")))
 (setq org-capture-templates
       `(("c" "Class Lecture" plain
          (function (lambda () (mjs/class-capture)))
@@ -1667,6 +1670,7 @@ If on a:
 (add-to-list 'org-latex-packages-alist '("" "sfmath" t))
 (add-to-list 'org-latex-packages-alist '("margin=1in" "geometry" t))
 (add-to-list 'org-latex-packages-alist '("" "parskip" t))
+(add-to-list 'org-latex-packages-alist '("" "nicematrix" t))
 
 ;; (use-package org-auctex
 ;;   :hook (org-mode . org-auctex-mode))
