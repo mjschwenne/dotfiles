@@ -165,6 +165,8 @@
       "image/png" = "org.gnome.eog.desktop";
       "image/jpeg" = "org.gnome.eog.desktop";
       "image/jpg" = "org.gnome.eog.desktop";
+
+      "application/pdf" = "org.pwmt.zathura.desktop";
     };
   };
 }

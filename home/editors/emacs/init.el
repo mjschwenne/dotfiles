@@ -1995,7 +1995,7 @@ If on a:
   :custom ((pdf-view-display-size 'fit-page)
            (pdf-view-use-scaling t)
            (pdf-view-use-imagemagick nil))
-  :hook (pdf-view-mode . (lambda () (setq buffer-read-only nil)
+  :hook ((pdf-view-mode . (lambda () (setq buffer-read-only nil)
                            (mjs-local-leader-def :keymaps 'pdf-view-mode-map
                              "a"   '(nil :which-key "Annotations")
                              "a a" '("Add Annotation" . pdf-annot-add-markup-annotation)
@@ -2013,6 +2013,8 @@ If on a:
                              "P f" '("Finalize Annotation" . (lambda () (interactive) (pdf-annot-edit-contents-finalize t t)))
                              "P k" '("Kill Annotation" . pdf-annot-edit-contents-abort)
                              "P s" '("Save Annotation" . pdf-annot-edit-contents-commit))))
+         (pdf-view-mode . (lambda ()
+                            (set (make-local-variable 'evil-default-cursor) (list nil)))))
   :config
   (add-to-list 'evil-normal-state-modes 'pdf-view-mode)
   ;; Silence large file prompts for PDFs
