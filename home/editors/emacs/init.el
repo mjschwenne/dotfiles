@@ -53,13 +53,13 @@
 (general-create-definer mjs-leader-def
 	:prefix "SPC"
 	:non-normal-prefix "M-SPC"
-    :states '(insert montion visual normal)
-	:whick-key "Leader")
+    :states '(insert motion visual normal)
+	:which-key "Leader")
 (general-create-definer mjs-local-leader-def
 	:prefix "SPC m"
 	:non-normal-prefix "M-SPC m"
-    :states '(insert montion visual normal)
-	:whick-key "Local Leader")
+    :states '(insert motion visual normal)
+	:which-key "Local Leader")
 (general-unbind :states '(insert motion visual) :keymaps 'global "M-SPC")
 
 (use-package evil
@@ -582,25 +582,25 @@ a prefix argument."
           (let* ((read-only (or buffer-read-only (string-match-p "\\*.*\\*" (buffer-name))))
                  (modifed (buffer-modified-p)))
             (concat 
-              (if read-only
-                  (propertize "󱙃 "
-                    'face `(:inherit mode-line-emphasis
-                            :foreground ,(catppuccin-get-color 'yellow)))
-                (if modifed
-                    (propertize "󰆓 "
-                      'face `(:inherit mode-line-emphasis
-                              :foreground ,(catppuccin-get-color 'red)))
-                    (propertize "󰆓 "
-                      'face `(:inherit mode-line-emphasis
-                              :foreground ,(catppuccin-get-color 'green)))))
-                (propertize (buffer-name) 'face 'mode-line-emphasis))))
+             (if read-only
+                 (propertize "󱙃 "
+                             'face `(:inherit mode-line-emphasis
+                                              :foreground ,(catppuccin-get-color 'yellow)))
+               (if modifed
+                   (propertize "󰆓 "
+                               'face `(:inherit mode-line-emphasis
+                                                :foreground ,(catppuccin-get-color 'red)))
+                 (propertize "󰆓 "
+                             'face `(:inherit mode-line-emphasis
+                                              :foreground ,(catppuccin-get-color 'green)))))
+             (propertize (buffer-name) 'face 'mode-line-emphasis))))
         (telephone-line-defsegment* mjs/position ()
           (if (eq major-mode 'pdf-view-mode)
               (let* ((current (pdf-view-current-page))
                      (max (or
                            (ignore-errors
-                            (pdf-cache-number-of-pages))
-                              " "))
+                             (pdf-cache-number-of-pages))
+                           " "))
                      (percent (if (stringp max)
                                   " "
                                 (format "%d%%%% "
@@ -609,49 +609,49 @@ a prefix argument."
                 (format "%s %s/%s" percent current max))
             `((-3 "%p") ,(concat " %3l:%" (if (bound-and-true-p column-number-indicator-zero-based) "c" "C")))))
         (telephone-line-mode +1)
-  :custom (telephone-line-lhs
-          '((evil . (telephone-line-evil-tag-segment))
-            (accent . (telephone-line-process-segment
-                       telephone-line-minor-mode-segment mjs/popup-segment))
-            (nil . (mjs/buffer-mod))))
-          (telephone-line-rhs
-          '((nil . (telephone-line-misc-info-segment
-                    telephone-line-atom-encoding-segment))
-            (accent . (telephone-line-major-mode-segment))
-            (evil . (mjs/position))))
-  :config
-    (set-face-foreground 'telephone-line-evil
-                         (catppuccin-get-color 'base))
-    (set-face-background 'telephone-line-evil-normal
-                         (catppuccin-get-color 'blue))
-    (set-face-background 'telephone-line-evil-insert
-                         (catppuccin-get-color 'green))
-    (set-face-background 'telephone-line-evil-visual
-                         (catppuccin-get-color 'mauve))
-    (set-face-background 'telephone-line-evil-emacs
-                         (catppuccin-get-color 'red))
-    (set-face-background 'telephone-line-evil-operator
-                         (catppuccin-get-color 'peach))
-    (set-face-background 'telephone-line-evil-motion
-                         (catppuccin-get-color 'pink))
-    (set-face-attribute 'telephone-line-accent-active t
-                        :foreground
-                          (catppuccin-get-color 'text)
-                        :background
-                          (catppuccin-get-color 'surface1))
-    (set-face-attribute 'mode-line t
-                        :foreground (catppuccin-get-color 'text)
-                        :background (catppuccin-get-color 'base)))
+        :custom (telephone-line-lhs
+                 '((evil . (telephone-line-evil-tag-segment))
+                   (accent . (telephone-line-process-segment
+                              telephone-line-minor-mode-segment mjs/popup-segment))
+                   (nil . (mjs/buffer-mod))))
+        (telephone-line-rhs
+         '((nil . (telephone-line-misc-info-segment
+                   telephone-line-atom-encoding-segment))
+           (accent . (telephone-line-major-mode-segment))
+           (evil . (mjs/position))))
+        :config
+        (set-face-foreground 'telephone-line-evil
+                             (catppuccin-get-color 'base))
+        (set-face-background 'telephone-line-evil-normal
+                             (catppuccin-get-color 'blue))
+        (set-face-background 'telephone-line-evil-insert
+                             (catppuccin-get-color 'green))
+        (set-face-background 'telephone-line-evil-visual
+                             (catppuccin-get-color 'mauve))
+        (set-face-background 'telephone-line-evil-emacs
+                             (catppuccin-get-color 'red))
+        (set-face-background 'telephone-line-evil-operator
+                             (catppuccin-get-color 'peach))
+        (set-face-background 'telephone-line-evil-motion
+                             (catppuccin-get-color 'pink))
+        (set-face-attribute 'telephone-line-accent-active t
+                            :foreground
+                            (catppuccin-get-color 'text)
+                            :background
+                            (catppuccin-get-color 'surface1))
+        (set-face-attribute 'mode-line t
+                            :foreground (catppuccin-get-color 'text)
+                            :background (catppuccin-get-color 'base)))
 
 (setq display-line-numbers-type 'relative
-       display-line-numbers-current-absolute t)
- (add-hook 'prog-mode-hook #'display-line-numbers-mode)
- (add-hook 'text-mode-hook #'display-line-numbers-mode)
- (add-hook 'conf-mode-hook #'display-line-numbers-mode)
+      display-line-numbers-current-absolute t)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'text-mode-hook #'display-line-numbers-mode)
+(add-hook 'conf-mode-hook #'display-line-numbers-mode)
 
- (use-package vi-tilde-fringe
-   :diminish vi-tilde-fringe-mode
-   :init (global-vi-tilde-fringe-mode))
+(use-package vi-tilde-fringe
+  :diminish vi-tilde-fringe-mode
+  :init (global-vi-tilde-fringe-mode))
 
 (use-package nerd-icons)
 
@@ -662,27 +662,27 @@ a prefix argument."
                        (not (org-in-archived-heading-p))
                        (string= (org-get-todo-state) "NEXT"))
             (point)))
-         (dashboard-setup-startup-hook)
-		 (mjs-leader-def :keymaps 'override
-           "d" '("Open Dashboard" . dashboard-open))
+  (dashboard-setup-startup-hook)
+  (mjs-leader-def :keymaps 'override
+    "d" '("Open Dashboard" . dashboard-open))
   :commands (dashboard-jump-to-agenda dashboard-jump-to-recents)
   :general 
-           (:keymaps #'dashboard-mode-map :states 'normal
-                     "a" #'dashboard-jump-to-agenda
-                     "r" #'dashboard-jump-to-recents)
+  (:keymaps #'dashboard-mode-map :states 'normal
+            "a" #'dashboard-jump-to-agenda
+            "r" #'dashboard-jump-to-recents)
   :custom (dashboard-startup-banner 'logo)
-          (dashboard-display-icons-p t)
-          (dashboard-icon-type 'nerd-icons)
-          (dashboard-set-navigator t)
-          (dashbaord-set-heading-icons t)
-          (dashboard-set-file-icons t)
-          (dashboard-filter-agenda-entry #'mjs/dashboard-next-items)
-          (dashboard-items '((recents . 5)
-                             (agenda . 10)))
-          (dashboard-item-names '(("Recent Files:" . "Recently Opened:")
-                                  ("Agenda for the coming week:" . "NEXT Items:")))
-          (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs"))
-	)
+  (dashboard-display-icons-p t)
+  (dashboard-icon-type 'nerd-icons)
+  (dashboard-set-navigator t)
+  (dashbaord-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  (dashboard-filter-agenda-entry #'mjs/dashboard-next-items)
+  (dashboard-items '((recents . 5)
+                     (agenda . 10)))
+  (dashboard-item-names '(("Recent Files:" . "Recently Opened:")
+                          ("Agenda for the coming week:" . "NEXT Items:")))
+  (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs"))
+  )
 
 (use-package popper
   :custom (popper-reference-buffers '("\\*Messages\\*"
@@ -697,48 +697,48 @@ a prefix argument."
                                       "\\*info\\*"
                                       helpful-mode
                                       compilation-mode))
-          (popper-display-control nil)
-          (popper-mode-line "")
-          (display-buffer-alist '(("\\*Org Links\\*" (display-buffer-at-bottom)
-                                                     (window-height . 2))
-                                  ("\\*Org Agenda\\*" (display-buffer-in-direction)
-                                                      (direction . left)
-                                                      (window-width . 0.5))
-                                  ("^\\*[hH]elp" (display-buffer-reuse-mode-window
-                                                  display-buffer-in-direction)
-                                             (mode . (helpful-mode help-mode))
-                                             (direction . right)
-                                             (window-width 0.5))))
+  (popper-display-control nil)
+  (popper-mode-line "")
+  (display-buffer-alist '(("\\*Org Links\\*" (display-buffer-at-bottom)
+                           (window-height . 2))
+                          ("\\*Org Agenda\\*" (display-buffer-in-direction)
+                           (direction . left)
+                           (window-width . 0.5))
+                          ("^\\*[hH]elp" (display-buffer-reuse-mode-window
+                                          display-buffer-in-direction)
+                           (mode . (helpful-mode help-mode))
+                           (direction . right)
+                           (window-width 0.5))))
   :init (popper-mode +1)
-        (popper-echo-mode +1)
-		(mjs-leader-def :keymaps 'override
-					 "p" '(nil :which-key "Popup")
-					 "p p" '("Toggle Popup" . popper-toggle-latest)
-					 "t"   '(nil :which-key "Toggle")
-					 "t p" '("Toggle Popup" . popper-toggle-latest)
-					 "p c" '("Cycle Popups" . popper-cycle)
-					 "p m" '("Make Popup" . popper-toggle-type)
-					 "p k" '("Kill Popup" . popper-kill-latest-popup))
+  (popper-echo-mode +1)
+  (mjs-leader-def :keymaps 'override
+	"p" '(nil :which-key "Popup")
+	"p p" '("Toggle Popup" . popper-toggle-latest)
+	"t"   '(nil :which-key "Toggle")
+	"t p" '("Toggle Popup" . popper-toggle-latest)
+	"p c" '("Cycle Popups" . popper-cycle)
+	"p m" '("Make Popup" . popper-toggle-type)
+	"p k" '("Kill Popup" . popper-kill-latest-popup))
   :config (defun mjs/escape-popups ()
             (if (eq popper-popup-status 'popup)
                 (popper-toggle-latest)))
-          (advice-add #'evil-force-normal-state :after #'mjs/escape-popups))
+  (advice-add #'evil-force-normal-state :after #'mjs/escape-popups))
 
 (use-package helpful
   :init (mjs-leader-def :keymaps 'override
-                           "h" '(nil :which-key "Help")
-                           "h f" '("Callable" . helpful-callable)
-                           "h F" '("Function" . helpful-function)
-                           "h t" '("Text (Face)" . describe-face)
-                           "h m" '("Mode" . describe-mode)
-                           "h M" '("Macro" . helpful-macro)
-                           "h x" '("Command" . helpful-command)
-                           "h k" '("Key" . helpful-key)
-                           "h K" '("Kaymap" . describe-keymap)
-                           "h v" '("Variable" . helpful-variable)
-                           "h p" '("Thing-at-Point" . helpful-at-point)
-                           "h s" '("Symbol" . helpful-symbol)
-                           "h q" '("Kill Help Buffers" . helpful-kill-buffers)))
+          "h" '(nil :which-key "Help")
+          "h f" '("Callable" . helpful-callable)
+          "h F" '("Function" . helpful-function)
+          "h t" '("Text (Face)" . describe-face)
+          "h m" '("Mode" . describe-mode)
+          "h M" '("Macro" . helpful-macro)
+          "h x" '("Command" . helpful-command)
+          "h k" '("Key" . helpful-key)
+          "h K" '("Kaymap" . describe-keymap)
+          "h v" '("Variable" . helpful-variable)
+          "h p" '("Thing-at-Point" . helpful-at-point)
+          "h s" '("Symbol" . helpful-symbol)
+          "h q" '("Kill Help Buffers" . helpful-kill-buffers)))
 
 (use-package vertico
   :custom (vertico-resize t)
@@ -761,35 +761,35 @@ a prefix argument."
   (vertico-mode)
   (savehist-mode)
   (general-define-key :keymaps 'vertico-map :states '(insert normal visual motion)
-		"S-RET" #'vertico-exit-input
-		"C-k"   #'vertico-next
-		"C-S-k" #'vertico-next-group
-		"C-j"   #'vertico-previous
-		"C-S-j" #'vertico-previous-group
-		"S-TAB" #'minibuffer-complete
-		;; More convenient directory navigation commands
-		"RET" #'vertico-directory-enter
-		"DEL" #'vertico-directory-delete-char
-		"S-DEL" #'vertico-directory-delete-word
-		"?"     #'minibuffer-completion-help
-		;;
-		"ESC" #'keyboard-escape-quit)
+		              "S-RET" #'vertico-exit-input
+		              "C-k"   #'vertico-next
+		              "C-S-k" #'vertico-next-group
+		              "C-j"   #'vertico-previous
+		              "C-S-j" #'vertico-previous-group
+		              "S-TAB" #'minibuffer-complete
+		              ;; More convenient directory navigation commands
+		              "RET" #'vertico-directory-enter
+		              "DEL" #'vertico-directory-delete-char
+		              "S-DEL" #'vertico-directory-delete-word
+		              "?"     #'minibuffer-completion-help
+		              ;;
+		              "ESC" #'keyboard-escape-quit)
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 (use-package vertico-directory 
-			 :after vertico 
-			 :ensure nil)
+  :after vertico 
+  :ensure nil)
 
 (use-package vertico-reverse
-			 :after vertico 
-			 :ensure nil 
-			 :init (vertico-reverse-mode))
+  :after vertico 
+  :ensure nil 
+  :init (vertico-reverse-mode))
 
 (use-package marginalia
-    :general (:keymaps 'minibuffer-local-map
-                       "M-A" #'marginalia-cycle)
-    :init (marginalia-mode))
+  :general (:keymaps 'minibuffer-local-map
+                     "M-A" #'marginalia-cycle)
+  :init (marginalia-mode))
 
 (use-package nerd-icons-completion
   :config (nerd-icons-completion-mode))
@@ -797,72 +797,72 @@ a prefix argument."
 (use-package orderless
   :ensure t
   :custom (completion-styles '(orderless basic))
-          (completion-category-overrides '((file (styles basic partial-completion)))))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package consult
   :init (recentf-mode 1)
-	(mjs-leader-def :keymaps 'override
-				 "c"     '(nil :which-key "Consult")
-				 "c b"   '("Buffer" . consult-buffer)
-				 "c c"   '("Complex Command" . consult-complex-command)
-				 "c e"   '("Compile Error" . consult-compile-error)
-				 "c f"   '("Recent Files" . consult-recent-file)
-				 "c g"   '(nil :which-key "External Search")
-				 "c g g" '("Grep" . consult-grep)
-				 "c g r" '("Ripgrep" . consult-ripgrep)
-				 "c g f" '("Find" . consult-find)
-				 "c g l" '("Locate" . consult-locate)
-				 "c h"   '(nil :which-key "Help")
-				 "c h i" '("Emacs Info" . consult-info)
-				 "c h m" '("UNIX Manual" . consult-man)
-				 "c m"   '(nil :which-key "Modes")
-				 "c m m" '("Minor Modes" . consult-minor-mode-menu)
-				 "c m c" '("Mode Commands" . consult-mode-command)
-				 "c M"   '("Macro" . consult-kmacro)
-				 "c n"   '(nil :which-key "Navigation")
-				 "c n i" '("imenu" . consult-imenu)
-				 "c n I" '("Multi-imenu" . consult-imenu-multi)
-				 "c n l" '("Goto Line" . consult-goto-line)
-				 "c n m" '("Goto Mark" . consult-mark)
-				 "c n M" '("Goto Global Mark" . consult-global-mark)
-				 "c n o" '("Outline" . consult-outline)
-				 "c o"   '(nil :which-key "Org")
-				 "c o a" '("Agenda" . consult-org-agenda)
-				 "c o h" '("Heading" . consult-org-heading)
-				 "c r"   '("Registers" . consult-register)
-				 "c s"   '(nil :which-key "Search")
-				 "c s l" '("Line" . consult-line)
-				 "c s m" '("Multi-buffer line" . consult-line-multi)
-				 "c t"   '("Themes" . consult-theme)
-				 "c y"   '(nil :which-key "Yank")
-				 "c y k" '("Kill Ring" . consult-yank-from-kill-ring)
-				 "c y p" '("Pop" . consult-yank-pop)
-				 "c y r" '("Replace" . consult-yank-replace))
+  (mjs-leader-def :keymaps 'override
+	"c"     '(nil :which-key "Consult")
+	"c b"   '("Buffer" . consult-buffer)
+	"c c"   '("Complex Command" . consult-complex-command)
+	"c e"   '("Compile Error" . consult-compile-error)
+	"c f"   '("Recent Files" . consult-recent-file)
+	"c g"   '(nil :which-key "External Search")
+	"c g g" '("Grep" . consult-grep)
+	"c g r" '("Ripgrep" . consult-ripgrep)
+	"c g f" '("Find" . consult-find)
+	"c g l" '("Locate" . consult-locate)
+	"c h"   '(nil :which-key "Help")
+	"c h i" '("Emacs Info" . consult-info)
+	"c h m" '("UNIX Manual" . consult-man)
+	"c m"   '(nil :which-key "Modes")
+	"c m m" '("Minor Modes" . consult-minor-mode-menu)
+	"c m c" '("Mode Commands" . consult-mode-command)
+	"c M"   '("Macro" . consult-kmacro)
+	"c n"   '(nil :which-key "Navigation")
+	"c n i" '("imenu" . consult-imenu)
+	"c n I" '("Multi-imenu" . consult-imenu-multi)
+	"c n l" '("Goto Line" . consult-goto-line)
+	"c n m" '("Goto Mark" . consult-mark)
+	"c n M" '("Goto Global Mark" . consult-global-mark)
+	"c n o" '("Outline" . consult-outline)
+	"c o"   '(nil :which-key "Org")
+	"c o a" '("Agenda" . consult-org-agenda)
+	"c o h" '("Heading" . consult-org-heading)
+	"c r"   '("Registers" . consult-register)
+	"c s"   '(nil :which-key "Search")
+	"c s l" '("Line" . consult-line)
+	"c s m" '("Multi-buffer line" . consult-line-multi)
+	"c t"   '("Themes" . consult-theme)
+	"c y"   '(nil :which-key "Yank")
+	"c y k" '("Kill Ring" . consult-yank-from-kill-ring)
+	"c y p" '("Pop" . consult-yank-pop)
+	"c y r" '("Replace" . consult-yank-replace))
   :custom (register-preview-function #'consult-register-format)
-          (register-preview-delay 0.5)
+  (register-preview-delay 0.5)
   :config 
-      (advice-add #'register-preview :override #'consult-register-window))
+  (advice-add #'register-preview :override #'consult-register-window))
 
 (use-package embark
   :commands embark-act embark-dwim embark-bindings
   :init (mjs-leader-def :keymaps 'override
-             "E" '(nil :which-key "Embark")
-             "E a" '("Embark Act"       . embark-act)
-             "E A" '("Embark DWIM"      . embark-dwim)
-             "h e" '("Emark Bindings" . embark-bindings))
+          "E" '(nil :which-key "Embark")
+          "E a" '("Embark Act"       . embark-act)
+          "E A" '("Embark DWIM"      . embark-dwim)
+          "h e" '("Emark Bindings" . embark-bindings))
   :custom (prefix-help-command #'embark-prefix-help-command)
-          (embark-prompter #'embark-completing-read-prompter))
-  ; :init (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target))
+  (embark-prompter #'embark-completing-read-prompter))
+                                        ; :init (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target))
 
 (use-package embark-consult
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package corfu
   :custom (corfu-cycle t)
-          (completion-cycle-threshold 3)
-          (corfu-auto t)
-          (corfu-quit-no-match t)
-          (corfu-preselect 'prompt)
+  (completion-cycle-threshold 3)
+  (corfu-auto t)
+  (corfu-quit-no-match t)
+  (corfu-preselect 'prompt)
   :general (:keymaps 'corfu-map
                      "TAB" #'corfu-next
                      [tab] #'corfu-next
@@ -874,11 +874,11 @@ a prefix argument."
   :after corfu
   :hook (prog-mode . (lambda ()
                        (add-to-list 'completion-at-point-functions #'cape-keyword)))
-        (text-mode . (lambda ()
-                       (add-to-list 'completion-at-point-functions #'cape-dict)
-                       (add-to-list 'completion-at-point-functions #'cape-dabbrev)))
-        (org-mode . (lambda ()
-                      (add-to-list 'completion-at-point-functions #'cape-elisp-block)))
+  (text-mode . (lambda ()
+                 (add-to-list 'completion-at-point-functions #'cape-dict)
+                 (add-to-list 'completion-at-point-functions #'cape-dabbrev)))
+  (org-mode . (lambda ()
+                (add-to-list 'completion-at-point-functions #'cape-elisp-block)))
   :config (add-to-list 'completion-at-point-functions #'cape-file))
 
 (use-package company-wordfreq
@@ -897,14 +897,14 @@ a prefix argument."
 (use-package macrostep
   :commands marcostep-expand
   :init (mjs-local-leader-def :states '(normal insert visual motion)
-             :keymaps 'emacs-lisp-mode-map
-             "e" '("Expand Macro" . macrostep-expand)))
+          :keymaps 'emacs-lisp-mode-map
+          "e" '("Expand Macro" . macrostep-expand)))
 
 (use-package elisp-def
   :commands elisp-def
   :init (mjs-local-leader-def :states '(normal insert visual motion)
-             :keymaps 'emacs-lisp-mode-map
-             "d" '("Find Definition" . elisp-def)))
+          :keymaps 'emacs-lisp-mode-map
+          "d" '("Find Definition" . elisp-def)))
 
 (use-package elisp-demos
   :config (advice-add 'helpful-update
@@ -982,7 +982,7 @@ a prefix argument."
           "d s"    '("Schedule" . org-schedule)
           "d t"    '("Time Stamp" . org-time-stamp)
           "d T"    '("Inactive Time Stamp" . org-time-stamp-inactive)
-          "f"      '(nil :whick-key "File Links")
+          "f"      '(nil :which-key "File Links")
           "f m"    '("Move File" . mjs/move-and-update-file-links)
           "f d"    '("Move Directory" . mjs/move-dir-update-link-links)
           "f r"    '("Regenerate Links" . mjs/regenerate-file-links)
@@ -1199,95 +1199,95 @@ If on a:
                     #'mjs/org-dwim-at-point)
 
 (defun mjs--org-insert-item (direction)
-(let ((context (org-element-lineage
-                (org-element-context)
-                '(table table-row headline inlinetask item plain-list)
-                t)))
-  (pcase (org-element-type context)
-    ;; Add a new list item (carrying over checkboxes if necessary)
-    ((or `item `plain-list)
-     (let ((orig-point (point)))
-       ;; Position determines where org-insert-todo-heading and `org-insert-item'
-       ;; insert the new list item.
-       (if (eq direction 'above)
-           (org-beginning-of-item)
-         (end-of-line))
-       (let* ((ctx-item? (eq 'item (org-element-type context)))
-              (ctx-cb (org-element-property :contents-begin context))
-              ;; Hack to handle edge case where the point is at the
-              ;; beginning of the first item
-              (beginning-of-list? (and (not ctx-item?)
-                                       (= ctx-cb orig-point)))
-              (item-context (if beginning-of-list?
-                                (org-element-context)
-                              context))
-              ;; Horrible hack to handle edge case where the
-              ;; line of the bullet is empty
-              (ictx-cb (org-element-property :contents-begin item-context))
-              (empty? (and (eq direction 'below)
-                           ;; in case contents-begin is nil, or contents-begin
-                           ;; equals the position end of the line, the item is
-                           ;; empty
-                           (or (not ictx-cb)
-                               (= ictx-cb
-                                  (1+ (point))))))
-              (pre-insert-point (point)))
-         ;; Insert dummy content, so that `org-insert-item'
-         ;; inserts content below this item
-         (when empty?
-           (insert " "))
-         (org-insert-item (org-element-property :checkbox context))
-         ;; Remove dummy content
-         (when empty?
-           (delete-region pre-insert-point (1+ pre-insert-point))))))
-    ;; Add a new table row
-    ((or `table `table-row)
-     (pcase direction
-       ('below (save-excursion (org-table-insert-row t))
-               (org-table-next-row))
-       ('above (save-excursion (org-shiftmetadown))
-               (+org/table-previous-row))))
-
-    ;; Otherwise, add a new heading, carrying over any todo state, if
-    ;; necessary.
-    (_
-     (let ((level (or (org-current-level) 1)))
-       ;; I intentionally avoid `org-insert-heading' and the like because they
-       ;; impose unpredictable whitespace rules depending on the cursor
-       ;; position. It's simpler to express this command's responsibility at a
-       ;; lower level than work around all the quirks in org's API.
+  (let ((context (org-element-lineage
+                  (org-element-context)
+                  '(table table-row headline inlinetask item plain-list)
+                  t)))
+    (pcase (org-element-type context)
+      ;; Add a new list item (carrying over checkboxes if necessary)
+      ((or `item `plain-list)
+       (let ((orig-point (point)))
+         ;; Position determines where org-insert-todo-heading and `org-insert-item'
+         ;; insert the new list item.
+         (if (eq direction 'above)
+             (org-beginning-of-item)
+           (end-of-line))
+         (let* ((ctx-item? (eq 'item (org-element-type context)))
+                (ctx-cb (org-element-property :contents-begin context))
+                ;; Hack to handle edge case where the point is at the
+                ;; beginning of the first item
+                (beginning-of-list? (and (not ctx-item?)
+                                         (= ctx-cb orig-point)))
+                (item-context (if beginning-of-list?
+                                  (org-element-context)
+                                context))
+                ;; Horrible hack to handle edge case where the
+                ;; line of the bullet is empty
+                (ictx-cb (org-element-property :contents-begin item-context))
+                (empty? (and (eq direction 'below)
+                             ;; in case contents-begin is nil, or contents-begin
+                             ;; equals the position end of the line, the item is
+                             ;; empty
+                             (or (not ictx-cb)
+                                 (= ictx-cb
+                                    (1+ (point))))))
+                (pre-insert-point (point)))
+           ;; Insert dummy content, so that `org-insert-item'
+           ;; inserts content below this item
+           (when empty?
+             (insert " "))
+           (org-insert-item (org-element-property :checkbox context))
+           ;; Remove dummy content
+           (when empty?
+             (delete-region pre-insert-point (1+ pre-insert-point))))))
+      ;; Add a new table row
+      ((or `table `table-row)
        (pcase direction
-         (`below
-          (let (org-insert-heading-respect-content)
-            (goto-char (line-end-position))
-            (org-end-of-subtree)
-            (insert "\n" (make-string level ?*) " ")))
-         (`above
-          (org-back-to-heading)
-          (insert (make-string level ?*) " ")
-          (save-excursion (insert "\n"))))
-       (run-hooks 'org-insert-heading-hook)
-       (when-let* ((todo-keyword (org-element-property :todo-keyword context))
-                   (todo-type    (org-element-property :todo-type context)))
-         (org-todo
-          (cond ((eq todo-type 'done)
-                 ;; Doesn't make sense to create more "DONE" headings
-                 (car (+org-get-todo-keywords-for todo-keyword)))
-                (todo-keyword)
-                ('todo)))))))
+         ('below (save-excursion (org-table-insert-row t))
+                 (org-table-next-row))
+         ('above (save-excursion (org-shiftmetadown))
+                 (+org/table-previous-row))))
 
-  (when (org-invisible-p)
-    (org-show-hidden-entry))
-  (when (and (bound-and-true-p evil-local-mode)
-             (not (evil-emacs-state-p)))
-    (evil-insert 1))))
+      ;; Otherwise, add a new heading, carrying over any todo state, if
+      ;; necessary.
+      (_
+       (let ((level (or (org-current-level) 1)))
+         ;; I intentionally avoid `org-insert-heading' and the like because they
+         ;; impose unpredictable whitespace rules depending on the cursor
+         ;; position. It's simpler to express this command's responsibility at a
+         ;; lower level than work around all the quirks in org's API.
+         (pcase direction
+           (`below
+            (let (org-insert-heading-respect-content)
+              (goto-char (line-end-position))
+              (org-end-of-subtree)
+              (insert "\n" (make-string level ?*) " ")))
+           (`above
+            (org-back-to-heading)
+            (insert (make-string level ?*) " ")
+            (save-excursion (insert "\n"))))
+         (run-hooks 'org-insert-heading-hook)
+         (when-let* ((todo-keyword (org-element-property :todo-keyword context))
+                     (todo-type    (org-element-property :todo-type context)))
+           (org-todo
+            (cond ((eq todo-type 'done)
+                   ;; Doesn't make sense to create more "DONE" headings
+                   (car (+org-get-todo-keywords-for todo-keyword)))
+                  (todo-keyword)
+                  ('todo)))))))
+
+    (when (org-invisible-p)
+      (org-show-hidden-entry))
+    (when (and (bound-and-true-p evil-local-mode)
+               (not (evil-emacs-state-p)))
+      (evil-insert 1))))
 ;; I use these instead of `org-insert-item' or `org-insert-heading' because they
 ;; impose bizarre whitespace rules depending on cursor location and many
 ;; settings. These commands have a much simpler responsibility.
 (defun mjs/org-insert-item-below (count)
-    "Inserts a new heading, table cell or item below the current one."
-    (interactive "p")
-    (dotimes (_ count) (mjs--org-insert-item 'below)))
+  "Inserts a new heading, table cell or item below the current one."
+  (interactive "p")
+  (dotimes (_ count) (mjs--org-insert-item 'below)))
 
 (defun mjs/org-insert-item-above (count)
   "Inserts a new heading, table cell or item above the current one."
@@ -1313,14 +1313,14 @@ If on a:
   :demand t)
 
 (org-babel-do-load-languages
-    'org-babel-load-languages
-    '((C . t)
-      (emacs-lisp . t)
-      (latex . t)
-      (python . t)
-      (R . t)
-      (java . t)
-      (rust . t)))
+ 'org-babel-load-languages
+ '((C . t)
+   (emacs-lisp . t)
+   (latex . t)
+   (python . t)
+   (R . t)
+   (java . t)
+   (rust . t)))
 
 (require 'org-tempo)
 
@@ -1464,32 +1464,32 @@ If on a:
 (defun log-todo-next-creation-date (&rest ignore)
   "Log NEXT creation time in the property drawer under the key 'ACTIVATED'"
   (when (and (string= (org-get-todo-state) "NEXT")
-           (not (org-entry-get nil "ACTIVATED")))
-  (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
+             (not (org-entry-get nil "ACTIVATED")))
+    (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
 (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
 
 (setq org-agenda-custom-commands
-    '(("g" "Get Things Done"
-       ((agenda ""
-                ((org-agenda-skip-function
-                  '(org-agenda-skip-entry-if 'deadline))
-                 (org-deadline-warning-days 0)
-                 (org-agenda-span 1)))
-        (todo "NEXT"
-              ((org-agenda-prefix-format "  %i %-12:c [%e] ")
-               (org-agenda-overriding-header "\nTasks\n")))
-        (agenda nil
-                ((org-agenda-entry-types '(:deadline))
-                 (org-agenda-format-date "")
-                 (org-deadline-warning-days 7)
-                 (org-agenda-skip-function
-                  '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
-                 (org-agenda-overriding-header "\nDeadlines")))
-        (tags-todo "inbox"
-                   ((org-agenda-prefix-format "  %?-12t% s")
-                    (org-agenda-overriding-header "\nInbox\n")))
-        (tags "CLOSED>=\"<today>\""
-              ((org-agenda-overriding-header "\nCompleted today\n")))))))
+      '(("g" "Get Things Done"
+         ((agenda ""
+                  ((org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'deadline))
+                   (org-deadline-warning-days 0)
+                   (org-agenda-span 1)))
+          (todo "NEXT"
+                ((org-agenda-prefix-format "  %i %-12:c [%e] ")
+                 (org-agenda-overriding-header "\nTasks\n")))
+          (agenda nil
+                  ((org-agenda-entry-types '(:deadline))
+                   (org-agenda-format-date "")
+                   (org-deadline-warning-days 7)
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+                   (org-agenda-overriding-header "\nDeadlines")))
+          (tags-todo "inbox"
+                     ((org-agenda-prefix-format "  %?-12t% s")
+                      (org-agenda-overriding-header "\nInbox\n")))
+          (tags "CLOSED>=\"<today>\""
+                ((org-agenda-overriding-header "\nCompleted today\n")))))))
 
 (use-package org-contacts
   :after org
@@ -1509,7 +1509,7 @@ If on a:
         (format "%s%s%s"
                 (propertize (abbreviate-file-name
                              (buffer-file-name (buffer-base-buffer)))
-                             'face 'font-lock-string-face)
+                            'face 'font-lock-string-face)
                 " ⟶ "
                 (concat
                  "Capture Buffer. Finish "
@@ -1529,9 +1529,9 @@ If on a:
                      (concat base-dir
                              (downcase
                               (string-replace " " "-"
-                               (replace-regexp-in-string
-                                "[^[:alnum:] ]" ""
-                                character-name)))
+                                              (replace-regexp-in-string
+                                               "[^[:alnum:] ]" ""
+                                               character-name)))
                              ".org")
                      org-directory)))
     (setq mjs--capture-title character-name)
@@ -1581,15 +1581,15 @@ If on a:
          :empty-lines 1)
         ("g" "Great Basin")
         ("gc" "Great Basin Character" plain
-          (function (lambda ()
-                      (mjs/named-capture
-                       "Character Name: "
-                       "ttrpg/great-basin/characters/")))
-          (file "ttrpg/great-basin/characters/template.org")
-          ;; The docs say this has to be a 'nullary function' and
-          ;; even thought it /is/ a nullary function if it's not
-          ;; wrapped in the lmabda I get an error.
-          :hook (lambda () (mjs/capture-insert-id)))
+         (function (lambda ()
+                     (mjs/named-capture
+                      "Character Name: "
+                      "ttrpg/great-basin/characters/")))
+         (file "ttrpg/great-basin/characters/template.org")
+         ;; The docs say this has to be a 'nullary function' and
+         ;; even thought it /is/ a nullary function if it's not
+         ;; wrapped in the lmabda I get an error.
+         :hook (lambda () (mjs/capture-insert-id)))
         ("ge" "Great Basin Event" plain
          (function (lambda ()
                      (mjs/named-capture
@@ -1613,16 +1613,16 @@ If on a:
          :hook (lambda () (mjs/capture-insert-id)))
         ;; :TODO: Replace this with something not dependent on Eamcs restarts
         ("gr" "Great Basin Session Record" plain
-          (file ,(format "ttrpg/great-basin/sessions/great-basin-%s.org"
-                  (org-read-date nil nil "Wed")))
-          (file "ttrpg/great-basin/sessions/template.org")
-          :jump-to-captured t
-          :immediate-finish t)
+         (file ,(format "ttrpg/great-basin/sessions/great-basin-%s.org"
+                        (org-read-date nil nil "Wed")))
+         (file "ttrpg/great-basin/sessions/template.org")
+         :jump-to-captured t
+         :immediate-finish t)
         ("gR" "Great Basin Public Session Record" plain
-          (file ,(format "ttrpg/great-basin/public/session-recaps/great-basin-%s.org"
-                  (org-read-date nil nil "-Wed")))
-          (file "ttrpg/great-basin/public/session-recaps/template.org")
-          :jump-to-captured t)
+         (file ,(format "ttrpg/great-basin/public/session-recaps/great-basin-%s.org"
+                        (org-read-date nil nil "-Wed")))
+         (file "ttrpg/great-basin/public/session-recaps/template.org")
+         :jump-to-captured t)
         ("gs" "Great Basin Stat Block" plain
          (function (lambda ()
                      (mjs/named-capture
@@ -1641,9 +1641,9 @@ If on a:
                      (mjs/named-capture
                       "Node Name: "
                       "knowledge-base/")))
-          ,(concat "#+filetags: :knowledge_base:\n"
-                   "#+author: %(user-full-name)\n"
-                   "#+title: %(format mjs--capture-title)\n\n%?")
+         ,(concat "#+filetags: :knowledge_base:\n"
+                  "#+author: %(user-full-name)\n"
+                  "#+title: %(format mjs--capture-title)\n\n%?")
          :hook (lambda () (mjs/capture-insert-id)))
         ("m" "Meeting" entry
          (file+headline "agenda/agenda.org" "Future")
@@ -1728,8 +1728,8 @@ If on a:
          (LaTeX-mode . mjs/preview-scale-adjustment)
          (LaTeX-mode . auto-fill-mode)
          (after-save . (lambda () 
-		  				(when (eq major-mode 'latex-mode)
-						  (TeX-command-run-all nil)))))
+		  				 (when (eq major-mode 'latex-mode)
+						   (TeX-command-run-all nil)))))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
            (TeX-view-program-list '(("Zathura" "zathura --synctex-forward :: %o")))
            (TeX-view-program-selection '((output-pdf "Zathura")))
@@ -1743,13 +1743,13 @@ If on a:
     "Evaluate `calc' on the contents of line at point"
     (interactive)
     (cond ((region-active-p)
-            (let* ((beg (region-beginning))
-                    (end (region-end))
-                    (string (buffer-substring-no-properties beg end)))
-            (kill-region beg end)
-            (insert (calc-eval `(,string calc-langauge latex
-                                            calc-prefer-frac t
-                                            calc-angle-mode rad)))))))
+           (let* ((beg (region-beginning))
+                  (end (region-end))
+                  (string (buffer-substring-no-properties beg end)))
+             (kill-region beg end)
+             (insert (calc-eval `(,string calc-langauge latex
+                                          calc-prefer-frac t
+                                          calc-angle-mode rad)))))))
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
   (mjs-local-leader-def :keymaps 'LaTeX-mode-map
@@ -1818,8 +1818,8 @@ If on a:
          (cdlatex-tab . LaTeX-indent-line))
   :custom (texmathp-tex-commands '(("bmatrix" env-on)
                                    ("pmatrix" env-on)))
-          (cdlatex-env-alist '(("proof" "\\begin{proof}\n?\n\\end{proof}" nil)))
-          (cdlatex-insert-auto-labels-in-env-templates nil)
+  (cdlatex-env-alist '(("proof" "\\begin{proof}\n?\n\\end{proof}" nil)))
+  (cdlatex-insert-auto-labels-in-env-templates nil)
   :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
                               "<tab>" #'cdlatex-tab)
   (add-to-list 'cdlatex-command-alist '("proof" "Insert proof env" ""
@@ -1908,27 +1908,27 @@ If on a:
 (use-package org-appear
   :after org
   :custom (org-hide-emphasis-markers t)
-          (org-appear-autolinks t)
-          (org-appear-trigger 'manual)
+  (org-appear-autolinks t)
+  (org-appear-trigger 'manual)
   :hook (org-mode . (lambda ()
-                       (org-appear-mode t)
-                       (add-hook 'evil-insert-state-entry-hook
-                                 #'org-appear-manual-start nil t)
-                       (add-hook 'evil-insert-state-exit-hook
-                                 #'org-appear-manual-stop nil t))))
+                      (org-appear-mode t)
+                      (add-hook 'evil-insert-state-entry-hook
+                                #'org-appear-manual-start nil t)
+                      (add-hook 'evil-insert-state-exit-hook
+                                #'org-appear-manual-stop nil t))))
 
 (use-package olivetti
   :custom (olivetti-body-width 100)
-          (olivetti-lighter " 󰘞")
+  (olivetti-lighter " 󰘞")
   :hook (org-mode . olivetti-mode)
   :init (diminish 'visual-line-mode)
   :init (mjs-local-leader-def :keymaps 'org-mode-map
-             "t o" '("Toggle Olivetti" . olivetti-mode)))
+          "t o" '("Toggle Olivetti" . olivetti-mode)))
 
 (use-package flycheck
   :diminish " 󰨮"
   :custom (flycheck-global-modes '(not org-capture-mode)))
-  ;; :init (global-flycheck-mode))
+;; :init (global-flycheck-mode))
 
 (use-package flycheck-vale
   :config (flycheck-vale-setup))
@@ -1939,9 +1939,9 @@ If on a:
   :general (:states '(normal visual) :keymaps 'jinx-mode-map
                     "z =" #'jinx-correct
                     "Z =" #'jinx-languages)
-            (:keymaps 'evil-motion-state-map
-                      "[ s" #'jinx-previous
-                      "] s" #'jinx-next))
+  (:keymaps 'evil-motion-state-map
+            "[ s" #'jinx-previous
+            "] s" #'jinx-next))
 
 (add-hook 'org-mode-hook 'org-indent-mode)
 (add-hook 'org-indent-mode-hook (lambda () (diminish 'org-indent-mode)))
@@ -1949,7 +1949,7 @@ If on a:
 (use-package org-superstar
   :after org
   :custom (org-superstar-leading-bullet nil)
-          (org-hide-leading-stars t)
+  (org-hide-leading-stars t)
   :hook (org-mode . org-superstar-mode))
 
 (use-package svg-tag-mode
@@ -1964,26 +1964,26 @@ If on a:
                               :background (catppuccin-get-color 'peach)
                               :foreground (catppuccin-get-color 'base)
                               ))))
-                ("^\\*+ \\(NEXT\\)" . ((lambda (tag)
-                                         (svg-lib-tag tag nil
-                                                      :margin 0
-                                                      :font-family "JetBrainsMono Nerd Font"
-                                                      :font-weight 500
-                                                      :background (catppuccin-get-color 'green)
-                                                      :foreground (catppuccin-get-color 'base)))))
-                ("^\\*+ \\(DONE\\|KILLED\\)" . ((lambda (tag)
-                                         (svg-lib-tag tag nil
-                                                      :margin 0
-                                                      :font-family "JetBrainsMono Nerd Font"
-                                                      :font-weight 500
-                                                      :foreground (catppuccin-get-color 'overlay0)))))
-                ("\\(:TODO:\\)" . ((lambda (tag)
-                                     (svg-lib-tag (substring tag 1 5) nil
-                                                  :margin 0
-                                                  :font-family "JetBrainsMono Nerd Font"
-                                                  :font-weight 500
-                                                  :background (catppuccin-get-color 'peach)
-                                                  :foreground (catppuccin-get-color 'base)))))
+             ("^\\*+ \\(NEXT\\)" . ((lambda (tag)
+                                      (svg-lib-tag tag nil
+                                                   :margin 0
+                                                   :font-family "JetBrainsMono Nerd Font"
+                                                   :font-weight 500
+                                                   :background (catppuccin-get-color 'green)
+                                                   :foreground (catppuccin-get-color 'base)))))
+             ("^\\*+ \\(DONE\\|KILLED\\)" . ((lambda (tag)
+                                               (svg-lib-tag tag nil
+                                                            :margin 0
+                                                            :font-family "JetBrainsMono Nerd Font"
+                                                            :font-weight 500
+                                                            :foreground (catppuccin-get-color 'overlay0)))))
+             ("\\(:TODO:\\)" . ((lambda (tag)
+                                  (svg-lib-tag (substring tag 1 5) nil
+                                               :margin 0
+                                               :font-family "JetBrainsMono Nerd Font"
+                                               :font-weight 500
+                                               :background (catppuccin-get-color 'peach)
+                                               :foreground (catppuccin-get-color 'base)))))
              )))
 
 (use-package toc-org
@@ -1992,29 +1992,55 @@ If on a:
 (use-package pdf-tools
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
-  :custom (pdf-view-display-size 'fit-page)
-          (pdf-view-use-scaling t)
-          (pdf-view-use-imagemagick nil)
-  ;; :hook (pdf-view-mode . (lambda () (evil-collection-init 'pdf)))
+  :custom ((pdf-view-display-size 'fit-page)
+           (pdf-view-use-scaling t)
+           (pdf-view-use-imagemagick nil))
+  :hook (pdf-view-mode . (lambda () (setq buffer-read-only nil)
+                           (mjs-local-leader-def :keymaps 'pdf-view-mode-map
+                             "a"   '(nil :which-key "Annotations")
+                             "a a" '("Add Annotation" . pdf-annot-add-markup-annotation)
+                             "a d" '("Delete Annotation" . pdf-annot-delete)
+                             "a h" '("Add Highlight Annotation" . pdf-annot-add-highlight-markup-annotation)
+                             "a l" '("List Annotations" . pdf-annot-list-annotations)
+                             "a s" '("Add Squiggly Annotation" . pdf-annot-add-squiggly-markup-annotation)
+                             "a t" '("Add Text Annotation" . pdf-annot-add-text-annotation)
+                             "a u" '("Add Underline Annotation" . pdf-annot-add-underline-markup-annotation)
+                             "a -" '("Add Strike-through Annotation" . pdf-annot-add-strikeout-markup-annotation)
+                             "o" '("Outline" . pdf-outline)
+                             "p" '("Goto Page" . pdf-view-goto-page))
+                           (mjs-local-leader-def :keymaps 'pdf-annot-edit-contents-minor-mode-map
+                             "P"   '(nil :which-key "PDF Annotations")
+                             "P f" '("Finalize Annotation" . (lambda () (interactive) (pdf-annot-edit-contents-finalize t t)))
+                             "P k" '("Kill Annotation" . pdf-annot-edit-contents-abort)
+                             "P s" '("Save Annotation" . pdf-annot-edit-contents-commit))))
   :config
-    (add-to-list 'evil-normal-state-modes 'pdf-view-mode)
-    ;; Silence large file prompts for PDFs
-    (defun mjs/suppress-large-file-prompts (fn size op-type filename
-                                               &optional offer-raw)
-      (unless (string-match-p "\\.pdf\\'" filename)
-        (funcall fn size op-type filename offer-raw)))
-    (advice-add #'abort-if-file-too-large :around
-                #'mjs/suppress-large-file-prompts)
-    ;; Add message about needing to install the pdf server.
-    (defun mjs/install-epdfinfo-message (fn &rest args)
-      (if (and (require 'pdf-info nil t)
-               (or (pdf-info-running-p)
-                   (ignore-errors (pdf-info-check-epdfinfo) t)))
-          (apply fn args)
-        (fundamental-mode)
-        (message "Viewing PDFs in Emacs requires epdfinfo. Use `M-x pdf-tools-install' to build it")))
-    (advice-add #'pdf-view-mode :around #'mjs/install-epdfinfo-message)
-    (pdf-tools-install-noverify))
+  (add-to-list 'evil-normal-state-modes 'pdf-view-mode)
+  ;; Silence large file prompts for PDFs
+  (defun mjs/suppress-large-file-prompts (fn size op-type filename
+                                             &optional offer-raw)
+    (unless (string-match-p "\\.pdf\\'" filename)
+      (funcall fn size op-type filename offer-raw)))
+  (advice-add #'abort-if-file-too-large :around
+              #'mjs/suppress-large-file-prompts)
+  ;; Add message about needing to install the pdf server.
+  (defun mjs/install-epdfinfo-message (fn &rest args)
+    (if (and (require 'pdf-info nil t)
+             (or (pdf-info-running-p)
+                 (ignore-errors (pdf-info-check-epdfinfo) t)))
+        (apply fn args)
+      (fundamental-mode)
+      (message "Viewing PDFs in Emacs requires epdfinfo. Use `M-x pdf-tools-install' to build it")))
+  (advice-add #'pdf-view-mode :around #'mjs/install-epdfinfo-message)
+  (defun mjs/pdf-annot-update-header ()
+    (setq header-line-format
+          (concat
+           "Save annotation with "
+           (propertize "SPC m P s" 'face 'help-key-binding)
+           ", or abort with "
+           (propertize "SPC m P k" 'face 'help-key-binding)
+           " in normal mode.")))
+  (add-hook 'pdf-annot-edit-contents-minor-mode-hook #'mjs/pdf-annot-update-header)
+  (pdf-tools-install-noverify))
 
 (use-package saveplace-pdf-view
   :after pdf-view)
