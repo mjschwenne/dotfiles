@@ -516,6 +516,7 @@ a prefix argument."
 (mjs-leader-def :keymaps 'override
   "i"  '(nil :which-key "Insert")
   "i u" '("Character" . insert-char)
+  "i 0" '("Zero-Width Space" . (lambda () (interactive) (insert-char #x00200B)))
   "i r" '("Evil Registers" . evil-show-registers)
   "i e" '("Emoji" . emojify-insert-emoji))
 
@@ -872,7 +873,7 @@ a prefix argument."
 (use-package cape
   :after corfu
   :hook (prog-mode . (lambda ()
-                       (add-to-list 'completion-at-point-functions #'cape-keywords)))
+                       (add-to-list 'completion-at-point-functions #'cape-keyword)))
         (text-mode . (lambda ()
                        (add-to-list 'completion-at-point-functions #'cape-dict)
                        (add-to-list 'completion-at-point-functions #'cape-dabbrev)))
@@ -880,9 +881,9 @@ a prefix argument."
                       (add-to-list 'completion-at-point-functions #'cape-elisp-block)))
   :config (add-to-list 'completion-at-point-functions #'cape-file))
 
-;; (use-package company-wordfre q
-;;   :after cape
-;;   :init (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-wordfreq)))
+(use-package company-wordfreq
+  :after cape
+  :init (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-wordfreq)))
 
 (global-prettify-symbols-mode +1)
 
@@ -986,7 +987,10 @@ a prefix argument."
           "f d"    '("Move Directory" . mjs/move-dir-update-link-links)
           "f r"    '("Regenerate Links" . mjs/regenerate-file-links)
           "f R"    '("Regenerate Links Globally" . mjs/regenerate-file-links-globally)
-          "h"      '("Toggle Heading" . org-toggle-heading)
+          "h"      '(nil :which-key "Heading")
+          "h h"    '("Toggle Heading" . org-toggle-heading)
+          "h s"    '("Set Heading State" . org-todo)
+          "h t"    '("Set Heading Tags" . org-set-tags-command)
           "i"      '(nil :which-key "ID")
           "i c"    '("Copy ID" . org-id-copy)
           "i i"    '("Create ID" . org-id-get-create)
@@ -1018,8 +1022,11 @@ a prefix argument."
           "S r"    '("Refile" . org-refile)
           "S s"    '("Sparse Subtree" . org-sparse-tree)
           "S S"    '("Sort" . org-sort)
-          "t"      '("Set TODO State" . org-todo)
-          "T"      '("Set Tags" . org-set-tags-command))
+          "t"      '(nil :which-key "Toggle")
+          "t s"    '("Toggle Sub/Superscripts" . (lambda ()
+                                                   (interactive)
+                                                   (setq org-pretty-entities-include-sub-superscripts
+                                                         (not org-pretty-entities-include-sub-superscripts)))))
   :custom (org-fontify-quote-and-verse-blocks t)
   (org-src-fontify-natively nil)
   (org-pretty-entities t)
@@ -1671,6 +1678,12 @@ If on a:
 (add-to-list 'org-latex-packages-alist '("margin=1in" "geometry" t))
 (add-to-list 'org-latex-packages-alist '("" "parskip" t))
 (add-to-list 'org-latex-packages-alist '("" "nicematrix" t))
+(add-to-list 'org-latex-packages-alist '("" "amsthm" t))
+(setq org-entities-user
+      '(("mathbbR" "\\mathbb{R}" nil "&x211D" "R" "R" "ℝ")
+        ("mathbbE" "\\mathbb{E}" nil "&x1D53C" "E" "E" "𝔼")
+        ("lightning" "\\lightning" nil "&x21AF" "</" "</" "↯")
+        ("qed" "\\qedsymbol" nil "&x25A1" "[]" "[]" "☐")))
 
 ;; (use-package org-auctex
 ;;   :hook (org-mode . org-auctex-mode))
@@ -1749,9 +1762,8 @@ If on a:
 (use-package yasnippet
   :diminish (yas-minor-mode . " 󰁨")
   :hook ((LaTeX-mode . yas-minor-mode)
-         (LaTeX-mode . yas-reload-all)
+         (dashboard-mode . yas-reload-all)
          (org-mode . yas-minor-mode)
-         (org-mode . yas-reload-all)
          (post-self-insert . mjs/yas-try-expanding-auto-snippets))
   :custom (yas-triggers-in-field t)
   (yas-snippets-dirs '("~/.emacs.d/snippets"))
@@ -1911,7 +1923,7 @@ If on a:
   :hook (org-mode . olivetti-mode)
   :init (diminish 'visual-line-mode)
   :init (mjs-local-leader-def :keymaps 'org-mode-map
-             "o" '("Toggle Olivetti" . olivetti-mode)))
+             "t o" '("Toggle Olivetti" . olivetti-mode)))
 
 (use-package flycheck
   :diminish " 󰨮"
@@ -1965,6 +1977,13 @@ If on a:
                                                       :font-family "JetBrainsMono Nerd Font"
                                                       :font-weight 500
                                                       :foreground (catppuccin-get-color 'overlay0)))))
+                ("\\(:TODO:\\)" . ((lambda (tag)
+                                     (svg-lib-tag (substring tag 1 5) nil
+                                                  :margin 0
+                                                  :font-family "JetBrainsMono Nerd Font"
+                                                  :font-weight 500
+                                                  :background (catppuccin-get-color 'peach)
+                                                  :foreground (catppuccin-get-color 'base)))))
              )))
 
 (use-package toc-org
@@ -2099,7 +2118,7 @@ With a prefix ARG, remove start location."
              "n r i" '("Insert Link" . org-roam-node-insert)
              "n r c" '("Roam Capture" . org-roam-capture)
              "n r s" '("Roam Sync" . org-roam-db-sync)
-             "n r S" '("Stripe Roam Links" . mjs/strip-org-roam-links)
+             "n r S" '("Strip Roam Links" . mjs/strip-org-roam-links)
              "n r d" '("Daily" . org-roam-dailies-capture-today)
              "n r r" '("Random Node" . org-roam-node-random)
              "n r t" '("Add Tags" . org-roam-tag-add)
@@ -2116,7 +2135,7 @@ With a prefix ARG, remove start location."
              "m i" '("Insert Link" . org-roam-node-insert)
              "m c" '("Roam Capture" . org-roam-capture)
              "m s" '("Roam Sync" . org-roam-db-sync)
-             "m S" '("Stripe Roam Links" . mjs/strip-org-roam-links)
+             "m S" '("Strip Roam Links" . mjs/strip-org-roam-links)
              "m d" '("Daily" . org-roam-dailies-capture-today)
              "m r" '("Random Node" . org-roam-node-random)
              "m t" '("Add Tags" . org-roam-tag-add)
@@ -2124,7 +2143,63 @@ With a prefix ARG, remove start location."
   :general (:states 'insert :keymaps 'org-mode-map
                     "C-f" #'org-roam-node-insert
                     "C-S-f" #'org-insert-link)
-  :hook (org-mode . org-roam-db-autosync-mode))
+  :hook (org-mode . org-roam-db-autosync-mode)
+  ;; Taken from https://github.com/org-roam/org-roam/pull/2219/files
+  :config (defconst mjs/org-roam-bracket-completion-re
+            "\\[\\(?:\\[id:\\([^z-a]*?\\)]\\)?\\[\\([^z-a]+?\\)]]"
+            "Regex for completion within link brackets.
+Matches both empty links (i.e. \"[[|]]\") and existing \"id:\"
+links (e.x. \"[[id:01234][|]]\").")
+  (defun mjs/org-roam-complete-link-at-point()
+    "Complete \"id:\" link at point to an existing Org-roam node.
+Places the completed string into the link description. If there
+was already an \"id:\" link at point, overwrites it to fit the
+new description."
+    (let (roam-p start end)
+      (when (org-in-regexp mjs/org-roam-bracket-completion-re 1)
+        (setq old-id (match-string 1)
+              start (match-beginning 2)
+              end (match-end 2))
+        (list start end
+            (org-roam--get-titles)
+            :exit-function
+            (lambda (str &rest _)
+              (let ((node-id (org-roam-node-id
+                              (org-roam-node-from-title-or-alias
+                               (substring-no-properties str)))))
+                (cond (old-id (delete-char
+                               (- 0 (length str) (length old-id) 2))
+                              (insert node-id "][" str))
+                      (t (delete-char (- 0 (length str)))
+                         (insert "id:" node-id "][" str)))
+                (forward-char 2)))))))
+  (defun mjs/org-roam-complete-everywhere ()
+    "Complete symbol at point as a link completion to an Org-roam node.
+This is a `completion-at-point' function, and is active when
+`org-roam-completion-everywhere' is non-nil.
+Unlike `org-roam-complete-link-at-point' this will complete even
+outside of the bracket syntax for links (i.e. \"[[id:|]]\"),
+hence \"everywhere\"."
+    (when (and org-roam-completion-everywhere
+               (thing-at-point 'word)
+               (not (save-match-data (org-in-regexp org-link-any-re))))
+      (let ((bounds (bounds-of-thing-at-point 'word)))
+        (list (car bounds) (cdr bounds)
+              (org-roam--get-titles)
+              :exit-function
+              (lambda (str _status)
+                (delete-char (- (length str)))
+                  (insert "[[id:"
+                      (org-roam-node-id (org-roam-node-from-title-or-alias
+                                         (substring-no-properties str)))
+                      "][" str "]]"))
+              ;; Proceed with the next completion function if the returned titles
+              ;; do not match. This allows the default Org capfs or custom capfs
+              ;; of lower priority to run.
+              :exclusive 'no))))
+  (advice-add #'org-roam-complete-link-at-point :override #'mjs/org-roam-complete-link-at-point)
+  (advice-add #'org-roam-complete-everywhere :override #'mjs/org-roam-complete-everywhere))
+      
 
 (use-package vulpea
   :hook (org-roam-db-autosync-mode . vulpea-db-autosync-enable))
@@ -2231,9 +2306,13 @@ With a prefix ARG, remove start location."
               (let* ((parsed-url (url-generic-parse-url url)) ;parse the url
                 (clean-title
                   (cond
-                  ;; if the host is aonprd.com, cleanup the title
+                  ;; if the host is one of these, cleanup the title
                   ((string= (url-host parsed-url) "aonprd.com")
                     (replace-regexp-in-string " - .*" "" title))
+                  ((string= (url-host parsed-url) "en.wikipedia.org")
+                   (replace-regexp-in-string " - .*" "" title))
+                  ((string= (url-host parsed-url) "github.com")
+                   (replace-regexp-in-string "^Github - " "" title))
                   ;; otherwise keep the original title
                   (t title))))
           ;; forward the title to the default org-cliplink transformer

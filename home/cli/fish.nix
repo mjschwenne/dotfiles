@@ -13,6 +13,8 @@
       nix-shell = "nix-shell --run fish";
       cs400-ssh = ''
         gcloud compute ssh --zone "us-central1-a" "cs400-vm" --project "cs-400-398116"'';
+      cs400-auth = ''gcloud auth login'';
+      ls = "eza";
     };
     functions = {
       mjs_rename = ''
