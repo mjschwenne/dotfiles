@@ -90,6 +90,7 @@
         preview
         paralist
         nicematrix
+        pgfplots
         ;
     })
     ghostscript
