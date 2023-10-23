@@ -54,6 +54,10 @@
     slack
     zoom-us
 
+    # Network Utilities 
+    remmina
+    openconnect
+
     # Password Manager
     keepassxc
 
@@ -100,7 +104,6 @@
     webcamoid
     gnome.eog
     mate.engrampa
-    globalprotect-openconnect
 
     # CLI Utilities
     pandoc
