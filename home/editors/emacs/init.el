@@ -1471,8 +1471,9 @@ If on a:
 (setq org-agenda-custom-commands
       '(("g" "Get Things Done"
          ((agenda ""
-                  ((org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'deadline))
+                  (;(org-agenda-skip-function
+                   ; '(org-agenda-skip-entry-if 'deadline))
+                   (org-agenda-log-mode-items '(closed clock))
                    (org-deadline-warning-days 0)
                    (org-agenda-span 1)))
           (todo "NEXT"
@@ -1480,8 +1481,10 @@ If on a:
                  (org-agenda-overriding-header "\nTasks\n")))
           (agenda nil
                   ((org-agenda-entry-types '(:deadline))
+                   (org-agenda-use-time-grid nil)
                    (org-agenda-format-date "")
                    (org-deadline-warning-days 14)
+                   (org-agenda-log-mode-items '(closed))
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'notregexp "\\*+ NEXT"))
                    (org-agenda-overriding-header "\nDeadlines")))
