@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# key: EXP
+# key: \E
 # name: Expectation
 # condition: (and (texmathp) (quote auto))
 # group: math
