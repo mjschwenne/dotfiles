@@ -98,11 +98,22 @@
     	gaps_out = 10
     	col.active_border = $green
     	col.inactive_border = $peach
-    	col.group_border = $yellow
-    	col.group_border_active = $green
-    	col.group_border_locked = $red
-    	col.group_border_locked_active = $pink
     	resize_on_border = true;
+    }
+
+    group {
+        col.border_active = $green 
+        col.border_inactive = $yellow
+        col.border_locked_inactive = $red 
+        col.border_locked_active = $pink
+        groupbar {
+            font_size = 12
+            gradients = false
+            col.active = $green
+            col.inactive = $yellow 
+            col.locked_active = $red 
+            col.locked_inactive = $pink
+        }
     }
 
     decoration {

@@ -342,7 +342,7 @@
         };
       };
 
-      null-ls = {
+      none-ls = {
         enable = true;
         sources = {
           diagnostics = {
