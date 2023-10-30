@@ -1,9 +1,8 @@
-{ config
-, pkgs
+{  pkgs
 , lib
 , foundry
 , ...
-} @ inputs: {
+} : {
   imports = [
     # Include the results of the hardware scan.
     ./sol-hardware.nix
@@ -51,7 +50,6 @@
         header_up X-Client-Port {http.request.remote.port}
         header_up X-Tls-Client-Cert-Der-Base64 {http.request.tls.client.certificate_der_base64}
       }
-
       tls {
         client_auth {
           mode request
