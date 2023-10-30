@@ -1468,25 +1468,31 @@ If on a:
     (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
 (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
 
+(defun mjs/deadline-format ()
+  (let* ((current-date (format-time-string "%Y-%m-%d" (current-time)))
+         (deadline (format-time-string "%Y-%m-%d" (org-get-deadline-time (point))))
+         (difference (days-between deadline current-date))
+         (time-remaining (if (< difference 0)
+                             (format ": %i days ago" (abs difference))
+                           (format ": %i days" difference))))
+    (format "%s %s" deadline time-remaining)))
+
 (setq org-agenda-custom-commands
       '(("g" "Get Things Done"
          ((agenda ""
-                  (;(org-agenda-skip-function
-                   ; '(org-agenda-skip-entry-if 'deadline))
+                  ((org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'deadline))
                    (org-agenda-log-mode-items '(closed clock))
                    (org-deadline-warning-days 0)
                    (org-agenda-span 1)))
           (todo "NEXT"
                 ((org-agenda-prefix-format "  %i %-12:c [%e] ")
                  (org-agenda-overriding-header "\nTasks\n")))
-          (agenda nil
+          (tags-todo "DEADLINE<=\"<+7d>\""
                   ((org-agenda-entry-types '(:deadline))
-                   (org-agenda-use-time-grid nil)
-                   (org-agenda-format-date "")
-                   (org-deadline-warning-days 14)
-                   (org-agenda-log-mode-items '(closed))
+                   (org-agenda-prefix-format "  %i %-12:c [%(mjs/deadline-format)] ")
                    (org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'notregexp "\\*+ NEXT"))
+                    '(org-agenda-skip-entry-if 'notregexp "\\*+ \\(NEXT\\|TODO\\)"))
                    (org-agenda-overriding-header "\nDeadlines")))
           (tags-todo "inbox"
                      ((org-agenda-prefix-format "  %?-12t% s")
@@ -1808,8 +1814,8 @@ If on a:
                         warning-suppress-types
                         :test 'equal))
   (general-define-key :keymaps 'yas-keymap :states 'insert
-                      "<tab>" #'yas-next-field-or-cdlatex
-                      "TAB" #'yas-next-field-or-cdlatex))
+                      "<tab>" #'mjs/yas-next-field-or-cdlatex
+                      "TAB" #'mjs/yas-next-field-or-cdlatex))
 
 ;; (use-package yasnippet-snippets
 ;;   :after yasnippet)
