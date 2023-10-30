@@ -1682,6 +1682,7 @@ If on a:
 (add-to-list 'org-latex-packages-alist '("" "parskip" t))
 (add-to-list 'org-latex-packages-alist '("" "nicematrix" t))
 (add-to-list 'org-latex-packages-alist '("" "amsthm" t))
+(add-to-list 'org-latex-packages-alist '("" "cancel" t))
 (setq org-entities-user
       '(("mathbbR" "\\mathbb{R}" nil "&x211D" "R" "R" "ℝ")
         ("mathbbE" "\\mathbb{E}" nil "&x1D53C" "E" "E" "𝔼")

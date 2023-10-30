@@ -91,6 +91,7 @@
         paralist
         nicematrix
         pgfplots
+        cancel
         ;
     })
     ghostscript
