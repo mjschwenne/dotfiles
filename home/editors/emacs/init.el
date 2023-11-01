@@ -1468,26 +1468,39 @@ If on a:
     (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
 (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
 
+(defun mjs/agenda-time-format (type)
+  (let* ((current-date (format-time-string "%Y-%m-%d" (current-time)))
+         (timestamp (format-time-string "%Y-%m-%d" (if (equal type 'deadline)
+                                                      (org-get-deadline-time (point))
+                                                    (org-get-scheduled-time (point)))))
+         (difference (days-between timestamp current-date))
+         (time-remaining (cond ((eq difference 0) "today")
+                               ((<= (abs difference) 1)
+                                (if (< difference 0)
+                                    (format "%i day ago" (abs difference))
+                                  (format "%i day" difference)))
+                               ((> difference 1) (format "%i days" difference))
+                               ((< difference -1) (format "%i days ago" (abs difference))))))
+    (format "%s : %s" timestamp time-remaining)))
+
 (setq org-agenda-custom-commands
       '(("g" "Get Things Done"
-         ((agenda ""
-                  (;(org-agenda-skip-function
-                   ; '(org-agenda-skip-entry-if 'deadline))
-                   (org-agenda-log-mode-items '(closed clock))
+         ((agenda* ""
+                  ((org-agenda-log-mode-items '(closed clock))
                    (org-deadline-warning-days 0)
                    (org-agenda-span 1)))
+          (tags-todo "DEADLINE<=\"<+7d>\""
+                  ((org-agenda-entry-types '(:deadline))
+                   (org-agenda-prefix-format "  %i %-12:c [%(mjs/agenda-time-format 'deadline)] ")
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'notregexp "\\*+ \\(NEXT\\|TODO\\)"))
+                   (org-agenda-overriding-header "\nDeadlines\n")))
+          (tags-todo "SCHEDULED<=\"<today>\""
+                     ((org-agenda-overriding-header "\nScheduled\n")
+                      (org-agenda-prefix-format "  %i %-12:c [%(mjs/agenda-time-format 'scheduled)] ")))
           (todo "NEXT"
                 ((org-agenda-prefix-format "  %i %-12:c [%e] ")
                  (org-agenda-overriding-header "\nTasks\n")))
-          (agenda nil
-                  ((org-agenda-entry-types '(:deadline))
-                   (org-agenda-use-time-grid nil)
-                   (org-agenda-format-date "")
-                   (org-deadline-warning-days 14)
-                   (org-agenda-log-mode-items '(closed))
-                   (org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'notregexp "\\*+ NEXT"))
-                   (org-agenda-overriding-header "\nDeadlines")))
           (tags-todo "inbox"
                      ((org-agenda-prefix-format "  %?-12t% s")
                       (org-agenda-overriding-header "\nInbox\n")))
@@ -1808,8 +1821,8 @@ If on a:
                         warning-suppress-types
                         :test 'equal))
   (general-define-key :keymaps 'yas-keymap :states 'insert
-                      "<tab>" #'yas-next-field-or-cdlatex
-                      "TAB" #'yas-next-field-or-cdlatex))
+                      "<tab>" #'mjs/yas-next-field-or-cdlatex
+                      "TAB" #'mjs/yas-next-field-or-cdlatex))
 
 ;; (use-package yasnippet-snippets
 ;;   :after yasnippet)
