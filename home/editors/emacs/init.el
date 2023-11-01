@@ -1351,7 +1351,7 @@ If on a:
         ("knowledge_base")
         (:grouptags)
         ("computer_operation")
-        ("matematics")
+        ("mathematics")
         ("processes")
         ("programming")
         (:endgrouptag)
@@ -1379,7 +1379,7 @@ If on a:
         ("statistics")
         (:grouptags)
         ("confidence_intervals")
-        ("hypthoesis_tests")
+        ("hypothesis_tests")
         ("probability")
         ("regression")
         (:endgrouptag)
@@ -1395,7 +1395,7 @@ If on a:
         ("classification")
         ("clustering")
         ("decision_tree")
-        ("information_retrival")
+        ("information_retrieval")
         ("recommender")
         ("text_mining")
         ("regression")
@@ -1495,7 +1495,7 @@ If on a:
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'notregexp "\\*+ \\(NEXT\\|TODO\\)"))
                    (org-agenda-overriding-header "\nDeadlines\n")))
-          (tags-todo "SCHEDULED<=\"<today>\""
+          (tags "SCHEDULED<=\"<today>\"-TODO=\"DONE\"-TODO=\"KILLED\""
                      ((org-agenda-overriding-header "\nScheduled\n")
                       (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'scheduled)] ")))
           (todo "NEXT"
