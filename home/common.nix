@@ -40,6 +40,7 @@
     eza
     ranger
     nix-prefetch-github # helps write derivations hosted on github
+    speedtest-cli
 
     # Fun tools
     cowsay
