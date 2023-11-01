@@ -1489,20 +1489,20 @@ If on a:
                   ((org-agenda-log-mode-items '(closed clock))
                    (org-deadline-warning-days 0)
                    (org-agenda-span 1)))
-          (tags-todo "DEADLINE<=\"<+7d>\""
+          (tags-todo "DEADLINE<=\"<+14d>\""
                   ((org-agenda-entry-types '(:deadline))
-                   (org-agenda-prefix-format "  %i %-12:c [%(mjs/agenda-time-format 'deadline)] ")
+                   (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'deadline)] ")
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'notregexp "\\*+ \\(NEXT\\|TODO\\)"))
                    (org-agenda-overriding-header "\nDeadlines\n")))
           (tags-todo "SCHEDULED<=\"<today>\""
                      ((org-agenda-overriding-header "\nScheduled\n")
-                      (org-agenda-prefix-format "  %i %-12:c [%(mjs/agenda-time-format 'scheduled)] ")))
+                      (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'scheduled)] ")))
           (todo "NEXT"
-                ((org-agenda-prefix-format "  %i %-12:c [%e] ")
+                ((org-agenda-prefix-format " %i %-12:c [%e] ")
                  (org-agenda-overriding-header "\nTasks\n")))
           (tags-todo "inbox"
-                     ((org-agenda-prefix-format "  %?-12t% s")
+                     ((org-agenda-prefix-format " %?-12t% s")
                       (org-agenda-overriding-header "\nInbox\n")))
           (tags "CLOSED>=\"<today>\""
                 ((org-agenda-overriding-header "\nCompleted today\n")))))))

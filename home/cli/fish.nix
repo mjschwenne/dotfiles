@@ -29,6 +29,7 @@
             # Remove leading '-' from subsequent parts of the file path
             # Lowercase any remaining capital letters
             # Replace '&' with 'and'
+            # Separate numbers from letters
             set -l dest (echo $filename | sed -E \
                 -e "s/[()_']//g" \
                 -e "s/ [a-z]/\-\l&/g" \
@@ -38,7 +39,8 @@
                 -e "s/\-\-+/\-/g" \
                 -e "s/^\-//g" \
                 -e "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/" \
-                -e "s/&/and/g"
+                -e "s/&/and/g" \
+                -e "s/([a-z])(\d+)/\1-\2/"
             )
 
             if test -n $dest
