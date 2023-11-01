@@ -20,6 +20,7 @@
 
     settings = {
       options.globalAnnounceServer = [ "https://discovery.schwennesen.org" ];
+      options.urAccepted = 3;
 
       devices = {
         "sol" = {

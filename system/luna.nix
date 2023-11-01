@@ -26,6 +26,8 @@
     user = "mjs";
     dataDir = "/home/mjs/syncthing";
 
+    settings.options.urAccepted = 3;
+
     settings = {
       devices = {
         "terra" = {
