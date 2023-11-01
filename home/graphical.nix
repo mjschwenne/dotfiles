@@ -167,6 +167,9 @@
       "x-scheme-handler/about" = "librewolf.desktop";
       "x-scheme-handler/unknown" = "librewolf.desktop";
 
+      "text/calendar" = "thunderbird.desktop";
+      "x-scheme-handler/mailto" = "thunderbird.desktop";
+
       "image/png" = "org.gnome.eog.desktop";
       "image/jpeg" = "org.gnome.eog.desktop";
       "image/jpg" = "org.gnome.eog.desktop";
