@@ -47,6 +47,7 @@
     boxes
     figlet
     fortune
+    tty-clock
   ];
 
   programs.nix-index.enable = true;

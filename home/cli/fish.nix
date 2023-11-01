@@ -6,7 +6,7 @@
       dup-files = "find . -type f -printf '%p -> %f\\n' | sort -k2 | uniq -f1 --all-repeated=separate";
       flatten = ''
         find */ -type f -exec sh -c 'file=''${1#./}; mv "$file" "$(basename $file)"' _ '{}' \; ; find */ -depth -type d -exec rmdir '{}' \;'';
-      mjs_bulk_rename = ''find . -depth -exec fish -c 'mjs_rename "{}"' \;'';
+      mjs-bulk-rename = ''find . -depth -exec fish -c 'mjs-rename "{}"' \;'';
       icat = "kitty +kitten icat";
       ssh = "kitty +kitten ssh";
       m = "math";
@@ -17,7 +17,19 @@
       ls = "eza";
     };
     functions = {
-      mjs_rename = ''
+      mjs-change-scale = ''
+        set -l monitor (hyprctl monitors -j | jq -c -r '.[] | if .focused then .name else empty end')
+        hyprctl keyword monitor "$monitor,preferred,auto,$argv[1]"
+        sleep 0.5
+        if test $monitor = "eDP-1"
+            eww close primary_panel 
+            eww open primary_panel 
+        else 
+            eww close secondary_panel 
+            eww open secondary_panel 
+        end
+      '';
+      mjs-rename = ''
         for src in $argv
             set -l filename (string split -r -m 1 -f 1 '.' (basename $src))
             set -l extension (string split -r -m 1 -f 2 '.' (basename $src))
