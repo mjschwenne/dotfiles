@@ -92,6 +92,18 @@
         nicematrix
         pgfplots
         cancel
+        fontawesome
+        tcolorbox
+        environ
+        tikzfill
+        enumitem
+        dashrule
+        ifmtarg
+        multirow
+        changepage
+        biblatex
+        lato
+        fontaxes
         ;
     })
     ghostscript
