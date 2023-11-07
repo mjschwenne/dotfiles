@@ -594,20 +594,24 @@ a prefix argument."
                              'face `(:inherit mode-line-emphasis
                                               :foreground ,(catppuccin-get-color 'green)))))
              (propertize (buffer-name) 'face 'mode-line-emphasis))))
-        (telephone-line-defsegment* mjs/position ()
-          (if (eq major-mode 'pdf-view-mode)
-              (let* ((current (pdf-view-current-page))
-                     (max (or
-                           (ignore-errors
-                             (pdf-cache-number-of-pages))
-                           " "))
-                     (percent (if (stringp max)
-                                  " "
-                                (format "%d%%%% "
-                                        (floor (* 100 (/ (float current)
-                                                         (float max))))))))
-                (format "%s %s/%s" percent current max))
-            `((-3 "%p") ,(concat " %3l:%" (if (bound-and-true-p column-number-indicator-zero-based) "c" "C")))))
+        (telephone-line-defsegment* mjs/buffer-position ()
+          (cond ((eq major-mode 'pdf-view-mode)
+                 (let* ((current (pdf-view-current-page))
+                        (max (or
+                              (ignore-errors
+                                (pdf-cache-number-of-pages))
+                              " "))
+                        (percent (if (stringp max)
+                                     " "
+                                   (format "%d%%%% "
+                                           (floor (* 100 (/ (float current)
+                                                            (float max))))))))
+                   (format "%s %s/%s" percent current max)))
+                ((eq major-mode 'image-mode)
+                 "%I")
+                 (t `((-3 "%p")
+                      ,(concat " %3l:%" (if (bound-and-true-p column-number-indicator-zero-based)
+                                            "c" "C"))))))
         (telephone-line-mode +1)
         :custom (telephone-line-lhs
                  '((evil . (telephone-line-evil-tag-segment))
@@ -618,7 +622,7 @@ a prefix argument."
          '((nil . (telephone-line-misc-info-segment
                    telephone-line-atom-encoding-segment))
            (accent . (telephone-line-major-mode-segment))
-           (evil . (mjs/position))))
+           (evil . (mjs/buffer-position))))
         :config
         (set-face-foreground 'telephone-line-evil
                              (catppuccin-get-color 'base))
@@ -988,9 +992,16 @@ a prefix argument."
           "f r"    '("Regenerate Links" . mjs/regenerate-file-links)
           "f R"    '("Regenerate Links Globally" . mjs/regenerate-file-links-globally)
           "h"      '(nil :which-key "Heading")
-          "h h"    '("Toggle Heading" . org-toggle-heading)
+          "h b"    '("Mark BLOCKED" . (lambda () (interactive) (org-todo "BLOCKED")))
+          "h d"    '("Mark DONE" . (lambda () (interactive) (org-todo "DONE")))
+          "h H"    '("Toggle Heading" . org-toggle-heading)
+          "h h"    '("Promote Heading" . org-metaright)
+          "h k"    '("Mark KILLED" . (lambda () (interactive) (org-todo "KILLED")))
+          "h l"    '("Demote Heading" . org-metaleft)
+          "h n"    '("Mark NEXT" . (lambda () (interactive) (org-todo "NEXT")))
           "h s"    '("Set Heading State" . org-todo)
           "h t"    '("Set Heading Tags" . org-set-tags-command)
+          "h T"    '("Mark TODO" . (lambda () (interactive) (org-todo "TODO")))
           "i"      '(nil :which-key "ID")
           "i c"    '("Copy ID" . org-id-copy)
           "i i"    '("Create ID" . org-id-get-create)
@@ -1027,15 +1038,18 @@ a prefix argument."
                                                    (interactive)
                                                    (setq org-pretty-entities-include-sub-superscripts
                                                          (not org-pretty-entities-include-sub-superscripts)))))
+         (evil-define-key 'normal calendar-mode-map
+           (kbd "RET") #'org-calendar-select)
   :custom (org-fontify-quote-and-verse-blocks t)
   (org-src-fontify-natively nil)
   (org-pretty-entities t)
   (org-highlight-latex-and-related '(native latex))
   :hook (org-mode . turn-on-org-cdlatex)
   :config (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
-  (set-face-attribute 'org-quote nil
-                      :background (catppuccin-get-color 'mantle)
-                      :extend t)
+          (set-face-attribute 'org-quote nil
+                              :background (catppuccin-get-color 'mantle)
+                              :extend t)
+          (set-face-foreground 'org-table (catppuccin-get-color 'subtext1))
   (diminish 'org-cdlatex-mode " "))
 
 (defun mjs/org-fix-newline-and-indent (&optional indent _arg _interactive)
@@ -2157,7 +2171,7 @@ With a prefix ARG, remove start location."
              "n r a" '("Add Alias" . org-roam-alias-add)
              "n r A" '("Remove Alias" . org-roam-alias-remove)
              "n r b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
-             "n r f" '("Find Node" . org-roam-node-find)
+             "n r f" '("Find Node" . (lambda () (interactive) (org-roam-node-find nil "^")))
              "n r F" '("Find Ref" . org-roam-ref-find)
              "n r g" '("Graph" . org-roam-graph)
              "n r i" '("Insert Link" . org-roam-node-insert)
@@ -2174,7 +2188,7 @@ With a prefix ARG, remove start location."
              "m a" '("Add Alias" . org-roam-alias-add)
              "m A" '("Remove Alias" . org-roam-alias-remove)
              "m b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
-             "m f" '("Find Node" . org-roam-node-find)
+             "m f" '("Find Node" . (lambda () (interactive) (org-roam-node-find nil "^")))
              "m F" '("Find Ref" . org-roam-ref-find)
              "m g" '("Graph" . org-roam-graph)
              "m i" '("Insert Link" . org-roam-node-insert)
