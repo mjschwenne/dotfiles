@@ -891,6 +891,8 @@ a prefix argument."
 
 (global-prettify-symbols-mode +1)
 
+(add-hook 'emacs-lisp-mode-hook (lambda () (setq mode-name "󰘧 Emacs Lisp")))
+
 (use-package lispy
   :diminish "'󰅲"
   :init (mjs-local-leader-def :keymaps 'emacs-lisp-mode-map
@@ -1044,13 +1046,15 @@ a prefix argument."
   (org-src-fontify-natively nil)
   (org-pretty-entities t)
   (org-highlight-latex-and-related '(native latex))
-  :hook (org-mode . turn-on-org-cdlatex)
+  :diminish (org-cdlatex-mode . " ")
+  :hook ((org-mode . turn-on-org-cdlatex)
+         (org-mode . (lambda () (setq mode-name " Org")))
+         (org-agenda-mode . (lambda () (setq mode-name "󰃮 Agenda"))))
   :config (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
           (set-face-attribute 'org-quote nil
                               :background (catppuccin-get-color 'mantle)
                               :extend t)
-          (set-face-foreground 'org-table (catppuccin-get-color 'subtext1))
-  (diminish 'org-cdlatex-mode " "))
+          (set-face-foreground 'org-table (catppuccin-get-color 'subtext1)))
 
 (defun mjs/org-fix-newline-and-indent (&optional indent _arg _interactive)
   "Mimic `newline-and-indent' in src blocks w/ lang-appropriate indentation."
@@ -1590,6 +1594,7 @@ If on a:
 (add-hook 'org-capture-mode-hook (lambda () (require 'diminish)
                                    (diminish 'org-capture-mode " 󰄀")
                                    (diminish 'narrow " 󰝔")))
+
 (setq org-capture-templates
       `(("c" "Class Lecture" plain
          (function (lambda () (mjs/class-capture)))
@@ -1753,7 +1758,8 @@ If on a:
 
 (use-package latex
   :ensure auctex
-  :hook ((LaTeX-mode . prettify-symbols-mode)
+  :hook ((LaTeX-mode . (lambda () (setq mode-name " LaTeX")))
+         (LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . TeX-fold-mode)
          (LaTeX-mode . TeX-PDF-mode)
          (LaTeX-mode . mjs/preview-scale-adjustment)

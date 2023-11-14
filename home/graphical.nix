@@ -119,6 +119,9 @@
     gnome.eog
     mate.engrampa
 
+    # MTG
+    cockatrice
+
     # CLI Utilities
     pandoc
     hugo
