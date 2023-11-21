@@ -184,6 +184,7 @@
     bind = $mod_CTRL, escape, exec, hyprctl kill
     bind = $mod_CTRL, r, exec, hyprctl reload
     bind = $mod_CTRL, e, exec, eww reload
+    bind = $mod_CTRL, w, exec, waypaper --backend swww
     bind = $mod, e, exec, ~/.config/hypr/scripts/eject.fish
 
     # utility keys
