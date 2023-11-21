@@ -150,6 +150,7 @@
     grim
     slurp
     hyprpicker
+    waypaper
   ];
 
   programs.kitty = {
