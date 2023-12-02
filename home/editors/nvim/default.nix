@@ -397,7 +397,7 @@
         folding = false;
       };
 
-      ts-context-commentstring.enable = true;
+      #ts-context-commentstring.enable = true;
 
       vimtex.enable = true;
       ledger.enable = true;
