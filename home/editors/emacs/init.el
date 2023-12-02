@@ -932,7 +932,7 @@ a prefix argument."
   "A"   '("GTD Agenda" . (lambda () (interactive) (org-agenda nil "g")))
   "n"   '(nil :which-key "Notes")
   "n a" '("Agenda" . org-agenda)
-  "n c" '("Capture" . org-capture)
+  "n c" '("GOTO Clock" . org-clock-goto)
   "n l" '("Store Link" . org-store-link)
   "n R" '("Refile DWIM" . mjs/org-refile-dwim)
   "n s" '("Search Notes" . org-search-view)
@@ -1792,6 +1792,7 @@ If on a:
   (mjs-local-leader-def :keymaps 'LaTeX-mode-map
     "c" '("Compile Document" . TeX-command-run-all)
     "e" '("Insert Environment" . LaTeX-environment)
+    "i" '("Indent Line" . LaTeX-indent-line)
     "m" '("Insert Macro" . TeX-insert-marco)
     "s" '("Insert Section" . LaTeX-section)
     "v" '("View PDF" . TeX-view)))
@@ -1855,7 +1856,8 @@ If on a:
          (cdlatex-tab . LaTeX-indent-line))
   :custom (texmathp-tex-commands '(("bmatrix" env-on)
                                    ("pmatrix" env-on)))
-  (cdlatex-env-alist '(("proof" "\\begin{proof}\n?\n\\end{proof}" nil)))
+  (cdlatex-env-alist '(("proof" "\\begin{proof}\n?\n\\end{proof}" nil)
+                       ("optp" "\\begin{array}{r@{\\quad}l}\n\\min & ? \ns.t. & \n\\end{array}" nil)))
   (cdlatex-insert-auto-labels-in-env-templates nil)
   :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
                               "<tab>" #'cdlatex-tab)
