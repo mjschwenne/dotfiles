@@ -612,11 +612,26 @@ a prefix argument."
                  (t `((-3 "%p")
                       ,(concat " %3l:%" (if (bound-and-true-p column-number-indicator-zero-based)
                                             "c" "C"))))))
+        (telephone-line-defsegment mjs/minor-mode-segment ()
+        `((:propertize ("" minor-mode-alist)
+                        mouse-face mode-line-highlight
+                        help-echo "Minor mode\n\
+        mouse-1: Display minor mode menu\n\
+        mouse-2: Show help for minor mode\n\
+        mouse-3: Toggle minor modes"
+                        local-map ,mode-line-minor-mode-keymap
+                        face ,face)
+          (:propertize (:eval (when (buffer-narrowed-p) " 󰘢"))
+                       mouse-face mode-line-highlight
+                 help-echo "mouse-2: Remove narrowing from buffer"
+                 local-map ,(make-mode-line-mouse-map
+                             'mouse-2 #'mode-line-widen)
+                 face ,face)))
         (telephone-line-mode +1)
         :custom (telephone-line-lhs
                  '((evil . (telephone-line-evil-tag-segment))
                    (accent . (telephone-line-process-segment
-                              telephone-line-minor-mode-segment mjs/popup-segment))
+                              mjs/minor-mode-segment mjs/popup-segment))
                    (nil . (mjs/buffer-mod))))
         (telephone-line-rhs
          '((nil . (telephone-line-misc-info-segment
@@ -1046,6 +1061,7 @@ a prefix argument."
   (org-src-fontify-natively nil)
   (org-pretty-entities t)
   (org-highlight-latex-and-related '(native latex))
+  (org-ellipsis " ▾")
   :diminish (org-cdlatex-mode . " ")
   :hook ((org-mode . turn-on-org-cdlatex)
          (org-mode . (lambda () (setq mode-name " Org")))
@@ -1470,6 +1486,7 @@ If on a:
 ;; Log the time a task is completed in a property drawer.
 (setq org-log-done 'time)
 (setq org-log-into-drawer t)
+(setq org-treat-insert-todo-heading-as-state-change t)
 ;; hide tags from agenda view, I'll probably be using the `#+CATEGORY'
 ;; more often anyways
 (setq org-agenda-hide-tags-regexp ".")
@@ -1592,8 +1609,7 @@ If on a:
 
 (add-hook 'org-capture-mode-hook (lambda () (flycheck-mode -1)))
 (add-hook 'org-capture-mode-hook (lambda () (require 'diminish)
-                                   (diminish 'org-capture-mode " 󰄀")
-                                   (diminish 'narrow " 󰝔")))
+                                   (diminish 'org-capture-mode " 󰄀")))
 
 (setq org-capture-templates
       `(("c" "Class Lecture" plain
