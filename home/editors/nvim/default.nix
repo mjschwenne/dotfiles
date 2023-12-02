@@ -189,7 +189,12 @@
           clangd.enable = true;
           nixd.enable = true;
           pyright.enable = true;
-          rust-analyzer.enable = true;
+          rust-analyzer = {
+            enable = true;
+            # Do not install these, they are already installed
+            installCargo = false;
+            installRustc = false;
+          };
           java-language-server.enable = true;
           julials.enable = true;
           ltex.enable = true;
