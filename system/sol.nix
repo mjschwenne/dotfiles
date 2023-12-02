@@ -81,6 +81,7 @@
     enable = true;
     user = "mjs";
     configDir = "/home/mjs/.syncthing";
+    dataDir = "/home/mjs/.syncthing";
 
     settings = {
       gui = {
