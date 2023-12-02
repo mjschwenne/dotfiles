@@ -104,6 +104,18 @@
         biblatex
         lato
         fontaxes
+        curve
+        silence
+        fontawesome5
+        relsize
+        comment
+        csquotes
+        xpatch
+        cochineal
+        xstring
+        cabin
+        inconsolata
+        upquote
         ;
     })
     ghostscript
