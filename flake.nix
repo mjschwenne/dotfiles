@@ -52,7 +52,7 @@
 
     nixvim.url = "github:nix-community/nixvim";
 
-    foundry.url = "github:reckenrode/nix-foundryvtt/6c52bfc6824a3dba673df4894a71193ec32aa399";
+    foundry.url = "github:reckenrode/nix-foundryvtt/f624c0ceabe13dd876ecff871e0dc7f55f96e993";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
