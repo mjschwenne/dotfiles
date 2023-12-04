@@ -2515,4 +2515,5 @@ hence \"everywhere\"."
   (ledger-mode-should-check-version nil))
 
 (use-package evil-ledger
+  :diminish evil-ledger-mode
   :hook (ledger-mode . evil-ledger-mode))

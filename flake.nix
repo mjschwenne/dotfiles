@@ -7,8 +7,7 @@
     extra-substituters = [
       # Nix community's cache server
       "https://nix-community.cachix.org"
-      # Hyprland cache server
-      "https://hyprland.cachix.org"
+      # Hyprland cache server "https://hyprland.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
@@ -23,8 +22,11 @@
     # There are many ways to reference flake inputs. The most widely used is github:owner/name/reference,
     # which represents the GitHub repository URL + branch/commit-id/tag.
 
-    # Official NixOS package source, using nixos-unstable branch here
+    # Official NixOS package source, using nixos-unstable branch here 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Master branch, for when packages haven't migrated to the unstable branch
+    nixpkgs-master.url = "github:NixOS/nixpkgs";
+
     # home-manager, used for managing user configuration
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -61,7 +63,7 @@
   # However, `self` is an exception, This special parameter points to the `outputs` itself (self-reference)
   # The `@` syntax here is used to alias the attribute set of the inputs's parameter, making it convenient to use inside the function.
   outputs =
-    { nixpkgs
+    { nixpkgs 
     , home-manager
     , ...
     } @ inputs: {
@@ -71,7 +73,7 @@
         # However, the configuration name can also be specified using `sudo nixos-rebuild switch --flake /path/to/flakes/directory#<name>`.
         # The `nixpkgs.lib.nixosSystem` function is used to build this configuration, the following attribute set is its parameter.
         # Run `sudo nixos-rebuild switch --flake .#nixos-test` in the flake's directory to deploy this configuration on any NixOS system
-        "terra" = nixpkgs.lib.nixosSystem {
+        "terra" = nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
 
           # The Nix module system can modularize configuration, improving the maintainability of configuration.
@@ -97,7 +99,11 @@
           # Only these parameters can be passed by default.
           # If you need to pass other parameters, you must use `specialArgs` by uncomment the following line
 
-          specialArgs = inputs; # pass custom arguments into sub module.
+          specialArgs = inputs // {
+            pkgs-master = import inputs.nixpkgs-master {
+              system = system;
+            };
+          };
           modules = [
             # Import the configuration.nix we used before, so that the old configuration file can still take effect.
             # Note: /etc/nixos/configuration.nix itself is also a Nix Module, so you can import it directly here
@@ -110,17 +116,25 @@
               home-manager.useUserPackages = true;
 
               home-manager.users.mjs = import ./home/terra.nix;
-              home-manager.extraSpecialArgs = inputs;
+              home-manager.extraSpecialArgs = inputs // {
+                pkgs-master = import inputs.nixpkgs-master {
+                  system = system;
+                };
+              };
 
               nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];
             }
           ];
         };
 
-        "luna" = nixpkgs.lib.nixosSystem {
+        "luna" = nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
 
-          specialArgs = inputs;
+          specialArgs = inputs // {
+            pkgs-master = import inputs.nixpkgs-master {
+              system = system;
+            };
+          };
           modules = [
             inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
             inputs.sddm-sugar-candy-nix.nixosModules.default
@@ -132,17 +146,25 @@
               home-manager.useUserPackages = true;
 
               home-manager.users.mjs = import ./home/luna.nix;
-              home-manager.extraSpecialArgs = inputs;
+              home-manager.extraSpecialArgs = inputs // {
+                pkgs-master = import inputs.nixpkgs-master {
+                  system = system;
+                };
+              };
 
               nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];
             }
           ];
         };
 
-        "sol" = nixpkgs.lib.nixosSystem {
+        "sol" = nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
 
-          specialArgs = inputs;
+          specialArgs = inputs // {
+            pkgs-master = import inputs.nixpkgs-master {
+              system = system;
+            };
+          };
           modules = [
             ./system/sol.nix
 
@@ -152,7 +174,11 @@
               home-manager.useUserPackages = true;
 
               home-manager.users.mjs = import ./home/sol.nix;
-              home-manager.extraSpecialArgs = inputs;
+              home-manager.extraSpecialArgs = inputs // {
+                pkgs-master = import inputs.nixpkgs-master {
+                  system = system;
+                };
+              };
             }
           ];
         };

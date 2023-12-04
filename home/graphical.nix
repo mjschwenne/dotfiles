@@ -1,53 +1,9 @@
-{ pkgs, ... }: {
-  gtk = {
-    enable = true;
-    theme = {
-      name = "Catppuccin-Mocha-Standard-Pink-Dark";
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "pink" ];
-        variant = "mocha";
-      };
-    };
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.catppuccin-papirus-folders.override {
-        flavor = "mocha";
-        accent = "pink";
-      };
-    };
-    font = { name = "JetBrainsMono Nerd Font"; };
-    gtk3.extraConfig = { gtk-decoration-layout = "appmenu:none"; };
-  };
-  home.sessionVariables = {
-    GTK_THEME = "Catppuccin-Mocha-Standard-Pink-Dark";
-  };
-  home.pointerCursor = {
-    package = pkgs.catppuccin-cursors.mochaLight;
-    name = "Catppuccin-Mocha-Light-Cursors";
-  };
-
-  qt = {
-    enable = true;
-    platformTheme = "qtct";
-    style.name = "kvantum";
-    style.package = pkgs.libsForQt5.qtstyleplugin-kvantum;
-  };
-  home.file.".config/Kvantum/Catppuccin-Mocha-Pink" = {
-    source = ./ui/qt/Catppuccin-Mocha-Pink;
-    recursive = true;
-  };
-  xdg.configFile."Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini { }).generate "kvantum.kvconfig" {
-    General.theme = "Catppuccin-Mocha-Pink";
-  };
-
-  imports = [ ./ui ./applications ./editors/emacs ];
-
-  # Packages and fonts that should be installed to the user profile.
-  fonts.fontconfig.enable = true;
-  home.packages = with pkgs; [
+{ pkgs, pkgs-master, lib, ... }: 
+let 
+  packages = with pkgs; [
     # Web browsers
-    librewolf
-    firefox
+    # librewolf
+    # firefox
     brave
 
     # Instant Communications
@@ -164,6 +120,56 @@
     hyprpicker
     waypaper
   ];
+  masterPkgs = with pkgs-master; [ librewolf firefox ];
+in 
+{
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Catppuccin-Mocha-Standard-Pink-Dark";
+      package = pkgs.catppuccin-gtk.override {
+        accents = [ "pink" ];
+        variant = "mocha";
+      };
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.catppuccin-papirus-folders.override {
+        flavor = "mocha";
+        accent = "pink";
+      };
+    };
+    font = { name = "JetBrainsMono Nerd Font"; };
+    gtk3.extraConfig = { gtk-decoration-layout = "appmenu:none"; };
+  };
+  home.sessionVariables = {
+    GTK_THEME = "Catppuccin-Mocha-Standard-Pink-Dark";
+  };
+  home.pointerCursor = {
+    package = pkgs.catppuccin-cursors.mochaLight;
+    name = "Catppuccin-Mocha-Light-Cursors";
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "qtct";
+    style.name = "kvantum";
+    style.package = pkgs.libsForQt5.qtstyleplugin-kvantum;
+  };
+  home.file.".config/Kvantum/Catppuccin-Mocha-Pink" = {
+    source = ./ui/qt/Catppuccin-Mocha-Pink;
+    recursive = true;
+  };
+  xdg.configFile."Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini { }).generate "kvantum.kvconfig" {
+    General.theme = "Catppuccin-Mocha-Pink";
+  };
+
+  imports = [ ./ui ./applications ./editors/emacs ];
+
+  # Packages and fonts that should be installed to the user profile.
+  fonts.fontconfig.enable = true;
+  
+  home.packages = packages ++ masterPkgs;
 
   programs.kitty = {
     enable = true;
