@@ -65,11 +65,6 @@
     # Java
     jdk17
 
-    # Common Lisp 
-    sbcl 
-    sbclPackages.buildapp
-    asdf
-
     # Build Utilities
     gnumake
     cmake

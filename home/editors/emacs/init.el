@@ -2517,3 +2517,16 @@ hence \"everywhere\"."
 (use-package evil-ledger
   :diminish evil-ledger-mode
   :hook (ledger-mode . evil-ledger-mode))
+
+(use-package direnv
+ :config
+ (direnv-mode))
+
+(use-package sly
+  :custom ((sly-symbol-completion-mode nil)
+           (inferior-lisp-prgram "sbcl"))
+  :config (add-to-list 'sly-contribs 'sly-asdf 'append))
+
+(use-package sly-macrostep)
+
+(use-package sly-asdf)
