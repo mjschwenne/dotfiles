@@ -65,6 +65,9 @@
     # Java
     jdk17
 
+    # Haskell
+    ghc
+
     # Build Utilities
     gnumake
     cmake

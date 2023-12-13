@@ -32,6 +32,7 @@ let
     # Graphics Applications
     gimp
     inkscape
+    zotero
 
     # LaTeX
     (texlive.combine {
@@ -105,6 +106,9 @@ let
     inotify-tools
     google-cloud-sdk
     ledger
+
+    # Programming languages 
+    coq
 
     # Wayland Utilities
     eww-wayland

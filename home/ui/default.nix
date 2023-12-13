@@ -75,6 +75,9 @@
     $mantle    = 0xff181825
     $crust     = 0xff11111b
 
+    # Debug 
+    debug:disable_logs = false
+
     # environment variables
     env = BROWSER,librewolf
 
