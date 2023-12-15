@@ -1,10 +1,9 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -30,7 +29,7 @@
   users.users.mjs = {
     isNormalUser = true;
     description = "Matt Schwennesen";
-    extraGroups = [ "networkmanager" "wheel" "syncthing"];
+    extraGroups = ["networkmanager" "wheel" "syncthing"];
     shell = pkgs.fish;
   };
 
@@ -52,7 +51,8 @@
     gdb
 
     # Python
-    python311
+    (python311.withPackages
+      (ps: with ps; [debugpy]))
 
     # Rust
     rustc

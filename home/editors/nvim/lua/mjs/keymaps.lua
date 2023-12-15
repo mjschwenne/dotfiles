@@ -101,7 +101,7 @@ local n_mappings = {
 		q = { "<cmd>q!<CR>", "Quit" },
 		h = { "<cmd>Telescope help_tags theme=dropdown<CR>", "Find Help" },
 		H = { "<cmd>noh<CR>", "No Highlight" },
-		d = { "<cmd>Alpha<CR>", "Return to Dashboard" },
+		D = { "<cmd>Alpha<CR>", "Return to Dashboard" },
 
 		-- Buffer Management
 		b = {
@@ -129,7 +129,7 @@ local n_mappings = {
 		["<localleader>"] = {
 			name = "Local",
 
-			m = { "<cmd>LspInfo<CR>", "Info" },
+			l = { "<cmd>LspInfo<CR>", "LSP Info" },
 		},
 
 		-- Telescope Based Searches

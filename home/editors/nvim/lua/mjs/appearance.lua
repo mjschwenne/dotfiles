@@ -42,7 +42,7 @@ if alpha_p then
 		dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
 		dashboard.button("e", "  New file", ":ene <BAR> startinsert <CR>"),
 		dashboard.button("r", "  Recently used files", ":Telescope oldfiles <CR>"),
- 		dashboard.button("t", "󰉿  Find text", ":Telescope live_grep <CR>"),
+		dashboard.button("t", "󰉿  Find text", ":Telescope live_grep <CR>"),
 		dashboard.button("c", "  Configuration", ":e ~/.config/nvim/init.lua <CR>"),
 		dashboard.button("q", "󰩈  Quit Neovim", ":qa<CR>"),
 	}
@@ -68,11 +68,7 @@ else
 end
 
 local lualine_p, lualine = pcall(require, "lualine")
-if lualine_p then 
-	local hide_in_width = function()
-		return vim.fn.winwidth(0) > 80
-	end 
-
+if lualine_p then
 	vim.api.nvim_set_hl(0, "MjsLualineUnmodified", {fg = "#a6e3a1"})
 	vim.api.nvim_set_hl(0, "MjsLualineModified", {fg = "#f38ba8"})
 	vim.api.nvim_set_hl(0, "MjsLualineReadonly", {fg = "#f9e2af"})
@@ -102,9 +98,9 @@ if lualine_p then
 					"filename",
 					fmt = function(str)
 						local sym = '%#MjsLualineUnmodified#󱣪 '
-						if vim.bo.modified then 
+						if vim.bo.modified then
 							sym = '%#MjsLualineModified#󰆓 '
-						elseif vim.bo.readonly then 
+						elseif vim.bo.readonly then
 							sym = '%#MjsLualineReadonly#󱙃 '
 						end
 
@@ -120,5 +116,5 @@ if lualine_p then
 		},
 	})
 else
- 	print "Failed to load lualine..."
+	print "Failed to load lualine..."
 end

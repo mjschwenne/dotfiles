@@ -1,3 +1,5 @@
+vim.g.skip_ts_context_commentstring_module = true
+
 local treesitter_p, treesitter = pcall(require, "nvim-treesitter.configs")
 if treesitter_p then
 	treesitter.setup {
@@ -41,6 +43,7 @@ if treesitter_p then
 			}
 		},
 	}
+	local whichkey = require("which-key")
 	whichkey.register({ ["<leader>"] = {
 		["<localleader>"] = {
 			T = {
@@ -165,13 +168,13 @@ if treesitter_p then
 			P =     { '<cmd>lua require"nvim-treesitter.textobjects.move".goto_next_end("@parameter.inner")<CR>', "Parameter (End)"},
 			R =     { '<cmd>lua require"nvim-treesitter.textobjects.move".goto_next_end("@regex.inner")<CR>', "Regex (End)"},
 		}
-	})	
+	})
 else
 	print "Failed to load treesitter..."
 end
 
 local ts_context_p, ts_context = pcall(require, "treesitter-context")
-if ts_context_p then 
+if ts_context_p then
 	ts_context.setup()
 else
 	print "Failed to load treesitter-context..."

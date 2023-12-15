@@ -1,7 +1,7 @@
 local colorizer_p, colorizer = pcall(require, "colorizer")
 if colorizer_p then 
 	colorizer.setup()
-	whichkey.register({ ["<leader>"] = {
+	require("which-key").register({ ["<leader>"] = {
 		t = {
 			name = "Toggle",
 			c = { "<cmd>ColorizerToggle<CR>", "Colorizer" }

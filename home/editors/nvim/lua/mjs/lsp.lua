@@ -1,8 +1,8 @@
+local whichkey = require("which-key")
 local lspconfig_p, lspconfig = pcall(require, "lspconfig")
+
 if lspconfig_p then
 	lspconfig.clangd.setup {}
-	lspconfig.hls.setup {}
-	lspconfig.jdtls.setup {}
 	lspconfig.ltex.setup {}
 	lspconfig.lua_ls.setup {
 		on_init = function(client)
@@ -36,7 +36,6 @@ if lspconfig_p then
 	}
 	lspconfig.nixd.setup {}
 	lspconfig.pyright.setup {}
-	lspconfig.rust_analyzer.setup {}
 
 	whichkey.register({
 		["[e"] = { vim.diagnostic.goto_prev, "Previous Diagnostic" },
@@ -169,32 +168,39 @@ if none_p then
 			formatting.trim_whitespace,
 			formatting.trim_newlines,
 
+			-- Bash
+			formatting.shfmt,
+
 			-- C/C++
 			diagnostics.clang_check,
 			formatting.clang_format.with({
 				extra_args = { "-i", '-style={"IndentWith:4, BreakBeforeBraces: Allman"}' }
 			}),
 
-			-- Nix
-			diagnostics.statix,
-			diagnostics.deadnix,
-			formatting.alejandra,
+			-- Fish
+			diagnostics.fish,
+			formatting.fish_indent,
 
 			-- Haskell
 			formatting.stylish_haskell,
 			formatting.cabal_fmt,
 
+			-- Java
+			formatting.google_java_format,
+
+			-- Nix
+			diagnostics.statix,
+			diagnostics.deadnix,
+			formatting.alejandra,
+
+			-- LaTeX
+			diagnostics.chktex,
+			diagnostics.proselint,
+			formatting.latexindent,
+			hover.dictionary,
+
 			-- Lua
 			diagnostics.luacheck,
-
-			-- Fish
-			diagnostics.fish,
-			formatting.fish_indent,
-
-			-- Java
-			diagnostics.checkstyle.with({
-				extra_args = { "-c", "/google_checks.xml" },
-			}),
 
 			-- Make
 			diagnostics.checkmake,
@@ -204,19 +210,50 @@ if none_p then
 			formatting.black,
 			formatting.isort,
 
-			-- LaTeX
-			diagnostics.chktex,
-			diagnostics.proselint,
-			formatting.latexindent,
-			hover.dictionary,
-
 			-- Rust
 			formatting.rustfmt,
-
-			-- Bash
-			formatting.shfmt
 		}
 	})
 else
 	print "Failed to load none-ls..."
+end
+
+local rust_tools_p, rust_tools = pcall(require, "rust-tools")
+if rust_tools_p then
+	rust_tools.setup({
+		server = {
+			on_attach = function(_, bufnr)
+				whichkey.register({
+					['<leader>'] = {
+						['<localleader>'] = {
+							m = {
+								name = "Rust",
+								i = {
+									name = "Inlay Hints",
+									d = { rust_tools.inlay_hints.disabled, "Diable Hints Globally" },
+									e = { rust_tools.inlay_hints.enable, "Enable Hints Globally" },
+									s = { rust_tools.inlay_hints.set, "Turn Hints On (buffer)" },
+									u = { rust_tools.inlay_hints.unset, "Turn Hints Off (buffer)" },
+								},
+								c = { rust_tools.crate_graph.view_crate_graph, "Crate Graph" },
+								d = { '<cmd>RustMoveItemDown<CR>', 'Move Item Down' },
+								D = { '<cmd>RustDebuggables<CR>', 'Debuggable' },
+								h = { rust_tools.hover_actions.hover_actions, "Hover" },
+								H = { rust_tools.hover_range.hover_range, "Hover Range" },
+								j = { rust_tools.join_lines.join_lines, "Join Lines" },
+								m = { rust_tools.expand_macro.expand_macro, "Expand Macro" },
+								o = { rust_tools.open_cargo_toml.open_cargo_toml, "Open cargo.toml" },
+								p = { rust_tools.parent_module.parent_module, "Open Parent Module" },
+								r = { rust_tools.runnables.runnables, "Run" },
+								s = { rust_tools.ssr.ssr, "Structural Search Replace" },
+								u = { '<cmd>RustMoveItemUp<CR>', 'Move Item Up' },
+							}
+						}
+					}
+				})
+			end
+		},
+	})
+else
+	print "Failed to load rust-tools..."
 end

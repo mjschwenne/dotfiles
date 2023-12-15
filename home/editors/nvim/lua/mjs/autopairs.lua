@@ -12,7 +12,7 @@ if npairs_p then
 			lua = { "string", "source" },
 			java = true,
 		},
-		disable_filetype = { "TelescopePrompt" },
+		disable_filetype = { "TelescopePrompt", "java" },
 		fast_wrap = {
 			map = "<M-e>",
 			chars = { "{", "[", "(", '"', "'", "`" },
@@ -53,6 +53,3 @@ if npairs_p then
 else
 	print "Failed to load autopairs..."
 end
-
-
-
