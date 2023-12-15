@@ -41,6 +41,7 @@
     ranger
     nix-prefetch-github # helps write derivations hosted on github
     speedtest-cli
+    bc
 
     # Fun tools
     cowsay

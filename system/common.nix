@@ -56,7 +56,6 @@
 
     # Rust
     rustc
-    rust-analyzer
     cargo
 
     # Julia

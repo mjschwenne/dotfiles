@@ -23,7 +23,7 @@ local options = {
 	number = true, -- Line numbers
 	relativenumber = true, -- Relative line numbers
 	numberwidth = 4, -- Number of characters for the line numbers
-	signcolumn = "auto", -- How to display the sign column
+	signcolumn = "yes:1", -- How to display the sign column
 	scrolloff = 8, -- Number of lines above/below scrolling cursor
 	sidescrolloff = 8, -- Number of character left/right scrolling cursor
 	wrap = false, -- Do not wrap lines
@@ -38,6 +38,18 @@ end
 vim.opt.shortmess:append("c") -- Suppress complation messages
 vim.opt.whichwrap:append("<,>,[,]") -- Allow <left> and <right> to move lines
 vim.opt.iskeyword:append("-") -- Consider '-' as part of a word
+
+-- Set Diagnostic symbols
+local signs = {
+	{ name = "DiagnosticSignError", text = "" },
+	{ name = "DiagnosticSignWarn", text = "" },
+	{ name = "DiagnosticSignHint", text = "" },
+	{ name = "DiagnosticSignInfo", text = "" },
+}
+
+for _, sign in ipairs(signs) do
+	vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+end
 
 -- Highlight on Yank
 vim.cmd([[
