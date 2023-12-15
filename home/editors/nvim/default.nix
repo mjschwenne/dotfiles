@@ -21,6 +21,10 @@ in {
         recursive = true;
       };
 
+      ".config/nvim/after/ftplugin/haskell.lua" = {
+        source = ./ftplugin/haskell.lua;
+      };
+
       ".config/nvim/after/ftplugin/java.lua".text = ''
         local jdtls_p, jdtls = pcall(require, "jdtls")
         if not jdtls_p then

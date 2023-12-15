@@ -51,6 +51,28 @@ if dap_p then
 			end,
 		}
 	}
+	dap.adapters.haskell = {
+		type = 'executable',
+		command = 'haskell-debug-adapter',
+		args = { '--hackage-version=0.0.33.0' },
+	}
+	dap.configurations.haskell = {
+		{
+			type = 'haskell',
+			request = 'launch',
+			name = 'Haskell Debug',
+			workspace = '${workspaceFolder}',
+			startup = "${file}",
+			stopOnEntry = true,
+			logFile = vim.fn.stdpath('data') .. '/haskell-dap.log',
+			logLevel = 'WARNING',
+			ghciEnv = vim.empty_dict(),
+			ghciPrompt = "λ: ",
+			-- Adjust the prompt to the prompt you see when you invoke the stack ghci command below
+			ghciInitialPrompt = "λ: ",
+			ghciCmd = "ghci --test --no-load --no-build --main-is TARGET --ghci-options -fprint-evld-with-show",
+		},
+	}
 
 	require("which-key").register({
 		['<leader>'] = {
