@@ -66,6 +66,7 @@
 
     # Haskell
     ghc
+    haskellPackages.ghci-dap
 
     # Build Utilities
     gnumake
