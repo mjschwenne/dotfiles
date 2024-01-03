@@ -1,5 +1,9 @@
-{ pkgs, pkgs-master, lib, ... }: 
-let 
+{
+  pkgs,
+  pkgs-master,
+  lib,
+  ...
+}: let
   packages = with pkgs; [
     # Web browsers
     # librewolf
@@ -10,7 +14,7 @@ let
     slack
     zoom-us
 
-    # Network Utilities 
+    # Network Utilities
     remmina
     openconnect
 
@@ -107,7 +111,7 @@ let
     google-cloud-sdk
     ledger
 
-    # Programming languages 
+    # Programming languages
     coq
 
     # Wayland Utilities
@@ -124,15 +128,14 @@ let
     hyprpicker
     waypaper
   ];
-  masterPkgs = with pkgs-master; [ librewolf firefox ];
-in 
-{
+  masterPkgs = with pkgs-master; [librewolf firefox];
+in {
   gtk = {
     enable = true;
     theme = {
       name = "Catppuccin-Mocha-Standard-Pink-Dark";
       package = pkgs.catppuccin-gtk.override {
-        accents = [ "pink" ];
+        accents = ["pink"];
         variant = "mocha";
       };
     };
@@ -143,8 +146,8 @@ in
         accent = "pink";
       };
     };
-    font = { name = "JetBrainsMono Nerd Font"; };
-    gtk3.extraConfig = { gtk-decoration-layout = "appmenu:none"; };
+    font = {name = "JetBrainsMono Nerd Font";};
+    gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
   };
   home.sessionVariables = {
     GTK_THEME = "Catppuccin-Mocha-Standard-Pink-Dark";
@@ -164,15 +167,15 @@ in
     source = ./ui/qt/Catppuccin-Mocha-Pink;
     recursive = true;
   };
-  xdg.configFile."Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini { }).generate "kvantum.kvconfig" {
+  xdg.configFile."Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini {}).generate "kvantum.kvconfig" {
     General.theme = "Catppuccin-Mocha-Pink";
   };
 
-  imports = [ ./ui ./applications ./editors/emacs ];
+  imports = [./ui ./applications ./editors/emacs];
 
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
-  
+
   home.packages = packages ++ masterPkgs;
 
   programs.kitty = {
@@ -188,7 +191,7 @@ in
   };
 
   # starship - an customizable prompt for any shell
-  programs.starship = { enable = true; };
+  programs.starship = {enable = true;};
 
   home.file.".config/starship.toml" = {
     source = ./applications/starship.toml;

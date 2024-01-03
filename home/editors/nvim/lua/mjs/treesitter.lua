@@ -173,9 +173,9 @@ else
 	print "Failed to load treesitter..."
 end
 
-local ts_context_p, ts_context = pcall(require, "treesitter-context")
-if ts_context_p then
-	ts_context.setup()
-else
-	print "Failed to load treesitter-context..."
-end
+-- local ts_context_p, ts_context = pcall(require, "treesitter-context")
+-- if ts_context_p then
+-- 	ts_context.setup()
+-- else
+-- 	print "Failed to load treesitter-context..."
+-- end

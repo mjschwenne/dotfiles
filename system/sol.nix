@@ -1,8 +1,9 @@
-{  pkgs
-, lib
-, foundry
-, ...
-} : {
+{
+  pkgs,
+  lib,
+  foundry,
+  ...
+}: {
   imports = [
     # Include the results of the hardware scan.
     ./sol-hardware.nix
@@ -13,12 +14,12 @@
   networking.hostName = "sol"; # define machine hostname
 
   users.users.mjs.openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAGIy0dwGXtG+kNO4OEG3Vv04X7SJHlAYkW7YjtIMnL9 mjs@terra"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAGIy0dwGXtG+kNO4OEG3Vv04X7SJHlAYkW7YjtIMnL9 mjs@terra"
   ];
 
   # Disable suspend when laptop lid is closed
   services.logind.lidSwitch = "ignore";
-  boot.kernelParams = [ "consoleblank=60" ];
+  boot.kernelParams = ["consoleblank=60"];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -60,7 +61,7 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 80 443 ];
+    allowedTCPPorts = [80 443];
   };
 
   # Enable the OpenSSH daemon.
@@ -105,15 +106,19 @@
       folders = {
         "org" = {
           path = "/home/mjs/Documents";
-          devices = [ "terra" "luna" ];
+          devices = ["terra" "luna"];
+        };
+        "zotero" = {
+          path = "/home/mjs/Zotero/storage";
+          devices = ["terra" "luna"];
         };
         "kdb" = {
           path = "/home/mjs/kdb";
-          devices = [ "terra" "luna" "phone" ];
+          devices = ["terra" "luna" "phone"];
         };
         "agenda" = {
           path = "/home/mjs/Documents/agenda";
-          devices = [ "phone" ];
+          devices = ["phone"];
         };
       };
     };
@@ -124,7 +129,7 @@
     description = "Syncthing discovery server";
     unitConfig.Type = "simple";
     serviceConfig.ExecStart = ''/run/current-system/sw/bin/stdiscosrv -db-dir="/home/mjs/.syncthing/discovery.db" -http'';
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
   };
 }
