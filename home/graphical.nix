@@ -1,7 +1,6 @@
 {
   pkgs,
   pkgs-master,
-  lib,
   ...
 }: let
   packages = with pkgs; [
@@ -36,7 +35,7 @@
     # Graphics Applications
     gimp
     inkscape
-    zotero
+    zotero_7
 
     # LaTeX
     (texlive.combine {
