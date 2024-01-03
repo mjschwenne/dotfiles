@@ -1,4 +1,8 @@
-{ pkgs, lib, ... }: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   imports = [
     # Include the results of the hardware scan.
     ./luna-hardware.nix
@@ -8,7 +12,7 @@
 
   networking.hostName = "luna"; # Define your hostname.
 
-  users.users.mjs.extraGroups = [ "surface-control" ];
+  users.users.mjs.extraGroups = ["surface-control"];
   microsoft-surface.ipts.enable = lib.mkForce true;
 
   environment.systemPackages = with pkgs; [
@@ -41,12 +45,15 @@
       folders = {
         "org" = {
           path = "/home/mjs/Documents";
-          devices = [ "terra" "sol" ];
+          devices = ["terra" "sol"];
         };
-
+        "zotero" = {
+          path = "/home/mjs/Zotero/storage";
+          devices = ["sol" "terra"];
+        };
         "kdb" = {
           path = "/home/mjs/kdb";
-          devices = [ "terra" "sol" ];
+          devices = ["terra" "sol"];
         };
       };
     };

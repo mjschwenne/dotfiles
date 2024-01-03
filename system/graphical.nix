@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 } @ inputs: {
   # Enable sound with pipewire.
   sound.enable = true;
@@ -41,10 +42,10 @@
   ];
 
   fonts.fontconfig.enable = true;
-  fonts.packages = with pkgs; [ (nerdfonts.override { fonts = [ "JetBrainsMono" ]; }) ];
+  fonts.packages = with pkgs; [(nerdfonts.override {fonts = ["JetBrainsMono"];})];
 
   # Setup SDDM display manager
-  security.pam.services.swaylock = { };
+  security.pam.services.swaylock = {};
   services.xserver.displayManager.sddm.sugarCandyNix = {
     enable = true;
 
@@ -71,15 +72,18 @@
 
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    # extraPortals = [pkgs.xdg-desktop-portal-hyprland];
   };
+
+  # Flatpak
+  services.flatpak.enable = true;
 
   # File manager
   services.gvfs.enable = true;
   services.tumbler.enable = true;
   programs.thunar = {
     enable = true;
-    plugins = with pkgs.xfce; [ thunar-archive-plugin thunar-volman ];
+    plugins = with pkgs.xfce; [thunar-archive-plugin thunar-volman];
   };
 
   # Bluetooth

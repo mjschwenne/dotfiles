@@ -1,4 +1,4 @@
-{ config, ... }: {
+{config, ...}: {
   imports = [
     # Include the results of the hardware scan.
     ./terra-hardware.nix
@@ -7,8 +7,8 @@
   ];
 
   # Bootloader.
-  boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
-  boot.kernelModules = [ "v4l2loopback" ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
+  boot.kernelModules = ["v4l2loopback"];
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
@@ -25,7 +25,7 @@
     dataDir = "/home/mjs/.syncthing";
 
     settings = {
-      options.globalAnnounceServer = [ "https://discovery.schwennesen.org" ];
+      options.globalAnnounceServer = ["https://discovery.schwennesen.org"];
       options.urAccepted = 3;
 
       devices = {
@@ -43,11 +43,15 @@
       folders = {
         "org" = {
           path = "/home/mjs/Documents";
-          devices = [ "sol" "luna" ];
+          devices = ["sol" "luna"];
+        };
+        "zotero" = {
+          path = "/home/mjs/Zotero/storage";
+          devices = ["sol" "luna"];
         };
         "kdb" = {
           path = "/home/mjs/kdb";
-          devices = [ "sol" "luna" "phone" ];
+          devices = ["sol" "luna" "phone"];
         };
       };
     };

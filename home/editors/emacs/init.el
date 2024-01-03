@@ -2392,6 +2392,8 @@ hence \"everywhere\"."
                   ;; if the host is one of these, cleanup the title
                   ((string= (url-host parsed-url) "aonprd.com")
                     (replace-regexp-in-string " - .*" "" title))
+                  ((string= (url-host parsed-url) "2e.aonprd.com")
+                    (replace-regexp-in-string " - .*" "" title))
                   ((string= (url-host parsed-url) "en.wikipedia.org")
                    (replace-regexp-in-string " - .*" "" title))
                   ((string= (url-host parsed-url) "github.com")
