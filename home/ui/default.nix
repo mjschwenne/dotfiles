@@ -1,5 +1,5 @@
-{ osConfig, ... }: {
-  imports = [ ./swaync ./rofi ./wlogout ./swaylock ];
+{osConfig, ...}: {
+  imports = [./swaync ./rofi ./wlogout ./swaylock];
 
   home.file.".config/eww" = {
     source = ./eww;
@@ -75,7 +75,7 @@
     $mantle    = 0xff181825
     $crust     = 0xff11111b
 
-    # Debug 
+    # Debug
     debug:disable_logs = false
 
     # environment variables
@@ -105,16 +105,16 @@
     }
 
     group {
-        col.border_active = $green 
+        col.border_active = $green
         col.border_inactive = $yellow
-        col.border_locked_inactive = $red 
+        col.border_locked_inactive = $red
         col.border_locked_active = $pink
         groupbar {
             font_size = 12
             gradients = false
             col.active = $green
-            col.inactive = $yellow 
-            col.locked_active = $red 
+            col.inactive = $yellow
+            col.locked_active = $red
             col.locked_inactive = $pink
         }
     }
@@ -229,13 +229,14 @@
        # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
        ${
       builtins.concatStringsSep "\n" (builtins.genList (x: let
-        ws = let c = (x + 1) / 10; in builtins.toString (x + 1 - (c * 10));
-      in ''
-        bind = $mod, ${ws}, exec, ~/.config/hypr/scripts/try_swap_workspace ${
-          toString (x + 1)
-        }
-        bind = $mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}
-      '') 10)
+          ws = let c = (x + 1) / 10; in builtins.toString (x + 1 - (c * 10));
+        in ''
+          bind = $mod, ${ws}, exec, ~/.config/hypr/scripts/try_swap_workspace ${
+            toString (x + 1)
+          }
+          bind = $mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}
+        '')
+        10)
     }
 
     bind = $mod, h, movefocus, l

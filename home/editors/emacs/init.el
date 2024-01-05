@@ -1784,8 +1784,10 @@ If on a:
 		  				 (when (eq major-mode 'latex-mode)
 						   (TeX-command-run-all nil)))))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
-           (TeX-view-program-list '(("Zathura" "zathura --synctex-forward :: %o")))
-           (TeX-view-program-selection '((output-pdf "Zathura")))
+           (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)
+                                    ("Zathura" "zathura --synctex-forward :: %o")))
+           (TeX-view-program-selection '((output-pdf "PDF Tools")))
+           (TeX-source-correlate-start-server t)
            (TeX-save-query nil))
   :init 
   (defun mjs/preview-scale-adjustment ()
@@ -2047,6 +2049,7 @@ If on a:
 (use-package pdf-tools
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
+  :diminish (pdf-view-themed-minor-mode . " ")
   :custom ((pdf-view-display-size 'fit-page)
            (pdf-view-use-scaling t)
            (pdf-view-use-imagemagick nil))
@@ -2061,6 +2064,7 @@ If on a:
                              "a t" '("Add Text Annotation" . pdf-annot-add-text-annotation)
                              "a u" '("Add Underline Annotation" . pdf-annot-add-underline-markup-annotation)
                              "a -" '("Add Strike-through Annotation" . pdf-annot-add-strikeout-markup-annotation)
+                             "d" '("Toggle Dark Mode" . pdf-view-themed-minor-mode)
                              "o" '("Outline" . pdf-outline)
                              "p" '("Goto Page" . pdf-view-goto-page))
                            (mjs-local-leader-def :keymaps 'pdf-annot-edit-contents-minor-mode-map
@@ -2069,7 +2073,20 @@ If on a:
                              "P k" '("Kill Annotation" . pdf-annot-edit-contents-abort)
                              "P s" '("Save Annotation" . pdf-annot-edit-contents-commit))))
          (pdf-view-mode . (lambda ()
-                            (set (make-local-variable 'evil-default-cursor) (list nil)))))
+                            (set (make-local-variable 'evil-default-cursor) (list nil))
+                            (pdf-view-themed-minor-mode)))
+         (pdf-view-mode . (lambda ()
+                            ;; disable triggering visual mode on selection in PDFView buffers
+                            (add-hook 'evil-local-mode-hook
+                                      (lambda () (remove-hook
+                                             'activate-mark-hook
+                                             'evil-visual-activate-hook
+                                             t))
+                                      nil t)
+                            ;; implement yank ourselves
+                            (evil-define-key 'normal pdf-view-mode-map
+                              "y" #'mjs/pdf-view-evil-yank-visual
+                              ))))
   :config
   (add-to-list 'evil-normal-state-modes 'pdf-view-mode)
   ;; Silence large file prompts for PDFs
@@ -2096,6 +2113,16 @@ If on a:
            ", or abort with "
            (propertize "SPC m P k" 'face 'help-key-binding)
            " in normal mode.")))
+  ;; based on 'pdf-view-kill-ring-save'
+  (defun mjs/pdf-view-evil-yank-visual ()
+    (interactive)
+    (pdf-view-assert-active-region)
+    (let ((txt (pdf-view-active-region-text))
+          (reg evil-this-register))
+      (pdf-view-deactivate-region)
+      (evil-set-register
+       (or reg ?\")
+       (mapconcat #'identity txt))))
   (add-hook 'pdf-annot-edit-contents-minor-mode-hook #'mjs/pdf-annot-update-header)
   (pdf-tools-install-noverify))
 

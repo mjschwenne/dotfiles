@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   home.username = "mjs";
   home.homeDirectory = "/home/mjs";
 
@@ -26,7 +26,7 @@
 
   programs.bash = {
     enable = true;
-    shellAliases = { vi = "nvim"; };
+    shellAliases = {vi = "nvim";};
   };
 
   # Some common user-level packages
@@ -37,6 +37,7 @@
 
     # Utilities
     ripgrep
+    ripgrep-all
     eza
     ranger
     nix-prefetch-github # helps write derivations hosted on github
@@ -59,10 +60,10 @@
     nix-direnv.enable = true;
   };
 
-  imports = [ 
+  imports = [
     # Neovim config
     ./editors/nvim
-    
+
     # Fish config
     ./cli/fish.nix
   ];
