@@ -32,6 +32,9 @@
         "sol" = {
           id = "73R7LD7-CE75DOS-QYCX3IN-7MYT33V-W65EKXH-L5Y2HIU-UGUPESG-KZEUYAF";
         };
+        "terra" = {
+          id = "MUIVJMG-P5ZY5S6-AFI7F7F-LQHCRJE-CZEXTWR-F6TEYUP-QCDPQON-VVCIGA2";
+        };
         "luna" = {
           id = "43RQHNP-QWSOVCU-32G6M5U-4TSIRY6-Y26QJBR-FT4DNK3-QRIJEAC-TIXHGA4";
         };
@@ -43,15 +46,15 @@
       folders = {
         "org" = {
           path = "/home/mjs/Documents";
-          devices = ["sol" "luna"];
+          devices = ["sol" "luna" "terra"];
         };
         "zotero" = {
           path = "/home/mjs/Zotero/storage";
-          devices = ["sol" "luna"];
+          devices = ["sol" "luna" "terra"];
         };
         "kdb" = {
           path = "/home/mjs/kdb";
-          devices = ["sol" "luna" "phone"];
+          devices = ["sol" "luna" "phone" "terra"];
         };
       };
     };

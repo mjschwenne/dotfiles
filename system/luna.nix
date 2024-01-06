@@ -38,6 +38,9 @@
     settings = {
       devices = {
         "terra" = {
+          id = "MUIVJMG-P5ZY5S6-AFI7F7F-LQHCRJE-CZEXTWR-F6TEYUP-QCDPQON-VVCIGA2";
+        };
+        "mars" = {
           id = "SA2KNKU-LTH27QL-OHZSGVW-HCMWWFP-5RYZEER-K3LQKDM-NGF2PNQ-HRVKSQL";
         };
         "sol" = {
@@ -48,15 +51,15 @@
       folders = {
         "org" = {
           path = "/home/mjs/Documents";
-          devices = ["terra" "sol"];
+          devices = ["terra" "sol" "mars"];
         };
         "zotero" = {
           path = "/home/mjs/Zotero/storage";
-          devices = ["sol" "terra"];
+          devices = ["sol" "terra" "mars"];
         };
         "kdb" = {
           path = "/home/mjs/kdb";
-          devices = ["terra" "sol"];
+          devices = ["terra" "sol" "mars"];
         };
       };
     };

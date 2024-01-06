@@ -93,6 +93,9 @@
 
       devices = {
         "terra" = {
+          id = "MUIVJMG-P5ZY5S6-AFI7F7F-LQHCRJE-CZEXTWR-F6TEYUP-QCDPQON-VVCIGA2";
+        };
+        "mars" = {
           id = "SA2KNKU-LTH27QL-OHZSGVW-HCMWWFP-5RYZEER-K3LQKDM-NGF2PNQ-HRVKSQL";
         };
         "luna" = {
@@ -106,15 +109,15 @@
       folders = {
         "org" = {
           path = "/home/mjs/Documents";
-          devices = ["terra" "luna"];
+          devices = ["terra" "luna" "mars"];
         };
         "zotero" = {
           path = "/home/mjs/Zotero/storage";
-          devices = ["terra" "luna"];
+          devices = ["terra" "luna" "mars"];
         };
         "kdb" = {
           path = "/home/mjs/kdb";
-          devices = ["terra" "luna" "phone"];
+          devices = ["terra" "luna" "phone" "mars"];
         };
         "agenda" = {
           path = "/home/mjs/Documents/agenda";
