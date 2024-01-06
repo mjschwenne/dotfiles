@@ -10,7 +10,7 @@
   libGL,
 }: let
   version = "1.1.7.3";
-  src = ./Wonderdraft-1.1.7.3-Linux64.zip;
+  src = /nix/store/05dhi4nfkdfca4rsgvpggs1acvqy9dcd-Wonderdraft-1.1.7.3-Linux64.zip;
 in
   stdenv.mkDerivation {
     name = "wonderdraft-${version}";
