@@ -1,0 +1,118 @@
+;; Background blurred panel
+(defwindow background_window
+  :monitor 0
+  :stacking "bg"
+  :exclusive true
+  :focusable false
+  :namespace "bar"
+  :geometry (geometry
+              :x 0
+              :y 0
+              :width "100%"
+              :height "4.5%"
+              :anchor "top center")
+  (background_widget))
+
+;; User info
+(defwindow start_window
+  :monitor 0
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "0.5%"
+              :y "-4%"
+              :width "2%"
+              :height "3.5%"
+              :anchor "top left")
+  (start_widget))
+
+;; Workspaces
+(defwindow workspaces_window
+  :monitor 0
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "3%"
+              :y "-4%"
+              :width "18.4%"
+              :height "3.5%"
+              :anchor "top left")
+  (workspaces_widget :orientation "h"))
+
+;; Window Name
+(defwindow window_window
+  :monitor 0
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "21.9%"
+              :y "-4%"
+              :width "18.4%"
+              :height "3.5%"
+              :anchor "top left")
+  (window_widget))
+
+;; Music
+(defwindow music_window
+  :monitor 0
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "40.8%"
+              :y "-4%"
+              :width "18.4%"
+              :height "3.5%"
+              :anchor "top left")
+  (music_widget))
+
+;; Tray
+(defwindow tray_window
+  :monitor 0
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "59.7%"
+              :y "-4%"
+              :width "8.95%"
+              :height "3.5%"
+              :anchor "top left")
+  (tray_widget))
+
+;; System Information
+(defwindow sys_window
+  :monitor 0
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "69.15%"
+              :y "-4%"
+              :width "8.95%"
+              :height "3.5%"
+              :anchor "top left")
+  (sys_widget))
+
+;; Clock
+(defwindow clock_window
+  :monitor 0
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "78.6%"
+              :y "-4%"
+              :width "18.4%"
+              :height "3.5%"
+              :anchor "top left")
+  (clock_widget))
+
+;; Power menu
+(defwindow power_window
+  :monitor 0
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "97.5%"
+              :y "-4%"
+              :width "2%"
+              :height "3.5%"
+              :anchor "top left")
+  (power_widget))

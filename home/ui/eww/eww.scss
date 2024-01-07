@@ -1,201 +1,90 @@
-$rosewater: #f5e0dc;
-$flamingo: #f2cdcd;
-$pink: #f5c2e7;
-$mauve: #cba6f7;
-$red: #f38ba8; 
-$maroon: #eba0ac;
-$peach: #fab387;
-$yellow: #f9e2af;
-$green: #a6e3a1;
-$teal: #94e2d5;
-$sky: #89dceb;
-$sapphire: #74c7ec;
-$blue: #89b4fa;
-$lavender: #b4befe;
-$text: #cdd6f4;
-$subtext1: #bac2de;
-$subtext0: #a6adc8;
-$overlay2: #9399b2;
-$overlay1: #7f849c;
-$overlay0: #6c7086;
-$surface2: #585b70;
-$surface1: #45475a;
-$surface0: #313244;
+// Colors
 $base: #1e1e2e;
-$mantle: #181825;
-$crust: #11111b;
+$text: #cdd6f4;
+$accent: #fab387;
+
+// Size
+$bor_radius: 5px;
+$bor_width: 2px;
 
 * {
+	font-family: "JetBrainsMono Nerd Font";
+}
+
+button {
 	all: unset;
-	font-family: "JetBrainsMono Nerd Font Mono";
 }
 
-.primary_panel {
+label {
+	font-size: 15px;
+	color: $text;
+}
+
+.background_window {
+	background: rgba(0, 0, 0, 0.2);
+}
+
+.start_window,
+.workspaces_window,
+.window_window,
+.music_window,
+.tray_window,
+.sys_window,
+.clock_window,
+.power_window {
+	background: rgba(0, 0, 0, 0);
+}
+
+.cell {
 	background-color: $base;
-	border-radius: 5px;
-}
-
-.secondary_panel {
-	background-color: $base;
-	border-radius: 5px;
-}
-
-.runner {
-	background-color: $base;
-	border-radius: 100px;
-	min-height: 30px;
-	min-width: 30px;
-	padding: 5px;
-	margin: 5px;
-}
-
-.runner:hover {
-	background-color: $surface1;
-}
-
-.power {
-	background-color: $base;
-	border-radius: 50px;
-	min-height: 25px;
-	min-width: 25px;
-	margin: 5px;
-	color: $red;
-	font-size: 30px;
-}
-
-.power:hover {
-	color: $base;
-	font-size: 30px;
-	background-color: $red;
-}
-
-
-.workspaces {
-	padding: 5px;
+	color: $text;
+	border-style: solid;
+	border-color: $accent;
+	border-width: $bor_width;
+	border-radius: $bor_radius;
 }
 
 .workspace {
-	font-size: 20px;
-}
-
-.hidden {
-	color: $text;
-}
-
-.displayed {
-	color: $yellow;
-}
-
-.focused {
-	color: $green;
-}
-
-.clock {
-	color: $text;
-	font-size: 25px;
-}
-
-.separator {
-	min-height: 10px;
-	padding-left: 7px;
-	padding-right: 7px;
-}
-
-.dot {
-	background-color: $text;
-	border-radius: 10px;
-	min-width: 5px;
-	min-height: 5px;
-}
-
-.slider-v {
-	min-height: 125px;
-}
-
-scale trough { 
-  background-color: $overlay0;
-  border-radius: 50px;
-  min-height: 150px;
-  min-width: 10px;
-}
-
-scale highlight {
-	border-radius: 50px;
-}
-
-.icon {
 	font-size: 24px;
+	font-family: "JetBrainsMono Nerd Font Mono";
 }
 
-.notifications {
-	color: $red
+.music_border {
+	border-style:         solid;
+	border-width:         $bor_width;
+	border-color:         $accent;
+	border-radius:        $bor_radius;
+	background-color:     $base;
 }
 
-.bluetooth {
-	color: $blue;
+.music_background {
+	background-repeat:    no-repeat;
+	background-size:      cover;
+	background-position:  center center;
+	border-radius:        $bor_radius;
+	opacity:              0.4;
 }
 
-.bluetooth.icon {
-	font-size: 20px;
+.music_cover {
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center center;
+	border-radius: $bor_radius 0px 0px $bor_radius;
+  	margin: $bor_width 10px $bor_width $bor_width;
 }
 
-.volume {
-	color: $pink;
+.music_title {
+	font-size: 13px;
 }
 
-.volume highlight {
-	background-color: $pink;
+.music_artist {
+	font-size: 12px;
 }
 
-.brightness {
-	color: $peach;
+menubar {
+	background-color: $base;
 }
 
-.brightness.icon {
-	font-size: 30px;
+menuitem {
+	margin: -5px;
 }
-
-.brightness highlight {
-	background-color: $peach;
-}
-
-.network {
-	color: $mauve;
-}
-
-.network.icon {
-	font-size: 30px;
-}
-
-.battery.full {
-	color: $green;
-}
-
-.battery.full highlight {
-	background-color: $green;
-}
-
-.battery.normal {
-	color: $yellow;
-}
-
-.battery.normal highlight {
-	background-color: $yellow;
-}
-
-.battery.low {
-	color: $red;
-}
-
-.battery.low highlight {
-	background-color: $red;
-}
-
-.battery.icon {
-	font-size: 20px;
-}
-
-.battery.icon.charging {
-	font-size: 30px;
-}
-

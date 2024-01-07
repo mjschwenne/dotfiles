@@ -50,11 +50,11 @@
 
     spicetify-nix.url = "github:the-argus/spicetify-nix";
 
-    nixvim.url = "github:nix-community/nixvim";
-
     foundry.url = "github:reckenrode/nix-foundryvtt/f624c0ceabe13dd876ecff871e0dc7f55f96e993";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    eww-tray.url = "github:ralismark/eww/tray-3";
   };
 
   # `outputs` are all the build result of the flake.

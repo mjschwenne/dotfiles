@@ -1,0 +1,110 @@
+;; Empty box for bg box
+(defwidget background_widget []
+  (box))
+
+(defwidget start_widget []
+  (button
+    :onclick "rofi -show run &"
+    :class "cell"
+    (image
+      :path "${EWW_CONFIG_DIR}/assets/nix_snowflake.png"
+      :image-width 25
+      :image-height 25)))
+
+(defwidget workspaces_widget [orientation]
+  (box
+    :class "cell"
+    :space-evenly true
+    :orientation orientation
+
+    (for workspace in {workspaces}
+      (button
+        :class "workspace button ${workspace.windows > 0 ? "occupied" : "empty"} ${workspace.status}"
+        :onclick "hyprctl dispatch workspace ${workspace.id}"
+        :valign "center"
+        (label
+          :class "workspace"
+          :text {workspace.status == "focused" ? "" : "${workspace.windows > 0 ? "" : ""}"})))))
+
+(defwidget window_widget []
+  (label
+    :class "cell"
+    :text {window_name}
+    :limit-width 35
+    :show-truncated true
+    :justify "center"
+    :yalign 0.5))
+
+(defwidget music_widget []
+   (eventbox :onclick "$HOME/.config/eww/popup/launch.sh --toggle_music"
+    (overlay
+      (box :class "music_border"
+        (revealer :reveal "${MUSIC_PLAYING}" :transition "crossfade"
+          (box :class "music_background" :style "background-image: url('${MUSIC_ART}');")
+        )
+      )
+      (box :orientation "h" :halign "start" :space-evenly false
+        (box :class "music_cover" :width 45 :style "background-image: url('${MUSIC_ART}');")
+        (box :orientation "v" :halign "start" :valign "center" :space-evenly false
+          (label :class "music_title" :halign "start" :limit-width 22 :text "${MUSIC_TITLE}")
+          (label :class "music_artist" :halign "start" :limit-width 22 :text "${MUSIC_ARTIST}")))
+    )
+  )
+)
+
+(defwidget tray_widget []
+  (centerbox :class "cell"
+    (box)
+    (systray :pack-direction "rtl")
+    (box)))
+
+(defwidget circular-metric [img size value tooltip ?cmd ?css-class]
+  (button :onclick cmd
+    :class css-class
+    :style "margin: 2px;"
+    (overlay
+      :tooltip tooltip
+      (image :path "${EWW_CONFIG_DIR}/assets/icons/${img}.png"
+        :image-width {size}
+        :image-height {size})
+      (circular-progress
+        :value value
+        :start-at 75
+        :thickness 2))))
+
+(defwidget sys_widget []
+  (box :class "cell" :orientation "h" :space-evenly true
+    (circular-metric
+      :img "cpu"
+      :size 20
+      :value "${EWW_CPU['avg']}"
+      :tooltip "CPU: ${round(EWW_CPU['avg'], 2)}%"
+      :css-class "cpu")
+    (circular-metric
+      :img "ram"
+      :size 20
+      :value "${EWW_RAM['used_mem_perc']}"
+      :tooltip "RAM: ${round(EWW_RAM['used_mem_perc'], 2)}%"
+      :css-class "ram")
+    (for stat in {sys_status}
+      (circular-metric
+        :img {stat.name}
+        :size {stat.size}
+        :value {stat.value}
+        :tooltip {stat.tooltip}
+        :css-class {stat.name}))))
+
+(defwidget clock_widget []
+  (label
+    :class "cell"
+    :text "  ${formattime(EWW_TIME, '%H : %M')}    ${formattime(EWW_TIME, '%a, %d %b %Y')}"
+    :justify "center"))
+
+(defwidget power_widget []
+  (button
+    :onclick ""
+    :class "cell"
+    (image
+      :path "${EWW_CONFIG_DIR}/assets/icons/power.png"
+      :image-width 25
+      :image-height 25)))

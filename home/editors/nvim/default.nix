@@ -25,6 +25,10 @@ in {
         source = ./ftplugin/haskell.lua;
       };
 
+      ".config/nvim/after/ftplugin/rust.lua" = {
+        source = ./ftplugin/rust.lua;
+      };
+
       ".config/nvim/after/ftplugin/java.lua".text = ''
         local jdtls_p, jdtls = pcall(require, "jdtls")
         if not jdtls_p then
@@ -165,7 +169,7 @@ in {
       vim-ledger
       nvim-jdtls
       vimtex
-      rust-tools-nvim
+      rustaceanvim
       vim-nix
       vim-nixhash
       hmts-nvim

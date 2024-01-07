@@ -3,6 +3,10 @@
   pkgs-master,
   ...
 }: let
+  eww-tray = pkgs.callPackage ./ui/eww/eww-tray.nix {
+    withWayland = true;
+  };
+  hyprland-activewindow = pkgs.callPackage ./ui/eww/hyprland-activewindow.nix {};
   packages = with pkgs; [
     # Web browsers
     # librewolf
@@ -109,12 +113,12 @@
     inotify-tools
     google-cloud-sdk
     ledger
+    python311Packages.gpustat
 
     # Programming languages
     coq
 
     # Wayland Utilities
-    eww-wayland
     swww
 
     wev
@@ -175,7 +179,7 @@ in {
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
 
-  home.packages = packages ++ masterPkgs;
+  home.packages = packages ++ masterPkgs ++ [eww-tray hyprland-activewindow];
 
   programs.kitty = {
     enable = true;

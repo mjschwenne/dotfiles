@@ -1,0 +1,31 @@
+;; User Profile
+(defvar USER_ICON "assets/user.png")
+(defpoll USER :interval "1h" "echo $USER")
+(defvar DISTRO_IMG "assets/nix_snowflake.png")
+
+;; Active Monitoring
+(defpoll sys_status :interval "2s" :initial "[]" `scripts/system.fish`)
+
+;; Passive monitoring
+;; (deflisten bluetooth `scripts/bluetooth.fish monitor`)
+;; (deflisten volume `scripts/volume.fish monitor`)
+;; (deflisten brightness `scripts/brightness.fish monitor`)
+;; (deflisten notifications `stdbuf -oL swaync-client -s`)
+(deflisten workspaces :initial "[]" `scripts/hyprland.fish workspaces`)
+(deflisten window_name `hyprland-activewindow HDMI-A-5`)
+
+;; Music
+(defpoll MUSIC_PLAYING :interval "2s"
+  `scripts/music.fish --status`)
+
+(defpoll MUSIC_TITLE :interval "2s"
+  `scripts/music.fish --title`)
+
+(defpoll MUSIC_ARTIST :interval "2s"
+  `scripts/music.fish --artist`)
+
+(defpoll MUSIC_ART :interval "1s"
+  `scripts/music.fish --art` )
+
+(defpoll MUSIC_POSITION :interval "2s"
+  `scripts/music.fish --position`)

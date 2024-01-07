@@ -122,6 +122,7 @@
     decoration {
     	rounding = 5
     }
+    blurls = bar
 
     input {
     	kb_options = ctrl:nocaps

@@ -1,7 +1,9 @@
-{ config, pkgs, builtins, ... }@inputs:
-
 {
-
+  config,
+  pkgs,
+  builtins,
+  ...
+} @ inputs: {
   nixpkgs.overlays = [
     inputs.emacs-overlay.overlay
   ];
@@ -25,7 +27,7 @@
       #     src = ./emacs.el;
       #     inherit (config.xdg) configHome dataHome;
       #   };
-	  defaultInitFile = false;
+      defaultInitFile = false;
 
       # Package is optional, defaults to pkgs.emacs
       package = pkgs.emacs-unstable-pgtk;
@@ -48,15 +50,17 @@
       # which defaults `:tangle` to `yes`.
       alwaysTangle = true;
 
-      override = epkgs: epkgs // {
-        org-timeblock = pkgs.callPackage ./org-timeblock.nix {
-          inherit (pkgs) fetchFromGitHub;
-          inherit (epkgs) trivialBuild org-ql persist;
+      override = epkgs:
+        epkgs
+        // {
+          org-timeblock = pkgs.callPackage ./org-timeblock.nix {
+            inherit (pkgs) fetchFromGitHub;
+            inherit (epkgs) trivialBuild org-ql persist;
+          };
+          # org-auctex = pkgs.callPackage ./org-auctex.nix {
+          #   inherit (epkgs) trivialBuild auctex;
+          # };
         };
-        # org-auctex = pkgs.callPackage ./org-auctex.nix {
-        #   inherit (epkgs) trivialBuild auctex;
-        # };
-      };
 
       # Optionally provide extra packages not in the configuration file.
       extraEmacsPackages = epkgs: [
