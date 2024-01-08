@@ -54,7 +54,7 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (window_widget))
+  (window_widget :monitor "0"))
 
 ;; Music
 (defwindow music_window
@@ -257,7 +257,7 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (window_widget))
+  (window_widget :monitor "1"))
 
 ;; Music
 (defwindow music_window_sec
