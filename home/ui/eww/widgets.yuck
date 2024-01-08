@@ -1,10 +1,15 @@
+;; -------- ;;
+;; MAIN BAR ;;
+;; -------- ;;
+
+
 ;; Empty box for bg box
 (defwidget background_widget []
   (box))
 
 (defwidget start_widget []
   (button
-    :onclick "rofi -show run &"
+    :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --open startmenu_window"
     :class "cell"
     (image
       :path "${EWW_CONFIG_DIR}/assets/nix_snowflake.png"
@@ -30,13 +35,13 @@
   (label
     :class "cell"
     :text {window_name}
-    :limit-width 35
+    :limit-width 34
     :show-truncated true
     :justify "center"
     :yalign 0.5))
 
 (defwidget music_widget []
-   (eventbox :onclick "$HOME/.config/eww/popup/launch.sh --toggle_music"
+   (eventbox :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --open musicmenu_window"
     (overlay
       (box :class "music_border"
         (revealer :reveal "${MUSIC_PLAYING}" :transition "crossfade"
@@ -46,8 +51,8 @@
       (box :orientation "h" :halign "start" :space-evenly false
         (box :class "music_cover" :width 45 :style "background-image: url('${MUSIC_ART}');")
         (box :orientation "v" :halign "start" :valign "center" :space-evenly false
-          (label :class "music_title" :halign "start" :limit-width 22 :text "${MUSIC_TITLE}")
-          (label :class "music_artist" :halign "start" :limit-width 22 :text "${MUSIC_ARTIST}")))
+          (label :class "music_title" :halign "start" :limit-width 30 :text "${MUSIC_TITLE}")
+          (label :class "music_artist" :halign "start" :limit-width 30 :text "${MUSIC_ARTIST}")))
     )
   )
 )
@@ -58,53 +63,363 @@
     (systray :pack-direction "rtl")
     (box)))
 
-(defwidget circular-metric [img size value tooltip ?cmd ?css-class]
-  (button :onclick cmd
-    :class css-class
-    :style "margin: 2px;"
+(defwidget circular-metric [img name value ?css-class]
     (overlay
-      :tooltip tooltip
+      :class css-class
+      :tooltip "${name}: ${round(value, 2)}%"
       (image :path "${EWW_CONFIG_DIR}/assets/icons/${img}.png"
-        :image-width {size}
-        :image-height {size})
+        :image-width 20
+        :image-height 20)
       (circular-progress
         :value value
+        :style "margin: 5px;"
         :start-at 75
-        :thickness 2))))
+        :thickness 2)))
 
 (defwidget sys_widget []
-  (box :class "cell" :orientation "h" :space-evenly true
-    (circular-metric
-      :img "cpu"
-      :size 20
-      :value "${EWW_CPU['avg']}"
-      :tooltip "CPU: ${round(EWW_CPU['avg'], 2)}%"
-      :css-class "cpu")
-    (circular-metric
-      :img "ram"
-      :size 20
-      :value "${EWW_RAM['used_mem_perc']}"
-      :tooltip "RAM: ${round(EWW_RAM['used_mem_perc'], 2)}%"
-      :css-class "ram")
-    (for stat in {sys_status}
+  (eventbox :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --toggle sysmenu_window"
+    (box :class "cell" :orientation "h" :space-evenly true
       (circular-metric
-        :img {stat.name}
-        :size {stat.size}
-        :value {stat.value}
-        :tooltip {stat.tooltip}
-        :css-class {stat.name}))))
+        :img "cpu"
+        :name "CPU"
+        :value "${EWW_CPU['avg']}"
+        :css-class "cpu")
+      (circular-metric
+        :img "ram"
+        :name "RAM"
+        :value "${EWW_RAM['used_mem_perc']}"
+        :css-class "ram")
+      (for stat in {sys_status}
+        (circular-metric
+          :img {stat.img}
+          :name {stat.name}
+          :value {stat.value}
+          :css-class {stat.name})))))
 
 (defwidget clock_widget []
-  (label
-    :class "cell"
-    :text "  ${formattime(EWW_TIME, '%H : %M')}    ${formattime(EWW_TIME, '%a, %d %b %Y')}"
-    :justify "center"))
+  (eventbox :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --toggle clockmenu_window"
+    (label
+      :class "cell"
+      :text "  ${formattime(EWW_TIME, '%H : %M')}    ${formattime(EWW_TIME, '%a, %d %b %Y')}"
+      :justify "center")))
 
 (defwidget power_widget []
   (button
-    :onclick ""
+    :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --toggle powermenu_window"
     :class "cell"
     (image
       :path "${EWW_CONFIG_DIR}/assets/icons/power.png"
       :image-width 25
       :image-height 25)))
+
+;; ---------- ;;
+;; START MENU ;; (No, not that type of start menu)
+;; ---------- ;;
+
+(defwidget startmenu_widget []
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close startmenu_window"
+    (box :orientation "v" :space-evenly false :spacing 15 :class "cell"
+
+        ;; Clock
+        (box :orientation "v" :halign "center" :valign "center" :space-evenly false
+             :width 300 :height 80 :spacing 10
+
+          (label :class "start_clock_time" :text "${formattime(EWW_TIME, '%H : %M')}")
+          (label :class "start_clock_date" :justify "center" :text "${formattime(EWW_TIME, '%A, %d %B %Y')}"))
+
+      ;; Profile
+      (box :class "profile" :orientation "v" :halign "center" :valign "center"
+           :space-evenly false :width 280 :height 165 :spacing 20
+
+        ;; Face
+        (box :halign "center" :valign "center"
+             :style " background-image:     url('${USER_ICON}');
+                      background-repeat:    no-repeat;
+                      background-size:      cover;
+                      background-position:  center center;
+                      min-width:            7.4rem;
+                      min-height:           7.4rem;
+                      margin-top:            10px;
+                      border-radius:        7.4rem;
+                    "
+        )
+
+        ;; Name
+        (label :class "profile_name" :text "Welcome, ${USER}")
+      )
+    )
+  )
+)
+
+;; ---------------- ;;
+;; MUSICMENU_WIDGET ;;
+;; ---------------- ;;
+
+(defwidget musicmenu_widget []
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close musicmenu_window"
+    :class "cell"
+    (box :orientation "v" :halign "center" :valign "center" :space-evenly false :spacing 20
+      :style "margin-top: 10px;"
+
+      ;; Top box
+      (overlay :width 330 :height 220
+
+        ;; Background
+        (revealer :reveal "${MUSIC_PLAYING}"
+          (box :class "music_reveal_cover"
+               :css " .music_reveal_cover {
+                        background-image:     url('${MUSIC_ART}');
+                        background-repeat:    no-repeat;
+                        background-size:      cover;
+                        background-position:  center center;
+
+                        border-radius:        1rem;
+                        opacity:              0.25;
+                      }
+                    "
+          )
+        )
+
+        ;; Foreground
+        (box :orientation "v" :halign "center" :valign "center" :space-evenly false :spacing 10
+          (overlay
+
+            ;; Default music Cover
+            (box :class "music_art_default"
+                 :halign "center" :valign "center" :space-evenly false
+                 :css " .music_art_default {
+                          background-image:     url('${MUSIC_ART}');
+                          background-repeat:    no-repeat;
+                          background-size:      cover;
+                          background-position:  center center;
+                          min-width:            12rem;
+                          min-height:           12rem;
+
+                          border-radius:        1rem;
+                        }
+                      "
+            )
+
+            ;; Music Cover
+            (revealer :reveal "${MUSIC_PLAYING}" :transition "crossfade"
+              (box :class "music_art"
+                   :halign "center" :valign "center" :space-evenly false
+                   :css " .music_art {
+                            background-image:     url('${MUSIC_ART}');
+                            background-repeat:    no-repeat;
+                            background-size:      cover;
+                            background-position:  center center;
+                            min-width:            12rem;
+                            min-height:           12rem;
+
+                            border-radius:        1rem;
+                            box-shadow:           0rem 0rem 0.37rem 0.13rem #FF0000;
+                          }
+                        "
+              )
+            )
+          )
+        )
+
+        ;; Dummy box
+        (box :style " border:               0.15rem solid #00FF00;
+                      border-radius:        5px;
+                    "
+        )
+      )
+
+      ;; control buttons
+      (box :orientation "h" :halign "center" :valign "center" :space-evenly false :spacing 10
+
+        ;; Previous button
+        (eventbox :class "music_button" :width 40 :height 40
+                  :onclick "scripts/music.fish --prev"
+          (label :class "music_prev_icon" :text "󰒮")
+        )
+
+        ;; Button that toggle play and pause
+        (eventbox :class "music_button" :width 40 :height 40
+                  :onclick "scripts/music.fish --toggle"
+          (box :class "music_toggle_icon" {MUSIC_PLAYING == "true" ? "󰏤" : "󰐊"})
+        )
+
+        ;; Next button
+        (eventbox :class "music_button" :width 40 :height 40
+                  :onclick "scripts/music.fish --next"
+          (label :class "music_next_icon" :text "󰒭")
+        )
+      )
+
+      ;; Music Position
+      (progress :value {MUSIC_POSITION})
+
+      ;; Bottom box
+      (box :orientation "v" :halign "center" :valign "center" :space-evenly false
+           :width 330 :height 55
+
+        ;; Title and artist
+        (box :orientation "v" :valign "start" :height  40
+          (label :class "music_title" :limit-width 22 :text "${MUSIC_TITLE}")
+          (label :class "music_artist" :limit-width 22 :text "${MUSIC_ARTIST}")
+        )
+      )
+    )
+  )
+)
+
+;; ------- ;;
+;; SYSMENU ;;
+;; ------- ;;
+
+(defwidget sys_state_slider [name img value ?onclick ?onscroll ?class]
+  (eventbox
+    :onclick "${onclick}"
+    :onscroll "${onscroll}"
+    (box :orientation "v" :space-evenly false :style "margin: 5px 10px 5px 10px;"
+      ;; Top stuff
+      (box
+        (box :class "${class}" :halign "start" (label :text "${name}"))
+        (box :class "${class}" :halign "end" (label :text "${round(value, 2)}%"))
+      )
+
+      ;; Bottom stuff
+      (box :space-evenly false :spacing 10
+        (image :path "${EWW_CONFIG_DIR}/assets/icons/${img}.png"
+          :image-width 20
+          :image-height 20)
+        (progress :valign "center" :hexpand true :value {value})
+      )
+      (box :class "separator")
+    )
+  )
+)
+
+(defwidget sys_state_text [name img label info ?onclick ?onscroll ?class]
+  (eventbox
+    :onclick "${onclick}"
+    :onscroll "${onscroll}"
+    (box :orientation "v" :space-evenly false :style "margin: 5px 10px 5px 10px;"
+      ;; Top stuff
+      (box
+        (box :halign "start" (label :text "${name}"))
+        (box :halign "end" (label :text "${label}"))
+      )
+
+      ;; Bottom stuff
+      (box :space-evenly false :spacing 10
+        (image :path "${EWW_CONFIG_DIR}/assets/icons/${img}.png"
+          :image-width 20
+          :image-height 20)
+        (label :halign "end" :hexpand true :text "${info}")
+      )
+    )
+  )
+)
+
+(defwidget sysmenu_widget []
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close sysmenu_window"
+    (box :orientation "v" :space-evenly false :class "cell"
+      ;; Cpu
+      (sys_state_slider
+        :name "CPU"
+        :img "cpu"
+        :value "${EWW_CPU['avg']}")
+      ;; Ram
+      (sys_state_slider
+        :name "RAM"
+        :img "ram"
+        :value "${EWW_RAM['used_mem_perc']}")
+      ;; Others, as deemed by the system script
+      (box :orientation "v"
+        (for stat in {sys_status}
+          (sys_state_slider
+            :name {stat.name}
+            :img {stat.img}
+            :value {stat.value}
+            :onclick {stat.click}
+            :onscroll {stat.scroll})))
+      ;; Network
+      (sys_state_text
+        :name "NETWORK"
+        :img {network.icon}
+        ;; Convert bytes to megabits
+        :label "󰞒 ${round(EWW_NET['wlo1'].NET_DOWN / 131100, 2)} Mb/s"
+        :info {network.name ?: "Not Connected"}
+        :onclick "${EWW_CONFIG_DIR}/scripts/network_toggle.fish")
+      (box :class "separator" :style "margin: 5px 10px 5px 10px;")
+      ;; Bluetooth
+      (sys_state_text
+        :name "BLUETOOTH"
+        :img {bluetooth.icon}
+        :label ""
+        :info {bluetooth.devices[0] ?: 'Not Connected'}
+        :onclick "rfkill toggle bluetooth")
+    )
+  )
+)
+
+;; --------- ;;
+;; CLOCKMENU ;;
+;; --------- ;;
+
+(defwidget clockmenu_widget []
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close clockmenu_window"
+    (box :orientation "v" :space-evenly false :spacing 15 :class "cell"
+
+        ;; Clock
+        (box :orientation "v" :halign "center" :valign "center" :space-evenly false
+             :width 300 :height 80 :spacing 10
+
+          (label :class "start_clock_time" :text "${formattime(EWW_TIME, '%H:%M:%S')}")
+          (label :class "start_clock_date" :justify "center" :text "${formattime(EWW_TIME, '%A, %d %B %Y')}"))
+
+        (calendar
+          :day "${formattime(EWW_TIME, '%d')}"
+          :month "${formattime(EWW_TIME, '%m')}"
+          :year "${formattime(EWW_TIME, '%Y')}"
+          :show-details true
+          :show-heading false)
+    )
+  )
+)
+
+;; --------- ;;
+;; POWERMENU ;;
+;; --------- ;;
+
+(defwidget powermenu_widget []
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close powermenu_window"
+    (box :class "cell" :orientation "v" :space-evenly true
+
+      ;; Lock button
+      (button :class "pow_button_square"
+              :onclick "~/.config/hypr/scripts/lock.fish"
+        (label :class "lock_icon" :text "")
+      )
+
+      ;; Shutdown button
+      (button :class "pow_button_square"
+              :onclick "$(systemctl poweroff)"
+        (label :class "shutdown_icon" :text "󰐥")
+      )
+
+      ;; Suspend button
+      (button :class "pow_button_square"
+              :onclick "systemctl suspend"
+        (label :class "suspend_icon" :text "󰤄")
+      )
+
+      ;; Logout button
+      (button :class "pow_button_square"
+              :onclick "hyprctl dispatch exit"
+        (label :class "logout_icon" :text "󰗼")
+      )
+
+      ;; Reboot button
+      (button :class "pow_button_square"
+              :onclick "$(systemctl reboot)"
+        (label :class "reboot_icon" :text "󰑙")
+      )
+    )
+  )
+)

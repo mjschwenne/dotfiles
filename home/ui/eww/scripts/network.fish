@@ -15,15 +15,15 @@ end
 function get_icon
     set -f quality (math (echo $(get) | jq -r '.link_quality'))
     if test $quality -ge 0.8
-        echo '󰤨'
+        echo wifi-full
     else if test $quality -ge 0.6
-        echo '󰤥'
+        echo wifi-3quarters
     else if test $quality -ge 0.4
-        echo '󰤢'
+        echo wifi-half
     else if test $quality -ge 0.2
-        echo '󰤟'
+        echo wifi-1quarter
     else
-        echo '󰤯'
+        echo wifi-zero
     end
 end
 

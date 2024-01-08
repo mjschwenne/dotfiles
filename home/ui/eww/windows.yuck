@@ -1,3 +1,7 @@
+;; -------- ;;
+;; MAIN BAR ;;
+;; -------- ;;
+
 ;; Background blurred panel
 (defwindow background_window
   :monitor 0
@@ -116,3 +120,79 @@
               :height "3.5%"
               :anchor "top left")
   (power_widget))
+
+;; ---------------- ;;
+;; STARTMENU WINDOW ;;
+;; ---------------- ;;
+
+(defwindow startmenu_window
+  :monitor 0
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "0.5%"
+              :y "1%"
+              :width "17%"
+              :height "31%"
+              :anchor "top left")
+  (startmenu_widget))
+
+;; ---------------- ;;
+;; MUSICMENU WINDOW ;;
+;; ---------------- ;;
+
+(defwindow musicmenu_window
+  :monitor 0
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "40.8%"
+              :y "1%"
+              :width "18.4%"
+              :height "18.4%"
+              :anchor "top left")
+  (musicmenu_widget))
+
+(defwindow sysmenu_window
+  :monitor 0
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "64.675%"
+              :y "1%"
+              :width "18.4%"
+              :height "18.4%"
+              :anchor "top left")
+  (sysmenu_widget))
+
+;; ---------------- ;;
+;; CLOCKMENU WINDOW ;;
+;; ---------------- ;;
+
+(defwindow clockmenu_window
+  :monitor 0
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "78.6%"
+              :y "1%"
+              :width "18.4%"
+              :height "18.4%"
+              :anchor "top left")
+  (clockmenu_widget))
+
+;; ---------------- ;;
+;; POWERMENU WINDOW ;;
+;; ---------------- ;;
+
+(defwindow powermenu_window
+  :monitor 0
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "0.5%"
+              :y "32.25%"
+              :width "3.5%"
+              :height "31%"
+              :anchor "top right")
+  (powermenu_widget))
