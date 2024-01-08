@@ -148,12 +148,13 @@
     windowrule=workspace 8,thunderbird
     windowrule=float,title:^(Write:)(.*)(- Thunderbird)$
     windowrule=float,title:^(Write: \(no subject\))$
-    windowrule=workspace 9,Spotify
+    windowrule=workspace 9,title:^(Spotify Premium)$
     windowrule=workspace 10,WebCord
     windowrule=float,title:^(Open Files)$
     windowrule=float,class:^(zenity)$
     windowrule=float,title:^(Compact folders)$
     windowrule=float,title:^(KeePassXC - Browser Access Request)$
+    windowrule=float,title:^(Unlock Database - KeePassXC)$
     windowrule=float,title:^(Formula \(pdflatex\))$
 
     # ANIMATIONS

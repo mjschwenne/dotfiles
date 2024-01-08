@@ -28,7 +28,7 @@
               :width "2%"
               :height "3.5%"
               :anchor "top left")
-  (start_widget))
+  (start_widget :window "startmenu_window"))
 
 ;; Workspaces
 (defwindow workspaces_window
@@ -67,7 +67,7 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (music_widget))
+  (music_widget :window "musicmenu_window"))
 
 ;; Tray
 (defwindow tray_window
@@ -93,7 +93,7 @@
               :width "8.95%"
               :height "3.5%"
               :anchor "top left")
-  (sys_widget))
+  (sys_widget :window "sysmenu_window"))
 
 ;; Clock
 (defwindow clock_window
@@ -106,7 +106,7 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (clock_widget))
+  (clock_widget :window "clockmenu_window"))
 
 ;; Power menu
 (defwindow power_window
@@ -119,7 +119,7 @@
               :width "2%"
               :height "3.5%"
               :anchor "top left")
-  (power_widget))
+  (power_widget :window "powermenu_window"))
 
 ;; ---------------- ;;
 ;; STARTMENU WINDOW ;;
@@ -135,7 +135,7 @@
               :width "17%"
               :height "31%"
               :anchor "top left")
-  (startmenu_widget))
+  (startmenu_widget :window "startmenu_window"))
 
 ;; ---------------- ;;
 ;; MUSICMENU WINDOW ;;
@@ -151,7 +151,7 @@
               :width "18.4%"
               :height "18.4%"
               :anchor "top left")
-  (musicmenu_widget))
+  (musicmenu_widget :window "musicmenu_window"))
 
 (defwindow sysmenu_window
   :monitor 0
@@ -163,7 +163,7 @@
               :width "18.4%"
               :height "18.4%"
               :anchor "top left")
-  (sysmenu_widget))
+  (sysmenu_widget :window "sysmenu_window"))
 
 ;; ---------------- ;;
 ;; CLOCKMENU WINDOW ;;
@@ -179,7 +179,7 @@
               :width "18.4%"
               :height "18.4%"
               :anchor "top left")
-  (clockmenu_widget))
+  (clockmenu_widget :window "clockmenu_window"))
 
 ;; ---------------- ;;
 ;; POWERMENU WINDOW ;;
@@ -195,4 +195,207 @@
               :width "3.5%"
               :height "31%"
               :anchor "top right")
-  (powermenu_widget))
+  (powermenu_widget :window "powermenu_window"))
+
+;; ============== ;;
+;; SECOND MONITOR ;;
+;; ============== ;;
+
+;; -------- ;;
+;; MAIN BAR ;;
+;; -------- ;;
+
+;; Background blurred panel
+(defwindow background_window_sec
+  :monitor 1
+  :stacking "bg"
+  :exclusive true
+  :focusable false
+  :namespace "bar"
+  :geometry (geometry
+              :x 0
+              :y 0
+              :width "100%"
+              :height "4.5%"
+              :anchor "top center")
+  (background_widget))
+
+;; User info
+(defwindow start_window_sec
+  :monitor 1
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "0.5%"
+              :y "-4%"
+              :width "2%"
+              :height "3.5%"
+              :anchor "top left")
+  (start_widget :window "startmenu_window_sec"))
+
+;; Workspaces
+(defwindow workspaces_window_sec
+  :monitor 1
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "3%"
+              :y "-4%"
+              :width "18.4%"
+              :height "3.5%"
+              :anchor "top left")
+  (workspaces_widget :orientation "h"))
+
+;; Window Name
+(defwindow window_window_sec
+  :monitor 1
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "21.9%"
+              :y "-4%"
+              :width "18.4%"
+              :height "3.5%"
+              :anchor "top left")
+  (window_widget))
+
+;; Music
+(defwindow music_window_sec
+  :monitor 1
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "40.8%"
+              :y "-4%"
+              :width "18.4%"
+              :height "3.5%"
+              :anchor "top left")
+  (music_widget :window "musicmenu_window_sec"))
+
+;; Tray
+(defwindow tray_window_sec
+  :monitor 1
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "59.7%"
+              :y "-4%"
+              :width "8.95%"
+              :height "3.5%"
+              :anchor "top left")
+  (tray_widget))
+
+;; System Information
+(defwindow sys_window_sec
+  :monitor 1
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "69.15%"
+              :y "-4%"
+              :width "8.95%"
+              :height "3.5%"
+              :anchor "top left")
+  (sys_widget :window "sysmenu_window_sec"))
+
+;; Clock
+(defwindow clock_window_sec
+  :monitor 1
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "78.6%"
+              :y "-4%"
+              :width "18.4%"
+              :height "3.5%"
+              :anchor "top left")
+  (clock_widget :window "clockmenu_window_sec"))
+
+;; Power menu
+(defwindow power_window_sec
+  :monitor 1
+  :focusable false
+  :stacking "fg"
+  :geometry (geometry
+              :x "97.5%"
+              :y "-4%"
+              :width "2%"
+              :height "3.5%"
+              :anchor "top left")
+  (power_widget :window "powermenu_window_sec"))
+
+;; ---------------- ;;
+;; STARTMENU WINDOW ;;
+;; ---------------- ;;
+
+(defwindow startmenu_window_sec
+  :monitor 1
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "0.5%"
+              :y "1%"
+              :width "17%"
+              :height "31%"
+              :anchor "top left")
+  (startmenu_widget :window "startmenu_window_sec"))
+
+;; ---------------- ;;
+;; MUSICMENU WINDOW ;;
+;; ---------------- ;;
+
+(defwindow musicmenu_window_sec
+  :monitor 1
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "40.8%"
+              :y "1%"
+              :width "18.4%"
+              :height "18.4%"
+              :anchor "top left")
+  (musicmenu_widget :window "musicmenu_window_sec"))
+
+(defwindow sysmenu_window_sec
+  :monitor 1
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "64.675%"
+              :y "1%"
+              :width "18.4%"
+              :height "18.4%"
+              :anchor "top left")
+  (sysmenu_widget :window "sysmenu_window_sec"))
+
+;; ---------------- ;;
+;; CLOCKMENU WINDOW ;;
+;; ---------------- ;;
+
+(defwindow clockmenu_window_sec
+  :monitor 1
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "78.6%"
+              :y "1%"
+              :width "18.4%"
+              :height "18.4%"
+              :anchor "top left")
+  (clockmenu_widget :window "clockmenu_window_sec"))
+
+;; ---------------- ;;
+;; POWERMENU WINDOW ;;
+;; ---------------- ;;
+
+(defwindow powermenu_window_sec
+  :monitor 1
+  :stacking "fg"
+  :focusable false
+  :geometry (geometry
+              :x "0.5%"
+              :y "32.25%"
+              :width "3.5%"
+              :height "31%"
+              :anchor "top right")
+  (powermenu_widget :window "powermenu_window_sec"))

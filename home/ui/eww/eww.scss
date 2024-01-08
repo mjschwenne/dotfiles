@@ -48,7 +48,8 @@ label {
 	color: $text;
 }
 
-.background_window {
+.background_window,
+.background_window_sec {
 	background: rgba(0, 0, 0, 0.2);
 }
 
@@ -64,7 +65,20 @@ label {
 .musicmenu_window,
 .sysmenu_window,
 .clockmenu_window,
-.powermenu_window {
+.powermenu_window,
+.start_window_sec,
+.workspaces_window_sec,
+.window_window_sec,
+.music_window_sec,
+.tray_window_sec,
+.sys_window_sec,
+.clock_window_sec,
+.power_window_sec,
+.startmenu_window_sec,
+.musicmenu_window_sec,
+.sysmenu_window_sec,
+.clockmenu_window_sec,
+.powermenu_window_sec {
 	background: rgba(0, 0, 0, 0);
 }
 

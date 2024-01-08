@@ -6,9 +6,9 @@
 (defwidget background_widget []
   (box))
 
-(defwidget start_widget []
+(defwidget start_widget [window]
   (button
-    :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --open startmenu_window"
+    :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --open ${window}"
     :class "cell"
     (image
       :path "${EWW_CONFIG_DIR}/assets/nix_snowflake.png"
@@ -39,8 +39,8 @@
     :justify "center"
     :yalign 0.5))
 
-(defwidget music_widget []
-   (eventbox :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --open musicmenu_window"
+(defwidget music_widget [window]
+   (eventbox :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --open ${window}"
     (overlay
       (box :class "music_border"
         (revealer :reveal "${MUSIC_PLAYING}" :transition "crossfade"
@@ -75,8 +75,8 @@
         :start-at 75
         :thickness 2)))
 
-(defwidget sys_widget []
-  (eventbox :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --toggle sysmenu_window"
+(defwidget sys_widget [window]
+  (eventbox :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --toggle ${window}"
     (box :class "cell" :orientation "h" :space-evenly true
       (circular-metric
         :img "cpu"
@@ -95,16 +95,16 @@
           :value {stat.value}
           :css-class {stat.name})))))
 
-(defwidget clock_widget []
-  (eventbox :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --toggle clockmenu_window"
+(defwidget clock_widget [window]
+  (eventbox :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --toggle ${window}"
     (label
       :class "cell"
       :text "  ${formattime(EWW_TIME, '%H : %M')}    ${formattime(EWW_TIME, '%a, %d %b %Y')}"
       :justify "center")))
 
-(defwidget power_widget []
+(defwidget power_widget [window]
   (button
-    :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --toggle powermenu_window"
+    :onclick "${EWW_CONFIG_DIR}/scripts/windows.fish --toggle ${window}"
     :class "cell"
     (image
       :path "${EWW_CONFIG_DIR}/assets/icons/power.png"
@@ -115,8 +115,8 @@
 ;; START MENU ;; (No, not that type of start menu)
 ;; ---------- ;;
 
-(defwidget startmenu_widget []
-  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close startmenu_window"
+(defwidget startmenu_widget [window]
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close ${window}"
     (box :orientation "v" :space-evenly false :spacing 15 :class "cell"
 
         ;; Clock
@@ -154,8 +154,8 @@
 ;; MUSICMENU_WIDGET ;;
 ;; ---------------- ;;
 
-(defwidget musicmenu_widget []
-  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close musicmenu_window"
+(defwidget musicmenu_widget [window]
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close ${window}"
     :class "cell"
     (box :orientation "v" :halign "center" :valign "center" :space-evenly false :spacing 20
       :style "margin-top: 10px;"
@@ -315,8 +315,8 @@
   )
 )
 
-(defwidget sysmenu_widget []
-  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close sysmenu_window"
+(defwidget sysmenu_widget [window]
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close ${window}"
     (box :orientation "v" :space-evenly false :class "cell"
       ;; Cpu
       (sys_state_slider
@@ -361,8 +361,8 @@
 ;; CLOCKMENU ;;
 ;; --------- ;;
 
-(defwidget clockmenu_widget []
-  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close clockmenu_window"
+(defwidget clockmenu_widget [window]
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close ${window}"
     (box :orientation "v" :space-evenly false :spacing 15 :class "cell"
 
         ;; Clock
@@ -386,8 +386,8 @@
 ;; POWERMENU ;;
 ;; --------- ;;
 
-(defwidget powermenu_widget []
-  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close powermenu_window"
+(defwidget powermenu_widget [window]
+  (eventbox :onhoverlost "${EWW_CONFIG_DIR}/scripts/windows.fish --close ${window}"
     (box :class "cell" :orientation "v" :space-evenly true
 
       ;; Lock button

@@ -1493,6 +1493,7 @@ If on a:
 
 (customize-set-variable 'org-agenda-files
                         (list (concat org-directory "agenda/")))
+(add-to-list 'org-modules 'org-habit t)
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "BLOCKED(b)" "|" "DONE(d)" "KILLED(k)")))
@@ -1530,9 +1531,10 @@ If on a:
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'notregexp "\\*+ \\(NEXT\\|TODO\\)"))
                    (org-agenda-overriding-header "\nDeadlines\n")))
-          (tags "SCHEDULED<=\"<today>\"-TODO=\"DONE\"-TODO=\"KILLED\""
+          (tags "SCHEDULED<=\"<today>\"-TODO=\"DONE\"-TODO=\"KILLED\"-STYLE=\"habit\""
                      ((org-agenda-overriding-header "\nScheduled\n")
                       (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'scheduled)] ")))
+          (tags "STYLE=\"habit\"" ((org-agenda-overriding-header "\nHabits\n")))
           (todo "NEXT"
                 ((org-agenda-prefix-format " %i %-12:c [%e] ")
                  (org-agenda-overriding-header "\nTasks\n")))
@@ -1541,6 +1543,49 @@ If on a:
                       (org-agenda-overriding-header "\nInbox\n")))
           (tags "CLOSED>=\"<today>\""
                 ((org-agenda-overriding-header "\nCompleted today\n")))))))
+
+(defvar mjs/org-habit-show-graphs-everywhere t
+  "If non-nil, show habit graphs in all types of agenda buffers.
+
+Normally, habits display consistency graphs only in
+\"agenda\"-type agenda buffers, not in other types of agenda
+buffers.  Set this variable to any non-nil variable to show
+consistency graphs in all Org mode agendas.")
+
+(defun mjs/org-agenda-mark-habits ()
+  "Mark all habits in current agenda for graph display.
+
+This function enforces `mjs/org-habit-show-graphs-everywhere' by
+marking all habits in the current agenda as such.  When run just
+before `org-agenda-finalize' (such as by advice; unfortunately,
+`org-agenda-finalize-hook' is run too late), this has the effect
+of displaying consistency graphs for these habits.
+
+When `mjs/org-habit-show-graphs-everywhere' is nil, this function
+has no effect."
+  (when (and mjs/org-habit-show-graphs-everywhere
+         (not (get-text-property (point) 'org-series)))
+    (let ((cursor (point))
+          item data) 
+      (while (setq cursor (next-single-property-change cursor 'org-marker))
+        (setq item (get-text-property cursor 'org-marker))
+        (when (and item (org-is-habit-p item)) 
+          (with-current-buffer (marker-buffer item)
+            (setq data (org-habit-parse-todo item))) 
+          (put-text-property cursor
+                             (next-single-property-change cursor 'org-marker)
+                             'org-habit-p data))))))
+
+(advice-add #'org-agenda-finalize :before #'mjs/org-agenda-mark-habits)
+(set-face-foreground 'org-habit-ready-face (catppuccin-get-color 'base))
+(set-face-background 'org-habit-ready-face (catppuccin-get-color 'green))
+(set-face-background 'org-habit-ready-future-face (catppuccin-get-color 'green))
+(set-face-background 'org-habit-clear-face (catppuccin-get-color 'blue))
+(set-face-background 'org-habit-clear-future-face (catppuccin-get-color 'blue))
+(set-face-background 'org-habit-alert-face (catppuccin-get-color 'yellow))
+(set-face-background 'org-habit-alert-future-face (catppuccin-get-color 'yellow))
+(set-face-background 'org-habit-overdue-face (catppuccin-get-color 'red))
+(set-face-background 'org-habit-overdue-future-face (catppuccin-get-color 'red))
 
 (use-package org-contacts
   :after org
