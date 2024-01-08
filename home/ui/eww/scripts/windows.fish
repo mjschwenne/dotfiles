@@ -1,8 +1,6 @@
 #!/run/current-system/sw/bin/fish
 
-notify-send "windows.fish $argv"
-
-set eww_path "$HOME/new-eww/"
+set eww_path "$HOME/.config/eww"
 set cache_path "$HOME/.cache/eww"
 
 if test ! -e $cache_path

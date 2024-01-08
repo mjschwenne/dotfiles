@@ -14,7 +14,7 @@ function volume
         set -f name vol-muted
     end
 
-    echo "{\"name\":\"VOL\",\"img\":\"$name\",\"value\":$vol,\"click\":\"wpctl set-mute @DEFAULT_SINK@ toggle\",\"scroll\":\"/home/mjs/new-eww/scripts/volume_scroll.fish {}\"}"
+    echo "{\"name\":\"VOL\",\"img\":\"$name\",\"value\":$vol,\"click\":\"wpctl set-mute @DEFAULT_SINK@ toggle\",\"scroll\":\"/home/mjs/.config/eww/scripts/volume_scroll.fish {}\"}"
 end
 
 function gpu

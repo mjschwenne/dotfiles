@@ -2,7 +2,6 @@
 ;; MAIN BAR ;;
 ;; -------- ;;
 
-
 ;; Empty box for bg box
 (defwidget background_widget []
   (box))
@@ -393,13 +392,13 @@
 
       ;; Lock button
       (button :class "pow_button_square"
-              :onclick "~/.config/hypr/scripts/lock.fish"
+              :onclick "~/.config/hypr/scripts/lock.fish &"
         (label :class "lock_icon" :text "")
       )
 
       ;; Shutdown button
       (button :class "pow_button_square"
-              :onclick "$(systemctl poweroff)"
+              :onclick "systemctl poweroff"
         (label :class "shutdown_icon" :text "󰐥")
       )
 
@@ -417,7 +416,7 @@
 
       ;; Reboot button
       (button :class "pow_button_square"
-              :onclick "$(systemctl reboot)"
+              :onclick "systemctl reboot"
         (label :class "reboot_icon" :text "󰑙")
       )
     )

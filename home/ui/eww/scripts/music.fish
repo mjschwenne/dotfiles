@@ -20,7 +20,7 @@ function music_art
     set -f player_name (playerctl -l --no-messages)
 
     if test (playerctl status) != Playing
-        echo "$HOME/new-eww/assets/no-music.png"
+        echo "$HOME/.config/eww/assets/no-music.png"
     else if test "$player_name" = spotify
         echo (playerctl metadata | grep artUrl | awk '{print $3}')
     else if test (string sub -e 7 "$player_name") = firefox
@@ -29,7 +29,7 @@ function music_art
         set -f image "$(ls $path)"
         echo $path$image
     else
-        echo "$HOME/new-eww/assets/no-music.png"
+        echo "$HOME/.config/eww/assets/no-music.png"
     end
 end
 

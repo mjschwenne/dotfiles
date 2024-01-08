@@ -1,4 +1,4 @@
-{ ... }: {
+{...}: {
   programs.fish = {
     enable = true;
     shellAliases = {
@@ -22,11 +22,11 @@
         hyprctl keyword monitor "$monitor,preferred,auto,$argv[1]"
         sleep 0.5
         if test $monitor = "eDP-1"
-            eww close primary_panel 
-            eww open primary_panel 
-        else 
-            eww close secondary_panel 
-            eww open secondary_panel 
+            eww close background_window start_window workspace_window window_window music_window tray_window sys_window clock_window power_window
+            eww open-many background_window start_window workspace_window window_window music_window tray_window sys_window clock_window power_window
+        else
+            eww close background_window start_window workspace_window window_window music_window tray_window sys_window clock_window power_window
+            eww open-many background_window start_window workspace_window window_window music_window tray_window sys_window clock_window power_window
         end
       '';
       mjs-rename = ''
@@ -34,7 +34,7 @@
             set -l filename (string split -r -m 1 -f 1 '.' (basename $src))
             set -l extension (string split -r -m 1 -f 2 '.' (basename $src))
             # Remove '(', ')', '_', and "'" characters from the file name
-            # Replace ' <letter>' with '-<letter>' 
+            # Replace ' <letter>' with '-<letter>'
             # Remove any remaining spaces
             # Replace all '.' and ',' characters with '-'
             # Replace camelCase with kebab case
@@ -43,7 +43,7 @@
             # Lowercase any remaining capital letters
             # Replace '&' with 'and'
             # Separate numbers from letters
-	        # Unseprarte if it's marking the size of a ttrpg asset 
+         # Unseprarte if it's marking the size of a ttrpg asset
             set -l dest (echo $filename | sed -E \
                 -e "s/[()_']//g" \
                 -e "s/ ([a-zA-Z])/\-\L\1/g" \
