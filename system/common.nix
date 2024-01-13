@@ -88,6 +88,7 @@
     htop
     calc
     rename
+    smartmontools
 
     # Networking
     wget
