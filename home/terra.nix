@@ -1,9 +1,10 @@
-{...}: {
-  home.username = "mjs";
-  home.homeDirectory = "/home/mjs";
-
-  home.sessionVariables = {
-    WLR_NO_HARDWARE_CURSORS = "1";
+{pkgs, ...}: {
+  home = {
+    username = "mjs";
+    homeDirectory = "/home/mjs";
+    sessionVariables = {
+      WLR_NO_HARDWARE_CURSORS = "1";
+    };
   };
 
   imports = [
@@ -15,5 +16,11 @@
     ./applications/dungeondraft
     ./applications/r
     ./editors/emacs
+  ];
+
+  home.packages = with pkgs; [
+    (blender.override {
+      cudaSupport = true;
+    })
   ];
 }
