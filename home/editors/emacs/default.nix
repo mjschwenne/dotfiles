@@ -70,13 +70,16 @@
     })
   ];
 
-  home.file.".emacs.d/init.el" = {
-    source = ./init.el;
-  };
-
-  home.file.".emacs.d/snippets" = {
-    source = ./snippets;
-    recursive = true;
+  home.file = {
+    ".emacs.d/init.el".source = ./init.el;
+    ".emacs.d/snippets" = {
+      source = ./snippets;
+      recursive = true;
+    };
+    ".emacs.d/autoloads" = {
+      source = ./autoloads;
+      recursive = true;
+    };
   };
 
   # home.file.".emacs.d/early-init.el" = {

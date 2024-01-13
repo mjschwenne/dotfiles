@@ -433,9 +433,6 @@
                        (not (org-in-archived-heading-p))
                        (string= (org-get-todo-state) "NEXT"))
             (point)))
-  ;; Have to set these to temp values so that it can search the agenda files
-  (setq org-directory "~/Documents/")
-  (setq org-capture-templates '())
   (dashboard-setup-startup-hook)
   (mjs-leader-def :keymaps 'override
     "d" '("Open Dashboard" . dashboard-open))
@@ -470,7 +467,8 @@
                                       help-mode
                                       "\\*info\\*"
                                       helpful-mode
-                                      compilation-mode))
+                                      compilation-mode
+                                      "\\*Embark Actions\\*"))
   (popper-display-control nil)
   (popper-mode-line "")
   (display-buffer-alist '(("\\*Org Links\\*" (display-buffer-at-bottom)
@@ -478,6 +476,8 @@
                           ("\\*Org Agenda\\*" (display-buffer-in-direction)
                            (direction . left)
                            (window-width . 0.5))
+                          ("\\*Embark Actions\\*" (display-buffer-at-bottom)
+                           (window-height . 14))
                           ("^\\*[hH]elp" (display-buffer-reuse-mode-window
                                           display-buffer-in-direction)
                            (mode . (helpful-mode help-mode))
@@ -620,12 +620,13 @@
 (use-package embark
   :commands embark-act embark-dwim embark-bindings
   :init (mjs-leader-def :keymaps 'override
-          "E" '(nil :which-key "Embark")
-          "E a" '("Embark Act"       . embark-act)
-          "E A" '("Embark DWIM"      . embark-dwim)
+          "e" '(nil :which-key "Embark")
+          "e a" '("Embark Act"       . embark-act)
+          "e A" '("Embark DWIM"      . embark-dwim)
           "h e" '("Emark Bindings" . embark-bindings))
   :custom (prefix-help-command #'embark-prefix-help-command)
-  (embark-prompter #'embark-completing-read-prompter))
+           ;; (embark-prompter #'embark-completing-read-prompter))
+  :config (setq embark-indicator 'embark-minimal-indicator))
 
 (use-package embark-consult
   :hook (embark-collect-mode . consult-preview-at-point-mode))
@@ -702,6 +703,7 @@
   "n T" '("Tag View" . org-tags-view))
 
 (use-package org
+  ;; For whatever reason, `org' gets upset if these aren't defined soon enough
   :init (setq org-directory "~/Documents/")
   :general (:states 'normal :keymaps 'org-mode-map "RET" #'mjs/org-dwim-at-point)
   (:states 'insert :keymaps 'org-mode-map "RET" #'mjs/org-return)
@@ -745,20 +747,7 @@
     "B K"    '("Remove All Results" . mjs/org-babel-remove-result-blocks)
     "B n"    '("Next Src Block" . org-babel-next-src-block)
     "B p"    '("Pervious Src Block" . org-babel-previous-src-block)
-    "c"      '(nil :which-key "Clock")
-    "c e"    '("Set Effort" . org-set-effort)
-    "c E"    '("Increase Effort" . org-inc-effort)
-    "c i"    '("Clock-in" . org-clock-in)
-    "c o"    '("Clock-out" . org-clock-out)
-    "c g"    '("Goto Current Clock" . org-clock-goto)
-    "c c"    '("Cancel Clock" . org-clock-cancel)
-    "c r"    '("Report" . org-clock-report)
-    "C"      '("Capture" . org-capture)
-    "d"      '(nil :which-key "Date")
-    "d d"    '("Deadline" . org-deadline)
-    "d s"    '("Schedule" . org-schedule)
-    "d t"    '("Time Stamp" . org-time-stamp)
-    "d T"    '("Inactive Time Stamp" . org-time-stamp-inactive)
+    "c"      '("Capture" . org-capture)
     "f"      '(nil :which-key "File Links")
     "f m"    '("Move File" . mjs/move-and-update-file-links)
     "f d"    '("Move Directory" . mjs/move-dir-update-link-links)
@@ -806,18 +795,30 @@
     "S r"    '("Refile" . org-refile)
     "S s"    '("Sparse Subtree" . org-sparse-tree)
     "S S"    '("Sort" . org-sort)
-    "t"      '(nil :which-key "Toggle")
-    "t s"    '("Toggle Sub/Superscripts" . (lambda ()
+    "t"      '(nil :which-key "Time")
+    "t d"    '("Deadline" . org-deadline)
+    "t s"    '("Schedule" . org-schedule)
+    "t t"    '("Time Stamp" . org-time-stamp)
+    "t T"    '("Inactive Time Stamp" . org-time-stamp-inactive)
+    "t e"    '("Set Effort" . org-set-effort)
+    "t E"    '("Increase Effort" . org-inc-effort)
+    "t i"    '("Clock-in" . org-clock-in)
+    "t o"    '("Clock-out" . org-clock-out)
+    "t g"    '("Goto Current Clock" . org-clock-goto)
+    "t c"    '("Cancel Clock" . org-clock-cancel)
+    "t r"    '("Report" . org-clock-report)
+    "T"      '(nil :which-key "Toggle")
+    "T s"    '("Toggle Sub/Superscripts" . (lambda ()
                                              (interactive)
                                              (setq org-pretty-entities-include-sub-superscripts
                                                    (not org-pretty-entities-include-sub-superscripts)))))
   (mjs-leader-def :keymaps 'org-capture-mode-map
-    "C"   '(nil :which-key "Capture")
-    "C f" '("Finish Capture" . org-capture-finalize)
-    "C k" '("Abort Capture" . org-capture-kill)
-    "C r" '("Refile Capture" . org-capture-refile))
+    "c"   '(nil :which-key "Capture")
+    "c f" '("Finish Capture" . org-capture-finalize)
+    "c k" '("Abort Capture" . org-capture-kill)
+    "c r" '("Refile Capture" . org-capture-refile))
   (mjs-leader-def :predicate '(not (bound-and-true-p org-capture-mode))
-    "C" '("Capture" . org-capture))
+    "c" '("Capture" . org-capture))
   :custom (
            (org-fontify-quote-and-verse-blocks t)
            (org-src-fontify-natively nil)
@@ -970,99 +971,6 @@
                             (org-agenda-overriding-header "\nInbox\n")))
                 (tags "CLOSED>=\"<today>\""
                       ((org-agenda-overriding-header "\nCompleted today\n")))))))
-           (org-capture-templates
-            `(("c" "Class Lecture" plain
-               (function (lambda () (mjs/class-capture)))
-               ,(concat "#+filetags: :%(format mjs--capture-title):\n"
-                        "#+title: %(format mjs--capture-title) (%<%d %B %Y>)\n"
-                        "#+author: %(user-full-name)\n\n%?")
-               :jump-to-captured t
-               :immediate-finish t)
-              ("C" "New Contact" entry
-               (file+headline ,(concat org-directory "contacts.org") "Other")
-               ,(concat
-                 "** %(org-contacts-template-name)\n"
-                 ":PROPERTIES:\n"
-                 ":ADDRESS: %^{Address?}\n"
-                 ":BIRTHDAY: %^{yyyy-mm-dd}\n"
-                 ":EMAIL: %(org-contacts-template-email)\n"
-                 ":NOTE: %?\n"
-                 ":END:")
-               :empty-lines 1)
-              ("g" "Great Basin")
-              ("gc" "Great Basin Character" plain
-               (function (lambda ()
-                           (mjs/named-capture
-                            "Character Name: "
-                            "ttrpg/great-basin/characters/")))
-               (file "ttrpg/great-basin/characters/template.org")
-               ;; The docs say this has to be a 'nullary function' and
-               ;; even thought it /is/ a nullary function if it's not
-               ;; wrapped in the lmabda I get an error.
-               :hook (lambda () (mjs/capture-insert-id)))
-              ("ge" "Great Basin Event" plain
-               (function (lambda ()
-                           (mjs/named-capture
-                            "Event Name: "
-                            "ttrpg/great-basin/events/")))
-               (file "ttrpg/great-basin/events/template.org")
-               :hook (lambda () (mjs/capture-insert-id)))
-              ("gl" "Great Basin Location" plain
-               (function (lambda ()
-                           (mjs/named-capture
-                            "Location Name: "
-                            "ttrpg/great-basin/locations/")))
-               (file "ttrpg/great-basin/locations/template.org")
-               :hook (lambda () (mjs/capture-insert-id)))
-              ("go" "Great Basin Object" plain
-               (function (lambda ()
-                           (mjs/named-capture
-                            "Object Name: "
-                            "ttrpg/great-basin/objects/")))
-               (file "ttrpg/great-basin/objects/template.org")
-               :hook (lambda () (mjs/capture-insert-id)))
-              ;; :TODO: Replace this with something not dependent on Eamcs restarts
-              ("gr" "Great Basin Session Record" plain
-               (file ,(format "ttrpg/great-basin/sessions/great-basin-%s.org"
-                              (org-read-date nil nil "Wed")))
-               (file "ttrpg/great-basin/sessions/template.org")
-               :jump-to-captured t
-               :immediate-finish t)
-              ("gR" "Great Basin Public Session Record" plain
-               (file ,(format "ttrpg/great-basin/public/session-recaps/great-basin-%s.org"
-                              (org-read-date nil nil "-Wed")))
-               (file "ttrpg/great-basin/public/session-recaps/template.org")
-               :jump-to-captured t)
-              ("gs" "Great Basin Stat Block" plain
-               (function (lambda ()
-                           (mjs/named-capture
-                            "Stat Block Name: "
-                            "ttrpg/great-basin/stat-blocks/")))
-               (file "ttrpg/great-basin/stat-blocks/template.org")
-               :hook (lambda () (mjs/capture-insert-id)))
-              ("i" "Inbox" entry
-               (file "agenda/inbox.org")
-               ,(concat "* TODO %?\n"
-                        "/Entered on/ %U")
-               :empty-lines 1
-               :prepend t)
-              ("k" "Knowledge Base" plain
-               (function (lambda ()
-                           (mjs/named-capture
-                            "Node Name: "
-                            "knowledge-base/")))
-               ,(concat "#+filetags: :knowledge_base:\n"
-                        "#+author: %(user-full-name)\n"
-                        "#+title: %(format mjs--capture-title)\n\n%?")
-               :hook (lambda () (mjs/capture-insert-id)))
-              ("m" "Meeting" entry
-               (file+headline "agenda/agenda.org" "Future")
-               ,(concat "* %? :meeting:\n"
-                        "SCHEDULED: %^{Meeting Time}T"))
-              ("n" "Meeting Notes" entry
-               (file "agenda/notes.org")
-               ,(concat "* Notes (%a)\n"
-                        "/Entered on/ %U\n\n%?"))))
            (org-refile-targets '(("projects.org" :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
            (org-refile-use-outline-path 'file)
            (org-outline-path-complete-in-steps nil)
@@ -1102,6 +1010,99 @@
          (org-mode . org-indent-mode)
          (org-indent-mode .  (lambda () (diminish 'org-indent-mode))))
   :config
+  (setq org-capture-templates
+        `(("c" "Class Lecture" plain
+           (function (lambda () (mjs/class-capture)))
+           ,(concat "#+filetags: :%(format mjs--capture-title):\n"
+                    "#+title: %(format mjs--capture-title) (%<%d %B %Y>)\n"
+                    "#+author: %(user-full-name)\n\n%?")
+           :jump-to-captured t
+           :immediate-finish t)
+          ("C" "New Contact" entry
+           (file+headline ,(concat org-directory "contacts.org") "Other")
+           ,(concat
+             "** %(org-contacts-template-name)\n"
+             ":PROPERTIES:\n"
+             ":ADDRESS: %^{Address?}\n"
+             ":BIRTHDAY: %^{yyyy-mm-dd}\n"
+             ":EMAIL: %(org-contacts-template-email)\n"
+             ":NOTE: %?\n"
+             ":END:")
+           :empty-lines 1)
+          ("g" "Great Basin")
+          ("gc" "Great Basin Character" plain
+           (function (lambda ()
+                       (mjs/named-capture
+                        "Character Name: "
+                        "ttrpg/great-basin/characters/")))
+           (file "ttrpg/great-basin/characters/template.org")
+           ;; The docs say this has to be a 'nullary function' and
+           ;; even thought it /is/ a nullary function if it's not
+           ;; wrapped in the lmabda I get an error.
+           :hook (lambda () (mjs/capture-insert-id)))
+          ("ge" "Great Basin Event" plain
+           (function (lambda ()
+                       (mjs/named-capture
+                        "Event Name: "
+                        "ttrpg/great-basin/events/")))
+           (file "ttrpg/great-basin/events/template.org")
+           :hook (lambda () (mjs/capture-insert-id)))
+          ("gl" "Great Basin Location" plain
+           (function (lambda ()
+                       (mjs/named-capture
+                        "Location Name: "
+                        "ttrpg/great-basin/locations/")))
+           (file "ttrpg/great-basin/locations/template.org")
+           :hook (lambda () (mjs/capture-insert-id)))
+          ("go" "Great Basin Object" plain
+           (function (lambda ()
+                       (mjs/named-capture
+                        "Object Name: "
+                        "ttrpg/great-basin/objects/")))
+           (file "ttrpg/great-basin/objects/template.org")
+           :hook (lambda () (mjs/capture-insert-id)))
+          ;; :TODO: Replace this with something not dependent on Eamcs restarts
+          ("gr" "Great Basin Session Record" plain
+           (file ,(format "ttrpg/great-basin/sessions/great-basin-%s.org"
+                          (org-read-date nil nil "Wed")))
+           (file "ttrpg/great-basin/sessions/template.org")
+           :jump-to-captured t
+           :immediate-finish t)
+          ("gR" "Great Basin Public Session Record" plain
+           (file ,(format "ttrpg/great-basin/public/session-recaps/great-basin-%s.org"
+                          (org-read-date nil nil "-Wed")))
+           (file "ttrpg/great-basin/public/session-recaps/template.org")
+           :jump-to-captured t)
+          ("gs" "Great Basin Stat Block" plain
+           (function (lambda ()
+                       (mjs/named-capture
+                        "Stat Block Name: "
+                        "ttrpg/great-basin/stat-blocks/")))
+           (file "ttrpg/great-basin/stat-blocks/template.org")
+           :hook (lambda () (mjs/capture-insert-id)))
+          ("i" "Inbox" entry
+           (file "agenda/inbox.org")
+           ,(concat "* TODO %?\n"
+                    "/Entered on/ %U")
+           :empty-lines 1
+           :prepend t)
+          ("k" "Knowledge Base" plain
+           (function (lambda ()
+                       (mjs/named-capture
+                        "Node Name: "
+                        "knowledge-base/")))
+           ,(concat "#+filetags: :knowledge_base:\n"
+                    "#+author: %(user-full-name)\n"
+                    "#+title: %(format mjs--capture-title)\n\n%?")
+           :hook (lambda () (mjs/capture-insert-id)))
+          ("m" "Meeting" entry
+           (file+headline "agenda/agenda.org" "Future")
+           ,(concat "* %? :meeting:\n"
+                    "SCHEDULED: %^{Meeting Time}T"))
+          ("n" "Meeting Notes" entry
+           (file "agenda/notes.org")
+           ,(concat "* Notes (%a)\n"
+                    "/Entered on/ %U\n\n%?"))))
   (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
   (set-face-attribute 'org-quote nil
                       :background (catppuccin-get-color 'mantle)
@@ -1553,6 +1554,76 @@ links (e.x. \"[[id:01234][|]]\").")
   :ensure nil
   :commands org-timeblock
   :general (mjs-leader-def :keymaps 'override "B" '("Time Blocks" . org-timeblock)))
+
+(use-package oc
+  :ensure nil
+  :custom ((org-cite-global-bibliography '("~/Documents/zotero.bib"))
+           (org-cite-csl-styles-dir "~/Zotero/styles/")
+           (org-cite-export-processors '((latex biblatex)
+                                         (md . (csl ieee.csl))
+                                         (t . (csl ieee.csl)))))
+  :general (mjs-local-leader-def :keymaps 'org-mode-map
+             "C" '("Citation" . org-cite-insert))
+  :custom-face (org-cite ((t (:foreground ,(catppuccin-get-color 'green)))))
+               (org-cite-key ((t (:foreground ,(catppuccin-get-color 'green) :slant italic)))))
+
+(use-package citar
+  :custom (citar-bibliography org-cite-global-bibliography)
+  :hook ((LaTeX-mode . citar-capf-setup)
+         (org-mode . citar-capf-setup))
+  :config
+  (defvar citar-indicator-files-icon
+    (citar-indicator-create
+     :symbol (nerd-icons-faicon
+              "nf-fa-file_pdf_o"
+              :face 'nerd-icons-lred)
+     :function #'citar-has-files
+     :padding " "
+     :tag "has:files"))
+  (defvar citar-indicator-notes-icon
+    (citar-indicator-create
+     :symbol (nerd-icons-sucicon
+              "nf-custom-orgmode"
+              :face 'nerd-icons-lgreen)
+     :function #'citar-has-notes
+     :padding " "
+     :tag "has:notes"))
+  (defvar citar-indicator-links-icon
+    (citar-indicator-create
+     :symbol (nerd-icons-octicon
+              "nf-oct-link"
+              :face 'nerd-icons-lblue)
+     :function #'citar-has-links
+     :padding " "
+     :tag "has:links"))
+  (defvar citar-indicator-cited-icon
+    (citar-indicator-create
+     :symbol (nerd-icons-octicon
+              "nf-oct-book"
+              :face 'nerd-icons-lred)
+     :function #'citar-is-cited
+     :padding " "
+     :tag "is:cited"))
+  (setq citar-indicators
+        (list citar-indicator-files-icon
+              citar-indicator-notes-icon
+              citar-indicator-links-icon
+              citar-indicator-cited-icon)))
+
+(use-package citar-org
+  :ensure nil
+  :after oc
+  :custom ((org-cite-insert-processor 'citar)
+           (org-cite-follow-processor 'citar)
+           (org-cite-activate-processor 'citar)))
+
+(use-package citar-embark
+  :after citar
+  :diminish citar-embark-mode
+  :no-require
+  :init (setq citar-at-point-function 'embark-act)
+  :hook ((org-mode . citar-embark-mode)
+         (LaTeX-mode . citar-embark-mode)))
 
 (use-package latex
   :ensure auctex
