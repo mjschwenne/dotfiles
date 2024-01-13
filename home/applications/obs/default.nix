@@ -1,11 +1,19 @@
-{pkgs, ...}: let
+{
+  pkgs,
+  osConfig,
+  ...
+}: let
   backgroundremove = pkgs.callPackage ./backgroundremove.nix {};
 in {
-  home.packages = [
-    pkgs.cudaPackages.tensorrt
-    pkgs.cudaPackages.cudnn
-    pkgs.onnxruntime
-  ];
+  # Build with cuda on terra only
+  home.packages =
+    if osConfig.networking.hostName == "terra"
+    then [
+      pkgs.cudaPackages.tensorrt
+      pkgs.cudaPackages.cudnn
+      pkgs.onnxruntime
+    ]
+    else [];
 
   programs.obs-studio = {
     enable = true;
