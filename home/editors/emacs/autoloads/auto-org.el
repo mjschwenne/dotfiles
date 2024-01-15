@@ -640,4 +640,5 @@ hence \"everywhere\"."
                         (file-name-extension thumbnail t))))
     (copy-file thumbnail-path dest-path t)
     (user-error "Could not move blowfish thumbnail image.")))
+
 (provide 'auto-org)

@@ -979,7 +979,8 @@
             '(("mathbbR" "\\mathbb{R}" nil "&x211D" "R" "R" "ℝ")
               ("mathbbE" "\\mathbb{E}" nil "&x1D53C" "E" "E" "𝔼")
               ("lightning" "\\lightning" nil "&x21AF" "</" "</" "↯")
-              ("qed" "\\qedsymbol" nil "&x25A1" "[]" "[]" "☐"))))
+              ("qed" "\\qedsymbol" nil "&x25A1" "[]" "[]" "☐")))
+           (org-confirm-babel-evaluate nil))
   :diminish ((org-cdlatex-mode . " ")
              (auto-fill-function . ""))
   :hook ((org-mode . turn-on-org-cdlatex)
@@ -1410,7 +1411,7 @@ With a prefix ARG, remove start location."
   (org-roam-completion-everywhere t)
   (org-roam-node-display-template
    (concat "${title:*} "
-           (propertize "${tags:30}" 'face 'org-tag)))
+           (propertize "${all-tags:60}" 'face 'org-tag)))
   :general (mjs-leader-def :keymaps 'override
              "n r"   '(nil :which-key "Roam")
              "n r a" '("Add Alias" . org-roam-alias-add)
@@ -1454,6 +1455,35 @@ With a prefix ARG, remove start location."
             "Regex for completion within link brackets.
 Matches both empty links (i.e. \"[[|]]\") and existing \"id:\"
 links (e.x. \"[[id:01234][|]]\").")
+
+(defun mjs/parent-tag (tag)
+  "Search `org-tag-persistent-alist' for the parent of TAG"
+  (if-let ((end-idx (cl-position `(,tag) org-tag-persistent-alist :test #'equal))
+		   (group-start-idx (cl-position '(:grouptags) org-tag-persistent-alist
+										 :test #'equal :from-end t :end end-idx)))
+
+	  (car (nth (- group-start-idx 1) org-tag-persistent-alist))))
+
+(defun mjs/all-parent-tags (tag)
+  "Find all parent tags of TAG in `org-tag-persistent-alist'.
+
+Returns a list including TAG itself."
+  (let ((current-tag tag)
+        (tag-list `(,tag)))
+    (while-let ((parent-tag (mjs/parent-tag current-tag)))
+      (progn
+        (setq current-tag parent-tag)
+        (push current-tag tag-list)))
+    tag-list))
+
+(cl-defmethod org-roam-node-all-tags ((node org-roam-node))
+  (mapconcat (lambda (tag) (concat "#" tag))
+			 (delete-dups
+			  (flatten-list
+			   (mapcar #'mjs/all-parent-tags
+					   (org-roam-node-tags node))))
+			 " "))
+
   (advice-add #'org-roam-complete-link-at-point :override #'mjs/org-roam-complete-link-at-point)
   (advice-add #'org-roam-complete-everywhere :override #'mjs/org-roam-complete-everywhere))
 
