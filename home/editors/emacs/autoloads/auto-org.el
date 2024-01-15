@@ -22,11 +22,11 @@
                 " ⟶ "
                 (concat
                  "Capture Buffer. Finish "
-                 (propertize "SPC C f" 'face 'help-key-binding)
+                 (propertize "SPC c f" 'face 'help-key-binding)
                  ", refile "
-                 (propertize "SPC C r" 'face 'help-key-binding)
+                 (propertize "SPC c r" 'face 'help-key-binding)
                  ", abort "
-                 (propertize "SPC C k" 'face 'help-key-binding)
+                 (propertize "SPC c k" 'face 'help-key-binding)
                  " in normal mode."
                  ))))
 
@@ -640,5 +640,86 @@ hence \"everywhere\"."
                         (file-name-extension thumbnail t))))
     (copy-file thumbnail-path dest-path t)
     (user-error "Could not move blowfish thumbnail image.")))
+
+;;;###autoload
+(defun mjs/parent-tag (tag)
+  "Search `org-tag-persistent-alist' for the parent of TAG"
+  (if-let ((end-idx (cl-position `(,tag) org-tag-persistent-alist :test #'equal))
+		   (group-start-idx (cl-position '(:grouptags) org-tag-persistent-alist
+										 :test #'equal :from-end t :end end-idx)))
+
+	  (car (nth (- group-start-idx 1) org-tag-persistent-alist))))
+
+;;;###autoload
+(defun mjs/all-parent-tags (tag)
+  "Find all parent tags of TAG in `org-tag-persistent-alist'.
+
+Returns a list including TAG itself."
+  (let ((current-tag tag)
+        (tag-list `(,tag)))
+    (while-let ((parent-tag (mjs/parent-tag current-tag)))
+      (progn
+        (setq current-tag parent-tag)
+        (push current-tag tag-list)))
+    tag-list))
+
+;;;###autoload
+(defun mjs/org-auto-tags--set (tags)
+  "Prompt user for more tags"
+  (interactive
+   (list
+    (completing-read-multiple
+     "Tag(s): " (org-roam-tag-completions) nil nil nil nil
+     (s-join "," mjs/org-auto-tags--current-list))))
+  (setq mjs/org-auto-tags--current-list tags))
+
+
+;;;###autoload
+(cl-defun mjs/org-auto-tags--set-by-context
+    (context &key (context-plist mjs/org-context-plist))
+  "Set `mjs/org-auto-tags--current-list' by CONTEXT.
+
+Prompt for CONTEXT from CONTEXT-PLIST."
+  (interactive
+   (list
+    (completing-read
+     "Context: " (mjs/org-context-list-completing-read))))
+  (setq mjs/org-auto-tags--current-list
+        (plist-get
+         (plist-get
+          context-plist (intern (concat ":" context)))
+         :tags)))
+
+;;;###autoload
+(defun mjs/org-roam-find-node
+    (&optional
+     other-window
+     initial-input)
+  "Call `org-roam-node-find' based on set tags."
+  (interactive current-prefix-arg)
+  (org-roam-node-find
+   other-window
+   initial-input
+   #'mjs/org-roam-filter-context-fn
+   nil
+   :templates (mjs/org-roam-templates-context-fn)))
+  
+;;;###autoload
+(defun mjs/org-roam-capture (&optional goto keys)
+  "Call `org-roam-capture' with templates from context."
+  (interactive "P")
+  (org-roam-capture
+   goto
+   keys
+   :filter-fn #'mjs/org-roam-filter-context-fn
+   :templates (mjs/org-roam-templates-context-fn)))
+
+;;;###autoload
+(defun mjs/org-roam-node-insert ()
+  "Call `org-roam-node-insert' based on context tags."
+  (interactive)
+  (org-roam-node-insert
+   #'mjs/org-roam-filter-context-fn
+   :templates (mjs/org-roam-templates-context-fn)))
 
 (provide 'auto-org)

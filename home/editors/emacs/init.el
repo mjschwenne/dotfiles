@@ -691,16 +691,31 @@
   :hook (emacs-lisp-mode . highlight-quoted-mode))
 
 (mjs-leader-def :keymaps 'override
-  "a"   '("Agenda" . org-agenda)
-  "A"   '("GTD Agenda" . (lambda () (interactive) (org-agenda nil "g")))
-  "n"   '(nil :which-key "Notes")
-  "n a" '("Agenda" . org-agenda)
-  "n c" '("GOTO Clock" . org-clock-goto)
-  "n l" '("Store Link" . org-store-link)
-  "n R" '("Refile DWIM" . mjs/org-refile-dwim)
-  "n s" '("Search Notes" . org-search-view)
-  "n t" '("TODO List" . org-todo-list)
-  "n T" '("Tag View" . org-tags-view))
+  "a"     '("Agenda" . org-agenda)
+  "A"     '("GTD Agenda" . (lambda () (interactive) (org-agenda nil "g")))
+  "c"      '(nil :which-key "Capture")
+  "c c"    '("Org Capture" . org-capture)
+  "c r"    '("Roam Capture" . mjs/org-roam-capture)
+  "c f"    '("Finish Capture" . org-capture-finalize)
+  "c k"    '("Abort Capture" . org-capture-kill)
+  "c r"    '("Refile Capture" . org-capture-refile)
+  "n"     '(nil :which-key "Notes")
+  "n a"   '("Agenda" . org-agenda)
+  "n c"   '(nil :which-key "Contexts")
+  "n c c" '("Set Context" . mjs/org-auto-tags--set)
+  "n c i" '("Inspect Tags" . (lambda ()
+                               (interactive)
+                               (mapconcat (lambda (tag)
+                                            (concat "#" tag))
+                                          mjs/org-auto-tags--current-list
+                                          " ")))
+  "n c s" '("Change Tags" . mjs/org-auto-tags--set-by-context)
+  "n C"   '("GOTO Clock" . org-clock-goto)
+  "n l"   '("Store Link" . org-store-link)
+  "n R"   '("Refile DWIM" . mjs/org-refile-dwim)
+  "n s"   '("Search Notes" . org-search-view)
+  "n t"   '("TODO List" . org-todo-list)
+  "n T"   '("Tag View" . org-tags-view))
 
 (use-package org
   ;; For whatever reason, `org' gets upset if these aren't defined soon enough
@@ -747,7 +762,12 @@
     "B K"    '("Remove All Results" . mjs/org-babel-remove-result-blocks)
     "B n"    '("Next Src Block" . org-babel-next-src-block)
     "B p"    '("Pervious Src Block" . org-babel-previous-src-block)
-    "c"      '("Capture" . org-capture)
+    "c"      '(nil :which-key "Capture")
+    "c c"    '("Org Capture" . org-capture)
+    "c r"    '("Roam Capture" . mjs/org-roam-capture)
+    "c f"    '("Finish Capture" . org-capture-finalize)
+    "c k"    '("Abort Capture" . org-capture-kill)
+    "c r"    '("Refile Capture" . org-capture-refile)
     "f"      '(nil :which-key "File Links")
     "f m"    '("Move File" . mjs/move-and-update-file-links)
     "f d"    '("Move Directory" . mjs/move-dir-update-link-links)
@@ -812,15 +832,7 @@
                                              (interactive)
                                              (setq org-pretty-entities-include-sub-superscripts
                                                    (not org-pretty-entities-include-sub-superscripts)))))
-  (mjs-leader-def :keymaps 'org-capture-mode-map
-    "c"   '(nil :which-key "Capture")
-    "c f" '("Finish Capture" . org-capture-finalize)
-    "c k" '("Abort Capture" . org-capture-kill)
-    "c r" '("Refile Capture" . org-capture-refile))
-  (mjs-leader-def :predicate '(not (bound-and-true-p org-capture-mode))
-    "c" '("Capture" . org-capture))
-  :custom (
-           (org-fontify-quote-and-verse-blocks t)
+  :custom ((org-fontify-quote-and-verse-blocks t)
            (org-src-fontify-natively nil)
            (org-pretty-entities t)
            (org-highlight-latex-and-related '(native latex))
@@ -834,52 +846,50 @@
            (org-preview-latex-default-process 'dvisvgm)
            (org-tag-persistent-alist
             '((:startgroup)
-              ("knowledge_base")
-              ("great_basin")
-              ("etera")
-              ("obscured_realms")
+              ("kb")
+              ("ttrpg")
               (:endgroup)
-              ("needs_merge")
+              ("merge")
               (:startgrouptag)
-              ("knowledge_base")
+              ("kb")
               (:grouptags)
-              ("computer_operation")
-              ("mathematics")
+              ("comp_op")
+              ("math")
               ("processes")
-              ("programming")
+              ("prog")
               (:endgrouptag)
               (:startgrouptag)
-              ("mathematics")
+              ("math")
               (:grouptags)
               ("combinatorics")
-              ("linear_algebra")
+              ("lin_alg")
               ("modeling")
-              ("statistics")
-              ("optimization")
+              ("stats")
+              ("opt")
               (:endgrouptag)
               (:startgrouptag)
-              ("programming")
+              ("prog")
               (:grouptags)
               ("C")
               ("lisp")
               (:endgrouptag)
               (:startgrouptag)
-              ("computer_operation")
+              ("comp_op")
               (:grouptags)
-              ("network")
+              ("net")
               (:endgrouptag)
               (:startgrouptag)
-              ("statistics")
+              ("stats")
               (:grouptags)
-              ("confidence_intervals")
-              ("hypothesis_tests")
-              ("probability")
+              ("conf_ints")
+              ("hyp_tests")
+              ("prob")
               ("regression")
               (:endgrouptag)
               (:startgrouptag)
-              ("optimization")
+              ("opt")
               (:grouptags)
-              ("linear_programming")
+              ("lin_prog")
               (:endgrouptag)
               (:startgrouptag)
               ("modeling")
@@ -888,14 +898,20 @@
               ("classification")
               ("clustering")
               ("decision_tree")
-              ("information_retrieval")
+              ("info_ret")
               ("recommender")
               ("text_mining")
               ("regression")
               (:endgrouptag)
               (:startgrouptag)
-              ("great_basin")
+              ("ttrpg")
               (:grouptags)
+			  ;; Specific games
+              ("great_basin")
+              ("etera")
+              ("obscured_realms")
+              ("graves")
+			  ;; Generic ttrpg types
               ("character")
               ("event")
               ("faction")
@@ -903,7 +919,11 @@
               ("object")
               ("session")
               ("stat")
-              ;; Start of individual factions
+              (:endgrouptag)
+              (:startgrouptag)
+              ("great_basin")
+              (:grouptags)
+              ;; Individual factions
               ("andorr_again")
               ("arendelle")
               ("atreides")
@@ -1030,72 +1050,23 @@
              ":NOTE: %?\n"
              ":END:")
            :empty-lines 1)
-          ("g" "Great Basin")
-          ("gc" "Great Basin Character" plain
-           (function (lambda ()
-                       (mjs/named-capture
-                        "Character Name: "
-                        "ttrpg/great-basin/characters/")))
-           (file "ttrpg/great-basin/characters/template.org")
-           ;; The docs say this has to be a 'nullary function' and
-           ;; even thought it /is/ a nullary function if it's not
-           ;; wrapped in the lmabda I get an error.
-           :hook (lambda () (mjs/capture-insert-id)))
-          ("ge" "Great Basin Event" plain
-           (function (lambda ()
-                       (mjs/named-capture
-                        "Event Name: "
-                        "ttrpg/great-basin/events/")))
-           (file "ttrpg/great-basin/events/template.org")
-           :hook (lambda () (mjs/capture-insert-id)))
-          ("gl" "Great Basin Location" plain
-           (function (lambda ()
-                       (mjs/named-capture
-                        "Location Name: "
-                        "ttrpg/great-basin/locations/")))
-           (file "ttrpg/great-basin/locations/template.org")
-           :hook (lambda () (mjs/capture-insert-id)))
-          ("go" "Great Basin Object" plain
-           (function (lambda ()
-                       (mjs/named-capture
-                        "Object Name: "
-                        "ttrpg/great-basin/objects/")))
-           (file "ttrpg/great-basin/objects/template.org")
-           :hook (lambda () (mjs/capture-insert-id)))
-          ;; :TODO: Replace this with something not dependent on Eamcs restarts
-          ("gr" "Great Basin Session Record" plain
-           (file ,(format "ttrpg/great-basin/sessions/great-basin-%s.org"
-                          (org-read-date nil nil "Wed")))
-           (file "ttrpg/great-basin/sessions/template.org")
+          ("e" "Etera Session" entry
+           (file "ttrpg/games/etera/notes.org")
+           "* Session %<%Y-%m-%d>\n\n%?\n"
            :jump-to-captured t
            :immediate-finish t)
-          ("gR" "Great Basin Public Session Record" plain
-           (file ,(format "ttrpg/great-basin/public/session-recaps/great-basin-%s.org"
-                          (org-read-date nil nil "-Wed")))
-           (file "ttrpg/great-basin/public/session-recaps/template.org")
-           :jump-to-captured t)
-          ("gs" "Great Basin Stat Block" plain
-           (function (lambda ()
-                       (mjs/named-capture
-                        "Stat Block Name: "
-                        "ttrpg/great-basin/stat-blocks/")))
-           (file "ttrpg/great-basin/stat-blocks/template.org")
-           :hook (lambda () (mjs/capture-insert-id)))
+          ("g" "Graves Session" entry
+           (file "ttrpg/games/graves-and-groves/sessions.org")
+           "* Session %<%Y-%m-%d>\n\n%?\n"
+           :prepend t
+           :jump-to-captured t
+           :immediate-finish t)
           ("i" "Inbox" entry
            (file "agenda/inbox.org")
            ,(concat "* TODO %?\n"
                     "/Entered on/ %U")
            :empty-lines 1
            :prepend t)
-          ("k" "Knowledge Base" plain
-           (function (lambda ()
-                       (mjs/named-capture
-                        "Node Name: "
-                        "knowledge-base/")))
-           ,(concat "#+filetags: :knowledge_base:\n"
-                    "#+author: %(user-full-name)\n"
-                    "#+title: %(format mjs--capture-title)\n\n%?")
-           :hook (lambda () (mjs/capture-insert-id)))
           ("m" "Meeting" entry
            (file+headline "agenda/agenda.org" "Future")
            ,(concat "* %? :meeting:\n"
@@ -1412,16 +1383,18 @@ With a prefix ARG, remove start location."
   (org-roam-node-display-template
    (concat "${title:*} "
            (propertize "${all-tags:60}" 'face 'org-tag)))
+  
   :general (mjs-leader-def :keymaps 'override
              "n r"   '(nil :which-key "Roam")
              "n r a" '("Add Alias" . org-roam-alias-add)
              "n r A" '("Remove Alias" . org-roam-alias-remove)
              "n r b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
-             "n r f" '("Find Node" . (lambda () (interactive) (org-roam-node-find nil "^")))
+             "n r f" '("Find Node" . (lambda () (interactive)
+                                       (mjs/org-roam-find-node nil "^")))
              "n r F" '("Find Ref" . org-roam-ref-find)
              "n r g" '("Graph" . org-roam-graph)
-             "n r i" '("Insert Link" . org-roam-node-insert)
-             "n r c" '("Roam Capture" . org-roam-capture)
+             "n r i" '("Insert Link" . mjs/org-roam-node-insert)
+             "n r c" '("Roam Capture" . mjs/org-roam-capture)
              "n r s" '("Roam Sync" . org-roam-db-sync)
              "n r S" '("Strip Roam Links" . mjs/strip-org-roam-links)
              "n r d" '("Daily" . org-roam-dailies-capture-today)
@@ -1434,11 +1407,10 @@ With a prefix ARG, remove start location."
     "m a" '("Add Alias" . org-roam-alias-add)
     "m A" '("Remove Alias" . org-roam-alias-remove)
     "m b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
-    "m f" '("Find Node" . (lambda () (interactive) (org-roam-node-find nil "^")))
+    "m f" '("Find Node" . (lambda () (interactive) (mjs/org-roam-find-node nil "^")))
     "m F" '("Find Ref" . org-roam-ref-find)
     "m g" '("Graph" . org-roam-graph)
-    "m i" '("Insert Link" . org-roam-node-insert)
-    "m c" '("Roam Capture" . org-roam-capture)
+    "m i" '("Insert Link" . mjs/org-roam-node-insert)
     "m s" '("Roam Sync" . org-roam-db-sync)
     "m S" '("Strip Roam Links" . mjs/strip-org-roam-links)
     "m d" '("Daily" . org-roam-dailies-capture-today)
@@ -1446,46 +1418,197 @@ With a prefix ARG, remove start location."
     "m t" '("Add Tags" . org-roam-tag-add)
     "m T" '("Remove Tags" . org-roam-tag-remove))
   (:states 'insert :keymaps 'org-mode-map
-           "C-f" #'org-roam-node-insert
+           "C-f" #'mjs/org-roam-node-insert
            "C-S-f" #'org-insert-link)
   :hook (org-mode . org-roam-db-autosync-mode)
   ;; Taken from https://github.com/org-roam/org-roam/pull/2219/files
   :config (defconst mjs/org-roam-bracket-completion-re
             "\\[\\(?:\\[id:\\([^z-a]*?\\)]\\)?\\[\\([^z-a]+?\\)]]"
             "Regex for completion within link brackets.
+
 Matches both empty links (i.e. \"[[|]]\") and existing \"id:\"
 links (e.x. \"[[id:01234][|]]\").")
 
-(defun mjs/parent-tag (tag)
-  "Search `org-tag-persistent-alist' for the parent of TAG"
-  (if-let ((end-idx (cl-position `(,tag) org-tag-persistent-alist :test #'equal))
-		   (group-start-idx (cl-position '(:grouptags) org-tag-persistent-alist
-										 :test #'equal :from-end t :end end-idx)))
+  (setq safe-local-variable-values '((mjs/org-auto-tags--current-list quote
+                                                                      ("great_basin"))
+                                     (mjs/org-auto-tags--current-list quote
+                                                                      ("kb"))))
 
-	  (car (nth (- group-start-idx 1) org-tag-persistent-alist))))
+  (cl-defmethod org-roam-node-all-tags ((node org-roam-node))
+    (mapconcat (lambda (tag) (concat "#" tag))
+               (delete-dups
+                (flatten-list
+                 (mapcar #'mjs/all-parent-tags
+                         (org-roam-node-tags node))))
+               " "))
 
-(defun mjs/all-parent-tags (tag)
-  "Find all parent tags of TAG in `org-tag-persistent-alist'.
+  (defvar mjs/org-context-plist
+    (list
+     :none
+     (list :name "none"
+           :tags (list))
+     :knowledge-base
+     (list :name "knowledge-base"
+           :tags '("kb"))
+     :ttrpg
+     (list :name "ttrpg"
+           :tags '("ttrpg"))
+     :great-basin
+     (list :name "great-basin"
+           :tags '("great_basin"))
+     :madttrpg
+     (list :name "madttrpg"
+           :tags '("madttrpg")))
+    "A list of tags groups defining common writing contexts")
 
-Returns a list including TAG itself."
-  (let ((current-tag tag)
-        (tag-list `(,tag)))
-    (while-let ((parent-tag (mjs/parent-tag current-tag)))
-      (progn
-        (setq current-tag parent-tag)
-        (push current-tag tag-list)))
-    tag-list))
+  (defvar mjs/org-roam-capture-templates-plist
+    (list
+     :knowledge-base
+     `(("k" "Knowledge Base" plain "%?"
+        :target (file+head "knowledge-base/%<%Y%m%d%H%M%S>-${slug}.org"
+                           ,(concat "#+filetags: ${auto-tags}\n"
+                                    "#+author: %(user-full-name)\n"
+                                    "#+title: ${title}\n"))
+        :unnarrowed t))
+     :great-basin
+     `(("g" "Great Basin")
+       ("gc" "Great Basin Character" plain
+        ,(format "%s%%[%s%s]"
+                 (concat "#+filetags: :great_basin:character:\n"
+                         "#+title: ${title}\n\n")
+                 org-roam-directory
+                 "/ttrpg/games/great-basin/characters/template.org")
+       :target (file "ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
+       :unnarrowed t)
+       ("ge" "Great Basin Event" plain
+        ,(format "%s%%[%s%s]"
+                 (concat "#+filetags: :great_basin:event:\n"
+                         "#+title: ${title}\n")
+                 org-roam-directory
+                 "/ttrpg/games/great-basin/events/template.org")
+        :target (file "ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
+        :unnarrowed t)
+       ("gl" "Great Basin Location" plain
+        ,(format "%s%%[%s%s]"
+                 (concat "#+filetags: :great_basin:location:\n"
+                         "#+title: ${title}\n")
+                 org-roam-directory
+                 "/ttrpg/games/great-basin/locations/template.org")
+        :target (file "ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
+        :unnarrowed t)
+       ("go" "Great Basin Object" plain
+        ,(format "%s%%[%s%s]"
+                 (concat "#+filetags: :great_basin:object:\n"
+                         "#+title: ${title}\n")
+                 org-roam-directory
+                 "/ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
+        :target (file "ttrpg/games/great-basin/objects/template.org")
+        :unnarrowed t)
+       ("gr" "Great Basin Session Record" plain
+        ,(format "%%[%s%s]"
+                 org-roam-directory
+                 "/ttrpg/games/great-basin/sessions/template.org")
+        :target (file "ttrpg/games/great-basin/sessions/great-basin-%<%Y-%m-%d>.org")
+        :unnarrowed t)
+       ("gR" "Great Basin Public Session Record" plain
+        ,(format "%%[%s%s]"
+                 org-roam-directory
+                 "/ttrpg/games/great-basin/public/session-recaps/template.org")
+        :target (file "ttrpg/games/great-basin/public/session-recaps/great-basin-%<%Y-%m-%d>.org")
+        :unnarrowed t)
+       ("gs" "Great Basin Stat Block" plain
+        ,(format "%s%%[%s%s]"
+                 (concat "#+filetags: :great_basin:stat:\n"
+                         "#+title: ${title}\n")
+                 org-roam-directory
+                 "/ttrpg/games/great-basin/stat-blocks/template.org")
+        :target (file "ttrpg/games/great-basin/stat-blocks/%<%Y%m%d%H%M%S>-${slug}.org")
+        :unnarrowed t))
+     :ttrpg
+     `(("c" "5E Character Sheet" plain
+        ,(format "%s%%[%s%s]"
+                 (concat "#+filetags: :ttrpg:stat:\n"
+                         "#+title: ${title}\n")
+                 org-roam-directory
+                 "/ttrpg/systems/dungeons-and-dragons-5e/character.org")
+        :target (file "ttrpg/games/%<%Y%m%d%H%M%S>-${slug}.org")
+        :unnarrowed t)
+       ("e" "Etera Session" entry "%?"
+        :target (file+datetree "ttrpg/games/etera/notes.org" 'day)
+        :unnarrowed t
+        :immediate-finish t
+        :jump-to-captured t)
+       ))
+    "Templates for use with `org-roam-capture'.")
 
-(cl-defmethod org-roam-node-all-tags ((node org-roam-node))
-  (mapconcat (lambda (tag) (concat "#" tag))
-			 (delete-dups
-			  (flatten-list
-			   (mapcar #'mjs/all-parent-tags
-					   (org-roam-node-tags node))))
-			 " "))
+  (defvar mjs/org-auto-tags--current-list
+    (list)
+    "The list of tags to automatically apply to an org capture")
 
-  (advice-add #'org-roam-complete-link-at-point :override #'mjs/org-roam-complete-link-at-point)
-  (advice-add #'org-roam-complete-everywhere :override #'mjs/org-roam-complete-everywhere))
+  (cl-defun mjs/org-context-list-completing-read (&key (context-plist mjs/org-context-plist))
+    "Create a list of contexts from the CONTEXT-PLIST for completing read.
+
+The form should be '((\"none\" 1) (\"knowledge-base\" 3) ...)."
+    (-non-nil (seq-map-indexed
+               (lambda (context index)
+                 (when (cl-oddp index)
+                   (list (plist-get context :name) index)))
+               context-plist)))
+
+  (cl-defun org-roam-node-auto-tags (node &key (tag-list mjs/org-auto-tags--current-list))
+    "Inject the TAG-LIST into the {auto-tags} region of captured NODE."
+    (if (and tag-list (> (length tag-list) 0))
+        (concat ":" (s-join ":" tag-list) ":")
+      ""))
+
+  (cl-defun mjs/org-roam-filter-context-fn (node &key
+                                                 (tag-list mjs/org-auto-tags--current-list))
+    "Determine if TAG-LIST is a subset of NODE's tags."
+    ;; gnus-subsetp is a more "permissive" version of subsetp. It doesn't
+    ;; consider order. And looks at strings as equal if their values are the
+    ;; same.
+    (gnus-subsetp tag-list (org-roam-node-tags node)))
+
+  (cl-defun mjs/org-roam-templates-list
+      (context &key (template-plist mjs/org-roam-capture-templates-plist))
+    "List of `org-roam' capture templates based on the given CONTEXT.
+
+Searches the TEMPLATE-PLIST for the templates.
+
+Note, the `:all' or `:none' contexts assumes we use the whole list"
+    (if (or (eq context :all) (eq context :none))
+        (-non-nil
+         (seq-map-indexed
+          (lambda (tmp index)
+            (when (cl-oddp index)
+              temp))
+          template-plist))
+      (plist-get template-plist context)))
+
+  (cl-defun mjs/org-roam-templates-context-fn
+      (&key (tag-list mjs/org-auto-tags--current-list))
+    "Returns a set of templates based on TAG-LIST.
+
+Returns templates for all contexts defined in `mjs/org-context-plist' whose tags
+are a subset of TAG-LIST, with the exception of the `:none' context which is only
+used if TAG-LIST is empty."
+    (if (and tag-list (> (length tag-list) 0))
+        (-flatten-n 1
+         (-non-nil (seq-map-indexed
+                    (lambda (context index)
+                      (when (and (cl-oddp index)
+                                 (not (string= (plist-get context :name) "none"))
+                                 (gnus-subsetp (plist-get context :tags)
+                                               mjs/org-auto-tags--current-list))
+                        (mjs/org-roam-templates-list
+                         (intern-soft (concat ":" (plist-get context :name))))))
+                    mjs/org-context-plist)))
+      (mjs/org-roam-templates-list :all)))
+
+  (advice-add #'org-roam-complete-link-at-point
+              :override #'mjs/org-roam-complete-link-at-point)
+  (advice-add #'org-roam-complete-everywhere
+              :override #'mjs/org-roam-complete-everywhere))
 
 
 (use-package vulpea
