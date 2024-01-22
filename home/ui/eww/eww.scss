@@ -44,7 +44,6 @@ button:hover {
 }
 
 label {
-	font-size: 15px;
 	color: $text;
 }
 
@@ -92,8 +91,19 @@ label {
 }
 
 .workspace {
-	font-size: 24px;
 	font-family: "JetBrainsMono Nerd Font Mono";
+}
+
+.hidden {
+	color: $text;
+}
+
+.displayed {
+	color: $yellow;
+}
+
+.focused {
+	color: $green;
 }
 
 .music_border {
@@ -120,20 +130,61 @@ label {
   	margin: $bor_width 10px $bor_width $bor_width;
 }
 
-.music_title {
-	font-size: 13px;
-}
-
-.music_artist {
-	font-size: 12px;
-}
-
 menubar {
 	background-color: $base;
 }
 
 menuitem {
 	margin: -5px;
+}
+
+.cpu {
+	color: $pink;
+}
+
+.ram {
+	color: $mauve;
+}
+
+.vol-full,
+.vol-mid,
+.vol-low {
+	color: $sapphire
+}
+
+.vol-muted {
+	color: $red;
+}
+
+.battery-charging-full,
+.battery-charging-90,
+.battery-charging-80,
+.battery-full,
+.battery-90,
+.battery-80 {
+	color: $green;
+}
+
+.battery-charging-70,
+.battery-charging-60,
+.battery-charging-50,
+.battery-charging-40,
+.battery-70,
+.battery-60,
+.battery-50,
+.battery-40 {
+	color: $yellow;
+}
+
+.battery-charging-30,
+.battery-charging-20,
+.battery-charging-10,
+.battery-charging-empty,
+.battery-30,
+.battery-20,
+.battery-10,
+.battery-empty {
+	color: $red;
 }
 
 .start_clock_time {

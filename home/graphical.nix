@@ -6,7 +6,7 @@
   eww-tray = pkgs.callPackage ./ui/eww/eww-tray.nix {
     withWayland = true;
   };
-  hyprland-activewindow = pkgs.callPackage ./ui/eww/hyprland-activewindow.nix {};
+  hyprland-activewindow = pkgs.callPackage ./ui/hyprland-activewindow.nix {};
   packages = with pkgs; [
     # Web browsers
     # librewolf

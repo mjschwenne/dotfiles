@@ -1,10 +1,5 @@
 {osConfig, ...}: {
-  imports = [./swaync ./rofi ./wlogout ./swaylock];
-
-  home.file.".config/eww" = {
-    source = ./eww;
-    recursive = true;
-  };
+  imports = [./swaync ./rofi ./wlogout ./swaylock ./eww];
 
   home.file.".config/hypr/scripts" = {
     source = ./scripts;

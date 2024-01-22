@@ -8,9 +8,6 @@
 (defpoll network :interval "2s" `scripts/network.fish`)
 
 ;; Passive monitoring
-;; (deflisten volume `scripts/volume.fish monitor`)
-;; (deflisten brightness `scripts/brightness.fish monitor`)
-;; (deflisten notifications `stdbuf -oL swaync-client -s`)
 (deflisten bluetooth `scripts/bluetooth.fish`)
 (deflisten workspaces :initial "[]" `scripts/hyprland.fish workspaces`)
 (deflisten window_name `hyprland-activewindow _`)
