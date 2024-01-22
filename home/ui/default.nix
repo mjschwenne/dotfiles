@@ -157,6 +157,7 @@
     windowrule=float,title:^(KeePassXC - Browser Access Request)$
     windowrule=float,title:^(Unlock Database - KeePassXC)$
     windowrule=float,title:^(Formula \(pdflatex\))$
+    windowrule=noblur,title:^(Annotation - Zoom)$
     windowrulev2=float,title:^(Progress),class:^(Zotero)$
 
     # ANIMATIONS
