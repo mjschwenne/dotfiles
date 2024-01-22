@@ -5,6 +5,11 @@
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.settings.trusted-users = ["root" "mjs"];
+  nix.settings.trusted-public-keys =
+    nix.settings.trusted-public-keys
+    ++ [
+      "sol1:FnmeWYY2OGCZpx7+ZKBoOui6UrrUqASpap+FYHXMPsc="
+    ];
 
   # Enable networking
   networking.networkmanager.enable = true;

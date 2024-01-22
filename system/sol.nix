@@ -28,6 +28,8 @@
     ];
   };
 
+  services.nix-serve.secretKeyFile = /home/mjs/so1.key;
+
   # Disable suspend when laptop lid is closed
   services.logind.lidSwitch = "ignore";
   boot.kernelParams = ["consoleblank=60"];
