@@ -4,6 +4,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.trusted-users = ["root" "mjs"];
 
   # Enable networking
   networking.networkmanager.enable = true;
