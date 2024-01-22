@@ -465,7 +465,10 @@ new description."
             start (match-beginning 2)
             end (match-end 2))
       (list start end
-            (org-roam--get-titles)
+            (mapcar #'vulpea-note-title
+                    (vulpea-db-query-by-tags-some
+                     (flatten-list (mapcar #'mjs/descendent-tags
+                                           mjs/org-auto-tags--current-list))))
             :exit-function
             (lambda (str &rest _)
               (let ((node-id (org-roam-node-id
@@ -491,7 +494,10 @@ hence \"everywhere\"."
              (not (save-match-data (org-in-regexp org-link-any-re))))
     (let ((bounds (bounds-of-thing-at-point 'word)))
       (list (car bounds) (cdr bounds)
-            (org-roam--get-titles)
+            (mapcar #'vulpea-note-title
+                    (vulpea-db-query-by-tags-some
+                     (flatten-list (mapcar #'mjs/descendent-tags
+                                           mjs/org-auto-tags--current-list))))
             :exit-function
             (lambda (str _status)
               (delete-char (- (length str)))
@@ -592,9 +598,7 @@ hence \"everywhere\"."
   (interactive "DDirectory: \n")
   (let ((dir (if (stringp dir) dir org-directory)))
     (dolist (file (directory-files-recursively dir ".*\\.org"))
-      (mjs/regenerate-file-links file nil 'kill)
-    )
-))
+      (mjs/regenerate-file-links file nil 'kill))))
 
 ;;;###autoload
 (defun mjs/clean-org-cliplink ()
@@ -662,6 +666,24 @@ Returns a list including TAG itself."
         (setq current-tag parent-tag)
         (push current-tag tag-list)))
     tag-list))
+
+;;;###autoload
+(defun mjs/children-tags (tag)
+  "Search `org-tag-persistent-alist' for the children of TAG"
+  (if-let ((group-head-idx (cl-position `(,tag) org-tag-persistent-alist
+                                   :test #'equal :from-end t))
+           (group-p (equal '(:grouptags) (nth (+ 1 group-head-idx)
+                                              org-tag-persistent-alist)))
+           (group-end-idx (cl-position '(:endgrouptag) org-tag-persistent-alist
+                                       :test #'equal :start group-head-idx)))
+      (-flatten-n 1 (cl-subseq org-tag-persistent-alist
+                               (+ 2 group-head-idx) group-end-idx))))
+
+;;;###autoload
+(defun mjs/descendent-tags (tag)
+  "Search `org-tag-persistent-alist' and return all descendants of TAG as a flat list"
+  (flatten-list (append `(,tag)
+                        (mapcar #'mjs/descendent-tags (mjs/children-tags tag)))))
 
 ;;;###autoload
 (defun mjs/org-auto-tags--set (tags)

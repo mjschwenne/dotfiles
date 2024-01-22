@@ -40,6 +40,7 @@
     gimp
     inkscape
     zotero_7
+    mpv
 
     # LaTeX
     (texlive.combine {
@@ -130,6 +131,7 @@
     slurp
     hyprpicker
     waypaper
+    wayland-logout
   ];
   masterPkgs = with pkgs-master; [librewolf firefox];
 in {

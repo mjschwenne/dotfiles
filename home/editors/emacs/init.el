@@ -702,14 +702,15 @@
   "n"     '(nil :which-key "Notes")
   "n a"   '("Agenda" . org-agenda)
   "n c"   '(nil :which-key "Contexts")
-  "n c c" '("Set Context" . mjs/org-auto-tags--set)
+  "n c c" '("Set Context" . mjs/org-auto-tags--set-by-context)
   "n c i" '("Inspect Tags" . (lambda ()
                                (interactive)
-                               (mapconcat (lambda (tag)
+                               (message "%s"
+                                        (mapconcat (lambda (tag)
                                             (concat "#" tag))
                                           mjs/org-auto-tags--current-list
-                                          " ")))
-  "n c s" '("Change Tags" . mjs/org-auto-tags--set-by-context)
+                                          " "))))
+  "n c s" '("Change Tags" . mjs/org-auto-tags--set)
   "n C"   '("GOTO Clock" . org-clock-goto)
   "n l"   '("Store Link" . org-store-link)
   "n R"   '("Refile DWIM" . mjs/org-refile-dwim)
@@ -911,6 +912,7 @@
               ("etera")
               ("obscured_realms")
               ("graves")
+              ("madttrpg")
 			  ;; Generic ttrpg types
               ("character")
               ("event")
@@ -1052,12 +1054,12 @@
            :empty-lines 1)
           ("e" "Etera Session" entry
            (file "ttrpg/games/etera/notes.org")
-           "* Session %<%Y-%m-%d>\n\n%?\n"
+           "\n* Session %<%Y-%m-%d>\n\n%?\n"
            :jump-to-captured t
            :immediate-finish t)
           ("g" "Graves Session" entry
            (file "ttrpg/games/graves-and-groves/sessions.org")
-           "* Session %<%Y-%m-%d>\n\n%?\n"
+           "\n* Session %<%Y-%m-%d>\n\n%?\n"
            :prepend t
            :jump-to-captured t
            :immediate-finish t)
@@ -1074,7 +1076,12 @@
           ("n" "Meeting Notes" entry
            (file "agenda/notes.org")
            ,(concat "* Notes (%a)\n"
-                    "/Entered on/ %U\n\n%?"))))
+                    "/Entered on/ %U\n\n%?"))
+          ("o" "Obscured Realms Session" entry
+           (file "ttrpg/games/obscured-realms/sessions.org")
+           "\n* Session %<%Y-%m-%d>\n\n%?"
+           :jump-to-captured t
+           :immediate-finish t)))
   (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
   (set-face-attribute 'org-quote nil
                       :background (catppuccin-get-color 'mantle)
@@ -1567,7 +1574,11 @@ The form should be '((\"none\" 1) (\"knowledge-base\" 3) ...)."
     ;; gnus-subsetp is a more "permissive" version of subsetp. It doesn't
     ;; consider order. And looks at strings as equal if their values are the
     ;; same.
-    (gnus-subsetp tag-list (org-roam-node-tags node)))
+    (gnus-subsetp tag-list
+                  (delete-dups
+                   (flatten-list
+                    (mapcar #'mjs/all-parent-tags
+                            (org-roam-node-tags node))))))
 
   (cl-defun mjs/org-roam-templates-list
       (context &key (template-plist mjs/org-roam-capture-templates-plist))
