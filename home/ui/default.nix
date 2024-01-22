@@ -188,6 +188,7 @@
     bind = $mod_CTRL, e, exec, eww reload
     bind = $mod_CTRL, w, exec, waypaper --backend swww
     bind = $mod, e, exec, ~/.config/hypr/scripts/eject.fish
+    bind = $mod_CTRL, i, exec, ~/.config/hypr/scripts/toggle_swayidle.fish
 
     # utility keys
     bind = ,Print, exec, grim -g "$(slurp)"
