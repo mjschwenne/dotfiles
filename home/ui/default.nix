@@ -93,7 +93,7 @@
     	cursor_inactive_timeout = 3;
     	border_size = 3
     	gaps_in = 5
-    	gaps_out = 10
+    	gaps_out = 5
     	col.active_border = $green
     	col.inactive_border = $peach
     	resize_on_border = true;
@@ -137,6 +137,7 @@
     }
 
     # WINDOW RULES
+    windowrule=idleinhibit fullscreen,(.+)
     windowrule=float,qalculate-gtk
     windowrule=size 400 200,qalculate-gtk
     windowrule=pin,rofi

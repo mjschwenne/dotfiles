@@ -32,6 +32,11 @@ switch $argv[1]
             set -l action (string split -m 1 -f 1 ">>" $line)
             if test $action = focusedmon -o $action = workspace
                 workspaces
+            else if test $action = monitoradded
+                sleep 1
+                eww open-many background_window_sec start_window_sec workspaces_window_sec window_window_sec music_window_sec tray_window_sec sys_window_sec clock_window_sec power_window_sec
+            else if test $action = montiorremoved
+                eww close background_window_sec start_window_sec workspaces_window_sec window_window_sec music_window_sec tray_window_sec sys_window_sec clock_window_sec power_window_sec
             end
         end
 
