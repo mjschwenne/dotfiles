@@ -69,7 +69,7 @@
            (evil-echo-state nil)
            (evil-undo-system 'undo-redo))
   :init (evil-mode 1)
-  :config (evil-set-initial-state 'org-agenda-mode 'normal)
+  :config 
   ;; Make evil search similar to vim
   (evil-select-search-module 'evil-search-module 'evil-search)
 
@@ -98,6 +98,7 @@
   :hook (org-mode . evil-org-mode)
   :config
   (require 'evil-org-agenda)
+  (evil-set-initial-state 'org-agenda-mode 'normal)
   (evil-org-agenda-set-keys))
 
 (use-package evil-collection
