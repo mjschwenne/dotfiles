@@ -7,7 +7,7 @@
     extra-substituters = [
       # Nix community's cache server
       "https://nix-community.cachix.org"
-      # Hyprland cache server "https://hyprland.cachix.org"
+      "https://hyprland.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="

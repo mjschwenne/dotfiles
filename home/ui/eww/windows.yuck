@@ -28,7 +28,7 @@
               :width "2%"
               :height "3.5%"
               :anchor "top left")
-  (start_widget :window "startmenu_window"))
+  (start_widget :window "startmenu_window" :size start_widget_size))
 
 ;; Workspaces
 (defwindow workspaces_window
@@ -41,7 +41,7 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (workspaces_widget :orientation "h"))
+  (workspaces_widget :orientation "h" :size workspaces_widget_size))
 
 ;; Window Name
 (defwindow window_window
@@ -54,7 +54,8 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (window_widget :monitor "0"))
+  (window_widget :monitor "0" :length window_widget_length
+    :size window_widget_size))
 
 ;; Music
 (defwindow music_window
@@ -67,7 +68,9 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (music_widget :window "musicmenu_window"))
+  (music_widget :window "musicmenu_window"
+    :title-size music_widget_title_size
+    :artist-size music_widget_artist_size))
 
 ;; Tray
 (defwindow tray_window
@@ -93,7 +96,7 @@
               :width "8.95%"
               :height "3.5%"
               :anchor "top left")
-  (sys_widget :window "sysmenu_window"))
+  (sys_widget :window "sysmenu_window" :size sys_widget_size))
 
 ;; Clock
 (defwindow clock_window
@@ -106,7 +109,7 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (clock_widget :window "clockmenu_window"))
+  (clock_widget :window "clockmenu_window" :size clock_widget_size))
 
 ;; Power menu
 (defwindow power_window
@@ -119,7 +122,7 @@
               :width "2%"
               :height "3.5%"
               :anchor "top left")
-  (power_widget :window "powermenu_window"))
+  (power_widget :window "powermenu_window" :size power_widget_size))
 
 ;; ---------------- ;;
 ;; STARTMENU WINDOW ;;
@@ -231,7 +234,7 @@
               :width "2%"
               :height "3.5%"
               :anchor "top left")
-  (start_widget :window "startmenu_window_sec"))
+  (start_widget :window "startmenu_window_sec" :size start_widget_size_sec))
 
 ;; Workspaces
 (defwindow workspaces_window_sec
@@ -244,7 +247,7 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (workspaces_widget :orientation "h"))
+  (workspaces_widget :orientation "h" :size workspaces_widget_size_sec))
 
 ;; Window Name
 (defwindow window_window_sec
@@ -257,7 +260,9 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (window_widget :monitor "1"))
+  (window_widget :monitor "1"
+    :length window_widget_length_sec
+    :size window_widget_size_sec))
 
 ;; Music
 (defwindow music_window_sec
@@ -270,7 +275,9 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (music_widget :window "musicmenu_window_sec"))
+  (music_widget :window "musicmenu_window_sec"
+    :title-size music_widget_title_size_sec
+    :artist-size music_widget_artist_size_sec))
 
 ;; Tray
 (defwindow tray_window_sec
@@ -296,7 +303,8 @@
               :width "8.95%"
               :height "3.5%"
               :anchor "top left")
-  (sys_widget :window "sysmenu_window_sec"))
+  (sys_widget :window "sysmenu_window_sec"
+    :size sys_widget_size_sec))
 
 ;; Clock
 (defwindow clock_window_sec
@@ -309,7 +317,8 @@
               :width "18.4%"
               :height "3.5%"
               :anchor "top left")
-  (clock_widget :window "clockmenu_window_sec"))
+  (clock_widget :window "clockmenu_window_sec"
+    :size clock_widget_size_sec))
 
 ;; Power menu
 (defwindow power_window_sec
@@ -322,7 +331,8 @@
               :width "2%"
               :height "3.5%"
               :anchor "top left")
-  (power_widget :window "powermenu_window_sec"))
+  (power_widget :window "powermenu_window_sec"
+    :size power_widget_size_sec))
 
 ;; ---------------- ;;
 ;; STARTMENU WINDOW ;;

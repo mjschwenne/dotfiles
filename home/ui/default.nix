@@ -1,10 +1,5 @@
 {osConfig, ...}: {
-  imports = [./swaync ./rofi ./wlogout ./swaylock];
-
-  home.file.".config/eww" = {
-    source = ./eww;
-    recursive = true;
-  };
+  imports = [./swaync ./rofi ./wlogout ./swaylock ./eww];
 
   home.file.".config/hypr/scripts" = {
     source = ./scripts;
@@ -98,7 +93,7 @@
     	cursor_inactive_timeout = 3;
     	border_size = 3
     	gaps_in = 5
-    	gaps_out = 10
+    	gaps_out = 5
     	col.active_border = $green
     	col.inactive_border = $peach
     	resize_on_border = true;
@@ -142,6 +137,7 @@
     }
 
     # WINDOW RULES
+    windowrule=idleinhibit fullscreen,(.+)
     windowrule=float,qalculate-gtk
     windowrule=size 400 200,qalculate-gtk
     windowrule=pin,rofi
@@ -194,6 +190,7 @@
     bind = $mod_CTRL, e, exec, eww reload
     bind = $mod_CTRL, w, exec, waypaper --backend swww
     bind = $mod, e, exec, ~/.config/hypr/scripts/eject.fish
+    bind = $mod_CTRL, i, exec, ~/.config/hypr/scripts/toggle_swayidle.fish
 
     # utility keys
     bind = ,Print, exec, grim -g "$(slurp)"

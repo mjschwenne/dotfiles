@@ -4,6 +4,11 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.trusted-users = ["root" "mjs"];
+  nix.settings.trusted-public-keys = [
+    "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
+    "sol1:FnmeWYY2OGCZpx7+ZKBoOui6UrrUqASpap+FYHXMPsc="
+  ];
 
   # Enable networking
   networking.networkmanager.enable = true;

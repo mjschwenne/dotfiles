@@ -384,7 +384,7 @@ has the effect of displaying consistency graphs for these habits."
 ;;;###autoload
 (defun mjs/class-capture ()
   (let* ((class (completing-read "Class: "
-                                 '("cs400" "cs525" "cs880" "cs900")
+                                 '("cs400" "cs502" "cs538" "cs710" "cs760")
                                  nil t))
          (file-name (expand-file-name
                      (concat "classes/" class "/"

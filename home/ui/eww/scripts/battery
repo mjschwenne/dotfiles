@@ -1,15 +1,15 @@
-#! /etc/profiles/per-user/mjs/bin/fish 
+#! /etc/profiles/per-user/mjs/bin/fish
 
 if test $hostname = terra
-	set bat "/org/freedesktop/UPower/devices/battery_BAT0"
-else 
-	set bat "/org/freedesktop/UPower/devices/battery_BAT1"
+    set bat /org/freedesktop/UPower/devices/battery_BAT0
+else
+    set bat /org/freedesktop/UPower/devices/battery_BAT1
 end
 
 if test $hostname = terra
-	set ac "/org/freedesktop/UPower/devices/line_power_AC"
-else 
-	set ac "/org/freedesktop/UPower/devices/line_power_ADP1"
+    set ac /org/freedesktop/UPower/devices/line_power_AC
+else
+    set ac /org/freedesktop/UPower/devices/line_power_ADP1
 end
 
 set -l bat_json (
@@ -24,24 +24,24 @@ set -l plugged_in (
 )
 
 # set icon and class
-set -l icons 󰂎 󰁺 󰁻 󰁼 󰁽 󰁾 󰁿 󰂀 󰂁 󰂂 󰁹 󰢟 󰢜 󰂆 󰂇 󰂈 󰢝 󰂉 󰢞 󰂊 󰂋 󰂅 
+set -l icons 󰂎 󰁺 󰁻 󰁼 󰁽 󰁾 󰁿 󰂀 󰂁 󰂂 󰁹 󰢟 󰢜 󰂆 󰂇 󰂈 󰢝 󰂉 󰢞 󰂊 󰂋 󰂅
 set -l idx (math "ceil(($percentage + 1) / 10)")
-if test $plugged_in = 'true'
-	set idx (math "$idx+11")
+if test $plugged_in = true
+    set idx (math "$idx+11")
 end
 
-if test $idx -ge 20 
-	set class "battery charging full"
+if test $idx -ge 20
+    set class "battery charging full"
 else if test $idx -ge 15
-	set class "battery charging normal"
+    set class "battery charging normal"
 else if test $idx -ge 12
-	set class "battery charging low"
+    set class "battery charging low"
 else if test $idx -ge 9
-	set class "battery full"
+    set class "battery full"
 else if test $idx -ge 4
-	set class "battery normal"
-else 
-	set class "battery low"
+    set class "battery normal"
+else
+    set class "battery low"
 end
 
 echo "{\"percentage\":$percentage,\"icon\":\"$icons[$idx]\",\"class\":\"$class\"}"
