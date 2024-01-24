@@ -34,6 +34,11 @@
               hscroll-margin 8
               scroll-conservatively 101)
 
+(use-package catppuccin-theme
+  :defer nil
+  :custom (catppuccin-flavor 'mocha)
+  :config (load-theme 'catppuccin t))
+
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path "/home/mjs/.emacs.d/autoloads/")
 (loaddefs-generate "/home/mjs/.emacs.d/autoloads" "/home/mjs/.emacs.d/autoloads/auto.el")
@@ -320,11 +325,6 @@
 
 (when window-system (global-hl-line-mode 1))
 
-(use-package catppuccin-theme
-  :defer nil
-  :custom (catppuccin-flavor 'mocha)
-  :config (load-theme 'catppuccin t))
-
 (use-package telephone-line
   :init (telephone-line-defsegment* mjs/popup-segment ()
           (cond ((not (boundp 'popper-popup-status)) "")
@@ -406,12 +406,13 @@
                        (catppuccin-get-color 'peach))
   (set-face-background 'telephone-line-evil-motion
                        (catppuccin-get-color 'pink))
-  (set-face-attribute 'telephone-line-accent-active t
-                      :foreground
-                      (catppuccin-get-color 'text)
-                      :background
-                      (catppuccin-get-color 'surface1))
-  (set-face-attribute 'mode-line t
+  (set-face-attribute 'telephone-line-accent-active nil
+                      :foreground (catppuccin-get-color 'text)
+                      :background (catppuccin-get-color 'surface1))
+  (set-face-attribute 'telephone-line-accent-inactive nil
+                      :foreground (catppuccin-get-color 'text)
+                      :background (catppuccin-get-color 'surface0))
+  (set-face-attribute 'mode-line nil
                       :foreground (catppuccin-get-color 'text)
                       :background (catppuccin-get-color 'base)))
 
@@ -1725,8 +1726,8 @@ used if TAG-LIST is empty."
   :custom ((org-cite-global-bibliography '("~/Documents/zotero.bib"))
            (org-cite-csl-styles-dir "~/Zotero/styles/")
            (org-cite-export-processors '((latex biblatex)
-                                         (md . (csl ieee.csl))
-                                         (t . (csl ieee.csl)))))
+                                         (md . (csl "ieee.csl"))
+                                         (t . (csl "ieee.csl")))))
   :general (mjs-local-leader-def :keymaps 'org-mode-map
              "C" '("Citation" . org-cite-insert))
   :custom-face (org-cite ((t (:foreground ,(catppuccin-get-color 'green)))))
