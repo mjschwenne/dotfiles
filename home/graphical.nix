@@ -41,6 +41,7 @@
     inkscape
     zotero_7
     mpv
+    posterazor
 
     # LaTeX
     (texlive.combine {
