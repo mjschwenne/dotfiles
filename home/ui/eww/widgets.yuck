@@ -347,7 +347,7 @@
         :name "NETWORK"
         :img {network.icon}
         ;; Convert bytes to megabits
-        :label "󰞒 ${round(EWW_NET['wlo1'].NET_DOWN / 131100, 2)} Mb/s"
+        :label "󰞒 ${round(EWW_NET[network_adapter].NET_DOWN / 131100, 2)} Mb/s"
         :info {network.name ?: "Not Connected"}
         :onclick "${EWW_CONFIG_DIR}/scripts/network_toggle.fish")
       (box :class "separator" :style "margin: 5px 10px 5px 10px;")

@@ -7,6 +7,8 @@
 ;
 ; Variables for luna
 
+(defvar network_adapter 'wlp1s0')
+
 (defvar start_widget_size 15)
 (defvar workspaces_widget_size 14)
 (defvar window_widget_length 30)

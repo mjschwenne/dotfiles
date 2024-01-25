@@ -7,6 +7,8 @@
 ;
 ; Variables for terra
 
+(defvar network_adapter 'wlo1')
+
 (defvar start_widget_size 25)
 (defvar workspaces_widget_size 18)
 (defvar window_widget_length 34)

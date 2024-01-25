@@ -142,6 +142,7 @@
   (add-hook 'org-mode-hook 'embrace-org-mode-hook)
   (evil-embrace-enable-evil-surround-integration))
 
+
 (use-package evil-escape
   :after evil
   :diminish evil-escape-mode
@@ -1203,7 +1204,7 @@
   :hook (org-mode . olivetti-mode)
   :init (diminish 'visual-line-mode)
   :init (mjs-local-leader-def :keymaps 'org-mode-map
-          "t o" '("Toggle Olivetti" . olivetti-mode)))
+          "o" '("Toggle Olivetti" . olivetti-mode)))
 
 (use-package flycheck
   :diminish " 󰨮"
