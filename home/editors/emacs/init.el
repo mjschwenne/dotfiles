@@ -1003,6 +1003,7 @@
            (org-entities-user
             '(("mathbbR" "\\mathbb{R}" nil "&x211D" "R" "R" "ℝ")
               ("mathbbE" "\\mathbb{E}" nil "&x1D53C" "E" "E" "𝔼")
+              ("mathbbP" "\\mathbb{P}" nil "&x2119" "P" "P" "ℙ")
               ("lightning" "\\lightning" nil "&x21AF" "</" "</" "↯")
               ("qed" "\\qedsymbol" nil "&x25A1" "[]" "[]" "☐")))
            (org-confirm-babel-evaluate nil))
@@ -1568,7 +1569,7 @@ The form should be '((\"none\" 1) (\"knowledge-base\" 3) ...)."
   (cl-defun org-roam-node-auto-tags (node &key (tag-list mjs/org-auto-tags--current-list))
     "Inject the TAG-LIST into the {auto-tags} region of captured NODE."
     (if (and tag-list (> (length tag-list) 0))
-        (concat ":" (s-join ":" tag-list) ":")
+        (concat ":" (s-join ":" (eval tag-list)) ":")
       ""))
 
   (cl-defun mjs/org-roam-filter-context-fn (node &key
@@ -1593,7 +1594,7 @@ Note, the `:all' or `:none' contexts assumes we use the whole list"
     (if (or (eq context :all) (eq context :none))
         (-non-nil
          (seq-map-indexed
-          (lambda (tmp index)
+          (lambda (temp index)
             (when (cl-oddp index)
               temp))
           template-plist))
