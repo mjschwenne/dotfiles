@@ -52,10 +52,14 @@
 
       override = epkgs:
         epkgs
-        // {
+        // rec {
           org-timeblock = pkgs.callPackage ./org-timeblock.nix {
             inherit (pkgs) fetchFromGitHub;
             inherit (epkgs) trivialBuild org-ql persist;
+          };
+          calfw-blocks = pkgs.callPackage ./calfw-blocks.nix {
+            inherit (pkgs) fetchFromGitHub;
+            inherit (epkgs) trivialBuild calfw calfw-org;
           };
           # org-auctex = pkgs.callPackage ./org-auctex.nix {
           #   inherit (epkgs) trivialBuild auctex;
@@ -65,6 +69,7 @@
       # Optionally provide extra packages not in the configuration file.
       extraEmacsPackages = epkgs: [
         epkgs.org-timeblock
+        epkgs.calfw-blocks
         # epkgs.org-auctex
       ];
     })
@@ -81,8 +86,4 @@
       recursive = true;
     };
   };
-
-  # home.file.".emacs.d/early-init.el" = {
-  #   source = ./early-init.el;
-  # };
 }

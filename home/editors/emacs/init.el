@@ -41,7 +41,9 @@
 
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path "/home/mjs/.emacs.d/autoloads/")
-(loaddefs-generate "/home/mjs/.emacs.d/autoloads" "/home/mjs/.emacs.d/autoloads/auto.el")
+(loaddefs-generate
+ "/home/mjs/.emacs.d/autoloads"
+ "/home/mjs/.emacs.d/autoloads/auto.el")
 (require 'auto)
 
 (use-package diminish
@@ -74,7 +76,7 @@
            (evil-echo-state nil)
            (evil-undo-system 'undo-redo))
   :init (evil-mode 1)
-  :config 
+  :config
   ;; Make evil search similar to vim
   (evil-select-search-module 'evil-search-module 'evil-search)
 
@@ -127,10 +129,10 @@
            "L" 'evil-forward-arg
            "H" 'evil-backward-arg))
 
-                                        ; (use-package evil-easymotion
-                                        ;   :after evil
-                                        ;   :general (:states 'motion "SPC SPC" '(nil :which-key "Easy Motion")
-                                        ;                             "SPC SPC" evilem-map))
+; (use-package evil-easymotion
+;   :after evil
+;   :general (:states 'motion "SPC SPC" '(nil :which-key "Easy Motion")
+;                             "SPC SPC" evilem-map))
 
 (use-package evil-surround
   :after evil
@@ -141,7 +143,6 @@
   :config
   (add-hook 'org-mode-hook 'embrace-org-mode-hook)
   (evil-embrace-enable-evil-surround-integration))
-
 
 (use-package evil-escape
   :after evil
@@ -290,34 +291,38 @@
 (use-package ligature
   :config
   ;; Enable all JetBrains Mono Nerd Font ligatures in programming modes
-  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
-                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-                                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
-                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-                                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-                                       "\\\\" "://"))
+  (ligature-set-ligatures
+   'prog-mode
+   '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+     ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+     "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+     "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+     "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+     "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+     "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+     "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+     ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+     "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+     "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+     "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+     "\\\\" "://"))
   ;; Enable most ligatures in text mode, but not all of them since some can mess with formatting
   ;; in org-mode or markdown documents
-  (ligature-set-ligatures 'text-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "||=" "||>"
-                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-                                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
-                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-                                       "?=" "?." "??" ";;" "/*" "/>" "//" "__" "~~" "(*" "*)"
-                                       "\\\\" "://"))
+  (ligature-set-ligatures
+   'text-mode
+   '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "||=" "||>"
+     ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+     "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+     "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+     "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+     "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+     "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+     "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+     ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+     "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+     "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+     "?=" "?." "??" ";;" "/*" "/>" "//" "__" "~~" "(*" "*)"
+     "\\\\" "://"))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
   (global-ligature-mode -1)
@@ -325,6 +330,10 @@
   (text-mode . ligature-mode))
 
 (when window-system (global-hl-line-mode 1))
+
+(use-package rainbow-mode
+  :diminish "󰙸 "
+  :hook prog-mode)
 
 (use-package telephone-line
   :init (telephone-line-defsegment* mjs/popup-segment ()
@@ -471,7 +480,9 @@
                                       "\\*info\\*"
                                       helpful-mode
                                       compilation-mode
-                                      "\\*Embark Actions\\*"))
+                                      "\\*Embark Actions\\*"
+                                      cfw:details-mode
+                                      ))
   (popper-display-control nil)
   (popper-mode-line "")
   (display-buffer-alist '(("\\*Org Links\\*" (display-buffer-at-bottom)
@@ -696,12 +707,12 @@
 (mjs-leader-def :keymaps 'override
   "a"     '("Agenda" . org-agenda)
   "A"     '("GTD Agenda" . (lambda () (interactive) (org-agenda nil "g")))
-  "c"      '(nil :which-key "Capture")
-  "c c"    '("Org Capture" . org-capture)
-  "c r"    '("Roam Capture" . mjs/org-roam-capture)
-  "c f"    '("Finish Capture" . org-capture-finalize)
-  "c k"    '("Abort Capture" . org-capture-kill)
-  "c r"    '("Refile Capture" . org-capture-refile)
+  "c"     '(nil :which-key "Capture")
+  "c c"   '("Org Capture" . org-capture)
+  "c r"   '("Roam Capture" . mjs/org-roam-capture)
+  "c f"   '("Finish Capture" . org-capture-finalize)
+  "c k"   '("Abort Capture" . org-capture-kill)
+  "c r"   '("Refile Capture" . org-capture-refile)
   "n"     '(nil :which-key "Notes")
   "n a"   '("Agenda" . org-agenda)
   "n c"   '(nil :which-key "Contexts")
@@ -1395,7 +1406,7 @@ With a prefix ARG, remove start location."
   (org-roam-node-display-template
    (concat "${title:*} "
            (propertize "${all-tags:60}" 'face 'org-tag)))
-  
+
   :general (mjs-leader-def :keymaps 'override
              "n r"   '(nil :which-key "Roam")
              "n r a" '("Add Alias" . org-roam-alias-add)
@@ -1892,6 +1903,118 @@ used if TAG-LIST is empty."
 (use-package evil-ledger
   :diminish evil-ledger-mode
   :hook (ledger-mode . evil-ledger-mode))
+
+(use-package calfw
+  :custom (calendar-week-start-day 1)
+  :general (mjs-leader-def
+             "C"     '(nil :which-key "Calendar")
+             "C a"   '("Open Agenda on Day" . cfw:org-open-agenda-day)
+             "C d"   '("GOTO Date" . cfw:navi-goto-date-command)
+             "C m"   '("First Day" . cfw:navi-goto-first-date-command)
+             "C M"   '("Last Day" . cfw:navi-goto-last-date-command)
+             "C q"   '("Quit Calendar" . cfw:org-clean-exit)
+             "C r"   '("Rebuild Calendar" . cfw:refresh-calendar-buffer)
+             "C v"   '(nil :which-key "Calender Views")
+             "C v m" '("Month" . (lambda ()
+                                   (interactive)
+                                   (cfw:open-calendar-buffer
+                                    :contents-sources (list (cfw:org-create-source))
+                                    :view 'month)))
+             "C w"   '("Beginning of Week" . cfw:navi-goto-week-begin-command)
+             "C W"   '("End of Week" . cfw:navi-goto-week-end-command))
+  :hook (cfw:calendar-mode . (lambda ()
+                               (general-define-key :states '(normal motion) :keymaps 'local
+                                                   "TAB"    #'cfw:navi-next-item-command
+                                                   "S-TAB"  (lambda ()
+                                                              (interactive)
+                                                              (cfw:navi-next-item-command -1))
+                                                   "h"      (lambda ()
+                                                              (interactive)
+                                                              (cfw:navi-next-day-command -1))
+                                                   "j"      #'cfw:navi-next-week-command
+                                                   "M-j"    #'cfw:navi-next-month-command
+                                                   "k"      (lambda ()
+                                                              (interactive)
+                                                              (cfw:navi-next-week-command -1))
+                                                   "M-k"    (lambda ()
+                                                              (interactive)
+                                                              (cfw:navi-next-month-command -1))
+                                                   "l"      #'cfw:navi-next-day-command
+                                                   "RET"    #'cfw:show-details-command)))
+  (cfw:details-mode . (lambda ()
+                        (general-define-key :states '(normal motion) :keymaps 'local
+                                            "q" #'kill-buffer-and-window)))
+  :custom-face
+  (cfw:face-title ((t  :foreground ,(catppuccin-get-color 'yellow)
+                       :weight bold
+                       :height 2.0)))
+  (cfw:face-header ((t :foreground ,(catppuccin-get-color 'yellow)
+                       :weight bold)))
+  (cfw:face-sunday ((t :foreground ,(catppuccin-get-color 'red)
+                       :weight bold)))
+  (cfw:face-saturday ((t :foreground ,(catppuccin-get-color 'blue)
+                         :weight bold)))
+  (cfw:face-holiday ((t :background ,(catppuccin-get-color 'mantle)
+                        :foreground ,(catppuccin-get-color 'red)
+                        :weight bold)))
+  (cfw:face-grid ((t :foreground ,(catppuccin-get-color 'subtext0))))
+  (cfw:face-default-content ((t :foreground ,(catppuccin-get-color 'green))))
+  (cfw:face-periods ((t :foreground ,(catppuccin-get-color 'sky))))
+  (cfw:face-day-title ((t :background ,(catppuccin-get-color 'mantle))))
+  (cfw:face-default-day ((t :weight bold :inherit cfw:face-day-title)))
+  (cfw:face-annotation ((t :foreground ,(catppuccin-get-color 'text)
+                           :inherit cfw:face-day-title)))
+  (cfw:face-disable ((t :foreground ,(catppuccin-get-color 'subtext0)
+                        :inherit cfw:face-day-title)))
+  (cfw:face-today-title ((t :foreground ,(catppuccin-get-color 'base)
+                            :background ,(catppuccin-get-color 'green)
+                            :weight bold)))
+  (cfw:face-today ((t :background: ,(catppuccin-get-color 'mantle)
+                      :weight bold)))
+  (cfw:face-select ((t :background ,(catppuccin-get-color 'overlay2))))
+  (cfw:face-toolbar ((t :foreground ,(catppuccin-get-color 'sapphire)
+                        :background ,(catppuccin-get-color 'sapphire))))
+  (cfw:face-toolbar-button-off ((t :foreground ,(catppuccin-get-color 'subtext0)
+                                   :weight bold)))
+  (cfw:face-toolbar-button-on ((t :foreground ,(catppuccin-get-color 'subtext1)
+                                   :weight bold)))
+  :config
+  (evil-set-initial-state 'cfw:calendar-mode 'normal))
+
+(use-package calfw-org
+  :general (mjs-leader-def
+             "C c"   '("Open Calendar" . cfw:open-org-calendar)))
+
+(use-package calfw-blocks
+  :ensure nil
+  :general (mjs-leader-def
+             "C v d" '("Day" . (lambda ()
+                                 (interactive)
+                                 (cfw:open-calendar-buffer
+                                  :contents-sources (list (cfw:org-create-source))
+                                  :view 'block-day)))
+             "C v D" '("3-Day" . (lambda ()
+                                   (interactive)
+                                   (cfw:open-calendar-buffer
+                                    :contents-sources (list (cfw:org-create-source))
+                                    :view 'block-3-day)))
+             "C v t" '("Two Weeks" . (lambda ()
+                                       (interactive)
+                                       (cfw:open-calendar-buffer
+                                        :contents-sources (list (cfw:org-create-source))
+                                        :view 'transpose-14-day)))
+             "C v w" '("Block Week" . (lambda ()
+                                        (interactive)
+                                        (cfw:open-calendar-buffer
+                                         :contents-sources (list (cfw:org-create-source))
+                                         :view 'block-week)))
+             "C v W" '("Week" . (lambda ()
+                                  (interactive)
+                                  (cfw:open-calendar-buffer
+                                   :contents-sources (list (cfw:org-create-source))
+                                   :view 'transpose-two-weeks))))
+  :custom ((calfw-blocks-earliest-visible-time (8 30))
+           (calfw-blocks-lines-per-hour 2)))
 
 (use-package direnv
   :config

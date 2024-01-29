@@ -1,10 +1,9 @@
 {
   trivialBuild,
   fetchFromGitHub,
-  org-ql, 
+  org-ql,
   persist,
 }:
-
 trivialBuild rec {
   pname = "org-timeblock";
   version = "main-25-08-2-2023";
@@ -15,6 +14,6 @@ trivialBuild rec {
     hash = "sha256-Nw/hwfw+NKyD8mNyKKTkpJccOUw4lD4OsPqfB02fRRU=";
   };
 
-  propagatedUserEnvPkgs = [ org-ql persist ];
+  propagatedUserEnvPkgs = [org-ql persist];
   buildInputs = propagatedUserEnvPkgs;
 }
