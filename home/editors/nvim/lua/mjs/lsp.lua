@@ -36,6 +36,7 @@ if lspconfig_p then
 	}
 	lspconfig.nixd.setup {}
 	lspconfig.pyright.setup {}
+	lspconfig.tsserver.setup {}
 
 	whichkey.register({
 		["[e"] = { vim.diagnostic.goto_prev, "Previous Diagnostic" },

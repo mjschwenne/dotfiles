@@ -108,6 +108,7 @@ in {
       nixd
       nodePackages.pyright
       rust-analyzer
+      nodePackages.typescript-language-server
 
       # none-ls sources
       alejandra
