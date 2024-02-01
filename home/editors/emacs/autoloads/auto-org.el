@@ -691,8 +691,8 @@ Returns a list including TAG itself."
   (interactive
    (list
     (completing-read-multiple
-     "Tag(s): " (org-roam-tag-completions) nil nil nil nil
-     (s-join "," mjs/org-auto-tags--current-list))))
+     "Tag(s): " (org-roam-tag-completions) nil nil
+     (concat (s-join "," mjs/org-auto-tags--current-list) ","))))
   (setq mjs/org-auto-tags--current-list tags))
 
 

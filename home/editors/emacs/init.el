@@ -105,8 +105,8 @@
   :hook (org-mode . evil-org-mode)
   :config
   (require 'evil-org-agenda)
-  (evil-set-initial-state 'org-agenda-mode 'normal)
-  (evil-org-agenda-set-keys))
+  (evil-org-agenda-set-keys)
+  (evil-set-initial-state 'org-agenda-mode 'normal))
 
 (use-package evil-collection
   :after evil
@@ -1156,11 +1156,13 @@
 (use-package org-tempo
   :ensure nil
   :after org
+  :defer nil
   :custom (org-structure-template-alist '(("t" . "LaTeX latex")
                                           ("j" . "src java")
                                           ("R" . "src R")
                                           ("r" . "src rust")
                                           ("p" . "src python")
+                                          ("sj" . "src javascript")
                                           ("st" . "src latex")
                                           ("el" . "src emacs-lisp")
                                           ("cp" . "src cpp")
@@ -1453,10 +1455,8 @@ With a prefix ARG, remove start location."
 Matches both empty links (i.e. \"[[|]]\") and existing \"id:\"
 links (e.x. \"[[id:01234][|]]\").")
 
-  (setq safe-local-variable-values '((mjs/org-auto-tags--current-list quote
-                                                                      ("great_basin"))
-                                     (mjs/org-auto-tags--current-list quote
-                                                                      ("kb"))))
+  (setq safe-local-variable-values '((mjs/org-auto-tags--current-list . ("great_basin"))
+                                     (mjs/org-auto-tags--current-list . ("kb"))))
 
   (cl-defmethod org-roam-node-all-tags ((node org-roam-node))
     (mapconcat (lambda (tag) (concat "#" tag))

@@ -146,7 +146,7 @@
     windowrule=float,title:^(Write: \(no subject\))$
     windowrule=workspace 9,title:^(Spotify Premium)$
     windowrule=workspace 10,WebCord
-    windowrule=workspace 10,Discord
+    windowrule=workspace 10,VencordDesktop
     windowrule=float,title:^(Open Files)$
     windowrule=float,class:^(zenity)$
     windowrule=float,title:^(Compact folders)$
