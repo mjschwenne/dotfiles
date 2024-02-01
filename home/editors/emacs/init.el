@@ -848,7 +848,7 @@
                                              (setq org-pretty-entities-include-sub-superscripts
                                                    (not org-pretty-entities-include-sub-superscripts)))))
   :custom ((org-fontify-quote-and-verse-blocks t)
-           (org-src-fontify-natively nil)
+           (org-src-fontify-natively t)
            (org-pretty-entities t)
            (org-highlight-latex-and-related '(native latex))
            (org-ellipsis " ▾")
@@ -1155,6 +1155,7 @@
 
 (use-package org-tempo
   :ensure nil
+  :after org
   :custom (org-structure-template-alist '(("t" . "LaTeX latex")
                                           ("j" . "src java")
                                           ("R" . "src R")
@@ -1982,11 +1983,13 @@ used if TAG-LIST is empty."
   (evil-set-initial-state 'cfw:calendar-mode 'normal))
 
 (use-package calfw-org
+  :after calfw
   :general (mjs-leader-def
              "C c"   '("Open Calendar" . cfw:open-org-calendar)))
 
 (use-package calfw-blocks
   :ensure nil
+  :after calfw
   :general (mjs-leader-def
              "C v d" '("Day" . (lambda ()
                                  (interactive)
