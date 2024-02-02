@@ -24,7 +24,7 @@
     driSupport32Bit = true;
   };
 
-  # nixpkgs.config.cudaSupport = true;
+  nixpkgs.config.cudaSupport = true;
 
   services.xserver.videoDrivers = ["nvidia"];
 
@@ -58,6 +58,8 @@
   networking.hostName = "terra"; # Define your hostname.
 
   programs.steam.enable = true;
+
+  services.xserver.wacom.enable = true;
 
   services.syncthing = {
     enable = true;

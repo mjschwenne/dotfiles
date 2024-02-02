@@ -4,6 +4,7 @@
   ...
 }: let
   backgroundremove = pkgs.callPackage ./backgroundremove.nix {};
+  opencv_no_cuda = pkgs.opencv.override {enableCuda = false;};
 in {
   # Build with cuda on terra only
   home.packages =
@@ -19,7 +20,9 @@ in {
     enable = true;
     plugins = with pkgs.obs-studio-plugins; [
       wlrobs
-      obs-backgroundremoval
+      (obs-backgroundremoval.override {
+        opencv = opencv_no_cuda;
+      })
       obs-pipewire-audio-capture
     ];
     # ++ [backgroundremove];

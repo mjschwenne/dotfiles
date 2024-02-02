@@ -19,8 +19,14 @@
   ];
 
   home.packages = with pkgs; [
+    # Graphics
     (blender.override {
       cudaSupport = true;
     })
+    krita
+
+    # LLM
+    ollama
+    oterm
   ];
 }

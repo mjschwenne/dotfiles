@@ -55,6 +55,8 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     eww-tray.url = "github:ralismark/eww/tray-3";
+
+    llama.url = "github:ggerganov/llama.cpp";
   };
 
   # `outputs` are all the build result of the flake.
@@ -126,7 +128,8 @@
                 };
               };
 
-            nixpkgs.overlays = [inputs.emacs-overlay.overlay];
+            # The second one is a function which constructs the overlay, apparently
+            nixpkgs.overlays = [inputs.emacs-overlay.overlay (inputs.llama.overlays.default)];
           }
         ];
       };
