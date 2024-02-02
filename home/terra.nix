@@ -1,4 +1,13 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  patched_ollama = pkgs.ollama.overrideAttrs (old: rec {
+    version = "0.1.17";
+    postPatch = ''
+      substituteInPlace llm/llama.go \
+        --subst-var-by llamaCppServer "${pkgs.llama-cpp}/bin/llama-server"
+      substituteInPlace server/routes_test.go --replace "0.0.0" "${version}"
+    '';
+  });
+in {
   home = {
     username = "mjs";
     homeDirectory = "/home/mjs";
@@ -26,7 +35,7 @@
     krita
 
     # LLM
-    ollama
+    patched_ollama
     oterm
   ];
 }
