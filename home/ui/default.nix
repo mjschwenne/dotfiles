@@ -145,7 +145,7 @@
     windowrule=float,title:^(Write: \(no subject\))$
     windowrule=workspace 9,title:^(Spotify Premium)$
     windowrule=workspace 10,WebCord
-    windowrule=workspace 10,VencordDesktop
+    windowrule=workspace 10,vesktop
     windowrule=float,title:^(Open Files)$
     windowrule=float,class:^(zenity)$
     windowrule=float,title:^(Compact folders)$
@@ -172,7 +172,7 @@
     bind = $mod, F7, exec, emacs
     bind = $mod, F8, exec, thunderbird
     bind = $mod, F9, exec, spotify
-    bind = $mod, F10, exec, vencorddesktop
+    bind = $mod, F10, exec, vesktop
     bind = $mod, F11, exec, evince
     bind = $mod, F12, exec, pavucontrol
     bind = $mod, RETURN, exec, kitty
