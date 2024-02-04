@@ -21,6 +21,7 @@ in {
     ./graphical.nix
     ./ui
     ./applications
+    ./applications/obs
     ./applications/wonderdraft
     ./applications/dungeondraft
     ./applications/r

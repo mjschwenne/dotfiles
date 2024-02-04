@@ -149,7 +149,10 @@
           inputs
           // {
             pkgs-master = import inputs.nixpkgs-master {
-              system = system;
+              inherit system;
+            };
+            pkgs-stable = import inputs.nixpkgs-stable {
+              inherit system;
             };
           };
         modules = [
@@ -185,7 +188,10 @@
           inputs
           // {
             pkgs-master = import inputs.nixpkgs-master {
-              system = system;
+              inherit system;
+            };
+            pkgs-stable = import inputs.nixpkgs-stable {
+              inherit system;
             };
           };
         modules = [

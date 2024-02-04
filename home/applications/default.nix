@@ -1,3 +1,3 @@
-{ ... }: {
-  imports = [ ./discord ./spotify ./obs ./zathura.nix ];
+{...}: {
+  imports = [./discord ./spotify ./zathura.nix];
 }
