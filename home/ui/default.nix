@@ -127,7 +127,6 @@
     }
 
     misc {
-    	force_hypr_chan = true
     	enable_swallow = true
     	swallow_regex = ".*kitty.*"
     }
