@@ -135,6 +135,11 @@
     	preserve_split = true
     }
 
+    device:wacom-intuos-bt-m-pen {
+      transform = 0
+      output = HDMI-A-5
+    }
+
     # WINDOW RULES
     windowrule=idleinhibit fullscreen,(.+)
     windowrule=float,qalculate-gtk

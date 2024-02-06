@@ -1115,6 +1115,7 @@
      (rust . t)))
 
   (add-to-list 'org-modules 'org-habit t)
+  (add-to-list 'org-modules 'org-tempo t)
   (advice-add #'org-agenda-finalize :before #'mjs/org-agenda-mark-habits)
 
   ;; Save the buffers after refile
@@ -1582,7 +1583,7 @@ The form should be '((\"none\" 1) (\"knowledge-base\" 3) ...)."
   (cl-defun org-roam-node-auto-tags (node &key (tag-list mjs/org-auto-tags--current-list))
     "Inject the TAG-LIST into the {auto-tags} region of captured NODE."
     (if (and tag-list (> (length tag-list) 0))
-        (concat ":" (s-join ":" (eval tag-list)) ":")
+        (concat ":" (s-join ":" tag-list) ":")
       ""))
 
   (cl-defun mjs/org-roam-filter-context-fn (node &key
