@@ -62,6 +62,7 @@
         tcolorbox
         environ
         tikzfill
+        tikzmark
         enumitem
         dashrule
         ifmtarg
@@ -82,6 +83,10 @@
         cabin
         inconsolata
         upquote
+        fifo-stack
+        varwidth
+        tabto-ltx
+        totcount
         ;
     })
     ghostscript

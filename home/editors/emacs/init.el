@@ -732,6 +732,17 @@
   "n t"   '("TODO List" . org-todo-list)
   "n T"   '("Tag View" . org-tags-view))
 
+  (custom-set-variables '(org-emphasis-alist
+                          (quote (("*" bold)
+                                  ("/" italic)
+                                  ("_" underline)
+                                  ("=" org-verbatim verbatim)
+                                  ("~" org-code verbatim)
+                                  ("+"
+                                   (:strike-through t))
+                                  ("!"
+                                  (:overline t))))))
+
 (use-package org
   ;; For whatever reason, `org' gets upset if these aren't defined soon enough
   :init (setq org-directory "~/Documents/")
