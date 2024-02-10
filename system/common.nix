@@ -34,7 +34,7 @@
   users.users.mjs = {
     isNormalUser = true;
     description = "Matt Schwennesen";
-    extraGroups = ["networkmanager" "wheel" "syncthing"];
+    extraGroups = ["networkmanager" "wheel" "syncthing" "video" "input"];
     shell = pkgs.fish;
   };
 

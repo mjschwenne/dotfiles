@@ -138,6 +138,9 @@
     hyprpicker
     waypaper
     wayland-logout
+
+    wezterm
+    alacritty
   ];
   masterPkgs = with pkgs-master; [librewolf firefox];
 in {
@@ -204,9 +207,9 @@ in {
   # starship - an customizable prompt for any shell
   programs.starship = {enable = true;};
 
-  home.file.".config/starship.toml" = {
-    source = ./applications/starship.toml;
-  };
+  # home.file.".config/starship.toml" = {
+  #   source = ./applications/starship.toml;
+  # };
 
   xdg.configFile."mimeapps.list".force = true;
   xdg.mimeApps = {

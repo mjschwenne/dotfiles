@@ -59,6 +59,8 @@
     eww-tray.url = "github:ralismark/eww/tray-3";
 
     llama.url = "github:ggerganov/llama.cpp";
+
+    ags.url = "github:Aylur/ags/52b2e5795a02e8b39a91e44c4dec76d06b6c8f4f";
   };
 
   # `outputs` are all the build result of the flake.
