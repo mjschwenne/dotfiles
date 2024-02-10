@@ -9,7 +9,7 @@
     wheel
   ];
   gnome_packages = with pkgs.gnome; [
-    gnome-keyring
+    # gnome-keyring
     gnome-control-center
     gnome-bluetooth
   ];
@@ -115,7 +115,8 @@ in {
       swappy
       wf-recorder
     ]
-    ++ python_packages;
+    ++ python_packages
+    ++ gnome_packages;
 
   fonts.fontconfig.enable = true;
 
