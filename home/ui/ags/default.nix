@@ -29,7 +29,7 @@ in {
 
   programs.ags = {
     enable = true;
-    configDir = ./config;
+    configDir = null;
 
     extraPackages = with pkgs; [
       gtksourceview
@@ -41,6 +41,11 @@ in {
       webp-pixbuf-loader
       ydotool
     ];
+  };
+
+  xdg.configFile."ags" = {
+    source = ./config;
+    recursive = true;
   };
 
   # Install all packages from the dependencies.conf file.

@@ -34,9 +34,10 @@ const WindowTitle = async () => {
     }
 }
 
-const OptionalWindowTitleInstance = await WindowTitle();
+const PrimaryWindowTitleInstance = await WindowTitle();
+const SecondaryWindowTitleInstace = await WindowTitle();
 
-export default () => Widget.EventBox({
+export default (monitor = 0) => Widget.EventBox({
     onScrollUp: () => {
         Indicator.popup(1); // Since the brightness and speaker are both on the same window
         Brightness.screen_value += 0.05;
@@ -45,9 +46,9 @@ export default () => Widget.EventBox({
         Indicator.popup(1); // Since the brightness and speaker are both on the same window
         Brightness.screen_value -= 0.05;
     },
-    onPrimaryClick: () => {
-        App.toggleWindow('sideleft');
-    },
+    // onPrimaryClick: () => {
+    //     App.toggleWindow('sideleft');
+    // },
     child: Widget.Box({
         homogeneous: false,
         children: [
@@ -61,7 +62,7 @@ export default () => Widget.EventBox({
                             vertical: true,
                             className: 'bar-space-button',
                             children: [
-                                OptionalWindowTitleInstance,
+                                monitor == 0 ? PrimaryWindowTitleInstance : SecondaryWindowTitleInstace
                             ]
                         })]
                     }),

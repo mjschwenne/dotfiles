@@ -66,6 +66,7 @@
           "$mod, b, exec, librewolf"
           "$mod_SHIFT, b, exec, brave"
           "$mod, e, exec, emacs"
+          "$mod, n, exec, foot nvim"
 
           # System
           "$mod_CTRL, a, exec, killall ags ydotool; ags &"
@@ -183,7 +184,7 @@
           '',Print, exec, grim -g "$(slurp)" - | swappy -f -''
           ''ALT,Print,exec,grim -g "$(slurp)" - | wl-copy''
           "SHIFT,Print,exec,grim - | wl-copy"
-          ''Control+Super+Shift,S,exec,grim -g $SLURP_COMMAND "tmp.png" && tesseract "tmp.png" - | wl-copy && rm "tmp.png"''
+          ''CTRL_$mod_SHIFT,t,exec,grim -g "$(slurp)" "tmp.png" && tesseract "tmp.png" - | wl-copy && rm "tmp.png"''
           "$mod_ALT, r, exec, ~/.config/ags/scripts/record-script.sh"
           "$mod_SHIFT, r, exec, ~/.config/ags/scripts/record-script.sh --fullscreen"
           "$mod_SHIFT_ALT, r, exec, ~/.config/ags/scripts/record-script.sh --fullscreen-sound"
@@ -239,7 +240,7 @@
         rounding = 20;
         blur = {
           enabled = true;
-          xray = true;
+          xray = false;
           size = 5;
           passes = 4;
           brightness = 1;

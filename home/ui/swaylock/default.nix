@@ -1,7 +1,10 @@
 {pkgs, ...}: {
-  home.packages = with pkgs; [swaylock-effects swayidle];
+  home = {
+    packages = with pkgs; [swaylock-effects swayidle];
+  };
 
-  # home.file.".config/swaylock/config" = { source = ./config; };
-  #
-  # home.file.".config/swaylock/swaylock.png" = { source = ./swaylock.png; };
+  xdg.configFile = {
+    "swaylock/config".source = ./config;
+    "swaylock/swaylock.png".source = ./swaylock.png;
+  };
 }

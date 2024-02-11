@@ -94,6 +94,7 @@
     calc
     rename
     smartmontools
+    killall
 
     # Networking
     wget
