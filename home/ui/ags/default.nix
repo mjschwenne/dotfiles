@@ -29,7 +29,7 @@ in {
 
   programs.ags = {
     enable = true;
-    configDir = null;
+    configDir = ./config;
 
     extraPackages = with pkgs; [
       gtksourceview
@@ -68,7 +68,6 @@ in {
       pavucontrol
       wireplumber
       libdbusmenu-gtk3
-      libsForQt5.plasma-browser-integration
       playerctl
       swww
 
@@ -119,18 +118,4 @@ in {
     ++ gnome_packages;
 
   fonts.fontconfig.enable = true;
-
-  # gtk = {
-  #   enable = true;
-  #   theme = {
-  #     name = "adw-gtk3-dark";
-  #     package = pkgs.adw-gtk3;
-  #   };
-  #   iconTheme = {
-  #     name = "OneUI";
-  #     package = pkgs.callPackage ./oneui.nix {};
-  #   };
-  #   font = {name = "JetBrainsMono Nerd Font";};
-  #   gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
-  # };
 }

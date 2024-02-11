@@ -22,18 +22,6 @@
 
   programs.steam.enable = true;
 
-  fonts.packages = with pkgs; [
-    (nerdfonts.override {fonts = ["JetBrainsMono" "SpaceMono"];})
-    (google-fonts.override {
-      fonts = [
-        "Gabarito"
-        "Lexend"
-      ];
-    })
-    material-symbols
-    rubik
-  ];
-
   services.syncthing = {
     enable = true;
     user = "mjs";

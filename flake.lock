@@ -189,6 +189,26 @@
         "type": "github"
       }
     },
+    "hyprgrass": {
+      "inputs": {
+        "hyprland": [
+          "hyprland"
+        ]
+      },
+      "locked": {
+        "lastModified": 1707244801,
+        "narHash": "sha256-tvZZfzNajAvmKWKukrR42viSO0hoaTbbWbFVWwZ5Mcg=",
+        "owner": "horriblename",
+        "repo": "hyprgrass",
+        "rev": "360bc1c2b590423d91ee7ee21049b55c5c7a1eaa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "horriblename",
+        "repo": "hyprgrass",
+        "type": "github"
+      }
+    },
     "hyprland": {
       "inputs": {
         "hyprland-protocols": "hyprland-protocols",
@@ -477,6 +497,7 @@
         "eww-tray": "eww-tray",
         "foundry": "foundry",
         "home-manager": "home-manager",
+        "hyprgrass": "hyprgrass",
         "hyprland": "hyprland",
         "llama": "llama",
         "nixos-hardware": "nixos-hardware",

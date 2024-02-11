@@ -6,11 +6,8 @@
   eww-tray = pkgs.callPackage ./ui/eww/eww-tray.nix {
     withWayland = true;
   };
-  hyprland-activewindow = pkgs.callPackage ./ui/hyprland-activewindow.nix {};
   packages = with pkgs; [
     # Web browsers
-    # librewolf
-    # firefox
     brave
 
     # Instant Communications
@@ -190,26 +187,7 @@ in {
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
 
-  home.packages = packages ++ masterPkgs ++ [eww-tray hyprland-activewindow];
-
-  programs.kitty = {
-    enable = true;
-    theme = "Catppuccin-Mocha";
-    font.name = "JetBrainsMono Nerd Font";
-    shellIntegration.mode = "no-cursor";
-    settings = {
-      disable_ligatures = "never";
-      cursor_shape = "block";
-      share_connections = "no";
-    };
-  };
-
-  # starship - an customizable prompt for any shell
-  programs.starship = {enable = true;};
-
-  # home.file.".config/starship.toml" = {
-  #   source = ./applications/starship.toml;
-  # };
+  home.packages = packages ++ masterPkgs ++ [eww-tray];
 
   xdg.configFile."mimeapps.list".force = true;
   xdg.mimeApps = {

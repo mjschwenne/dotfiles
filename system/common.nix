@@ -57,7 +57,7 @@
 
     # Python
     (python311.withPackages
-      (ps: with ps; [debugpy]))
+      (ps: with ps; [debugpy material-color-utilities]))
 
     # Rust
     rustc
