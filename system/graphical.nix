@@ -94,7 +94,7 @@
   };
 
   # Flatpak
-  services.flatpak.enable = true;
+  # services.flatpak.enable = true;
 
   # File manager
   services.gvfs.enable = true;

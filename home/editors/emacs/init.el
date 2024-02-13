@@ -1086,7 +1086,7 @@
            :immediate-finish t)
           ("g" "Graves Session" entry
            (file "ttrpg/games/graves-and-groves/sessions.org")
-           "\n* Session %<%Y-%m-%d>\n\n%?\n"
+           "\n\n* Session %<%Y-%m-%d>\n\n%?\n"
            :prepend t
            :jump-to-captured t
            :immediate-finish t)

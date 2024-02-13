@@ -13,7 +13,7 @@
         find */ -type f -exec sh -c 'file=''${1#./}; mv "$file" "$(basename $file)"' _ '{}' \; ; find */ -depth -type d -exec rmdir '{}' \;'';
       mjs-bulk-rename = ''find . -depth -exec fish -c 'mjs-rename "{}"' \;'';
       icat = "kitty +kitten icat";
-      ssh = "kitty +kitten ssh";
+      kssh = "kitty +kitten ssh";
       m = "math";
       nix-shell = "nix-shell --run fish";
       cs400-ssh = ''
