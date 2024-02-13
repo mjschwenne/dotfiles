@@ -162,6 +162,7 @@ in {
   };
   home.sessionVariables = {
     GTK_THEME = "Catppuccin-Mocha-Standard-Pink-Dark";
+    YDOTOOL_SOCKET = "/tmp/ydotools";
   };
   home.pointerCursor = {
     package = pkgs.catppuccin-cursors.mochaLight;

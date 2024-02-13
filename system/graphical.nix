@@ -41,6 +41,13 @@
     # pulseaudio
   ];
 
+  systemd.user.services.ydotoold = {
+    enable = true;
+    description = "An auto-input utility for wayland";
+    serviceConfig.ExecStart = "/etc/profiles/per-user/mjs/bin/ydotoold --socket-path /tmp/ydotools";
+    wantedBy = ["default.target"];
+  };
+
   fonts.fontconfig.enable = true;
   fonts.packages = with pkgs; [
     (nerdfonts.override {fonts = ["JetBrainsMono" "SpaceMono"];})

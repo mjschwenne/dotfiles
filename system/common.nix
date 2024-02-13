@@ -31,10 +31,11 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  hardware.uinput.enable = true;
   users.users.mjs = {
     isNormalUser = true;
     description = "Matt Schwennesen";
-    extraGroups = ["networkmanager" "wheel" "syncthing" "video" "input"];
+    extraGroups = ["networkmanager" "wheel" "syncthing" "video" "input" "uinput"];
     shell = pkgs.fish;
   };
 

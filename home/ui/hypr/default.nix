@@ -191,9 +191,8 @@
           "$mod_ALT, c, exec, hyprpicker -a"
           "$mod, v, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
 
-          # Mouse binds
-          "$mod, mouse:272, movewindow"
-          "$mod, mouse:273, resizeactive"
+          # Touch gestures
+          ",edge:d:u, exec, ags -t 'osk'"
 
           # Debug
           ''Super+Alt, f12, exec, notify-send 'Test notification' "Here's a really long message to test truncation and wrapping\nYou can middle click or flick this notification to dismiss it!" -a 'Shell' -A "Test1=I got it!" -A "Test2=Another action"''
@@ -236,10 +235,14 @@
         ", XF86MonBrightnessDown, exec, ags run-js 'brightness.screen_value -= 0.05;'"
         ", XF86MonBrightnessDown, exec, ags run-js 'indicator.popup(1);'"
       ];
+      bindm = [
+        "$mod, mouse:272, movewindow"
+        "$mod, mouse:273, resizeactive"
+      ];
       decoration = {
         rounding = 20;
         blur = {
-          enabled = true;
+          enabled = false;
           xray = false;
           size = 5;
           passes = 4;
@@ -362,6 +365,11 @@
         }
         ."${osConfig.networking.hostName}"
         or [];
+      plugin = {
+        touch_gestures = {
+          sensitivity = 4.0;
+        };
+      };
       source = [
         "~/.config/hypr/colors.conf"
       ];
@@ -410,12 +418,16 @@
     (callPackage ./hyprland-activewindow.nix {})
   ];
 
+  home.file.".config/hypr/colors.conf".source = ./colors.conf;
+
   xdg.configFile = {
-    "hypr/colors.conf".source = ./colors.conf;
+    # "hypr/colors.conf".source = ./colors.conf;
+
     "hypr/scripts" = {
       source = ./scripts;
       recursive = true;
     };
+
     "hypr/shaders" = {
       source = ./shaders;
       recursive = true;

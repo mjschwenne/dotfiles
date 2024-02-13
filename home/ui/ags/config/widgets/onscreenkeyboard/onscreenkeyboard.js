@@ -24,7 +24,7 @@ class ShiftMode {
     static Off = new ShiftMode('Off');
     static Normal = new ShiftMode('Normal');
     static Locked = new ShiftMode('Locked');
-  
+
     constructor(name) {
       this.name = name;
     }
@@ -103,7 +103,7 @@ const keyboardItself = (kbJson) => {
                     className: `osk-key osk-key-${key.shape}`,
                     hexpand: ["space", "expand"].includes(key.shape),
                     label: key.label,
-                    attribute: 
+                    attribute:
                         {key: key},
                     setup: (button) => {
                         let pressed = false;
@@ -172,7 +172,7 @@ const keyboardItself = (kbJson) => {
                                                 rightShiftButton.toggleClassName('osk-key-active', false);
                                             }
                                             execAsync(`ydotool key ${key.keycode}:0`);
-                                            
+
                                             allButtons.forEach(button => { if (typeof button.attribute.key.labelShift !== 'undefined') button.label = button.attribute.key.label; }
                                         )};
                                     }
