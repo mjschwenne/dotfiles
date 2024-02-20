@@ -1,14 +1,28 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+} @ inputs: {
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-  nix.settings.trusted-users = ["root" "mjs"];
-  nix.settings.trusted-public-keys = [
-    "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
-    "sol1:FnmeWYY2OGCZpx7+ZKBoOui6UrrUqASpap+FYHXMPsc="
-  ];
+  nix = {
+    channel.enable = false;
+    registry.nixpkgs.flake = inputs.nixpkgs;
+    nixPath = [
+      "nixpkgs=${inputs.nixpkgs.outPath}"
+    ];
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+      trusted-users = ["root" "mjs"];
+      trusted-public-keys = [
+        "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
+        "sol1:FnmeWYY2OGCZpx7+ZKBoOui6UrrUqASpap+FYHXMPsc="
+      ];
+      nix-path = "${inputs.nixpkgs.outPath}";
+    };
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -73,6 +87,8 @@
     # Haskell
     ghc
     haskellPackages.ghci-dap
+    cabal-install
+    cabal2nix
 
     # Build Utilities
     gnumake

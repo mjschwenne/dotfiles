@@ -393,12 +393,10 @@
         "float,title:^(Write:)(.*)(- Thunderbird)$"
         "float,title:^(Write: \(no subject\))$"
         "float,title:^(Open Files)$"
-        "float,class:^(zenity)$"
         "float,title:^(Compact folders)$"
         "float,title:^(KeePassXC - Browser Access Request)$"
         "float,title:^(Unlock Database - KeePassXC)$"
         "float,title:^(Formula \(pdflatex\))$"
-        "float,title:^(Progress),class:^(Zotero)$"
 
         # Workspaces
         "workspace 8,thunderbird"
@@ -407,6 +405,8 @@
         "workspace 10,vesktop"
       ];
       windowrulev2 = [
+        "float,class:^(zenity)$"
+        "float,title:^(Progress),class:^(Zotero)$"
         "noblur,title:^(Annotation - Zoom)$"
       ];
     };

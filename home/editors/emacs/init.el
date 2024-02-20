@@ -899,6 +899,7 @@
               (:grouptags)
               ("C")
               ("lisp")
+              ("pl_theory")
               (:endgrouptag)
               (:startgrouptag)
               ("comp_op")
