@@ -35,6 +35,10 @@ in {
     })
     krita
 
+    # Audio
+    audacity
+    ardour
+
     # LLM
     patched_ollama
     oterm

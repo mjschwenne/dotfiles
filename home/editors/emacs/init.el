@@ -30,8 +30,7 @@
               column-number-mode t
               enable-recursive-minibuffers t
               use-dialog-box nil
-              scroll-margin 8
-              hscroll-margin 8
+              scroll-margin 8 hscroll-margin 8
               scroll-conservatively 101)
 
 (use-package catppuccin-theme
@@ -2044,3 +2043,21 @@ used if TAG-LIST is empty."
 (use-package sly-macrostep)
 
 (use-package sly-asdf)
+
+(use-package haskell-mode
+  ;; These aren't working and I have no idea why...
+  :diminish haskell-doc-mode
+  :diminish haskell-indent-mode
+  :diminish interactive-haskell-mode
+  :custom ((haskell-process-args-cabal-new-repl
+            '("--ghc-options=-ferror-spans -fshow-loaded-modules"))
+           (haskell-process-type 'cabal-new-repl)
+           (haskell-stylish-on-save 't))
+  :hook
+  (haskell-mode . (lambda ()
+                    (diminish 'haskell-doc-mode)
+                    (diminish 'haskell-indent-mode)
+                    (diminish 'interactive-haskell-mode)))
+  (haskell-mode . turn-on-haskell-doc-mode)
+  (haskell-mode . turn-on-haskell-indent)
+  (haskell-mode . interactive-haskell-mode))

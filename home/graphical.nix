@@ -139,7 +139,7 @@
     wezterm
     alacritty
   ];
-  masterPkgs = with pkgs-master; [librewolf firefox protonvpn-gui];
+  masterPkgs = with pkgs-master; [librewolf firefox protonvpn-cli protonvpn-gui];
 in {
   gtk = {
     enable = true;
