@@ -1175,6 +1175,7 @@
                                           ("r" . "src rust")
                                           ("p" . "src python")
                                           ("sj" . "src javascript")
+                                          ("sh" . "src haskell")
                                           ("st" . "src latex")
                                           ("el" . "src emacs-lisp")
                                           ("cp" . "src cpp")
