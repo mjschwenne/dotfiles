@@ -1118,6 +1118,7 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((C . t)
+     (dot . t)
      (emacs-lisp . t)
      (latex . t)
      (python . t)
