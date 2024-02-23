@@ -20,3 +20,5 @@ require("which-key").register({
 		}
 	}
 }, { buffer = bufnr })
+
+vim.o.expandtab = true
