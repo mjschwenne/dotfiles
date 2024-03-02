@@ -7,17 +7,6 @@
 }: {
   imports = [hyprland.homeManagerModules.default];
 
-  home.sessionVariables = {
-    # Setting up input for onscreen keyboard
-    QT_IM_MODULE = "fcitx";
-    XMODIFIER = "@im=fcitx";
-    SDL_IM_MODULE = "fcitx";
-    GLFW_IM_MODULE = "ibus";
-    INPUT_METHOD = "fcitx";
-
-    BROWSER = "librewolf";
-  };
-
   wayland.windowManager.hyprland = {
     enable = true;
     plugins = [
@@ -237,7 +226,7 @@
       ];
       bindm = [
         "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizeactive"
+        "$mod, mouse:273, resizewindow"
       ];
       decoration = {
         rounding = 20;
@@ -391,12 +380,12 @@
         "size 400 200,qalculate-gtk"
         "pin,rofi"
         "float,title:^(Write:)(.*)(- Thunderbird)$"
-        "float,title:^(Write: \(no subject\))$"
+        "float,title:^(Write: \\(no subject\\))$"
         "float,title:^(Open Files)$"
         "float,title:^(Compact folders)$"
         "float,title:^(KeePassXC - Browser Access Request)$"
         "float,title:^(Unlock Database - KeePassXC)$"
-        "float,title:^(Formula \(pdflatex\))$"
+        "float,title:^(Formula \\(pdflatex\\))$"
 
         # Workspaces
         "workspace 8,thunderbird"
@@ -412,13 +401,24 @@
     };
   };
 
-  home.packages = with pkgs; [
-    hyprshade
-    fcitx5
-    (callPackage ./hyprland-activewindow.nix {})
-  ];
+  home = {
+    sessionVariables = {
+      # Setting up input for onscreen keyboard
+      QT_IM_MODULE = "fcitx";
+      XMODIFIER = "@im=fcitx";
+      SDL_IM_MODULE = "fcitx";
+      GLFW_IM_MODULE = "ibus";
+      INPUT_METHOD = "fcitx";
 
-  home.file.".config/hypr/colors.conf".source = ./colors.conf;
+      BROWSER = "librewolf";
+    };
+    packages = with pkgs; [
+      hyprshade
+      fcitx5
+      (callPackage ./hyprland-activewindow.nix {})
+    ];
+    file.".config/hypr/colors.conf".source = ./colors.conf;
+  };
 
   xdg.configFile = {
     # "hypr/colors.conf".source = ./colors.conf;

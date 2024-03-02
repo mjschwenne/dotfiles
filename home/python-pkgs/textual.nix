@@ -8,7 +8,7 @@
   poetry-core,
   pytest-aiohttp,
   pytestCheckHook,
-  pythonOlder,
+  # pythonOlder,
   rich,
   syrupy,
   time-machine,
@@ -17,16 +17,16 @@
 }:
 buildPythonPackage rec {
   pname = "textual";
-  version = "0.50.1";
+  version = "0.52.1";
   pyproject = true;
 
-  disabled = pythonOlder "3.7";
+  # disabled = pythonOlder "3.7";
 
   src = fetchFromGitHub {
     owner = "Textualize";
     repo = pname;
     rev = "refs/tags/v${version}";
-    hash = "sha256-0000000000000000000000000000000000000000000=";
+    hash = "sha256-jt3HX8p5KVE3/ROKaQpU+jA4bjqW+idjynTdgvWrtYI=";
   };
 
   nativeBuildInputs = [
@@ -72,6 +72,7 @@ buildPythonPackage rec {
 
     # requires tree-sitter-languages which is not packaged in nixpkgs
     "test_register_language"
+    "test_language_binary_missing"
   ];
 
   pythonImportsCheck = [

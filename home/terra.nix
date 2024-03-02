@@ -7,6 +7,34 @@
       substituteInPlace server/routes_test.go --replace "0.0.0" "${version}"
     '';
   });
+  updated_textual = pkgs.callPackage ./python-pkgs/textual.nix {
+    inherit (pkgs) tree-sitter;
+    inherit (pkgs.python3Packages) buildPythonPackage;
+    jinja2 = pkgs.jinja2-cli;
+    inherit (pkgs.python311Packages) importlib-metadata markdown-it-py poetry-core pytest-aiohttp pytestCheckHook rich syrupy time-machine typing-extensions;
+  };
+  oterm_updated = pkgs.oterm.overrideAttrs (old: rec {
+    version = "0.2.1";
+    src = pkgs.fetchFromGitHub {
+      owner = "ggozad";
+      repo = "oterm";
+      rev = "refs/tags/${version}";
+      hash = "sha256-bMfRMJPf62S0UFDOUnZAHpP8DEjBj2GAJvQ2T7AAAX0=";
+    };
+    propagatedBuildInputs = with pkgs.python3Packages; [
+      updated_textual
+      typer
+      python-dotenv
+      httpx
+      aiosql
+      aiosqlite
+      pyperclip
+      packaging
+      rich-pixels
+      pillow
+      aiohttp
+    ];
+  });
 in {
   home = {
     username = "mjs";
@@ -41,6 +69,6 @@ in {
 
     # LLM
     patched_ollama
-    oterm
+    oterm_updated
   ];
 }
