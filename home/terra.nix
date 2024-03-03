@@ -68,7 +68,8 @@ in {
     ardour
 
     # LLM
-    patched_ollama
+    # patched_ollama
+    ollama
     oterm_updated
   ];
 }
