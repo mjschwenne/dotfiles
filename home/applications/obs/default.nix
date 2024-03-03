@@ -15,9 +15,9 @@ in {
     then [
       # pkgs.cudaPackages.tensorrt
       # pkgs.cudaPackages.cudnn
-      # (pkgs.callPackage
-      #   ./onnxruntime.nix
-      #   {})
+      (pkgs.callPackage
+        ./onnxruntime.nix
+        {})
     ]
     else [];
 

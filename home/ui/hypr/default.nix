@@ -12,6 +12,14 @@
     plugins = [
       hyprgrass.packages.${pkgs.system}.default
     ];
+    # Hyprland changed the device format.. HM is still behind
+    extraConfig = ''
+      device {
+        name = wacom-intuos-bt-m-pen
+        transform = 0
+        output = HDMI-A-5
+      }
+    '';
     settings = {
       animations = {
         enabled = true;
@@ -248,12 +256,6 @@
       };
       debug = {
         disable_logs = false;
-      };
-      device = {
-        wacom-intuos-bt-m-pen = {
-          transform = 0;
-          output = "HDMI-A-5";
-        };
       };
       dwindle = {
         preserve_split = true;
