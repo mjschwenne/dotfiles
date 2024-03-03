@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  nixpkgs,
   ...
 } @ inputs: {
   # Use the systemd-boot EFI boot loader.
@@ -23,6 +24,10 @@
       nix-path = "${inputs.nixpkgs.outPath}";
     };
   };
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "freeimage-unstable-2021-11-01"
+  ];
 
   # Enable networking
   networking.networkmanager.enable = true;

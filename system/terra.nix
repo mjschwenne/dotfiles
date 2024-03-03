@@ -31,10 +31,6 @@
 
   nixpkgs.config.cudaSupport = true;
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "freeimage-unstable-2021-11-01"
-  ];
-
   services.xserver.videoDrivers = ["nvidia"];
 
   hardware.nvidia = {
