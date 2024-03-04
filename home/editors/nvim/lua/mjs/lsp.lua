@@ -37,6 +37,7 @@ if lspconfig_p then
 	lspconfig.nixd.setup {}
 	lspconfig.pyright.setup {}
 	lspconfig.tsserver.setup {}
+	lspconfig.texlab.setup {}
 
 	whichkey.register({
 		["[e"] = { vim.diagnostic.goto_prev, "Previous Diagnostic" },
@@ -165,26 +166,17 @@ if none_p then
 			end
 		end,
 		sources = {
-			-- General
-			formatting.trim_whitespace,
-			formatting.trim_newlines,
-
 			-- Bash
 			formatting.shfmt,
 
 			-- C/C++
-			diagnostics.clang_check,
-			formatting.clang_format.with({
-				extra_args = { "-i", '-style={"IndentWith:4, BreakBeforeBraces: Allman"}' }
-			}),
+			-- formatting.clang_format.with({
+			-- 	extra_args = { "-i", '-style={"IndentWith:4, BreakBeforeBraces: Allman"}' }
+			-- }),
 
 			-- Fish
 			diagnostics.fish,
 			formatting.fish_indent,
-
-			-- Haskell
-			formatting.stylish_haskell,
-			formatting.cabal_fmt,
 
 			-- Java
 			formatting.google_java_format,
@@ -195,13 +187,8 @@ if none_p then
 			formatting.alejandra,
 
 			-- LaTeX
-			diagnostics.chktex,
 			diagnostics.proselint,
-			formatting.latexindent,
 			hover.dictionary,
-
-			-- Lua
-			diagnostics.luacheck,
 
 			-- Make
 			diagnostics.checkmake,
@@ -210,9 +197,6 @@ if none_p then
 			diagnostics.mypy,
 			formatting.black,
 			formatting.isort,
-
-			-- Rust
-			formatting.rustfmt,
 		}
 	})
 else

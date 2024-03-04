@@ -109,6 +109,7 @@ in {
       nodePackages.pyright
       rust-analyzer
       nodePackages.typescript-language-server
+      texlab
 
       # none-ls sources
       alejandra
@@ -117,13 +118,9 @@ in {
       checkmake
       google-java-format
       deadnix
-      luajitPackages.luacheck
       mypy
       black
-      stylish-haskell
-      haskellPackages.cabal-fmt
       isort
-      rustfmt
       shfmt
 
       # language specific stuff
@@ -150,6 +147,7 @@ in {
       whichkey
       nvim-autopairs
       comment-nvim
+      trim-nvim
 
       # File tree
       nvim-tree-lua

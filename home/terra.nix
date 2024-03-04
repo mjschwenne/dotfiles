@@ -53,6 +53,7 @@ in {
     ./applications/wonderdraft
     ./applications/dungeondraft
     ./applications/r
+    ./applications/rembg
     ./editors/emacs
   ];
 
