@@ -21,7 +21,7 @@
   # limit cores to try and cap memory useage... Which is crazy for a desktop with 64 GB RAM and 64 GB Swap...
   nix.settings.cores = 16;
   nix.settings.max-jobs = 1;
-
+  nixpkgs.config.allowBroken = true;
   # Nvidia graphics setup
   hardware.opengl = {
     enable = true;

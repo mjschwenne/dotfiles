@@ -4,10 +4,11 @@
   osConfig,
   ...
 }: let
-  opencv_no_cuda = pkgs.opencv.override {enableCuda = false;};
-  backgroundremove = pkgs-stable.obs-studio-plugins.obs-backgroundremoval.override {
-    opencv = opencv_no_cuda;
-  };
+  onnx =
+    pkgs.callPackage
+    ./onnxruntime.nix
+    {};
+  backgroundremove = pkgs-stable.obs-studio-plugins.obs-backgroundremoval;
 in {
   # Build with cuda on terra only
   home.packages =
