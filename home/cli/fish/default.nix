@@ -1,11 +1,11 @@
 {...}: {
   programs.fish = {
     enable = true;
-    interactiveShellInit = ''
-      if test -f ~/.cache/ags/user/colorschemes/sequences
-        cat ~/.cache/ags/user/colorschemes/sequences
-      end
-    '';
+    # interactiveShellInit = ''
+    #   if test -f ~/.cache/ags/user/colorschemes/sequences
+    #     cat ~/.cache/ags/user/colorschemes/sequences
+    #   end
+    # '';
     shellAliases = {
       vi = "nvim";
       dup-files = "find . -type f -printf '%p -> %f\\n' | sort -k2 | uniq -f1 --all-repeated=separate";
