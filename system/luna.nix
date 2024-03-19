@@ -20,13 +20,14 @@
   ];
 
   # Adjust screen size for SDDM
-  services.xserver.displayManager.sddm.sugarCandyNix.settings = {
-    ScreenWidth = lib.mkDefault 2736;
-    ScreenHeight = lib.mkDefault 1824;
+  services = {
+    xserver.displayManager.sddm.sugarCandyNix.settings = {
+      ScreenWidth = lib.mkDefault 2736;
+      ScreenHeight = lib.mkDefault 1824;
+    };
+    # Enable thermald, which should prevent overheating
+    thermald.enable = true;
   };
-
-  # Enable thermald, which should prevent overheating
-  services.thermald.enable = true;
 
   services.syncthing = {
     enable = true;
