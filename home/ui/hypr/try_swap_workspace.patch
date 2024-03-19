@@ -1,0 +1,13 @@
+diff --git a/scripts/try_swap_workspace.old b/nix/store/j16xpdq8fb70ycllgsr8hcz4znafc8xk-try_swap_workspace-0.1/bin/.try_swap_workspace-wrapped
+index 46aadfb..96a1417 100755
+--- a/try_swap_workspace
++++ b/try_swap_workspace
+@@ -48,7 +48,7 @@ basicChecks() {
+ 		notify "Seriously mate!!" "Start Hyprland before this script"
+ 		exit 1
+ 	}
+-	pgrep -x Hyprland &>/dev/null || {
++	pgrep -x .Hyprland-wrapp &>/dev/null || {
+ 		notify "Make Sure Hyprland Session is running."
+ 		exit 1
+ 	}

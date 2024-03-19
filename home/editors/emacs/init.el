@@ -1841,7 +1841,8 @@ used if TAG-LIST is empty."
                                     ("Zathura" "zathura --synctex-forward :: %o")))
            (TeX-view-program-selection '((output-pdf "PDF Tools")))
            (TeX-source-correlate-start-server t)
-           (TeX-save-query nil))
+           (TeX-save-query nil)
+           (TeX-engine 'luatex))
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
   (mjs-local-leader-def :keymaps 'LaTeX-mode-map
