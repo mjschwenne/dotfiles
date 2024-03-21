@@ -1,4 +1,4 @@
-{...}: {
+{osConfig, ...}: {
   programs.fish = {
     enable = true;
     # interactiveShellInit = ''
@@ -26,12 +26,22 @@
         set -l monitor (hyprctl monitors -j | jq -c -r '.[] | if .focused then .name else empty end')
         hyprctl keyword monitor "$monitor,preferred,auto,$argv[1]"
         sleep 0.5
-        if test $monitor = "eDP-1"
-            eww close background_window start_window workspace_window window_window music_window tray_window sys_window clock_window power_window
-            eww open-many background_window start_window workspace_window window_window music_window tray_window sys_window clock_window power_window
+        pkill ags
+        ags &
+        disown (pgrep ags)
+      '';
+      mjs-toggle-mirror = ''
+        set -l target ${
+          if osConfig.networking.hostName == "terra"
+          then "HDMI-A-1"
+          else "HDMI-A-2"
+        }
+        set -l source eDP-1
+
+        if test (hyprctl monitors | wc -l) -eq (hyprctl monitors all | wc -l)
+          hyprctl keyword monitor $target,preferred,auto,1,mirror,$source
         else
-            eww close background_window start_window workspace_window window_window music_window tray_window sys_window clock_window power_window
-            eww open-many background_window start_window workspace_window window_window music_window tray_window sys_window clock_window power_window
+          hyprctl keyword monitor $target,preferred,auto,1
         end
       '';
       mjs-rename = ''
