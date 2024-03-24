@@ -84,6 +84,7 @@
         varwidth
         tabto-ltx
         totcount
+        mathtools
         ;
     })
     ghostscript
