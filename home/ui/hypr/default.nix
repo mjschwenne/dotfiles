@@ -2,6 +2,7 @@
   pkgs,
   hyprland,
   hyprgrass,
+  hyprland-contrib,
   osConfig,
   ...
 }: {
@@ -200,11 +201,11 @@
         (builtins.genList (x: let
             ws = let c = (x + 1) / 10; in builtins.toString (x + 1 - (c * 10));
           in ''
-            bind = $mod, ${ws}, exec, ~/.config/hypr/scripts/try_swap_workspace ${
+            $mod, ${ws}, exec, try_swap_workspace ${
               toString (x + 1)
             }
-            bind = $mod_SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}
-            bind = $mod_ALT, ${ws}, movetoworkspacesilent, ${toString (x + 1)}
+            bind=$mod_SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}
+            bind=$mod_ALT, ${ws}, movetoworkspacesilent, ${toString (x + 1)}
           '')
           10);
       binde = [
@@ -418,6 +419,13 @@
       hyprshade
       fcitx5
       (callPackage ./hyprland-activewindow.nix {})
+      (hyprland-contrib.packages.${pkgs.system}.try_swap_workspace.overrideAttrs (o: {
+        patches =
+          (o.patches or [])
+          ++ [
+            ./try_swap_workspace.patch
+          ];
+      }))
     ];
     file.".config/hypr/colors.conf".source = ./colors.conf;
   };

@@ -39,6 +39,7 @@
     zotero_7
     mpv
     posterazor
+    imagemagick
 
     # LaTeX
     (texlive.combine {
