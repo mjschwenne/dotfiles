@@ -9,7 +9,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   nix = {
-    channel.enable = false;
+    channel.enable = true;
     registry.nixpkgs.flake = inputs.nixpkgs;
     nixPath = [
       "nixpkgs=${inputs.nixpkgs.outPath}"
@@ -58,15 +58,19 @@
     shell = pkgs.fish;
   };
 
+  sops = {
+    defaultSopsFile = ../secrets.yaml;
+    defaultSopsFormat = "yaml";
+
+    age.keyFile = "/home/mjs/.config/sops/age/keys.txt";
+  };
+
   # Need to enable the user shell program
   programs.fish.enable = true;
 
   # Power management
   services.upower.enable = true;
 
-  # Some common packages for all of my devices
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     # Languages
     # C
@@ -144,7 +148,9 @@
     hunspellDicts.en_US-large
 
     # Security
+    sops
     gnupg
+    age
   ];
 
   # Text editor

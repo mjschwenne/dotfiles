@@ -15,9 +15,6 @@
     ];
   };
 
-  # This is the standard format for flake.nix. `inputs` are the dependencies of the flake,
-  # and `outputs` function will return all the build results of the flake.
-  # Each item in `inputs` will be passed as a parameter to the `outputs` function after being pulled and built.
   inputs = {
     # There are many ways to reference flake inputs. The most widely used is github:owner/name/reference,
     # which represents the GitHub repository URL + branch/commit-id/tag.
@@ -29,7 +26,6 @@
     # Stable branch, for when packages need to be rolled back
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
 
-    # home-manager, used for managing user configuration
     home-manager = {
       url = "github:nix-community/home-manager";
       # The `follows` keyword in inputs is used for inheritance.
@@ -38,8 +34,21 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprland-contrib.url = "github:hyprwm/contrib";
+    # secret management
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # hyprland
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+    };
+
+    hyprland-contrib = {
+      url = "github:hyprwm/contrib";
+    };
+
     hyprgrass = {
       url = "github:horriblename/hyprgrass";
       inputs.hyprland.follows = "hyprland";
@@ -55,17 +64,34 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    spicetify-nix.url = "github:the-argus/spicetify-nix";
+    spicetify-nix = {
+      url = "github:the-argus/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    foundry.url = "github:reckenrode/nix-foundryvtt/f624c0ceabe13dd876ecff871e0dc7f55f96e993";
+    foundry = {
+      url = "github:reckenrode/nix-foundryvtt/f624c0ceabe13dd876ecff871e0dc7f55f96e993";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
 
-    eww-tray.url = "github:ralismark/eww/tray-3";
+    eww-tray = {
+      url = "github:ralismark/eww/tray-3";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    llama.url = "github:ggerganov/llama.cpp";
+    llama = {
+      url = "github:ggerganov/llama.cpp";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    ags.url = "github:Aylur/ags/52b2e5795a02e8b39a91e44c4dec76d06b6c8f4f";
+    ags = {
+      url = "github:Aylur/ags/52b2e5795a02e8b39a91e44c4dec76d06b6c8f4f";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # `outputs` are all the build result of the flake.
@@ -121,29 +147,28 @@
             };
           };
         modules = [
-          # Import the configuration.nix we used before, so that the old configuration file can still take effect.
-          # Note: /etc/nixos/configuration.nix itself is also a Nix Module, so you can import it directly here
+          inputs.sops-nix.nixosModules.sops
           inputs.sddm-sugar-candy-nix.nixosModules.default
           ./system/terra.nix
 
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            home-manager.users.mjs = import ./home/terra.nix;
-            home-manager.extraSpecialArgs =
-              inputs
-              // {
-                pkgs-master = import inputs.nixpkgs-master {
-                  inherit system;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.mjs = import ./home/terra.nix;
+              extraSpecialArgs =
+                inputs
+                // {
+                  pkgs-master = import inputs.nixpkgs-master {
+                    inherit system;
+                  };
+                  pkgs-stable = import inputs.nixpkgs-stable {
+                    inherit system;
+                  };
                 };
-                pkgs-stable = import inputs.nixpkgs-stable {
-                  inherit system;
-                };
-              };
-
-            # The second one is a function which constructs the overlay, apparently
+            };
+            # The second one is a function which constructs the overlay so the parenthesis are required.
             nixpkgs.overlays = [inputs.emacs-overlay.overlay (inputs.llama.overlays.default)];
           }
         ];
@@ -163,26 +188,27 @@
             };
           };
         modules = [
+          inputs.sops-nix.nixosModules.sops
           inputs.sddm-sugar-candy-nix.nixosModules.default
           ./system/mars.nix
 
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            home-manager.users.mjs = import ./home/mars.nix;
-            home-manager.extraSpecialArgs =
-              inputs
-              // {
-                pkgs-master = import inputs.nixpkgs-master {
-                  inherit system;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.mjs = import ./home/mars.nix;
+              extraSpecialArgs =
+                inputs
+                // {
+                  pkgs-master = import inputs.nixpkgs-master {
+                    inherit system;
+                  };
+                  pkgs-stable = import inputs.nixpkgs-stable {
+                    inherit system;
+                  };
                 };
-                pkgs-stable = import inputs.nixpkgs-stable {
-                  inherit system;
-                };
-              };
-
+            };
             nixpkgs.overlays = [inputs.emacs-overlay.overlay];
           }
         ];
@@ -203,23 +229,23 @@
           };
         modules = [
           inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
+          inputs.sops-nix.nixosModules.sops
           inputs.sddm-sugar-candy-nix.nixosModules.default
           ./system/luna.nix
-
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            home-manager.users.mjs = import ./home/luna.nix;
-            home-manager.extraSpecialArgs =
-              inputs
-              // {
-                pkgs-master = import inputs.nixpkgs-master {
-                  system = system;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.mjs = import ./home/luna.nix;
+              extraSpecialArgs =
+                inputs
+                // {
+                  pkgs-master = import inputs.nixpkgs-master {
+                    inherit system;
+                  };
                 };
-              };
-
+            };
             nixpkgs.overlays = [inputs.emacs-overlay.overlay];
           }
         ];
@@ -239,24 +265,25 @@
             };
           };
         modules = [
+          inputs.sops-nix.nixosModules.sops
           ./system/sol.nix
-
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            home-manager.users.mjs = import ./home/sol.nix;
-            home-manager.extraSpecialArgs =
-              inputs
-              // {
-                pkgs-master = import inputs.nixpkgs-master {
-                  inherit system;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.mjs = import ./home/sol.nix;
+              extraSpecialArgs =
+                inputs
+                // {
+                  pkgs-master = import inputs.nixpkgs-master {
+                    inherit system;
+                  };
+                  pkgs-stable = import inputs.nixpkgs-stable {
+                    inherit system;
+                  };
                 };
-                pkgs-stable = import inputs.nixpkgs-stable {
-                  inherit system;
-                };
-              };
+            };
           }
         ];
       };

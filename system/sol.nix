@@ -9,6 +9,7 @@
     ./sol-hardware.nix
     ./common.nix
     foundry.nixosModules.foundryvtt
+    ./applications/nextcloud
   ];
 
   networking.hostName = "sol"; # define machine hostname
@@ -50,26 +51,32 @@
   services.caddy = {
     enable = true;
 
-    virtualHosts."foundry.schwennesen.org".extraConfig = ''
-      reverse_proxy localhost:30000
-    '';
+    virtualHosts = {
+      "cloud.schwennesen.org".extraConfig = ''
+        reverse_proxy localhost:8081
+      '';
 
-    virtualHosts."syncthing.schwennesen.org".extraConfig = ''
-      reverse_proxy localhost:8384
-    '';
+      "foundry.schwennesen.org".extraConfig = ''
+        reverse_proxy localhost:30000
+      '';
 
-    virtualHosts."discovery.schwennesen.org".extraConfig = ''
-      reverse_proxy localhost:8443 {
-        header_up X-Forwarded-For {http.request.remote.host}
-        header_up X-Client-Port {http.request.remote.port}
-        header_up X-Tls-Client-Cert-Der-Base64 {http.request.tls.client.certificate_der_base64}
-      }
-      tls {
-        client_auth {
-          mode request
+      "sync.schwennesen.org".extraConfig = ''
+        reverse_proxy localhost:8384
+      '';
+
+      "discovery.schwennesen.org".extraConfig = ''
+        reverse_proxy localhost:8443 {
+          header_up X-Forwarded-For {http.request.remote.host}
+          header_up X-Client-Port {http.request.remote.port}
+          header_up X-Tls-Client-Cert-Der-Base64 {http.request.tls.client.certificate_der_base64}
         }
-      }
-    '';
+        tls {
+          client_auth {
+            mode request
+          }
+        }
+      '';
+    };
   };
 
   networking.firewall = {

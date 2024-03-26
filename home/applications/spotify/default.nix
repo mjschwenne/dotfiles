@@ -1,14 +1,17 @@
-{ pkgs
-, spicetify-nix
-, ...
-}:
-let
-  spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
-in
 {
-  imports = [ spicetify-nix.homeManagerModule ];
+  pkgs,
+  spicetify-nix,
+  ...
+}: let
+  spicePkgs = spicetify-nix.packages.${pkgs.system}.default;
+in {
+  imports = [spicetify-nix.homeManagerModule];
 
-  home.packages = with pkgs; [ spotify-player ];
+  home.packages = with pkgs; [
+    spotify-player
+    ncspot
+    # (callPackage ./muffon.nix {})
+  ];
 
   programs.spicetify = {
     enable = true;
@@ -23,7 +26,7 @@ in
       genericName = "Music Player";
       exec = "spotify %U";
       terminal = false;
-      categories = [ "Audio" "Music" "Player" "AudioVideo" ];
+      categories = ["Audio" "Music" "Player" "AudioVideo"];
       icon = "spotify-client";
     };
   };

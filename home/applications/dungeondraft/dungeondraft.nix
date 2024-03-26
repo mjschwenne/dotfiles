@@ -1,26 +1,20 @@
-
-{ stdenv
-, lib
-, fetchurl
-, autoPatchelfHook
-, dpkg
-, gtk2
-, openssl
-, pcsclite
-, requireFile
-, libXcursor
-, libXinerama
-, libXext
-, libXrandr
-, libXi
-, libGL
-, zlib
-, libkrb5
-, udev
-, makeWrapper
-, gnome
+{
+  stdenv,
+  lib,
+  autoPatchelfHook,
+  dpkg,
+  libXcursor,
+  libXinerama,
+  libXext,
+  libXrandr,
+  libXi,
+  libGL,
+  zlib,
+  libkrb5,
+  udev,
+  makeWrapper,
+  gnome,
 }:
-
 stdenv.mkDerivation rec {
   pname = "dungeondraft";
   version = "1.1.0.3";
@@ -56,8 +50,8 @@ stdenv.mkDerivation rec {
     mv opt/Dungeondraft/* $out/opt/Dungeondraft
     # Can't use wrapProgram because godot seems to load data files based upon executable name
     makeWrapper $out/opt/Dungeondraft/Dungeondraft.x86_64 $out/opt/Dungeondraft/Dungeondraft.x86_64.wrapped \
-      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev ]} \
-      --prefix PATH : ${lib.makeBinPath [ gnome.zenity ]}
+      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [udev]} \
+      --prefix PATH : ${lib.makeBinPath [gnome.zenity]}
     mkdir -p $out/share/applications
     mv usr/share/applications/* $out/share/applications
     sed -i "s|Exec=/opt/Dungeondraft/Dungeondraft.x86_64|Exec=$out/opt/Dungeondraft/Dungeondraft.x86_64.wrapped|g" $out/share/applications/Dungeondraft.desktop
