@@ -60,6 +60,12 @@
         reverse_proxy localhost:30000
       '';
 
+      "office.schwennesen.org".extraConfig = ''
+        reverse_proxy localhost:8000 {
+          header_up X-Forward-Proto https
+        }
+      '';
+
       "sync.schwennesen.org".extraConfig = ''
         reverse_proxy localhost:8384
       '';

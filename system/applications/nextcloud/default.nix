@@ -18,12 +18,24 @@
   };
 
   services = {
-    nginx.virtualHosts."cloud.schwennesen.org".listen = [
-      {
-        addr = "127.0.0.1";
-        port = 19000;
-      }
-    ];
+    nginx.virtualHosts = {
+      "cloud.schwennesen.org" = {
+        listen = [
+          {
+            addr = "127.0.0.1";
+            port = 19000;
+          }
+        ];
+      };
+      "office.schwennesen.org" = {
+        listen = [
+          {
+            addr = "127.0.0.1";
+            port = 19001;
+          }
+        ];
+      };
+    };
 
     fail2ban = {
       enable = true;
@@ -69,16 +81,18 @@
         enable = true;
         startAt = "04:00:00";
       };
+
+      appstoreEnable = true;
       extraAppsEnable = true;
       extraApps = with config.services.nextcloud.package.packages.apps; {
         # List of apps we want to install and are already packaged in
         # https://github.com/NixOS/nixpkgs/blob/master/pkgs/servers/nextcloud/packages/nextcloud-apps.json
-        inherit calendar contacts mail notes onlyoffice tasks;
+        inherit calendar contacts mail notes tasks onlyoffice;
 
         # Custom app installation example.
-        # cookbook = pkgs.fetchNextcloudApp rec {
-        #   url = "https://github.com/nextcloud/cookbook/releases/download/v0.10.2/Cookbook-0.10.2.tar.gz";
-        #   sha256 = "sha256-XgBwUr26qW6wvqhrnhhhhcN4wkI+eXDHnNSm1HDbP6M=";
+        # integration_excalidraw = pkgs.fetchNextcloudApp {
+        #   url = "https://github.com/nextcloud-releases/integration_excalidraw/releases/download/v2.1.0/integration_excalidraw-v2.1.0.tar.gz";
+        #   sha256 = "sha256-ufYw6pVcvHy/ASRuXzsEUCviEVe2kkhsvc75eGDfRFs=";
         #   license = "agpl3";
         # };
       };
@@ -97,6 +111,9 @@
             verify_peer_name = false;
           };
         };
+        default_language = "en";
+        default_locale = "en_US";
+        default_timezone = "America/Chicago";
       };
 
       config = {
@@ -105,13 +122,13 @@
         dbtype = "pgsql";
       };
     };
-    # onlyoffice = {
-    #   enable = true;
-    #   hostname = "office.schwennesen.org";
-    # };
+
+    onlyoffice = {
+      enable = true;
+      hostname = "office.schwennesen.org";
+    };
   };
 
-  # services.pcscd.enable = true;
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
