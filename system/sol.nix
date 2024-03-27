@@ -53,7 +53,7 @@
 
     virtualHosts = {
       "cloud.schwennesen.org".extraConfig = ''
-        reverse_proxy localhost:8081
+        reverse_proxy localhost:19000
       '';
 
       "foundry.schwennesen.org".extraConfig = ''

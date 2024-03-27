@@ -78,9 +78,6 @@
     };
   };
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   # Install hyprland wayland compositor
   programs.hyprland = {
     enable = true;

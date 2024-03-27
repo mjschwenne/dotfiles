@@ -25,9 +25,14 @@
     };
   };
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "freeimage-unstable-2021-11-01"
-  ];
+  nixpkgs.config = {
+    permittedInsecurePackages = [
+      "freeimage-unstable-2021-11-01"
+    ];
+
+    # Allow unfree packages
+    allowUnfree = true;
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;

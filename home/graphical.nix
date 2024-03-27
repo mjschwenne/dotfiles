@@ -32,6 +32,7 @@
     xournalpp
     libsForQt5.okular
     poppler_utils
+    nextcloud-client
 
     # Graphics Applications
     gimp
