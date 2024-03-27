@@ -106,9 +106,9 @@
 
   services.syncthing = {
     enable = true;
-    user = "mjs";
-    configDir = "/home/mjs/.syncthing";
-    dataDir = "/home/mjs/.syncthing";
+    user = "nextcloud";
+    configDir = "/var/lib/syncthing/.config";
+    dataDir = "/var/lib/syncthing";
 
     settings = {
       gui = {
@@ -134,19 +134,19 @@
 
       folders = {
         "org" = {
-          path = "/home/mjs/Documents";
+          path = "/var/lib/syncthing/documents";
           devices = ["terra" "luna" "mars"];
         };
         "zotero" = {
-          path = "/home/mjs/Zotero/storage";
+          path = "/var/lib/syncthing/zotero";
           devices = ["terra" "luna" "mars"];
         };
         "kdb" = {
-          path = "/home/mjs/kdb";
+          path = "/var/lib/syncthing/kdb";
           devices = ["terra" "luna" "phone" "mars"];
         };
         "agenda" = {
-          path = "/home/mjs/Documents/agenda";
+          path = "/var/lib/syncthing/documents/agenda";
           devices = ["phone"];
         };
       };
