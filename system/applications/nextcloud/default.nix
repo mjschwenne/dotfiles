@@ -7,6 +7,16 @@
     owner = "nextcloud";
   };
 
+  environment.etc = {
+    "fail2ban/filter.d/nextcloud.conf".text = ''
+      [Definition]
+      _groupsre = (?:(?:,?\s*"\w+":(?:"[^"]+"|\w+))*)
+      failregex = ^\{%(_groupsre)s,?\s*"remoteAddr":"<HOST>"%(_groupsre)s,?\s*"message":"Login failed:
+                  ^\{%(_groupsre)s,?\s*"remoteAddr":"<HOST>"%(_groupsre)s,?\s*"message":"Trusted domain error.
+      datepattern = ,?\s*"time"\s*:\s*"%%Y-%%m-%%d[T ]%%H:%%M:%%S(%%z)?"
+    '';
+  };
+
   services = {
     nginx.virtualHosts."cloud.schwennesen.org".listen = [
       {
@@ -14,6 +24,25 @@
         port = 19000;
       }
     ];
+
+    fail2ban = {
+      enable = true;
+      maxretry = 5;
+      bantime = "24h"; # Ban IPs for one day on the first ban
+      bantime-increment = {
+        enable = true; # Enable increment of bantime after each violation
+        multipliers = "1 2 4 8 16 32 64";
+        maxtime = "168h"; # Do not ban for more than 1 week
+        overalljails = true; # Calculate the bantime based on all the violations
+      };
+      jails.nextcloud.settings = {
+        enabled = true;
+        filter = "nextcloud";
+        backend = "auto";
+        port = 19000;
+      };
+    };
+
     nextcloud = {
       enable = true;
       package = pkgs.nextcloud28;
