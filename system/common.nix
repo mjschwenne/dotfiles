@@ -59,7 +59,7 @@
   users.users.mjs = {
     isNormalUser = true;
     description = "Matt Schwennesen";
-    extraGroups = ["networkmanager" "wheel" "syncthing" "video" "input" "uinput"];
+    extraGroups = ["docker" "networkmanager" "wheel" "syncthing" "video" "input" "uinput"];
     shell = pkgs.fish;
   };
 

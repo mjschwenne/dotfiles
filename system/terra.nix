@@ -77,6 +77,14 @@
 
   networking.hostName = "terra"; # Define your hostname.
 
+  virtualisation.docker = {
+    enable = true;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+  };
+
   programs.steam.enable = true;
 
   services.xserver.wacom.enable = true;
@@ -93,7 +101,7 @@
 
       devices = {
         "sol" = {
-          id = "73R7LD7-CE75DOS-QYCX3IN-7MYT33V-W65EKXH-L5Y2HIU-UGUPESG-KZEUYAF";
+          id = "7AYNHZQ-VFBBFZP-MC327GI-UTDLN4K-KZOV2L6-DVI5Z6D-TORIX5C-IXDYEAP";
         };
         "luna" = {
           id = "43RQHNP-QWSOVCU-32G6M5U-4TSIRY6-Y26QJBR-FT4DNK3-QRIJEAC-TIXHGA4";

@@ -7,14 +7,14 @@
       substituteInPlace server/routes_test.go --replace "0.0.0" "${version}"
     '';
   });
-  updated_textual = pkgs.callPackage ./python-pkgs/textual.nix {
-    inherit (pkgs) tree-sitter;
-    inherit (pkgs.python3Packages) buildPythonPackage;
-    jinja2 = pkgs.jinja2-cli;
-    inherit (pkgs.python311Packages) importlib-metadata markdown-it-py poetry-core pytest-aiohttp pytestCheckHook rich syrupy time-machine typing-extensions;
-  };
+  # updated_textual = pkgs.callPackage ./python-pkgs/textual.nix {
+  #   inherit (pkgs) tree-sitter;
+  #   inherit (pkgs.python3Packages) buildPythonPackage;
+  #   jinja2 = pkgs.jinja2-cli;
+  #   inherit (pkgs.python311Packages) importlib-metadata markdown-it-py poetry-core pytest-aiohttp pytestCheckHook rich syrupy time-machine typing-extensions;
+  # };
   oterm_updated = pkgs.oterm.overrideAttrs (old: rec {
-    version = "0.2.1";
+    version = "0.2.4";
     src = pkgs.fetchFromGitHub {
       owner = "ggozad";
       repo = "oterm";
@@ -22,11 +22,27 @@
       hash = "sha256-bMfRMJPf62S0UFDOUnZAHpP8DEjBj2GAJvQ2T7AAAX0=";
     };
     propagatedBuildInputs = with pkgs.python3Packages; [
-      updated_textual
+      (textual.overrideAttrs rec {
+        version = "0.50.1";
+        src = pkgs.fetchFromGitHub {
+          owner = "Textualize";
+          repo = "textual";
+          rev = "refs/tags/v0.50.1";
+          hash = "sha256-jt3HX8p5KVE3/ROKaQpU+jA4bjqW+idjynTdgvWrtYI=";
+        };
+      })
       typer
       python-dotenv
       httpx
-      aiosql
+      (aiosql.overrideAttrs rec {
+        version = "9.3";
+        src = pkgs.fetchFromGitHub {
+          owner = "nackjicholson";
+          repo = "aiosql";
+          rev = "refs/tags/9.3";
+          hash = "sha256-7bCJykE+7/eA1h4L5MyH/zVPZVMt7cNLXZSWq+8mPtY=";
+        };
+      })
       aiosqlite
       pyperclip
       packaging
