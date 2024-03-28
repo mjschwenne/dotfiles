@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   foundry,
@@ -29,7 +30,12 @@
     ];
   };
 
-  services.nix-serve.secretKeyFile = /home/mjs/so1.key;
+  sops.secrets = {
+    "ssh/sol/github/key".owner = "mjs";
+    "ssh/sol/nix-serve/key".owner = "mjs";
+  };
+
+  services.nix-serve.secretKeyFile = config.sops.secrets."ssh/sol/nix-serve/key".path;
 
   # Disable suspend when laptop lid is closed
   services.logind.lidSwitch = "ignore";
