@@ -1,18 +1,8 @@
-{pkgs, ...}: let
-  patched_ollama = pkgs.ollama.overrideAttrs (old: rec {
-    version = "0.1.17";
-    postPatch = ''
-      substituteInPlace llm/llama.go \
-        --subst-var-by llamaCppServer "${pkgs.llama-cpp}/bin/llama-server"
-      substituteInPlace server/routes_test.go --replace "0.0.0" "${version}"
-    '';
-  });
-  # updated_textual = pkgs.callPackage ./python-pkgs/textual.nix {
-  #   inherit (pkgs) tree-sitter;
-  #   inherit (pkgs.python3Packages) buildPythonPackage;
-  #   jinja2 = pkgs.jinja2-cli;
-  #   inherit (pkgs.python311Packages) importlib-metadata markdown-it-py poetry-core pytest-aiohttp pytestCheckHook rich syrupy time-machine typing-extensions;
-  # };
+{
+  osConfig,
+  pkgs,
+  ...
+}: let
   oterm_updated = pkgs.oterm.overrideAttrs (old: rec {
     version = "0.2.4";
     src = pkgs.fetchFromGitHub {

@@ -11,16 +11,25 @@
     ./graphical.nix
   ];
 
-  boot.extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
-  boot.kernelModules = ["v4l2loopback"];
-  boot.extraModprobeConfig = ''
-    options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
-  '';
+  boot = {
+    extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
+    kernelModules = ["v4l2loopback"];
+    extraModprobeConfig = ''
+      options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+    '';
+  };
+
   security.polkit.enable = true;
 
+  sops.secrets = {
+    "ssh/terra/github/key".owner = "mjs";
+    "ssh/terra/sol/key".owner = "mjs";
+    "ssh/terra/google-compute/key".owner = "mjs";
+  };
+
   # limit cores to try and cap memory useage... Which is crazy for a desktop with 64 GB RAM and 64 GB Swap...
-  nix.settings.cores = 16;
-  nix.settings.max-jobs = 1;
+  # nix.settings.cores = 16;
+  # nix.settings.max-jobs = 1;
   nixpkgs.config.allowBroken = true;
   # Nvidia graphics setup
   hardware.opengl = {
@@ -30,8 +39,6 @@
   };
 
   nixpkgs.config.cudaSupport = true;
-
-  services.xserver.videoDrivers = ["nvidia"];
 
   hardware.nvidia = {
     # Modesetting is required.
@@ -77,55 +84,52 @@
 
   networking.hostName = "terra"; # Define your hostname.
 
-  virtualisation.docker = {
-    enable = true;
-    rootless = {
-      enable = true;
-      setSocketVariable = true;
-    };
-  };
-
   programs.steam.enable = true;
 
-  services.xserver.wacom.enable = true;
+  services = {
+    xserver = {
+      wacom.enable = true;
+      videoDrivers = ["nvidia"];
+    };
 
-  services.syncthing = {
-    enable = true;
-    user = "mjs";
-    configDir = "/home/mjs/.syncthing";
-    dataDir = "/home/mjs/.syncthing";
+    syncthing = {
+      enable = true;
+      user = "mjs";
+      configDir = "/home/mjs/.syncthing";
+      dataDir = "/home/mjs/.syncthing";
 
-    settings = {
-      options.globalAnnounceServer = ["https://discovery.schwennesen.org"];
-      options.urAccepted = 3;
+      settings = {
+        options.globalAnnounceServer = ["https://discovery.schwennesen.org"];
+        options.urAccepted = 3;
 
-      devices = {
-        "sol" = {
-          id = "7AYNHZQ-VFBBFZP-MC327GI-UTDLN4K-KZOV2L6-DVI5Z6D-TORIX5C-IXDYEAP";
+        devices = {
+          "sol" = {
+            id = "7AYNHZQ-VFBBFZP-MC327GI-UTDLN4K-KZOV2L6-DVI5Z6D-TORIX5C-IXDYEAP";
+          };
+          "luna" = {
+            id = "43RQHNP-QWSOVCU-32G6M5U-4TSIRY6-Y26QJBR-FT4DNK3-QRIJEAC-TIXHGA4";
+          };
+          "mars" = {
+            id = "SA2KNKU-LTH27QL-OHZSGVW-HCMWWFP-5RYZEER-K3LQKDM-NGF2PNQ-HRVKSQL";
+          };
+          "phone" = {
+            id = "SVMWORW-JCZ26YN-7P77FJC-YYUNZ46-3PXZZQH-TMZGH5F-LD3TVJ4-XEVQMAE";
+          };
         };
-        "luna" = {
-          id = "43RQHNP-QWSOVCU-32G6M5U-4TSIRY6-Y26QJBR-FT4DNK3-QRIJEAC-TIXHGA4";
-        };
-        "mars" = {
-          id = "SA2KNKU-LTH27QL-OHZSGVW-HCMWWFP-5RYZEER-K3LQKDM-NGF2PNQ-HRVKSQL";
-        };
-        "phone" = {
-          id = "SVMWORW-JCZ26YN-7P77FJC-YYUNZ46-3PXZZQH-TMZGH5F-LD3TVJ4-XEVQMAE";
-        };
-      };
 
-      folders = {
-        "org" = {
-          path = "/home/mjs/Documents";
-          devices = ["sol" "luna" "mars"];
-        };
-        "zotero" = {
-          path = "/home/mjs/Zotero/storage";
-          devices = ["sol" "luna" "mars"];
-        };
-        "kdb" = {
-          path = "/home/mjs/kdb";
-          devices = ["sol" "luna" "phone" "mars"];
+        folders = {
+          "org" = {
+            path = "/home/mjs/Documents";
+            devices = ["sol" "luna" "mars"];
+          };
+          "zotero" = {
+            path = "/home/mjs/Zotero/storage";
+            devices = ["sol" "luna" "mars"];
+          };
+          "kdb" = {
+            path = "/home/mjs/kdb";
+            devices = ["sol" "luna" "phone" "mars"];
+          };
         };
       };
     };

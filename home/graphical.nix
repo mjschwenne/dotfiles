@@ -1,4 +1,5 @@
 {
+  osConfig,
   pkgs,
   pkgs-master,
   ...
@@ -144,6 +145,17 @@
   ];
   masterPkgs = with pkgs-master; [librewolf firefox protonvpn-cli protonvpn-gui];
 in {
+  programs.ssh = {
+    matchBlocks = {
+      "sol" = {
+        user = "mjs";
+        hostname = "192.168.0.206";
+        identitiesOnly = true;
+        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/sol/key".path;
+      };
+    };
+  };
+
   gtk = {
     enable = true;
     theme = {
@@ -182,10 +194,6 @@ in {
     source = ./ui/qt/Catppuccin-Mocha-Pink;
     recursive = true;
   };
-  xdg.configFile."Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini {}).generate "kvantum.kvconfig" {
-    General.theme = "Catppuccin-Mocha-Pink";
-  };
-
   imports = [./ui ./applications ./editors/emacs];
 
   # Packages and fonts that should be installed to the user profile.
@@ -193,25 +201,32 @@ in {
 
   home.packages = packages ++ masterPkgs ++ [eww-tray];
 
-  xdg.configFile."mimeapps.list".force = true;
-  xdg.mimeApps = {
-    enable = true;
+  xdg = {
+    configFile = {
+      "mimeapps.list".force = true;
+      "Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini {}).generate "kvantum.kvconfig" {
+        General.theme = "Catppuccin-Mocha-Pink";
+      };
+    };
+    mimeApps = {
+      enable = true;
 
-    defaultApplications = {
-      "text/html" = "librewolf.desktop";
-      "x-scheme-handler/http" = "librewolf.desktop";
-      "x-scheme-handler/https" = "librewolf.desktop";
-      "x-scheme-handler/about" = "librewolf.desktop";
-      "x-scheme-handler/unknown" = "librewolf.desktop";
+      defaultApplications = {
+        "text/html" = "librewolf.desktop";
+        "x-scheme-handler/http" = "librewolf.desktop";
+        "x-scheme-handler/https" = "librewolf.desktop";
+        "x-scheme-handler/about" = "librewolf.desktop";
+        "x-scheme-handler/unknown" = "librewolf.desktop";
 
-      "text/calendar" = "thunderbird.desktop";
-      "x-scheme-handler/mailto" = "thunderbird.desktop";
+        "text/calendar" = "thunderbird.desktop";
+        "x-scheme-handler/mailto" = "thunderbird.desktop";
 
-      "image/png" = "org.gnome.eog.desktop";
-      "image/jpeg" = "org.gnome.eog.desktop";
-      "image/jpg" = "org.gnome.eog.desktop";
+        "image/png" = "org.gnome.eog.desktop";
+        "image/jpeg" = "org.gnome.eog.desktop";
+        "image/jpg" = "org.gnome.eog.desktop";
 
-      "application/pdf" = "org.pwmt.zathura.desktop";
+        "application/pdf" = "org.pwmt.zathura.desktop";
+      };
     };
   };
 }

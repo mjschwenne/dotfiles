@@ -1,7 +1,19 @@
-{pkgs, ...}: {
+{osConfig, ...}: {
   home = {
     username = "mjs";
     homeDirectory = "/home/mjs";
+  };
+
+  programs.ssh = {
+    enable = true;
+    matchBlocks = {
+      "github.com" = {
+        user = "git";
+        hostname = "github.com";
+        identitiesOnly = true;
+        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/github/key".path;
+      };
+    };
   };
 
   imports = [
