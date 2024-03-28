@@ -19,6 +19,11 @@
     iptsd
   ];
 
+  sops.secrets = {
+    "ssh/luna/github/key".owner = "mjs";
+    "ssh/luna/sol/key".owner = "mjs";
+  };
+
   # Adjust screen size for SDDM
   services = {
     xserver.displayManager.sddm.sugarCandyNix.settings = {
