@@ -18,6 +18,11 @@
   '';
   security.polkit.enable = true;
 
+  sops.secrets = {
+    "ssh/mars/github/key".owner = "mjs";
+    "ssh/mars/sol/key".owner = "mjs";
+  };
+
   networking.hostName = "mars"; # Define your hostname.
 
   programs.steam.enable = true;

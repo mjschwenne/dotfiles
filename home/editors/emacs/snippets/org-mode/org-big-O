@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# contributor: Matt Schwennesen <matt@schwennesen.org>
+# key: \O
+# group: math
+# condition: 'auto
+# name: big-O
+# --
+\mathcalO$0

@@ -37,6 +37,7 @@ in {
       python311Packages.material-color-utilities
       pywal
       sassc
+      dart-sass
       webkitgtk
       webp-pixbuf-loader
       ydotool
@@ -65,6 +66,7 @@ in {
       typescript
       gjs
       sassc
+      dart-sass
 
       # Basic graphic
       xorg.xrandr

@@ -50,6 +50,10 @@
     color: $onSurfaceVariant;
 }
 
+.txt-onLayer1 {
+    color: $onLayer1;
+}
+
 .txt-shadow {
     text-shadow: 1px 2px 8px rgba(0, 0, 0, 0.69);
     margin: 10px;
@@ -167,7 +171,7 @@
 }
 
 .separator-line {
-    background-color: $outline;
+    background-color: mix($subtext, $surface, 50%);
     min-width: 0.068rem;
     min-height: 0.068rem;
 }
@@ -416,6 +420,10 @@
     margin-bottom: 0.682rem;
 }
 
+.margin-bottom-8 { // wtf
+    margin-bottom: 0.545rem;
+}
+
 .margin-right-15 {
     margin-right: 1.023rem;
 }
@@ -518,7 +526,4 @@
 }
 .element-accel {
     @include element_accel;
-}
-.page-move {
-    @include page_move;
 }

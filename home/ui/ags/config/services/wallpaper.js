@@ -1,13 +1,8 @@
-const { Gdk, Gio, GLib } = imports.gi;
+const { Gdk, GLib } = imports.gi;
 import Service from 'resource:///com/github/Aylur/ags/service.js';
 import * as Utils from 'resource:///com/github/Aylur/ags/utils.js';
-const { exec, execAsync } = Utils;
 
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-function fileExists(filePath) {
-    let file = Gio.File.new_for_path(filePath);
-    return file.query_exists(null);
-}
+const WALLPAPER_CONFIG_PATH = `${GLib.get_user_cache_dir()}/ags/user/wallpaper.json`;
 
 class WallpaperService extends Service {
     static {
@@ -53,7 +48,7 @@ class WallpaperService extends Service {
         // How many screens?
         this._monitorCount = Gdk.Display.get_default()?.get_n_monitors() || 1;
         // Read config
-        this._wallPath = `${GLib.get_user_cache_dir()}/ags/user/wallpaper.json`;
+        this._wallPath = WALLPAPER_CONFIG_PATH;
         try {
             const fileContents = Utils.readFile(this._wallPath);
             this._wallJson = JSON.parse(fileContents);
