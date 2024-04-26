@@ -110,6 +110,7 @@ in {
       rust-analyzer
       nodePackages.typescript-language-server
       texlab
+      coqPackages.coq-lsp
 
       # none-ls sources
       alejandra
@@ -154,15 +155,7 @@ in {
       nvim-web-devicons
 
       # Completion
-      (coq_nvim.overrideAttrs {
-        version = "2024-03-03";
-        src = pkgs.fetchFromGitHub {
-          owner = "ms-jpq";
-          repo = "coq_nvim";
-          rev = "806a0a71a20795a6b3cd11e0bc9deaa68ae81d7f";
-          sha256 = "sha256-aqpenycKvkXzy3UOz4zWFyl+UNALvHxOoDoADxoyVpw=";
-        };
-      })
+      coq_nvim
       coq-thirdparty
       coq-artifacts
 
@@ -182,6 +175,7 @@ in {
       hmts-nvim
       yuck-vim
       haskell-tools-nvim
+      Coqtail
 
       # DAP
       nvim-dap

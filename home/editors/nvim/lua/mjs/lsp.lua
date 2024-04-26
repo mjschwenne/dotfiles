@@ -38,6 +38,7 @@ if lspconfig_p then
 	lspconfig.pyright.setup {}
 	lspconfig.tsserver.setup {}
 	lspconfig.texlab.setup {}
+	lspconfig.coq_lsp.setup {}
 
 	whichkey.register({
 		["[e"] = { vim.diagnostic.goto_prev, "Previous Diagnostic" },
