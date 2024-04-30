@@ -8,31 +8,23 @@
     src = pkgs.fetchFromGitHub {
       owner = "ggozad";
       repo = "oterm";
-      rev = "refs/tags/${version}";
-      hash = "sha256-bMfRMJPf62S0UFDOUnZAHpP8DEjBj2GAJvQ2T7AAAX0=";
+      rev = "a0167f4e6f7bc8057cbcaaa688c7a71080ec6f64";
+      hash = "sha256-p0ns+8qmcyX4gcg0CfYdDMn1Ie0atVBuQbVQoDRQ9+c=";
     };
     propagatedBuildInputs = with pkgs.python3Packages; [
       (textual.overrideAttrs rec {
-        version = "0.50.1";
+        version = "0.53.1";
         src = pkgs.fetchFromGitHub {
           owner = "Textualize";
           repo = "textual";
-          rev = "refs/tags/v0.50.1";
-          hash = "sha256-jt3HX8p5KVE3/ROKaQpU+jA4bjqW+idjynTdgvWrtYI=";
+          rev = "refs/tags/v0.53.1";
+          hash = "sha256-73qEogHe69B66r4EJOj2RAP95O5z7v/UYARTIEPxrcA=";
         };
       })
       typer
       python-dotenv
       httpx
-      (aiosql.overrideAttrs rec {
-        version = "9.3";
-        src = pkgs.fetchFromGitHub {
-          owner = "nackjicholson";
-          repo = "aiosql";
-          rev = "refs/tags/9.3";
-          hash = "sha256-7bCJykE+7/eA1h4L5MyH/zVPZVMt7cNLXZSWq+8mPtY=";
-        };
-      })
+      aiosql
       aiosqlite
       pyperclip
       packaging
@@ -77,6 +69,6 @@ in {
     # LLM
     # patched_ollama
     ollama
-    oterm_updated
+    # oterm_updated
   ];
 }

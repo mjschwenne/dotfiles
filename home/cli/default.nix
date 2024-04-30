@@ -47,6 +47,8 @@
     ripgrep-all
     eza
     ranger
+    nix-prefetch
+    nix-prefetch-git
     nix-prefetch-github # helps write derivations hosted on github
     speedtest-cli
     bc

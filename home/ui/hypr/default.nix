@@ -11,7 +11,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     plugins = [
-      hyprgrass.packages.${pkgs.system}.default
+      # hyprgrass.packages.${pkgs.system}.default
     ];
     # Hyprland changed the device format.. HM is still behind
     extraConfig = ''
@@ -399,6 +399,7 @@
       windowrulev2 = [
         "float,class:^(zenity)$"
         "float,title:^(Progress),class:^(Zotero)$"
+        "size 350 100,title:^(Progress),class:^(Zotero)$"
         "noblur,title:^(Annotation - Zoom)$"
       ];
     };

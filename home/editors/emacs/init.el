@@ -1844,11 +1844,14 @@ used if TAG-LIST is empty."
            (TeX-view-program-selection '((output-pdf "PDF Tools")))
            (TeX-source-correlate-start-server t)
            (TeX-save-query nil)
-           (TeX-engine 'luatex))
+           (TeX-engine 'luatex)
+           (TeX-parse-self t)
+           (TeX-auto-save t))
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
   (mjs-local-leader-def :keymaps 'LaTeX-mode-map
     "c" '("Compile Document" . TeX-command-run-all)
+    "C" '("Clean Document" . TeX-clean)
     "e" '("Insert Environment" . LaTeX-environment)
     "i" '("Indent Line" . LaTeX-indent-line)
     "m" '("Insert Macro" . TeX-insert-marco)
