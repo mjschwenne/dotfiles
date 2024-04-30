@@ -110,6 +110,7 @@ in {
       rust-analyzer
       nodePackages.typescript-language-server
       texlab
+      coqPackages.coq-lsp
 
       # none-ls sources
       alejandra
@@ -174,6 +175,7 @@ in {
       hmts-nvim
       yuck-vim
       haskell-tools-nvim
+      Coqtail
 
       # DAP
       nvim-dap
