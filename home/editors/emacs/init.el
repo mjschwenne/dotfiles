@@ -446,7 +446,7 @@
             (point)))
   (dashboard-setup-startup-hook)
   (mjs-leader-def :keymaps 'override
-    "d" '("Open Dashboard" . dashboard-open))
+    "D" '("Open Dashboard" . dashboard-open))
   :commands (dashboard-jump-to-agenda dashboard-jump-to-recents)
   :general
   (:keymaps 'dashboard-mode-map :states 'normal
@@ -1770,6 +1770,8 @@ used if TAG-LIST is empty."
                (org-cite-key ((t (:foreground ,(catppuccin-get-color 'green) :slant italic)))))
 
 (use-package citar
+  :general (mjs-local-leader-def :keymaps 'LaTeX-mode-map
+             "C" '("Citation" . citar-insert-citation))
   :custom (citar-bibliography org-cite-global-bibliography)
   :hook ((LaTeX-mode . citar-capf-setup)
          (org-mode . citar-capf-setup))
@@ -1844,7 +1846,8 @@ used if TAG-LIST is empty."
            (TeX-view-program-selection '((output-pdf "PDF Tools")))
            (TeX-source-correlate-start-server t)
            (TeX-save-query nil)
-           (TeX-engine 'luatex))
+           (TeX-engine 'luatex)
+           (TeX-parse-self t))
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
   (mjs-local-leader-def :keymaps 'LaTeX-mode-map
@@ -2042,7 +2045,9 @@ used if TAG-LIST is empty."
            (calfw-blocks-lines-per-hour 2)))
 
 (use-package direnv
-  :config
+  :general (mjs-leader-def :keymaps 'override
+             "d" '("Direnv Allow" . direnv-allow))
+  :init
   (direnv-mode))
 
 (use-package sly
