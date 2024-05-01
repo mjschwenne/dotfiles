@@ -1770,8 +1770,6 @@ used if TAG-LIST is empty."
                (org-cite-key ((t (:foreground ,(catppuccin-get-color 'green) :slant italic)))))
 
 (use-package citar
-  :general (mjs-local-leader-def :keymaps 'LaTeX-mode-map
-             "C" '("Citation" . citar-insert-citation))
   :custom (citar-bibliography org-cite-global-bibliography)
   :hook ((LaTeX-mode . citar-capf-setup)
          (org-mode . citar-capf-setup))
@@ -1851,6 +1849,9 @@ used if TAG-LIST is empty."
            (TeX-auto-save t))
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
+  :general
+  (:states 'insert :keymaps 'LaTeX-mode-map
+           "C-S-c" #'citar-insert-citation)
   (mjs-local-leader-def :keymaps 'LaTeX-mode-map
     "c" '("Compile Document" . TeX-command-run-all)
     "C" '("Clean Document" . TeX-clean)
@@ -1858,6 +1859,7 @@ used if TAG-LIST is empty."
     "i" '("Indent Line" . LaTeX-indent-line)
     "m" '("Insert Macro" . TeX-insert-marco)
     "s" '("Insert Section" . LaTeX-section)
+    "t" '("Insert Citation" . citar-insert-citation)
     "v" '("View PDF" . TeX-view)))
 
 (use-package yasnippet
