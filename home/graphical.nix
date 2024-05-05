@@ -103,8 +103,9 @@
     gnome.eog
     mate.engrampa
 
-    # MTG
+    # Games
     cockatrice
+    melonDS
 
     # CLI Utilities
     pandoc
