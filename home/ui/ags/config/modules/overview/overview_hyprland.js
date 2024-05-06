@@ -4,7 +4,6 @@
 //
 const { Gdk, Gtk } = imports.gi;
 const { Gravity } = imports.gi.Gdk;
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../variables.js';
 import App from 'resource:///com/github/Aylur/ags/app.js';
 import Variable from 'resource:///com/github/Aylur/ags/variable.js';
 import Widget from 'resource:///com/github/Aylur/ags/widget.js';
@@ -15,14 +14,14 @@ const { execAsync, exec } = Utils;
 import { setupCursorHoverGrab } from '../.widgetutils/cursorhover.js';
 import { dumpToWorkspace, swapWorkspace } from "./actions.js";
 import { substitute } from "../.miscutils/icons.js";
+import { monitors } from '../.miscutils/hyprlanddata.js';
 
 const NUM_OF_WORKSPACES_SHOWN = userOptions.overview.numOfCols * userOptions.overview.numOfRows;
 const TARGET = [Gtk.TargetEntry.new('text/plain', Gtk.TargetFlags.SAME_APP, 0)];
-const POPUP_CLOSE_TIME = 100; // ms
 
 const overviewTick = Variable(false);
 
-export default () => {
+export default (overviewMonitor = 0) => {
     const clientMap = new Map();
     let workspaceGroup = 0;
     const ContextMenuWorkspaceArray = ({ label, actionFunc, thisWorkspace }) => Widget.MenuItem({
@@ -50,20 +49,20 @@ export default () => {
         }
     })
 
-    const Window = ({ address, at: [x, y], size: [w, h], workspace: { id, name }, class: c, title, xwayland }, screenCoords) => {
+    const Window = ({ address, at: [x, y], size: [w, h], workspace: { id, name }, class: c, monitor, title, xwayland }, screenCoords) => {
         const revealInfoCondition = (Math.min(w, h) * userOptions.overview.scale > 70);
         if (w <= 0 || h <= 0 || (c === '' && title === '')) return null;
         // Non-primary monitors
         if (screenCoords.x != 0) x -= screenCoords.x;
         if (screenCoords.y != 0) y -= screenCoords.y;
         // Other offscreen adjustments
-        if (x + w <= 0) x += (Math.floor(x / SCREEN_WIDTH) * SCREEN_WIDTH);
+        if (x + w <= 0) x += (Math.floor(x / monitors[monitor].width) * monitors[monitor].width);
         else if (x < 0) { w = x + w; x = 0; }
-        if (y + h <= 0) x += (Math.floor(y / SCREEN_HEIGHT) * SCREEN_HEIGHT);
+        if (y + h <= 0) x += (Math.floor(y / monitors[monitor].height) * monitors[monitor].height);
         else if (y < 0) { h = y + h; y = 0; }
         // Truncate if offscreen
-        if (x + w > SCREEN_WIDTH) w = SCREEN_WIDTH - x;
-        if (y + h > SCREEN_HEIGHT) h = SCREEN_HEIGHT - y;
+        if (x + w > monitors[monitor]) w = monitors[monitor] - x;
+        if (y + h > monitors[monitor].height) h = monitors[monitor].height - y;
 
         const appIcon = Widget.Icon({
             icon: substitute(c),
@@ -86,8 +85,8 @@ export default () => {
                 margin-bottom: -${Math.round((y + h) * userOptions.overview.scale)}px;
             `,
             onClicked: (self) => {
+                Hyprland.messageAsync(`dispatch focuswindow address:${address}`);
                 App.closeWindow('overview');
-                Utils.timeout(POPUP_CLOSE_TIME, () => Hyprland.messageAsync(`dispatch focuswindow address:${address}`));
             },
             onMiddleClickRelease: () => Hyprland.messageAsync(`dispatch closewindow address:${address}`),
             onSecondaryClick: (button) => {
@@ -142,8 +141,8 @@ export default () => {
                                     truncate: 'end',
                                     className: `margin-top-5 ${xwayland ? 'txt txt-italic' : 'txt'}`,
                                     css: `
-                                font-size: ${Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) * userOptions.overview.scale / 14.6}px;
-                                margin: 0px ${Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) * userOptions.overview.scale / 10}px;
+                                font-size: ${Math.min(monitors[monitor].width, monitors[monitor].height) * userOptions.overview.scale / 14.6}px;
+                                margin: 0px ${Math.min(monitors[monitor].width, monitors[monitor].height) * userOptions.overview.scale / 10}px;
                             `,
                                     // If the title is too short, include the class
                                     label: (title.length <= 1 ? `${c}: ${title}` : title),
@@ -159,7 +158,6 @@ export default () => {
 
                 button.drag_source_set(Gdk.ModifierType.BUTTON1_MASK, TARGET, Gdk.DragAction.MOVE);
                 button.drag_source_set_icon_name(substitute(c));
-                // button.drag_source_set_icon_gicon(icon);
 
                 button.connect('drag-begin', (button) => {  // On drag start, add the dragging class
                     button.toggleClassName('overview-tasks-window-dragging', true);
@@ -215,8 +213,8 @@ export default () => {
             className: 'overview-tasks-workspace-number',
             label: `${index}`,
             css: `
-                margin: ${Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) * userOptions.overview.scale * userOptions.overview.wsNumMarginScale}px;
-                font-size: ${SCREEN_HEIGHT * userOptions.overview.scale * userOptions.overview.wsNumScale}px;
+                margin: ${Math.min(monitors[overviewMonitor].width, monitors[overviewMonitor].height) * userOptions.overview.scale * userOptions.overview.wsNumMarginScale}px;
+                font-size: ${monitors[overviewMonitor].height * userOptions.overview.scale * userOptions.overview.wsNumScale}px;
             `,
             setup: (self) => self.hook(Hyprland.active.workspace, (self) => {
                 // Update when going to new ws group
@@ -229,15 +227,14 @@ export default () => {
             className: 'overview-tasks-workspace',
             vpack: 'center',
             css: `
-                min-width: ${SCREEN_WIDTH * userOptions.overview.scale}px;
-                min-height: ${SCREEN_HEIGHT * userOptions.overview.scale}px;
+                min-width: ${monitors[overviewMonitor].width * userOptions.overview.scale}px;
+                min-height: ${monitors[overviewMonitor].height * userOptions.overview.scale}px;
             `,
             children: [Widget.EventBox({
                 hexpand: true,
-                vexpand: true,
                 onPrimaryClick: () => {
+                    Hyprland.messageAsync(`dispatch workspace ${index}`);
                     App.closeWindow('overview');
-                    Utils.timeout(POPUP_CLOSE_TIME, () => Hyprland.messageAsync(`dispatch workspace ${index}`));
                 },
                 setup: (eventbox) => {
                     eventbox.drag_dest_set(Gtk.DestDefaults.ALL, TARGET, Gdk.DragAction.COPY);
@@ -334,7 +331,7 @@ export default () => {
             },
             update: (box) => {
                 const offset = Math.floor((Hyprland.active.workspace.id - 1) / NUM_OF_WORKSPACES_SHOWN) * NUM_OF_WORKSPACES_SHOWN;
-                if (!App.getWindow(windowName).visible) return;
+                if (!App.getWindow(windowName)?.visible) return;
                 Hyprland.messageAsync('j/clients').then(clients => {
                     const allClients = JSON.parse(clients);
                     const kids = box.get_children();
@@ -360,7 +357,7 @@ export default () => {
                     offset + startWorkspace <= id &&
                     id <= offset + startWorkspace + workspaces
                 )) return;
-                // if (!App.getWindow(windowName).visible) return;
+                // if (!App.getWindow(windowName)?.visible) return;
                 Hyprland.messageAsync('j/clients').then(clients => {
                     const allClients = JSON.parse(clients);
                     const kids = box.get_children();

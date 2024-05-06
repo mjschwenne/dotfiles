@@ -384,12 +384,17 @@ $sidebar_chat_textboxareaColor: mix($onSurfaceVariant, $surfaceVariant, 40%);
 .sidebar-module-btn-arrow {
     @include full-rounding;
     @include icon-material;
-    background-color: $surfaceContainerHigh;
+    background-color: $layer2;
     min-width: 1.705rem;
     min-height: 1.705rem;
 
-    &:hover {
-        background-color: $hovercolor;
+    &:hover,
+    &:focus {
+        background-color: $layer2Hover;
+    }
+
+    &:active {
+        background-color: $layer2Active;
     }
 }
 
@@ -400,12 +405,13 @@ $sidebar_chat_textboxareaColor: mix($onSurfaceVariant, $surfaceVariant, 40%);
     min-width: 1.705rem;
     min-height: 1.705rem;
 
-    &:hover {
-        background-color: $hovercolor;
+    &:hover,
+    &:focus {
+        background-color: $layer1Hover;
     }
 
     &:active {
-        background-color: $activecolor;
+        background-color: $layer1Active;
     }
 }
 
@@ -539,11 +545,57 @@ $colorpicker_rounding: 0.341rem;
     background-color: mix($primary, $hovercolor, 40%);
 }
 
+.sidebar-chat-messagearea {
+    margin: 0.341rem;
+}
+
 .sidebar-chat-message {
-    margin: 0.682rem;
     @include normal-rounding;
     @include group-padding;
     background-color: $layer1;
+}
+
+$skeleton-accent: mix($secondary, $onSecondary, 50%);
+
+@keyframes sidebar-chat-message-skeletonline-anim {
+    0% {
+        background-position: 175% 0%;
+    }
+
+    100% {
+        background-position: 50% 0%;
+    }
+}
+
+.sidebar-chat-message-skeletonline {
+    border-radius: $rounding_verysmall;
+    min-height: 1.364rem;
+    background-color: $layer2;
+}
+
+.sidebar-chat-message-skeletonline-offset0 {
+    background-repeat: no-repeat;
+    background: linear-gradient(to right, $layer3 0%, $skeleton-accent 25%, $layer3 50%, $layer3 100%);
+    background-size: 500% 500%;
+    animation: sidebar-chat-message-skeletonline-anim 2s linear;
+    animation-iteration-count: infinite;
+}
+
+.sidebar-chat-message-skeletonline-offset1 {
+    background-repeat: no-repeat;
+    background: linear-gradient(to right, $layer3 0%, $layer3 50%, $skeleton-accent 75%, $layer3 100%);
+    background-size: 500% 500%;
+    animation: sidebar-chat-message-skeletonline-anim 2s linear;
+    animation-iteration-count: infinite;
+}
+
+.sidebar-chat-message-skeletonline-offset2 {
+    margin-right: 5.795rem;
+    background-repeat: no-repeat;
+    background: linear-gradient(to right, $layer3 0%, $layer3 25%, $skeleton-accent 50%, $layer3 75%, $layer3 100%);
+    background-size: 500% 500%;
+    animation: sidebar-chat-message-skeletonline-anim 2s linear;
+    animation-iteration-count: infinite;
 }
 
 .sidebar-chat-indicator {
@@ -861,6 +913,13 @@ $waifu_image_overlay_transparency: 0.7;
     margin: 0rem 0.682rem;
 }
 
+.sidebar-volmixer-deviceselector {
+    @include small-rounding;
+    padding: 0.477rem 0.682rem;
+    background-color: $surfaceContainerHigh;
+    color: $onSurfaceVariant;
+}
+
 .sidebar-bluetooth-device {
     padding: 0.682rem;
     @include normal-rounding;
@@ -914,4 +973,22 @@ $waifu_image_overlay_transparency: 0.7;
     background-color: $layer1;
     color: $onLayer1;
     padding: 0.682rem;
+}
+
+.sidebar-centermodules-bottombar-button {
+    @include full-rounding;
+    @include element_decel;
+    min-width: 6.818rem;
+    min-height: 2.25rem;
+    background-color: $layer2;
+    color: $onLayer2;
+}
+
+.sidebar-centermodules-bottombar-button:hover,
+.sidebar-centermodules-bottombar-button:focus {
+    background-color: $layer2Hover;
+}
+
+.sidebar-centermodules-bottombar-button:active {
+    background-color: $layer2Active;
 }

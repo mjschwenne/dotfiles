@@ -4,8 +4,8 @@ import PopupWindow from '../.widgethacks/popupwindow.js';
 
 export default (id = '') => PopupWindow({
     name: `overview${id}`,
-    exclusivity: 'ignore',
-    keymode: 'exclusive',
+    // exclusivity: 'ignore',
+    keymode: 'on-demand',
     visible: false,
     anchor: ['top'],
     layer: 'overlay',

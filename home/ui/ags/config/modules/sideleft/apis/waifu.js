@@ -19,7 +19,8 @@ async function getImageViewerApp(preferredApp) {
         .then((output) => {
             if (output != '') return preferredApp;
             else return 'xdg-open';
-        });
+        })
+        .catch(print);
 }
 
 const IMAGE_REVEAL_DELAY = 13; // Some wait for inits n other weird stuff
@@ -126,6 +127,7 @@ const WaifuImage = (taglist) => {
             'download': ImageState('downloading', 'Downloading image'),
             'done': ImageState('done', 'Finished!'),
             'error': ImageState('error', 'Error'),
+            'notfound': ImageState('error', 'Not found!'),
         },
     });
     const downloadIndicator = MarginRevealer({
@@ -187,7 +189,7 @@ const WaifuImage = (taglist) => {
         child: Overlay({
             child: Box({
                 homogeneous: true,
-                className: 'sidebar-waifu-image',
+                className: 'sidebar-waifu-image margin-top-5',
                 children: [blockImage],
             }),
             overlays: [blockImageActions],
@@ -203,6 +205,10 @@ const WaifuImage = (taglist) => {
                 thisBlock.attribute.imageData = imageData;
                 const { status, signature, url, extension, source, dominant_color, is_nsfw, width, height, tags } = thisBlock.attribute.imageData;
                 thisBlock.attribute.isNsfw = is_nsfw;
+                if (status == 404) {
+                    downloadState.shown = 'notfound';
+                    return;
+                }
                 if (status != 200) {
                     downloadState.shown = 'error';
                     return;
@@ -255,7 +261,6 @@ const WaifuImage = (taglist) => {
         children: [
             Box({
                 vertical: true,
-                className: 'spacing-v-5',
                 children: [
                     blockHeading,
                     Box({

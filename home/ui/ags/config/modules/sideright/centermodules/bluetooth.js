@@ -1,6 +1,3 @@
-// This file is for the notification list on the sidebar
-// For the popup notifications, see onscreendisplay.js
-// The actual widget for each single notification is in ags/modules/.commonwidgets/notification.js
 import Widget from 'resource:///com/github/Aylur/ags/widget.js';
 import Bluetooth from 'resource:///com/github/Aylur/ags/service/bluetooth.js';
 import * as Utils from 'resource:///com/github/Aylur/ags/utils.js';
@@ -132,13 +129,26 @@ export default (props) => {
             self.shown = (Bluetooth.devices.length > 0 ? 'list' : 'empty')
         }),
     })
+    const bottomBar = Box({
+        homogeneous: true,
+        children: [Button({
+            hpack: 'center',
+            className: 'txt-small txt sidebar-centermodules-bottombar-button',
+            onClicked: () => {
+                execAsync(userOptions.apps.bluetooth).catch(print);
+                closeEverything();
+            },
+            label: 'More',
+            setup: setupCursorHover,
+        })],
+    })
     return Box({
         ...props,
         className: 'spacing-v-5',
         vertical: true,
         children: [
             mainContent,
-            // status,
+            bottomBar
         ]
     });
 }

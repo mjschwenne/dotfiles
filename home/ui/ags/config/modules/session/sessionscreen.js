@@ -1,10 +1,10 @@
 // This is for the cool memory indicator on the sidebar
 // For the right pill of the bar, see system.js
 const { Gdk, Gtk } = imports.gi;
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../variables.js';
 import App from 'resource:///com/github/Aylur/ags/app.js';
 import Widget from 'resource:///com/github/Aylur/ags/widget.js';
 import * as Utils from 'resource:///com/github/Aylur/ags/utils.js';
+import { monitors } from '../.miscutils/hyprlanddata.js';
 
 const { exec, execAsync } = Utils;
 
@@ -59,7 +59,7 @@ const SessionButton = (name, icon, command, props = {}, colorid = 0) => {
     });
 }
 
-export default ({ id = '' }) => {
+export default ({ id = 0 }) => {
     // lock, logout, sleep
     const lockButton = SessionButton('Lock', 'lock', () => { App.closeWindow(`session${id}`); execAsync(['loginctl', 'lock-session']).catch(print) }, {}, 1);
     const logoutButton = SessionButton('Logout', 'logout', () => { App.closeWindow(`session${id}`); execAsync(['bash', '-c', 'pkill Hyprland || pkill sway || pkill niri || loginctl terminate-user $USER']).catch(print) }, {}, 2);
@@ -98,8 +98,8 @@ export default ({ id = '' }) => {
     return Widget.Box({
         className: 'session-bg',
         css: `
-        min-width: ${SCREEN_WIDTH}px;
-        min-height: ${SCREEN_HEIGHT}px;
+        min-width: ${monitors[id].width}px;
+        min-height: ${monitors[id].height}px;
         `, // idk why but height = screen height doesn't fill
         vertical: true,
         children: [

@@ -63,18 +63,22 @@
 
   # Setup SDDM display manager
   security.pam.services.swaylock = {};
-  services.xserver.displayManager.sddm.sugarCandyNix = {
-    enable = true;
+  services.displayManager.sddm = {
+    wayland.enable = true;
 
-    settings = {
-      ScreenWidth = 1920;
-      ScreenHeight = 1080;
-      Background = lib.cleanSource ./sddm.png;
-      PartialBlur = true;
-      FormPosition = "left";
-      Font = "JetBrainsMono Nerd Font";
-      ForceHideCompletePassword = true;
-      DateFormat = "dddd, dd MMMM yyyy";
+    sugarCandyNix = {
+      enable = true;
+
+      settings = {
+        ScreenWidth = 1920;
+        ScreenHeight = 1080;
+        Background = lib.cleanSource ./sddm.png;
+        PartialBlur = true;
+        FormPosition = "left";
+        Font = "JetBrainsMono Nerd Font";
+        ForceHideCompletePassword = true;
+        DateFormat = "dddd, dd MMMM yyyy";
+      };
     };
   };
 
