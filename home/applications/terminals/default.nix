@@ -54,6 +54,7 @@
           style = "block";
         };
         colors = {
+          alpha = 0.8;
           foreground = "cdd6f4"; # text
           background = "1e1e2e"; # base
           regular0 = "45475a"; # surface 1

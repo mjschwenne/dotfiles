@@ -179,6 +179,7 @@ in {
   home.sessionVariables = {
     GTK_THEME = "Catppuccin-Mocha-Standard-Pink-Dark";
     YDOTOOL_SOCKET = "/tmp/ydotools";
+    WLR_RENDERER = "vulkan";
   };
   home.pointerCursor = {
     package = pkgs.catppuccin-cursors.mochaLight;
@@ -187,7 +188,7 @@ in {
 
   qt = {
     enable = true;
-    platformTheme = "qtct";
+    platformTheme.name = "qtct";
     style.name = "kvantum";
     style.package = pkgs.libsForQt5.qtstyleplugin-kvantum;
   };

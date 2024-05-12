@@ -40,6 +40,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # swayfx
+    swayfx = {
+      url = "github:WillPower3309/swayfx";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # hyprland
     hyprland = {
       url = "git+https://github.com/hyprwm/Hyprland?submodules=1";

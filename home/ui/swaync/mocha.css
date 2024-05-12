@@ -1,8 +1,23 @@
 * {
   all: unset;
   font-size: 14px;
-  font-family: "Ubuntu Nerd Font";
+  font-family: "JetBrains Mono Nerd Font";
   transition: 200ms;
+}
+
+trough highlight {
+  background: #cdd6f4;
+}
+
+scale trough {
+  margin: 0rem 1rem;
+  background-color: #313244;
+  min-height: 8px;
+  min-width: 70px;
+}
+
+slider {
+  background-color: #89b4fa;
 }
 
 .floating-notifications.background .notification-row .notification-background {
@@ -90,7 +105,7 @@
   padding: 14px;
 }
 
-.control-center .widget-title {
+.control-center .widget-title > label {
   color: #cdd6f4;
   font-size: 1.3em;
 }
@@ -180,6 +195,10 @@
   background-color: #eba0ac;
 }
 
+.close-button {
+  border-radius: 6.3px;
+}
+
 .control-center .notification-row .notification-background .close-button:hover {
   background-color: #f38ba8;
   color: #1e1e2e;
@@ -202,16 +221,6 @@
   color: #cdd6f4;
 }
 
-progressbar,
-progress,
-trough {
-  border-radius: 12.6px;
-}
-
-progressbar {
-  box-shadow: inset 0 0 0 1px #45475a;
-}
-
 .notification.critical progress {
   background-color: #f38ba8;
 }
@@ -219,14 +228,6 @@ progressbar {
 .notification.low progress,
 .notification.normal progress {
   background-color: #89b4fa;
-}
-
-trough {
-  background-color: #313244;
-}
-
-.control-center trough {
-  background-color: #45475a;
 }
 
 .control-center-dnd {
@@ -267,4 +268,79 @@ trough {
   background: #45475a;
   border-radius: 8px;
   border: 1px solid #6c7086;
+}
+
+.widget-mpris .widget-mpris-player {
+  background: #313244;
+  padding: 7px;
+}
+
+.widget-mpris .widget-mpris-title {
+  font-size: 1.2rem;
+}
+
+.widget-mpris .widget-mpris-subtitle {
+  font-size: 0.8rem;
+}
+
+.widget-menubar > box > .menu-button-bar > button > label {
+  font-size: 3rem;
+  padding: 0.5rem 2rem;
+}
+
+.widget-menubar > box > .menu-button-bar > :last-child {
+  color: #f38ba8;
+}
+
+.power-buttons button:hover,
+.powermode-buttons button:hover,
+.screenshot-buttons button:hover {
+  background: #313244;
+}
+
+.control-center .widget-label > label {
+  color: #cdd6f4;
+  font-size: 2rem;
+}
+
+.widget-buttons-grid {
+  padding-top: 1rem;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button label {
+  font-size: 2.5rem;
+}
+
+.widget-volume {
+  padding-top: 1rem;
+}
+
+.widget-volume label {
+  font-size: 1.5rem;
+  color: #74c7ec;
+}
+
+.widget-volume trough highlight {
+  background: #74c7ec;
+}
+
+.widget-backlight trough highlight {
+  background: #f9e2af;
+}
+
+.widget-backlight scale {
+  margin-right: 1rem;
+}
+
+.widget-backlight label {
+  font-size: 1.5rem;
+  color: #f9e2af;
+}
+
+.widget-backlight .KB {
+  padding-bottom: 1rem;
+}
+
+.image {
+  padding-right: 0.5rem;
 }

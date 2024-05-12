@@ -64,21 +64,7 @@
 
     # 550 is leading to massive flickering in electron apps.
     # Reverting to 545
-    package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-      version = "545.29.06";
-      sha256_64bit = "sha256-grxVZ2rdQ0FsFG5wxiTI3GrxbMBMcjhoDFajDgBFsXs=";
-      sha256_aarch64 = "sha256-o6ZSjM4gHcotFe+nhFTePPlXm0+RFf64dSIDt+RmeeQ=";
-      openSha256 = "sha256-h4CxaU7EYvBYVbbdjiixBhKf096LyatU6/V6CeY9NKE=";
-      settingsSha256 = "sha256-YBaKpRQWSdXG8Usev8s3GYHCPqL8PpJeF6gpa2droWY=";
-      persistencedSha256 = "sha256-AiYrrOgMagIixu3Ss2rePdoL24CKORFvzgZY3jlNbwM=";
-
-      patches = [
-        (pkgs.fetchpatch {
-          url = "https://github.com/gentoo/gentoo/raw/c64caf53/x11-drivers/nvidia-drivers/files/nvidia-drivers-470.223.02-gpl-pfn_valid.patch";
-          hash = "sha256-eZiQQp2S/asE7MfGvfe6dA/kdCvek9SYa/FFGp24dVg=";
-        })
-      ];
-    };
+    package = config.boot.kernelPackages.nvidiaPackages.production;
   };
 
   networking.hostName = "terra"; # Define your hostname.

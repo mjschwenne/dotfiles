@@ -82,6 +82,17 @@
     };
   };
 
+  services.xserver.displayManager.session = [
+    {
+      manage = "window";
+      name = "SwayFX";
+      start = ''
+        env WLR_RENDERER=vulkan ${inputs.swayfx.packages."${pkgs.system}".swayfx-unwrapped}/bin/sway --unsupported-gpu
+        waitPID=$!
+      '';
+    }
+  ];
+
   # Install hyprland wayland compositor
   programs.hyprland = {
     enable = true;
