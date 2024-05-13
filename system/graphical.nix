@@ -91,14 +91,6 @@
         waitPID=$!
       '';
     }
-    {
-      manage = "window";
-      name = "Hyprland";
-      start = ''
-        ${inputs.hyprland.packages."${pkgs.system}".hyprland}/bin/Hyprland
-        waitPID=$!
-      '';
-    }
   ];
 
   # Install hyprland wayland compositor

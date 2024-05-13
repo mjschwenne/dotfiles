@@ -236,6 +236,10 @@
         "swaync"
         "/home/mjs/.config/hypr/scripts/wallpaper.fish interval 300 &"
         "waybar"
+        # I don't know why, but a phamton monitor has been appearing since I setup sway.
+        # Trying to switch to it or pull workspaces from it hangs hyprland, so let's
+        # nip that in the bud by disabling it a soon as possible.
+        "hyprctl keyword monitor Unknown-1,disable"
       ];
       input = {
         float_switch_override_focus = 2;

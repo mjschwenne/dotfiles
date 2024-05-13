@@ -40,7 +40,7 @@
     ];
   };
 
-  nixpkgs.config.cudaSupport = false;
+  nixpkgs.config.cudaSupport = true;
 
   hardware.nvidia = {
     # Modesetting is required.
@@ -83,16 +83,16 @@
     #     })
     #   ];
     # };
-    forceFullCompositionPipeline = true;
-    prime = {
-      sync.enable = true;
-      # offload = {
-      #   enable = false;
-      #   enableOffloadCmd = false;
-      # };
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-    };
+    # forceFullCompositionPipeline = true;
+    # prime = {
+    #   sync.enable = true;
+    #   # offload = {
+    #   #   enable = false;
+    #   #   enableOffloadCmd = false;
+    #   # };
+    #   intelBusId = "PCI:0:2:0";
+    #   nvidiaBusId = "PCI:1:0:0";
+    # };
   };
 
   networking.hostName = "terra"; # Define your hostname.
