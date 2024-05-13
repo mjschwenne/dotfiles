@@ -224,6 +224,7 @@
       };
       dwindle = {
         preserve_split = true;
+        no_gaps_when_only = 1;
       };
       exec-once = [
         "swww kill; swww-daemon"
