@@ -4,9 +4,6 @@
   pkgs-master,
   ...
 }: let
-  eww-tray = pkgs.callPackage ./ui/eww/eww-tray.nix {
-    withWayland = true;
-  };
   packages = with pkgs; [
     # Web browsers
     brave
@@ -179,7 +176,6 @@ in {
   home.sessionVariables = {
     GTK_THEME = "Catppuccin-Mocha-Standard-Pink-Dark";
     YDOTOOL_SOCKET = "/tmp/ydotools";
-    WLR_RENDERER = "vulkan";
   };
   home.pointerCursor = {
     package = pkgs.catppuccin-cursors.mochaLight;
@@ -201,7 +197,7 @@ in {
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
 
-  home.packages = packages ++ masterPkgs ++ [eww-tray];
+  home.packages = packages ++ masterPkgs;
 
   xdg = {
     configFile = {

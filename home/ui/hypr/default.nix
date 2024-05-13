@@ -60,56 +60,29 @@
           "$mod, F10, exec, vesktop"
           "$mod, F11, exec, evince"
           "$mod, F12, exec, pavucontrol"
+
           "$mod, RETURN, exec, foot"
           "$mod, b, exec, librewolf"
-          "$mod_SHIFT, b, exec, brave"
+          "$mod_SHIFT, b, exec, firefox"
           "$mod, e, exec, emacs"
-          "$mod, n, exec, foot nvim"
+          "$mod, p, exec, keepassxc"
+          "$mod, r, exec, rofi -show drun"
 
           # System
-          "$mod_CTRL, a, exec, killall ags ydotool; ags &"
-          "$mod_CTRL, e, exec, eww reload"
-          "$mod_CTRL, i, exec, ~/.config/hypr/scripts/toggle_swayidle.fish"
+          "$mod, n, exec, swaync-client -t"
           "$mod_CTRL, q, exec, hyprctl kill"
           "$mod_CTRL, r, exec, hyprctl reload"
-          "$mod_CTRL_SHIFT, r, exec, hyprctl reload; killall ags ydotool; ags &"
           ''$mod_CTRL, s, exec, XDG_CURRENT_DESKTOP="gnome" gnome-control-center''
           "$mod_CTRL, v, exec, pavucontrol"
-          # "$mod_CTRL, w, exec, waypaper --backend swww"
-          "$mod_CTRL, w, exec, ~/.config/ags/scripts/color_generation/switchwall.sh"
+          "$mod_CTRL, w, exec, waypaper --backend swww"
           "$mod, z, exec, ~/.config/hypr/scripts/lock.fish"
-          # "$mod_CTRL, z, exec, wlogout -b 5 -T 400 -B 400"
-          "$mod_CTRL, z, exec, ags -t 'session'"
-
-          # AGS
-          "$mod, r, exec, ags -t 'overview'"
-          "$mod, Tab, exec, ags -t 'overview'"
-          "$mod, Slash, exec, ags -t 'cheatsheet'"
-          "$mod, n, exec, ags -t 'sideright'"
-          "$mod, m, exec, ags run-js 'openMusicControls.value = (!Mpris.getPlayer() ? false : !openMusicControls.value);'"
-          "$mod, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'"
-          # "$mod_ALT, k, exec, ags -t 'osk'"
-          "Control+Alt, Delete, exec, ags -t 'session'"
+          "$mod_CTRL, z, exec, wlogout -b 5 -T 400 -B 400"
 
           # Window
           "$mod, q, killactive,"
           "$mod, u, fullscreen, 0"
-          "$mod_SHIFT, u, fullscreen, 1"
           "$mod, i, togglefloating"
-          "$mod, o, fakefullscreen"
-          "$mod, p, pin"
-
-          # Window groups
-          "$mod_ALT, g, togglegroup"
-          "$mod_ALT_SHIFT, g, moveoutofgroup"
-          "$mod_ALT, n, changegroupactive, f"
-          "$mod_ALT_SHIFT, n, changegroupactive, b"
-          "$mod_ALT, l, lockactivegroup"
-          "$mod_ALT_SHIFT, l, lockgroups"
-          "$mod_ALT, h, moveintogroup, r"
-          "$mod_ALT, j, moveintogroup, d"
-          "$mod_ALT, k, moveintogroup, u"
-          "$mod_ALT, l, moveintogroup, l"
+          "$mod, o, pin"
 
           # Window Movement
           "$mod_SHIFT, h, swapwindow, l"
@@ -135,10 +108,6 @@
           "ALT, Tab, cyclenext"
           "ALT, Tab, bringactivetotop,"
           "ALT_SHIFT, Tab, cyclenext, prev"
-          # "$mod, n, cyclenext"
-          # "$mod_SHIFT, n, cyclenext, prev"
-          # "$mod_CTRL, n, swapnext"
-          # "$mod_CTRL_SHIFT, n, swapnext, prev"
 
           # Window size
           "$mod_CTRL, h, resizeactive, -10 0"
@@ -187,7 +156,7 @@
           "$mod_SHIFT, r, exec, ~/.config/ags/scripts/record-script.sh --fullscreen"
           "$mod_SHIFT_ALT, r, exec, ~/.config/ags/scripts/record-script.sh --fullscreen-sound"
           "$mod_ALT, c, exec, hyprpicker -a"
-          "$mod, v, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
+          "CTRL_ALT, v, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
 
           # Touch gestures
           ",edge:d:u, exec, ags -t 'osk'"
@@ -216,34 +185,29 @@
         "Super, Apostrophe, splitratio, 0.1"
       ];
       bindl = [
-        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ", XF86AudioMute, exec, ags run-js 'indicator.popup(1);'"
+        ", XF86AudioMute, exec, swayosd-client --output-volume mute-toogle"
         ", XF86AudioPlay, exec, playerctl play-pause"
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
-        ", XF86AudioStep, exec, playerctl stop"
+        ", XF86AudioStop, exec, playerctl stop"
       ];
       bindle = [
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86AudioRaiseVolume, exec, ags run-js 'indicator.popup(1);'"
-        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ", XF86AudioLowerVolume, exec, ags run-js 'indicator.popup(1);'"
-        ", XF86MonBrightnessUp, exec, ags run-js 'brightness.screen_value += 0.05;'"
-        ", XF86MonBrightnessUp, exec, ags run-js 'indicator.popup(1);'"
-        ", XF86MonBrightnessDown, exec, ags run-js 'brightness.screen_value -= 0.05;'"
-        ", XF86MonBrightnessDown, exec, ags run-js 'indicator.popup(1);'"
+        ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
+        ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
+        ", XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
+        ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
       ];
       bindm = [
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
       ];
       decoration = {
-        rounding = 20;
+        rounding = 10;
         blur = {
-          enabled = false;
+          enabled = true;
           xray = false;
           size = 5;
-          passes = 4;
+          passes = 3;
           brightness = 1;
           noise = 0.01;
           contrast = 1;
@@ -262,18 +226,16 @@
         preserve_split = true;
       };
       exec-once = [
-        "swww kill; swww init"
-        "ags &"
-        "fcitx5"
-        "swayidle -w timeout 300 'swaylock' timeout 600 'systemctl suspend' before-sleep 'swaylock' &"
-        "swayidle -w timeout 450 'pidof java || systemctl suspend' &"
+        "swww kill; swww-daemon"
         "dbus-update-activation-environment --all &"
         "sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "protonmail-bridge --noniteractive &"
-        # "nm-applet "
+        "nm-applet"
+        "swaync"
         "/home/mjs/.config/hypr/scripts/wallpaper.fish interval 300 &"
+        "waybar"
       ];
       input = {
         float_switch_override_focus = 2;
@@ -293,7 +255,7 @@
         "col.active_border" = "$green";
         "col.inactive_border" = "$peach";
         border_size = 3;
-        gaps_in = 4;
+        gaps_in = 5;
         gaps_out = 5;
         layout = "dwindle";
         no_focus_fallback = true;
@@ -314,30 +276,8 @@
         };
       };
       layerrule = [
-        "blur,bar"
-        "noanim, selection"
-        "xray 1, .*"
-        # "noanim, .*"
-        "noanim, selection"
-        "noanim, overview"
-        "noanim, anyrun"
+        "blur,waybar"
         "blur, swaylock"
-
-        "blur, eww"
-        "ignorealpha 0.8, eww"
-        "noanim, noanim"
-        "blur, noanim"
-        "blur, gtk-layer-shell"
-        "ignorezero, gtk-layer-shell"
-        "blur, launcher"
-        "ignorealpha 0.5, launcher"
-        "blur, notifications"
-        "ignorealpha 0.69, notifications"
-
-        # ags
-        "blur, session"
-        "noanim, sideright"
-        "noanim, sideleft"
       ];
       misc = {
         animate_manual_resizes = false;
@@ -407,13 +347,6 @@
 
   home = {
     sessionVariables = {
-      # Setting up input for onscreen keyboard
-      QT_IM_MODULE = "fcitx";
-      XMODIFIER = "@im=fcitx";
-      SDL_IM_MODULE = "fcitx";
-      GLFW_IM_MODULE = "ibus";
-      INPUT_METHOD = "fcitx";
-
       BROWSER = "librewolf";
     };
     packages = with pkgs; [
@@ -432,8 +365,6 @@
   };
 
   xdg.configFile = {
-    # "hypr/colors.conf".source = ./colors.conf;
-
     "hypr/scripts" = {
       source = ./scripts;
       recursive = true;

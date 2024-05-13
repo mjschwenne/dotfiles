@@ -1,9 +1,7 @@
 {...}: {
   imports = [
     ./rofi
-    # ./eww
-    # ./ags
-    # ./hypr
+    ./hypr
     ./sway
     ./swayidle
     ./swaylock

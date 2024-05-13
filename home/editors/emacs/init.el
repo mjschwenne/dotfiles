@@ -38,6 +38,10 @@
   :custom (catppuccin-flavor 'mocha)
   :config (load-theme 'catppuccin t))
 
+;; (set-frame-parameter nil 'alpha-background 80)
+
+;; (add-to-list 'default-frame-alist '(alpha-background . 80))
+
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path "/home/mjs/.emacs.d/autoloads/")
 (loaddefs-generate

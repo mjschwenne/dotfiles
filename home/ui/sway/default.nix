@@ -49,7 +49,8 @@
           # Application hotkeys
           "${mod}+Return" = "exec ${pkgs.foot}/bin/foot";
           "${mod}+b" = "exec ${pkgs.librewolf}/bin/librewolf";
-          "${mod}+Shift+b" = "exec ${pkgs.brave}/bin/brave";
+          "${mod}+Shift+b" = "exec ${pkgs.brave}/bin/firefox";
+          "${mod}+e" = "exec emacs";
           "${mod}+p" = "exec ${pkgs.keepassxc}/bin/keepassxc";
           "${mod}+r" = "exec ${pkgs.rofi-wayland}/bin/rofi -show drun";
 
@@ -57,6 +58,7 @@
           "${mod}+F2" = "exec ${pkgs.keepassxc}/bin/keepassxc";
           "${mod}+F3" = "exec ${pkgs.librewolf}/bin/librewolf";
           "${mod}+F4" = "exec ${pkgs.brave}/bin/brave";
+          "${mod}+F5" = "exec ${pkgs.firefox}/bin/firefox";
           "${mod}+F6" = "exec ${pkgs.qalculate-gtk}/bin/qalculate-gtk";
           "${mod}+F7" = "exec emacs"; # Emacs is installed from the overlay, not pkgs
           "${mod}+F8" = "exec ${pkgs.thunderbird}/bin/thunderbird";
@@ -220,7 +222,7 @@
       startup = [
         {command = "${pkgs.autotiling-rs}/bin/autotiling-rs";}
         {command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";}
-        {command = "swww-deamon";}
+        {command = "swww-daemon";}
         {command = "wl-paste --type text --watch cliphist store";}
         {command = "wl-paste --type image --watch cliphist store";}
         {command = "protonmail-bridge --noniteractive &";}

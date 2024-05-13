@@ -1,17 +1,17 @@
 {pkgs, ...}: {
   services.swayidle = {
     enable = true;
-    systemdTarget = "sway-session.target";
+    systemdTarget = "graphical-session.target";
     events = [
       {
         event = "before-sleep";
-        command = "${pkgs.swaylock}/bin/swaylock";
+        command = "swaylock";
       }
     ];
     timeouts = [
       {
         timeout = 300;
-        command = "${pkgs.swaylock}/bin/swaylock";
+        command = "swaylock";
       }
       {
         timeout = 600;

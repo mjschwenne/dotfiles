@@ -91,6 +91,14 @@
         waitPID=$!
       '';
     }
+    {
+      manage = "window";
+      name = "Hyprland";
+      start = ''
+        ${inputs.hyprland.packages."${pkgs.system}".hyprland}/bin/Hyprland
+        waitPID=$!
+      '';
+    }
   ];
 
   # Install hyprland wayland compositor
@@ -100,16 +108,16 @@
     portalPackage = inputs.hyprland.packages."${pkgs.system}".xdg-desktop-portal-hyprland;
   };
 
+  programs.dconf.enable = true;
+
   xdg.portal = {
     enable = true;
     wlr.enable = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
     ];
+    config.common.default = "*";
   };
-
-  # Flatpak
-  # services.flatpak.enable = true;
 
   # File manager
   services.gvfs.enable = true;
@@ -129,7 +137,7 @@
   # programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
-    enableSSHSupport = true;
+    enableSSHSupport = false;
     pinentryPackage = pkgs.pinentry-gnome3;
   };
 
