@@ -2084,3 +2084,21 @@ used if TAG-LIST is empty."
   (haskell-mode . turn-on-haskell-doc-mode)
   (haskell-mode . turn-on-haskell-indent)
   (haskell-mode . interactive-haskell-mode))
+
+(use-package proof-general
+  :general (mjs-local-leader-def :keymaps 'coq-mode-map
+             "a" '("Active Script" . proof-toggle-active-scripting)
+             "b" '("Assert Buffer" . proof-process-buffer)
+             "c" '("Clear Buffers" . pg-response-clear-displays)
+             "i" '("Interrupt Assistant" . proof-interrupt-process)
+             "n" '("Assert Next Command" . proof-assert-next-command-interactive)
+             "p" '("Undo Last Command" . proof-undo-last-successful-command)
+             "l" '("Assert to Line" . proof-goto-point)
+             "L" '("Retract to Line" . proof-retract-until-point-interactive)
+             "r" '("Retract Buffer" . proof-retract-buffer)
+             "x" '("Exit Assistant" . proof-shell-exit))
+  :diminish proof-active-buffer-fake-minor-mode
+  :diminish (holes-mode . "󰠣 ")
+  :hook (coq-mode . (lambda ()
+                      (set-face-background 'proof-locked-face
+                        (catppuccin-get-color 'surface0)))))
