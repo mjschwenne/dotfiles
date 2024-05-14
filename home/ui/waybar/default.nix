@@ -83,6 +83,10 @@
         "sway/window" = {
           format = "{title}";
           max-length = 50;
+          rewrite = {
+            # Trim out -=+ characters from shyfox
+            "^-?=?+?" = "";
+          };
         };
         "hyprland/workspaces" = {
           all-outputs = true;
