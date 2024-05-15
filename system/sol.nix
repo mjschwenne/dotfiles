@@ -157,7 +157,7 @@
         };
         "enumlator" = {
           path = "/home/mjs/enumlation";
-          devices = ["sol" "luna" "mars" "phone"];
+          devices = ["terra" "luna" "mars" "phone"];
         };
       };
     };

@@ -67,7 +67,7 @@
         };
         "enumlator" = {
           path = "/home/mjs/workspace/enumlation";
-          devices = ["sol" "luna" "mars" "phone"];
+          devices = ["sol" "luna" "terra" "phone"];
         };
       };
     };
