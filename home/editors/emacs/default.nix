@@ -52,7 +52,7 @@
 
       override = epkgs:
         epkgs
-        // rec {
+        // {
           org-timeblock = pkgs.callPackage ./org-timeblock.nix {
             inherit (pkgs) fetchFromGitHub;
             inherit (epkgs) trivialBuild org-ql persist;
@@ -85,5 +85,6 @@
       source = ./autoloads;
       recursive = true;
     };
+    ".emacs.d/logo.webp".source = ./emacs.webp;
   };
 }

@@ -155,6 +155,10 @@
           path = "/var/lib/syncthing/documents/agenda";
           devices = ["phone"];
         };
+        "enumlator" = {
+          path = "/home/mjs/enumlation";
+          devices = ["sol" "luna" "mars" "phone"];
+        };
       };
     };
   };

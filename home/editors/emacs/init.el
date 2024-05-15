@@ -457,7 +457,7 @@
             "a" #'dashboard-jump-to-agenda
             "r" #'dashboard-jump-to-recents)
   :custom
-  (dashboard-startup-banner 'logo)
+  (dashboard-startup-banner "~/.emacs.d/logo.webp")
   (dashboard-display-icons-p t)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-set-navigator t)

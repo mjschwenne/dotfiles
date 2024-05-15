@@ -85,7 +85,7 @@
           max-length = 50;
           rewrite = {
             # Trim out -=+ characters from shyfox
-            "^-?=?+?" = "";
+            "^-?=?+?(.*)" = "$1";
           };
         };
         "hyprland/workspaces" = {

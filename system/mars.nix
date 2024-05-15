@@ -65,6 +65,10 @@
           path = "/home/mjs/kdb";
           devices = ["sol" "luna" "phone" "terra"];
         };
+        "enumlator" = {
+          path = "/home/mjs/workspace/enumlation";
+          devices = ["sol" "luna" "mars" "phone"];
+        };
       };
     };
   };
