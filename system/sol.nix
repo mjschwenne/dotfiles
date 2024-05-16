@@ -156,7 +156,7 @@
           devices = ["phone"];
         };
         "emulator" = {
-          path = "/home/mjs/emulation";
+          path = "/var/lib/syncthing/emulation";
           devices = ["terra" "luna" "mars" "phone"];
         };
       };
