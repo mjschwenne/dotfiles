@@ -219,6 +219,11 @@
         ];
         titlebar = false;
       };
+      seat = {
+        "*" = {
+          hide_cursor = "3000";
+        };
+      };
       startup = [
         {command = "${pkgs.autotiling-rs}/bin/autotiling-rs";}
         {command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";}

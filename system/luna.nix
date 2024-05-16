@@ -67,8 +67,8 @@
           path = "/home/mjs/kdb";
           devices = ["terra" "sol" "mars"];
         };
-        "enumlator" = {
-          path = "/home/mjs/workspace/enumlation";
+        "emulator" = {
+          path = "/home/mjs/workspace/emulation";
           devices = ["sol" "mars" "terra" "phone"];
         };
       };
