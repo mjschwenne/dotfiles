@@ -61,7 +61,7 @@
           "$mod, F11, exec, evince"
           "$mod, F12, exec, pavucontrol"
 
-          "$mod, RETURN, exec, foot"
+          "$mod, RETURN, exec, wezterm"
           "$mod, b, exec, librewolf"
           "$mod_SHIFT, b, exec, firefox"
           "$mod, e, exec, emacs"

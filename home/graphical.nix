@@ -137,9 +137,6 @@
     hyprpicker
     waypaper
     wayland-logout
-
-    wezterm
-    alacritty
   ];
   masterPkgs = with pkgs-master; [librewolf firefox protonvpn-cli protonvpn-gui];
 in {
