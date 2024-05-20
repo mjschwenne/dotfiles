@@ -3,7 +3,7 @@
   swayfx,
   lib,
   ...
-}: {
+} @ inputs: {
   home.packages = with pkgs; [
     # Install the swayfx fork. For some reason it won't build when
     # given as the package below.
@@ -32,7 +32,7 @@
     checkConfig = false; # Must disable to use sawyfx features
     config = rec {
       modifier = "Mod4";
-      terminal = "foot";
+      terminal = "wezterm";
       input = {
         "type:keyboard" = {
           "xkb_options" = "ctrl:nocaps";
@@ -47,9 +47,9 @@
       in
         lib.mkOptionDefault {
           # Application hotkeys
-          "${mod}+Return" = "exec ${pkgs.foot}/bin/foot";
+          "${mod}+Return" = "exec ${inputs.wezterm.packages.${pkgs.system}.default}/bin/wezterm";
           "${mod}+b" = "exec ${pkgs.librewolf}/bin/librewolf";
-          "${mod}+Shift+b" = "exec ${pkgs.brave}/bin/firefox";
+          "${mod}+Shift+b" = "exec ${pkgs.firefox}/bin/firefox";
           "${mod}+e" = "exec emacs";
           "${mod}+p" = "exec ${pkgs.keepassxc}/bin/keepassxc";
           "${mod}+r" = "exec ${pkgs.rofi-wayland}/bin/rofi -show drun";
@@ -172,9 +172,9 @@
         smartBorders = "no_gaps";
       };
       assigns = {
-        "8" = [{class = "thunderbird";}];
+        "8" = [{app_id = "^(thunderbird)$";}];
         "9" = [{title = "^(Spotify Premium)$";}];
-        "10" = [{class = "vesktop";}];
+        "10" = [{app_id = "^(vesktop)";}];
       };
       floating = {
         criteria = [
