@@ -237,7 +237,7 @@
             warning = 30;
             critical = 15;
           };
-          format = "{capacity}% {icon}";
+          format = "{icon}  {capacity}%";
           format-icons = ["" "" "" "" ""];
         };
         "idle_inhibitor" = {
@@ -424,6 +424,14 @@
         #battery {
             background-color: ${base};
             padding: 0px 5px 0px 5px;
+        }
+
+        #battery.warning {
+            background-color: ${peach};
+        }
+
+        #battery.critical {
+            background-color: ${red};
         }
 
         #idle_inhibitor {
