@@ -28,6 +28,7 @@
     # Document-based Applications
     evince
     xournalpp
+    rnote
     libsForQt5.okular
     poppler_utils
     nextcloud-client
