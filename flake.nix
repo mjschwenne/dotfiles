@@ -40,6 +40,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # swayfx
+    swayfx = {
+      url = "github:WillPower3309/swayfx";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # waybar
+    waybar = {
+      url = "github:Alexays/Waybar";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # hyprland
     hyprland = {
       url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
@@ -90,6 +102,11 @@
 
     ags = {
       url = "github:Aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    wezterm = {
+      url = "github:wez/wezterm?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

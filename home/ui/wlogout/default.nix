@@ -1,14 +1,10 @@
-{
-  config,
-  pkgs,
-  ...
-} @ inputs: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     wlogout
   ];
 
-  # home.file.".config/wlogout" = {
-  # 	source = ./wlogout;
-  # 	recursive = true;
-  # };
+  home.file.".config/wlogout" = {
+    source = ./wlogout;
+    recursive = true;
+  };
 }

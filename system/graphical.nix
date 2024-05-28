@@ -82,6 +82,17 @@
     };
   };
 
+  services.xserver.displayManager.session = [
+    {
+      manage = "window";
+      name = "SwayFX";
+      start = ''
+        env WLR_RENDERER=vulkan ${inputs.swayfx.packages."${pkgs.system}".swayfx-unwrapped}/bin/sway --unsupported-gpu
+        waitPID=$!
+      '';
+    }
+  ];
+
   # Install hyprland wayland compositor
   programs.hyprland = {
     enable = true;
@@ -89,16 +100,16 @@
     portalPackage = inputs.hyprland.packages."${pkgs.system}".xdg-desktop-portal-hyprland;
   };
 
+  programs.dconf.enable = true;
+
   xdg.portal = {
     enable = true;
     wlr.enable = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
     ];
+    config.common.default = "*";
   };
-
-  # Flatpak
-  # services.flatpak.enable = true;
 
   # File manager
   services.gvfs.enable = true;
@@ -118,7 +129,7 @@
   # programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
-    enableSSHSupport = true;
+    enableSSHSupport = false;
     pinentryPackage = pkgs.pinentry-gnome3;
   };
 

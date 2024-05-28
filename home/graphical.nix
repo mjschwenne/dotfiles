@@ -4,9 +4,6 @@
   pkgs-master,
   ...
 }: let
-  eww-tray = pkgs.callPackage ./ui/eww/eww-tray.nix {
-    withWayland = true;
-  };
   packages = with pkgs; [
     # Web browsers
     brave
@@ -31,6 +28,7 @@
     # Document-based Applications
     evince
     xournalpp
+    rnote
     libsForQt5.okular
     poppler_utils
     nextcloud-client
@@ -140,9 +138,6 @@
     hyprpicker
     waypaper
     wayland-logout
-
-    wezterm
-    alacritty
   ];
   masterPkgs = with pkgs-master; [librewolf firefox protonvpn-cli protonvpn-gui];
 in {
@@ -187,7 +182,7 @@ in {
 
   qt = {
     enable = true;
-    platformTheme = "qtct";
+    platformTheme.name = "qtct";
     style.name = "kvantum";
     style.package = pkgs.libsForQt5.qtstyleplugin-kvantum;
   };
@@ -200,7 +195,7 @@ in {
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
 
-  home.packages = packages ++ masterPkgs ++ [eww-tray];
+  home.packages = packages ++ masterPkgs;
 
   xdg = {
     configFile = {

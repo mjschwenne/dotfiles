@@ -38,6 +38,10 @@
   :custom (catppuccin-flavor 'mocha)
   :config (load-theme 'catppuccin t))
 
+(set-frame-parameter nil 'alpha-background 80)
+
+(add-to-list 'default-frame-alist '(alpha-background . 80))
+
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path "/home/mjs/.emacs.d/autoloads/")
 (loaddefs-generate
@@ -453,7 +457,7 @@
             "a" #'dashboard-jump-to-agenda
             "r" #'dashboard-jump-to-recents)
   :custom
-  (dashboard-startup-banner 'logo)
+  (dashboard-startup-banner "~/.emacs.d/logo.webp")
   (dashboard-display-icons-p t)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-set-navigator t)
@@ -1262,9 +1266,50 @@
 
 (use-package org-superstar
   :after org
-  :custom (org-superstar-leading-bullet nil)
-  (org-hide-leading-stars t)
-  :hook (org-mode . org-superstar-mode))
+  :custom ((org-superstar-leading-bullet " ")
+           (org-hide-leading-stars nil)
+           (org-superstar-remove-leading-stars nil))
+  :hook (org-mode . org-superstar-mode)
+  :config
+  (defun mjs/org-indent-compute-prefixes ()
+    "Compute prefix strings for regular text and headlines.
+
+This is taken from the `org-indent' source code, but I've changed
+the characters."
+    (setq org-indent--heading-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (setq org-indent--inlinetask-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (setq org-indent--text-line-prefixes
+          (make-vector org-indent--deepest-level nil))
+    (when (> org-indent-indentation-per-level 0)
+      (dotimes (n org-indent--deepest-level)
+        (let ((indentation (if (<= n 1) 0
+                             (* (1- org-indent-indentation-per-level)
+                                (1- n)))))
+          ;; Headlines line prefixes.
+          ;; (let ((heading-prefix (make-string indentation ?·)))
+          (let ((heading-prefix (make-string indentation 32)))
+            (aset org-indent--heading-line-prefixes
+                  n
+                  (org-add-props heading-prefix nil 'face 'org-indent))
+            ;; Inline tasks line prefixes
+            (aset org-indent--inlinetask-line-prefixes
+                  n
+                  (cond ((<= n 1) "")
+                        ((bound-and-true-p org-inlinetask-show-first-star)
+                         (concat org-indent-inlinetask-first-star
+                                 (substring heading-prefix 1)))
+                        (t (org-add-props heading-prefix nil 'face 'org-indent)))))
+          ;; Text line prefixes.
+          (aset org-indent--text-line-prefixes
+                n
+                (org-add-props
+                    (concat (make-string (+ n indentation) ?\s)
+                            (and (> n 0)
+                                 (char-to-string org-indent-boundary-char)))
+                    nil 'face 'org-indent))))))
+  (advice-add 'org-indent--compute-prefixes :override #'mjs/org-indent-compute-prefixes))
 
 (use-package svg-tag-mode
   :hook org-mode
@@ -2080,3 +2125,21 @@ used if TAG-LIST is empty."
   (haskell-mode . turn-on-haskell-doc-mode)
   (haskell-mode . turn-on-haskell-indent)
   (haskell-mode . interactive-haskell-mode))
+
+(use-package proof-general
+  :general (mjs-local-leader-def :keymaps 'coq-mode-map
+             "a" '("Active Script" . proof-toggle-active-scripting)
+             "b" '("Assert Buffer" . proof-process-buffer)
+             "c" '("Clear Buffers" . pg-response-clear-displays)
+             "i" '("Interrupt Assistant" . proof-interrupt-process)
+             "n" '("Assert Next Command" . proof-assert-next-command-interactive)
+             "p" '("Undo Last Command" . proof-undo-last-successful-command)
+             "l" '("Assert to Line" . proof-goto-point)
+             "L" '("Retract to Line" . proof-retract-until-point-interactive)
+             "r" '("Retract Buffer" . proof-retract-buffer)
+             "x" '("Exit Assistant" . proof-shell-exit))
+  :diminish proof-active-buffer-fake-minor-mode
+  :diminish (holes-mode . "󰠣 ")
+  :hook (coq-mode . (lambda ()
+                      (set-face-background 'proof-locked-face
+                        (catppuccin-get-color 'surface0)))))

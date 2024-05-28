@@ -1,11 +1,12 @@
 {...}: {
   imports = [
-    # ./swaync
-    # ./rofi
-    ./wlogout
-    ./swaylock
-    ./eww
-    ./ags
+    ./rofi
     ./hypr
+    ./sway
+    ./swayidle
+    ./swaylock
+    ./swaync
+    ./waybar
+    ./wlogout
   ];
 }

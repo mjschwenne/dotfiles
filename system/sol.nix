@@ -155,6 +155,10 @@
           path = "/var/lib/syncthing/documents/agenda";
           devices = ["phone"];
         };
+        "emulator" = {
+          path = "/var/lib/syncthing/emulation";
+          devices = ["terra" "luna" "mars" "phone"];
+        };
       };
     };
   };

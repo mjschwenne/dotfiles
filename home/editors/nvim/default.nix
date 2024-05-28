@@ -10,6 +10,12 @@
     };
   };
 in {
+  home.sessionVariables = {
+    NVIM_APPNAME = "astronvim";
+  };
+
+  imports = [./astronvim.nix];
+
   home = {
     file = {
       ".config/nvim/init.lua" = {
@@ -106,6 +112,7 @@ in {
       ltex-ls
       lua-language-server
       nixd
+      nil
       nodePackages.pyright
       rust-analyzer
       nodePackages.typescript-language-server
@@ -123,6 +130,7 @@ in {
       black
       isort
       shfmt
+      stylua
 
       # language specific stuff
       lldb

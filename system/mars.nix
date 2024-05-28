@@ -65,6 +65,10 @@
           path = "/home/mjs/kdb";
           devices = ["sol" "luna" "phone" "terra"];
         };
+        "emulator" = {
+          path = "/home/mjs/workspace/emulation";
+          devices = ["sol" "luna" "terra" "phone"];
+        };
       };
     };
   };

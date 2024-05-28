@@ -1,4 +1,0 @@
-#!/etc/profiles/per-user/mjs/bin/fish
-
-echo $argv > /tmp/brightness.fifo
-sleep 0.1s

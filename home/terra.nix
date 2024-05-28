@@ -51,7 +51,7 @@ in {
     ./applications/wonderdraft
     ./applications/dungeondraft
     ./applications/r
-    ./applications/rembg
+    # ./applications/rembg
     ./editors/emacs
   ];
 

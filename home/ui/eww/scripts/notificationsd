@@ -1,3 +1,0 @@
-#!/etc/profiles/per-user/mjs/bin/fish
-
-swaync-client -s
