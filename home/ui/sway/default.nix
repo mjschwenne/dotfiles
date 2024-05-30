@@ -102,7 +102,7 @@
           "XF86AudioPrev" = "exec playerctl previous";
           "XF86AudioStop" = "exec playerctl stop";
 
-          "XF86AudioRaiseVolume" = "exec swayosd-client --output-volume riase";
+          "XF86AudioRaiseVolume" = "exec swayosd-client --output-volume raise";
           "XF86AudioLowerVolume" = "exec swayosd-client --output-volume lower";
           "XF86AudioMute" = "exec swayosd-client --output-volume mute-toggle";
           "XF86AudioMicMute" = "exec swayosd-client --input-volume mute-toggle";
@@ -184,13 +184,13 @@
           {title = "^(Open Folder)(.*)$";}
           {title = "^(Save As)(.*)$";}
           {title = "^(Library)(.*)$";}
-          {class = "^(Write:)(.*)(- Thunderbird)$";}
+          {app_id = "^(Write:)(.*)(- Thunderbird)$";}
           {title = "^(Write: \\(no subject\\))$";}
           {title = "^(Compact folders)$";}
           {title = "^(KeePassXC - Browser Access Request)$";}
           {title = "^(Unlock Database - KeePassXC)$";}
           {title = "^(Formula \\(pdflatex\\))$";}
-          {class = "zenity";}
+          {app_id = "zenity";}
         ];
         modifier = modifier;
         titlebar = false;
@@ -202,18 +202,18 @@
           # Inhibit idle
           {
             command = "inhibit_idle fullscreen";
-            criteria = {class = "^.*";};
+            criteria = {app_id = "^.*";};
           }
           # Floats + size adjustments
           {
             command = "floating enable; resize set 400 200";
-            criteria = {class = "qalculate-gtk";};
+            criteria = {app_id = "qalculate-gtk";};
           }
           {
             command = "floating enable, resize set 350 100";
             criteria = {
               title = "^(Progress)$";
-              class = "Zotero";
+              app_id = "Zotero";
             };
           }
         ];
