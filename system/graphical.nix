@@ -36,6 +36,7 @@
   environment.systemPackages = with pkgs; [
     # SDDM theme
     libsForQt5.qt5.qtgraphicaleffects
+    swaylock-effects
 
     # Audio Utilities
     # pulseaudio

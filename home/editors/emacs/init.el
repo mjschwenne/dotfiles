@@ -3,7 +3,7 @@
 (setq user-full-name "Matt Schwennesen"
       user-login-name "matt"
       user-real-login-name "mjs"
-      user-mail-address "mjschwenne@gmail.com")
+      user-mail-address "matt@schwennesen.org")
 
 (require 'use-package)
 (setq use-package-verbose t
