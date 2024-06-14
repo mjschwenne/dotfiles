@@ -2,6 +2,7 @@
   pkgs,
   swayfx,
   lib,
+  osConfig,
   ...
 } @ inputs: {
   home.packages = with pkgs; [
@@ -38,7 +39,10 @@
           "xkb_options" = "ctrl:nocaps";
         };
         "1386:967:Wacom_Intuos_BT_M_Pen" = {
-          "map_to_output" = "HDMI-A-5";
+          "map_to_output" =
+            if osConfig.networking.hostName == "terra"
+            then "HDMI-A-5"
+            else "eDP-1";
         };
       };
       keybindings = let

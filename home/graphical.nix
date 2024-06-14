@@ -24,6 +24,8 @@
     pass-wayland
     pass-secret-service
     protonmail-bridge
+    protonmail-desktop
+    protonmail-bridge-gui
 
     # Document-based Applications
     evince

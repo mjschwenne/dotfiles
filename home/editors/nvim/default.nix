@@ -116,6 +116,7 @@ in {
       nodePackages.pyright
       rust-analyzer
       nodePackages.typescript-language-server
+      nodePackages.bash-language-server
       texlab
       coqPackages.coq-lsp
 
