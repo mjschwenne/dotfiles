@@ -102,10 +102,13 @@
     webcamoid
     gnome.eog
     mate.engrampa
+    swappy
+    wl-mirror
 
     # Games
     cockatrice
     melonDS
+    mindustry-wayland
 
     # CLI Utilities
     pandoc
