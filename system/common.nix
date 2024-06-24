@@ -38,8 +38,7 @@
   networking.networkmanager.enable = true;
 
   # Set your time zone.
-  # time.timeZone = "America/NewYork";
-  services.automatic-timezoned.enable = true;
+  time.timeZone = "America/Chicago";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
