@@ -13,7 +13,10 @@
   networking.hostName = "luna"; # Define your hostname.
 
   users.users.mjs.extraGroups = ["surface-control"];
-  microsoft-surface.ipts.enable = lib.mkForce true;
+  services.iptsd = {
+    enable = true;
+    config.Touch.DisableOnStylus = true;
+  };
 
   environment.systemPackages = with pkgs; [
     iptsd
@@ -24,15 +27,8 @@
     "ssh/luna/sol/key".owner = "mjs";
   };
 
-  # Adjust screen size for SDDM
-  services = {
-    xserver.displayManager.sddm.sugarCandyNix.settings = {
-      ScreenWidth = lib.mkDefault 2736;
-      ScreenHeight = lib.mkDefault 1824;
-    };
-    # Enable thermald, which should prevent overheating
-    thermald.enable = true;
-  };
+  # Enable thermald, which should prevent overheating
+  services.thermald.enable = true;
 
   services.syncthing = {
     enable = true;
@@ -51,6 +47,9 @@
         };
         "sol" = {
           id = "7AYNHZQ-VFBBFZP-MC327GI-UTDLN4K-KZOV2L6-DVI5Z6D-TORIX5C-IXDYEAP";
+        };
+        "phone" = {
+          id = "SVMWORW-JCZ26YN-7P77FJC-YYUNZ46-3PXZZQH-TMZGH5F-LD3TVJ4-XEVQMAE";
         };
       };
 
