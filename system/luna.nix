@@ -26,7 +26,7 @@
 
   # Adjust screen size for SDDM
   services = {
-    xserver.displayManager.sddm.sugarCandyNix.settings = {
+    displayManager.sddm.sugarCandyNix.settings = {
       ScreenWidth = lib.mkDefault 2736;
       ScreenHeight = lib.mkDefault 1824;
     };
