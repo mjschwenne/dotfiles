@@ -6,10 +6,6 @@
   ...
 } @ inputs: {
   home.packages = with pkgs; [
-    # Install the swayfx fork. For some reason it won't build when
-    # given as the package below.
-    swayfx.packages.${pkgs.system}.swayfx-unwrapped
-
     # XMonad/Qtile switch workspace switching
     i3-wk-switch
 
@@ -51,7 +47,10 @@
       in
         lib.mkOptionDefault {
           # Application hotkeys
-          "${mod}+Return" = "exec ${inputs.wezterm.packages.${pkgs.system}.default}/bin/wezterm";
+          "${mod}+Return" =
+            if osConfig.networking.hostName == "terra"
+            then "exec ${pkgs.foot}/bin/foot"
+            else "exec ${inputs.wezterm.packages.${pkgs.system}.default}/bin/wezterm";
           "${mod}+b" = "exec ${pkgs.librewolf}/bin/librewolf";
           "${mod}+Shift+b" = "exec ${pkgs.firefox}/bin/firefox";
           "${mod}+e" = "exec emacs";
@@ -121,49 +120,49 @@
         };
       bars = [];
       colors = let
-        base = "#1e1e2e";
-        crust = "#11111b";
-        red = "#f38ba8";
-        peach = "#fab387";
-        yellow = "#f9e2af";
-        green = "#a6e3a1";
-        sapphire = "#74c7ec";
-        text = "#cdd6f4";
+        base = "#191724";
+        surface = "#1f1d2e";
+        love = "#eb6f92";
+        iris = "#c4a7e7";
+        gold = "#f6c177";
+        pine = "#31748f";
+        foam = "#9ccfd8";
+        text = "#e0def4";
       in {
-        background = crust;
+        background = surface;
         focused = {
-          background = green;
-          border = green;
-          childBorder = green;
-          indicator = sapphire;
+          background = pine;
+          border = pine;
+          childBorder = pine;
+          indicator = foam;
           text = base;
         };
         focusedInactive = {
-          background = peach;
-          border = peach;
-          childBorder = peach;
-          indicator = sapphire;
+          background = iris;
+          border = iris;
+          childBorder = iris;
+          indicator = foam;
           text = base;
         };
         placeholder = {
-          background = crust;
+          background = surface;
           border = base;
           childBorder = base;
-          indicator = sapphire;
+          indicator = foam;
           text = text;
         };
         unfocused = {
-          background = yellow;
-          border = yellow;
-          childBorder = yellow;
-          indicator = sapphire;
+          background = gold;
+          border = gold;
+          childBorder = gold;
+          indicator = foam;
           text = base;
         };
         urgent = {
-          background = red;
-          border = red;
-          childBorder = red;
-          indicator = sapphire;
+          background = love;
+          border = love;
+          childBorder = love;
+          indicator = foam;
           text = base;
         };
       };
@@ -234,18 +233,18 @@
         {command = "swww-daemon";}
         {command = "wl-paste --type text --watch cliphist store";}
         {command = "wl-paste --type image --watch cliphist store";}
-        {command = "protonmail-bridge --noniteractive &";}
         {command = "nm-applet";}
         {command = "/home/mjs/.config/sway/scripts/wallpaper.fish interval 300 &";}
         {command = "waybar";}
+        {command = "protonmail-bridge --noninteractive &";}
       ];
     };
-    extraConfig = ''
-      corner_radius 10
-      blur enable
-      blur_passes 3
-      layer_effects "waybar" blur enable
-    '';
+    # extraConfig = ''
+    #   corner_radius 10
+    #   blur enable
+    #   blur_passes 3
+    #   layer_effects "waybar" blur enable
+    # '';
     systemd.enable = true;
   };
 

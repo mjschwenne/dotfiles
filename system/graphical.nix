@@ -40,14 +40,11 @@
 
     # Audio Utilities
     # pulseaudio
-  ];
 
-  systemd.user.services.ydotoold = {
-    enable = true;
-    description = "An auto-input utility for wayland";
-    serviceConfig.ExecStart = "/etc/profiles/per-user/mjs/bin/ydotoold --socket-path /tmp/ydotools";
-    wantedBy = ["default.target"];
-  };
+    # Install window manager and greeter
+    inputs.nixpkgs-wayland.packages."${pkgs.system}".sway-unwrapped
+    greetd.tuigreet
+  ];
 
   fonts.fontconfig.enable = true;
   fonts.packages = with pkgs; [
@@ -62,43 +59,14 @@
     rubik
   ];
 
-  # Setup SDDM display manager
-  security.pam.services.swaylock = {};
-  services.displayManager.sddm = {
-    wayland.enable = true;
-
-    sugarCandyNix = {
-      enable = true;
-
-      settings = {
-        ScreenWidth = 1920;
-        ScreenHeight = 1080;
-        Background = lib.cleanSource ./sddm.png;
-        PartialBlur = true;
-        FormPosition = "left";
-        Font = "JetBrainsMono Nerd Font";
-        ForceHideCompletePassword = true;
-        DateFormat = "dddd, dd MMMM yyyy";
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = ''${pkgs.greetd.tuigreet}/bin/tuigreet --remember --time --cmd "sway --unsupported-gpu"'';
+        user = "mjs";
       };
     };
-  };
-
-  services.xserver.displayManager.session = [
-    {
-      manage = "window";
-      name = "SwayFX";
-      start = ''
-        env WLR_RENDERER=vulkan ${inputs.swayfx.packages."${pkgs.system}".swayfx-unwrapped}/bin/sway --unsupported-gpu
-        waitPID=$!
-      '';
-    }
-  ];
-
-  # Install hyprland wayland compositor
-  programs.hyprland = {
-    enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-    portalPackage = inputs.hyprland.packages."${pkgs.system}".xdg-desktop-portal-hyprland;
   };
 
   programs.dconf.enable = true;

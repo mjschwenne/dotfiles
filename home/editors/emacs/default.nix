@@ -70,13 +70,14 @@
       extraEmacsPackages = epkgs: [
         epkgs.org-timeblock
         epkgs.calfw-blocks
-        # epkgs.org-auctex
+        epkgs.autothemer
       ];
     })
   ];
 
   home.file = {
     ".emacs.d/init.el".source = ./init.el;
+    ".emacs.d/rose-pine-theme.el".source = ./rose-pine-theme.el;
     ".emacs.d/snippets" = {
       source = ./snippets;
       recursive = true;

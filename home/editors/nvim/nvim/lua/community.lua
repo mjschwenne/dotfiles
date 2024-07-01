@@ -7,7 +7,7 @@
 ---@type LazySpec
 return {
   "AstroNvim/astrocommunity",
-  
+
   -- Language packs
   { import = "astrocommunity.pack.bash" },
   { import = "astrocommunity.pack.cpp" },
@@ -19,7 +19,7 @@ return {
   { import = "astrocommunity.pack.nix" },
   { import = "astrocommunity.pack.python" },
   { import = "astrocommunity.pack.rust" },
-  
+
   -- Appearances
-  { import = "astrocommunity.colorscheme.catppuccin"}
+  { import = "astrocommunity.colorscheme.rose-pine" },
 }

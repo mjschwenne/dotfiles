@@ -15,7 +15,7 @@
   makeWrapper,
   gnome,
 }:
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "dungeondraft";
   version = "1.1.0.3";
 

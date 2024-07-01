@@ -7,11 +7,9 @@
     extra-substituters = [
       # Nix community's cache server
       "https://nix-community.cachix.org"
-      "https://hyprland.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
     ];
   };
 
@@ -52,22 +50,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # hyprland
-    hyprland = {
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-    };
-
-    hyprland-contrib = {
-      url = "github:hyprwm/contrib";
-    };
-
-    hyprgrass = {
-      url = "github:horriblename/hyprgrass";
-      inputs.hyprland.follows = "hyprland";
-    };
-
-    sddm-sugar-candy-nix = {
-      url = "gitlab:Zhaith-Izaliel/sddm-sugar-candy-nix";
+    # nixpkgs with wayland nvidia?
+    nixpkgs-wayland = {
+      url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -88,21 +73,6 @@
 
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
-    };
-
-    eww-tray = {
-      url = "github:ralismark/eww/tray-3";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    llama = {
-      url = "github:ggerganov/llama.cpp";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    ags = {
-      url = "github:Aylur/ags";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     wezterm = {
@@ -165,7 +135,6 @@
           };
         modules = [
           inputs.sops-nix.nixosModules.sops
-          inputs.sddm-sugar-candy-nix.nixosModules.default
           ./system/terra.nix
 
           home-manager.nixosModules.home-manager
@@ -186,7 +155,7 @@
                 };
             };
             # The second one is a function which constructs the overlay so the parenthesis are required.
-            nixpkgs.overlays = [inputs.emacs-overlay.overlay (inputs.llama.overlays.default)];
+            nixpkgs.overlays = [inputs.emacs-overlay.overlay]; # inputs.nixpkgs-wayland.overlay];
           }
         ];
       };
@@ -206,7 +175,6 @@
           };
         modules = [
           inputs.sops-nix.nixosModules.sops
-          inputs.sddm-sugar-candy-nix.nixosModules.default
           ./system/mars.nix
 
           home-manager.nixosModules.home-manager
@@ -247,7 +215,6 @@
         modules = [
           inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
           inputs.sops-nix.nixosModules.sops
-          inputs.sddm-sugar-candy-nix.nixosModules.default
           ./system/luna.nix
           home-manager.nixosModules.home-manager
           {

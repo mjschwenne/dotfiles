@@ -1,7 +1,6 @@
 {...}: {
   imports = [
     ./rofi
-    ./hypr
     ./sway
     ./swayidle
     ./swaylock

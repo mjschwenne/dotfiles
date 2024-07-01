@@ -1,45 +1,47 @@
-{ pkgs, ... }: {
-
-  home.packages = with pkgs; [ zathura ];
+{pkgs, ...}: {
+  home.packages = with pkgs; [zathura];
 
   home.file.".config/zathura/zathurarc".text = ''
-    set default-fg                "#CDD6F4"
-    set default-bg 			      "#1E1E2E"
+    # https://github.com/rose-pine/rose-pine-theme
+    # Soho vibes for Zathura: Rosé Pine
+    #
+    # Usage:
+    # Copy contents of this file to ~/.config/zathura/zathurarc
+    #
+    # Change 'recolor' and 'recolor-keephue' to true to change
+    # the document colors for a more uniform viewing experience.
 
-    set completion-bg		      "#313244"
-    set completion-fg		      "#CDD6F4"
-    set completion-highlight-bg	  "#575268"
-    set completion-highlight-fg	  "#CDD6F4"
-    set completion-group-bg		  "#313244"
-    set completion-group-fg		  "#89B4FA"
+    set default-bg                  "#191724"
+    set default-fg                  "#e0def4"
 
-    set statusbar-fg		      "#CDD6F4"
-    set statusbar-bg		      "#313244"
+    set statusbar-fg                "#e0def4"
+    set statusbar-bg                "#555169"
 
-    set notification-bg		      "#313244"
-    set notification-fg		      "#CDD6F4"
-    set notification-error-bg	  "#313244"
-    set notification-error-fg	  "#F38BA8"
-    set notification-warning-bg	  "#313244"
-    set notification-warning-fg	  "#FAE3B0"
+    set inputbar-bg                 "#6e6a86"
+    set inputbar-fg                 "#ebbcba"
 
-    set inputbar-fg			      "#CDD6F4"
-    set inputbar-bg 		      "#313244"
+    set notification-bg             "#e0def4"
+    set notification-fg             "#555169"
 
-    set recolor-lightcolor		  "#1E1E2E"
-    set recolor-darkcolor		  "#CDD6F4"
+    set notification-error-bg       "#f6c177"
+    set notification-error-fg       "#555169"
 
-    set index-fg			      "#CDD6F4"
-    set index-bg			      "#1E1E2E"
-    set index-active-fg		      "#CDD6F4"
-    set index-active-bg		      "#313244"
+    set notification-warning-bg     "#ebbcba"
+    set notification-warning-fg     "#555169"
 
-    set render-loading-bg		  "#1E1E2E"
-    set render-loading-fg		  "#CDD6F4"
+    set highlight-color             "#ebbcba"
+    set highlight-active-color      "#eb6f92"
 
-    set highlight-color		      "#575268"
-    set highlight-fg              "#F5C2E7"
-    set highlight-active-color	  "#F5C2E7"
-    set recolor
+    set completion-bg               "#6e6a86"
+    set completion-fg               "#ebbcba"
+
+    set completion-highlight-fg     "#26233a"
+    set completion-highlight-bg     "#ebbcba"
+
+    set recolor-lightcolor          "#191724"
+    set recolor-darkcolor           "#e0def4"
+
+    set recolor                     "true"
+    set recolor-keephue             "true"
   '';
 }

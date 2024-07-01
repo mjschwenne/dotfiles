@@ -53,9 +53,9 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
+  hardware.uinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  hardware.uinput.enable = true;
   users.users.mjs = {
     isNormalUser = true;
     description = "Matt Schwennesen";
