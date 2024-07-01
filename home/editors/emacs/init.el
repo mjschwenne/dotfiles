@@ -3,7 +3,7 @@
 (setq user-full-name "Matt Schwennesen"
       user-login-name "matt"
       user-real-login-name "mjs"
-      user-mail-address "mjschwenne@gmail.com")
+      user-mail-address "matt@schwennesen.org")
 
 (require 'use-package)
 (setq use-package-verbose t
@@ -33,14 +33,15 @@
               scroll-margin 8 hscroll-margin 8
               scroll-conservatively 101)
 
-(use-package catppuccin-theme
+(use-package rose-pine
   :defer nil
-  :custom (catppuccin-flavor 'mocha)
-  :config (load-theme 'catppuccin t))
+  :ensure nil
+  :init (load-file "~/.emacs.d/rose-pine-theme.el")
+  :config (load-theme 'rose-pine t))
 
-(set-frame-parameter nil 'alpha-background 80)
+;; (set-frame-parameter nil 'alpha-background 80)
 
-(add-to-list 'default-frame-alist '(alpha-background . 80))
+;; (add-to-list 'default-frame-alist '(alpha-background . 80))
 
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path "/home/mjs/.emacs.d/autoloads/")
@@ -351,14 +352,14 @@
        (if read-only
            (propertize "󱙃 "
                        'face `(:inherit mode-line-emphasis
-                                        :foreground ,(catppuccin-get-color 'yellow)))
+                                        :foreground "#f6c177"))
          (if modifed
              (propertize "󰆓 "
                          'face `(:inherit mode-line-emphasis
-                                          :foreground ,(catppuccin-get-color 'red)))
+                                          :foreground "#eb6f92"))
            (propertize "󰆓 "
                        'face `(:inherit mode-line-emphasis
-                                        :foreground ,(catppuccin-get-color 'green)))))
+                                        :foreground "#31748f" ))))
        (propertize (buffer-name) 'face 'mode-line-emphasis))))
   (telephone-line-defsegment* mjs/buffer-position ()
     (cond ((eq major-mode 'pdf-view-mode)
@@ -406,28 +407,28 @@
      (evil . (mjs/buffer-position))))
   :config
   (set-face-foreground 'telephone-line-evil
-                       (catppuccin-get-color 'base))
+                       "#191724")
   (set-face-background 'telephone-line-evil-normal
-                       (catppuccin-get-color 'blue))
+                       "#31748f")
   (set-face-background 'telephone-line-evil-insert
-                       (catppuccin-get-color 'green))
+                       "#ebbcba")
   (set-face-background 'telephone-line-evil-visual
-                       (catppuccin-get-color 'mauve))
+                       "#c4a7e7")
   (set-face-background 'telephone-line-evil-emacs
-                       (catppuccin-get-color 'red))
+                       "#eb6f92")
   (set-face-background 'telephone-line-evil-operator
-                       (catppuccin-get-color 'peach))
+                       "#f6c177")
   (set-face-background 'telephone-line-evil-motion
-                       (catppuccin-get-color 'pink))
+                       "#ebbcba")
   (set-face-attribute 'telephone-line-accent-active nil
-                      :foreground (catppuccin-get-color 'text)
-                      :background (catppuccin-get-color 'surface1))
+                      :foreground "#e0def4"
+                      :background "#26233a")
   (set-face-attribute 'telephone-line-accent-inactive nil
-                      :foreground (catppuccin-get-color 'text)
-                      :background (catppuccin-get-color 'surface0))
+                      :foreground "#e0def4"
+                      :background "#1f1d2e")
   (set-face-attribute 'mode-line nil
-                      :foreground (catppuccin-get-color 'text)
-                      :background (catppuccin-get-color 'base)))
+                      :foreground "#e0def4"
+                      :background "#191724"))
 
 (setq display-line-numbers-type 'relative
       display-line-numbers-current-absolute t)
@@ -468,7 +469,11 @@
                      (agenda . 10)))
   (dashboard-item-names '(("Recent Files:" . "Recently Opened:")
                           ("Agenda for the coming week:" . "NEXT Items:")))
-  (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs")))
+  (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs"))
+  :config (set-face-attribute 'dashboard-items-face nil :weight 'normal :height 120)
+           ;; (set-face-attribute 'dashboard-banner-logo-title nil :weight 'normal :height 120)
+           (set-face-attribute 'dashboard-heading nil :weight 'normal :height 120))
+  
 
 (use-package popper
   :custom (popper-reference-buffers '("\\*Messages\\*"
@@ -1120,11 +1125,11 @@
            "\n* Session %<%Y-%m-%d>\n\n%?"
            :jump-to-captured t
            :immediate-finish t)))
-  (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
+  (set-face-foreground 'org-verbatim "#c4a7e7")
   (set-face-attribute 'org-quote nil
-                      :background (catppuccin-get-color 'mantle)
+                      :background "#21202e"
                       :extend t)
-  (set-face-foreground 'org-table (catppuccin-get-color 'subtext1))
+  (set-face-foreground 'org-table "#6e6a86")
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -1164,15 +1169,15 @@
 (use-package org-habit
   :ensure nil
   :config
-  (set-face-foreground 'org-habit-ready-face (catppuccin-get-color 'base))
-  (set-face-background 'org-habit-ready-face (catppuccin-get-color 'green))
-  (set-face-background 'org-habit-ready-future-face (catppuccin-get-color 'green))
-  (set-face-background 'org-habit-clear-face (catppuccin-get-color 'blue))
-  (set-face-background 'org-habit-clear-future-face (catppuccin-get-color 'blue))
-  (set-face-background 'org-habit-alert-face (catppuccin-get-color 'yellow))
-  (set-face-background 'org-habit-alert-future-face (catppuccin-get-color 'yellow))
-  (set-face-background 'org-habit-overdue-face (catppuccin-get-color 'red))
-  (set-face-background 'org-habit-overdue-future-face (catppuccin-get-color 'red)))
+  (set-face-foreground 'org-habit-ready-face "#191724")
+  (set-face-background 'org-habit-ready-face "#31748f")
+  (set-face-background 'org-habit-ready-future-face "#31748f")
+  (set-face-background 'org-habit-clear-face "#9ccfd8")
+  (set-face-background 'org-habit-clear-future-face "#9ccfd8")
+  (set-face-background 'org-habit-alert-face "#f6c177")
+  (set-face-background 'org-habit-alert-future-face "#f6c177")
+  (set-face-background 'org-habit-overdue-face "#eb6f92")
+  (set-face-background 'org-habit-overdue-future-face "#eb6f92"))
 
 (use-package ob-rust
   :after org)
@@ -1269,47 +1274,7 @@
   :custom ((org-superstar-leading-bullet " ")
            (org-hide-leading-stars nil)
            (org-superstar-remove-leading-stars nil))
-  :hook (org-mode . org-superstar-mode)
-  :config
-  (defun mjs/org-indent-compute-prefixes ()
-    "Compute prefix strings for regular text and headlines.
-
-This is taken from the `org-indent' source code, but I've changed
-the characters."
-    (setq org-indent--heading-line-prefixes
-          (make-vector org-indent--deepest-level nil))
-    (setq org-indent--inlinetask-line-prefixes
-          (make-vector org-indent--deepest-level nil))
-    (setq org-indent--text-line-prefixes
-          (make-vector org-indent--deepest-level nil))
-    (when (> org-indent-indentation-per-level 0)
-      (dotimes (n org-indent--deepest-level)
-        (let ((indentation (if (<= n 1) 0
-                             (* (1- org-indent-indentation-per-level)
-                                (1- n)))))
-          ;; Headlines line prefixes.
-          ;; (let ((heading-prefix (make-string indentation ?·)))
-          (let ((heading-prefix (make-string indentation 32)))
-            (aset org-indent--heading-line-prefixes
-                  n
-                  (org-add-props heading-prefix nil 'face 'org-indent))
-            ;; Inline tasks line prefixes
-            (aset org-indent--inlinetask-line-prefixes
-                  n
-                  (cond ((<= n 1) "")
-                        ((bound-and-true-p org-inlinetask-show-first-star)
-                         (concat org-indent-inlinetask-first-star
-                                 (substring heading-prefix 1)))
-                        (t (org-add-props heading-prefix nil 'face 'org-indent)))))
-          ;; Text line prefixes.
-          (aset org-indent--text-line-prefixes
-                n
-                (org-add-props
-                    (concat (make-string (+ n indentation) ?\s)
-                            (and (> n 0)
-                                 (char-to-string org-indent-boundary-char)))
-                    nil 'face 'org-indent))))))
-  (advice-add 'org-indent--compute-prefixes :override #'mjs/org-indent-compute-prefixes))
+  :hook (org-mode . org-superstar-mode))
 
 (use-package svg-tag-mode
   :hook org-mode
@@ -1320,29 +1285,29 @@ the characters."
                               :margin 0
                               :font-family "JetBrainsMono Nerd Font"
                               :font-weight 500
-                              :background (catppuccin-get-color 'peach)
-                              :foreground (catppuccin-get-color 'base)
+                              :background "#9ccfd8"
+                              :foreground "#191724"
                               ))))
              ("^\\*+ \\(NEXT\\)" . ((lambda (tag)
                                       (svg-lib-tag tag nil
                                                    :margin 0
                                                    :font-family "JetBrainsMono Nerd Font"
                                                    :font-weight 500
-                                                   :background (catppuccin-get-color 'green)
-                                                   :foreground (catppuccin-get-color 'base)))))
+                                                   :background "#c4a7e7"
+                                                   :foreground "#191724"))))
              ("^\\*+ \\(DONE\\|KILLED\\)" . ((lambda (tag)
                                                (svg-lib-tag tag nil
                                                             :margin 0
                                                             :font-family "JetBrainsMono Nerd Font"
                                                             :font-weight 500
-                                                            :foreground (catppuccin-get-color 'overlay0)))))
+                                                            :foreground "#524f67"))))
              ("\\(:TODO:\\)" . ((lambda (tag)
                                   (svg-lib-tag (substring tag 1 5) nil
                                                :margin 0
                                                :font-family "JetBrainsMono Nerd Font"
                                                :font-weight 500
-                                               :background (catppuccin-get-color 'peach)
-                                               :foreground (catppuccin-get-color 'base)))))
+                                               :background "#9ccfd8"
+                                               :foreground "#191724"))))
              )))
 
 (use-package toc-org
@@ -1811,8 +1776,8 @@ used if TAG-LIST is empty."
                                          (t . (csl "ieee.csl")))))
   :general (mjs-local-leader-def :keymaps 'org-mode-map
              "C" '("Citation" . org-cite-insert))
-  :custom-face (org-cite ((t (:foreground ,(catppuccin-get-color 'green)))))
-               (org-cite-key ((t (:foreground ,(catppuccin-get-color 'green) :slant italic)))))
+  :custom-face (org-cite ((t (:foreground "#31748f"))))
+               (org-cite-key ((t (:foreground "#31748f" :slant italic)))))
 
 (use-package citar
   :custom (citar-bibliography org-cite-global-bibliography)
@@ -2020,38 +1985,38 @@ used if TAG-LIST is empty."
                         (general-define-key :states '(normal motion) :keymaps 'local
                                             "q" #'kill-buffer-and-window)))
   :custom-face
-  (cfw:face-title ((t  :foreground ,(catppuccin-get-color 'yellow)
+  (cfw:face-title ((t  :foreground "#f6c177"
                        :weight bold
                        :height 2.0)))
-  (cfw:face-header ((t :foreground ,(catppuccin-get-color 'yellow)
+  (cfw:face-header ((t :foreground "#f6c177"
                        :weight bold)))
-  (cfw:face-sunday ((t :foreground ,(catppuccin-get-color 'red)
+  (cfw:face-sunday ((t :foreground "#eb6f92"
                        :weight bold)))
-  (cfw:face-saturday ((t :foreground ,(catppuccin-get-color 'blue)
+  (cfw:face-saturday ((t :foreground "#9ccfd8"
                          :weight bold)))
-  (cfw:face-holiday ((t :background ,(catppuccin-get-color 'mantle)
-                        :foreground ,(catppuccin-get-color 'red)
+  (cfw:face-holiday ((t :background "#1f1d2e"
+                        :foreground "#eb6f92"
                         :weight bold)))
-  (cfw:face-grid ((t :foreground ,(catppuccin-get-color 'subtext0))))
-  (cfw:face-default-content ((t :foreground ,(catppuccin-get-color 'green))))
-  (cfw:face-periods ((t :foreground ,(catppuccin-get-color 'sky))))
-  (cfw:face-day-title ((t :background ,(catppuccin-get-color 'mantle))))
+  (cfw:face-grid ((t :foreground "#6e6a86")))
+  (cfw:face-default-content ((t :foreground "#31748f")))
+  (cfw:face-periods ((t :foreground "#c4a7e7")))
+  (cfw:face-day-title ((t :background "#1f1d2e")))
   (cfw:face-default-day ((t :weight bold :inherit cfw:face-day-title)))
-  (cfw:face-annotation ((t :foreground ,(catppuccin-get-color 'text)
+  (cfw:face-annotation ((t :foreground "#e0def4"
                            :inherit cfw:face-day-title)))
-  (cfw:face-disable ((t :foreground ,(catppuccin-get-color 'subtext0)
+  (cfw:face-disable ((t :foreground "#6e6a86"
                         :inherit cfw:face-day-title)))
-  (cfw:face-today-title ((t :foreground ,(catppuccin-get-color 'base)
-                            :background ,(catppuccin-get-color 'green)
+  (cfw:face-today-title ((t :foreground "#191724"
+                            :background "#31748f"
                             :weight bold)))
-  (cfw:face-today ((t :background: ,(catppuccin-get-color 'mantle)
+  (cfw:face-today ((t :background: "#1f1d2e"
                       :weight bold)))
-  (cfw:face-select ((t :background ,(catppuccin-get-color 'overlay2))))
-  (cfw:face-toolbar ((t :foreground ,(catppuccin-get-color 'sapphire)
-                        :background ,(catppuccin-get-color 'sapphire))))
-  (cfw:face-toolbar-button-off ((t :foreground ,(catppuccin-get-color 'subtext0)
+  (cfw:face-select ((t :background "#524f67")))
+  (cfw:face-toolbar ((t :foreground "#ebbcba"
+                        :background "#ebbcba")))
+  (cfw:face-toolbar-button-off ((t :foreground "#6e6a86"
                                    :weight bold)))
-  (cfw:face-toolbar-button-on ((t :foreground ,(catppuccin-get-color 'subtext1)
+  (cfw:face-toolbar-button-on ((t :foreground "#908caa"
                                    :weight bold)))
   :config
   (evil-set-initial-state 'cfw:calendar-mode 'normal))
@@ -2142,4 +2107,4 @@ used if TAG-LIST is empty."
   :diminish (holes-mode . "󰠣 ")
   :hook (coq-mode . (lambda ()
                       (set-face-background 'proof-locked-face
-                        (catppuccin-get-color 'surface0)))))
+                        "#403d52"))))

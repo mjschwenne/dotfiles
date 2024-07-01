@@ -23,20 +23,8 @@
           }
           ."${osConfig.networking.hostName}"
           or [];
-        # Basically, I need hyprland on terra and sway everywhere else
-        modules-left =
-          {
-            "terra" = ["hyprland/workspaces"];
-            "mars" = ["sway/workspaces" "sway/mode"];
-            "luna" = ["sway/workspaces" "sway/mode"];
-          }
-          ."${osConfig.networking.hostName}"
-          or []
-          ++ ["tray" "mpris"];
-        modules-center =
-          if osConfig.networking.hostName == "terra"
-          then ["hyprland/window"]
-          else ["sway/window"];
+        modules-left = ["sway/workspaces" "sway/mode" "tray" "mpris"];
+        modules-center = ["sway/window"];
         modules-right = [
           "privacy"
           "clock"
@@ -149,11 +137,11 @@
             on-scroll = 1;
             on-click-right = "mode";
             format = {
-              months = "<span color='#ffead3'><b>{}</b></span>";
-              days = "<span color='#ecc6d9'><b>{}</b></span>";
-              weeks = "<span color='#99ffdd'><b>W{}</b></span>";
-              weekdays = "<span color='#ffcc66'><b>{}</b></span>";
-              today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+              months = "<span color='#e0def4'><b>{}</b></span>";
+              days = "<span color='#ebbcba'><b>{}</b></span>";
+              weeks = "<span color='#9ccfd8'><b>W{}</b></span>";
+              weekdays = "<span color='#f6c177'><b>{}</b></span>";
+              today = "<span color='#eb6f92'><b><u>{}</u></b></span>";
             };
           };
           actions = {
@@ -251,32 +239,16 @@
     };
     # Style for all devices
     style = let
-      base = "#1e1e2e";
-      mantle = "#181825";
-      crust = "#11111b";
-      text = "#cdd6f4";
-      subtext0 = "#a6adc8";
-      subtext1 = "#bac2de";
-      surface0 = "#313244";
-      surface1 = "#45475a";
-      surface2 = "#585b70";
-      overlay0 = "#6c7086";
-      overlay1 = "#7f849c";
-      overlay2 = "#9399b2";
-      blue = "#89b4fa";
-      lavender = "#b4befe";
-      sapphire = "#74c7ec";
+      overlay = "#26233a";
+      base = "#191724";
+      text = "#e0def4";
+      foam = "#9ccfd8";
       sky = "#89dceb";
-      teal = "#94e2d5";
-      green = "#a6e3a1";
-      yellow = "#f9e2af";
-      peach = "#fab387";
-      maroon = "#eba0ac";
-      red = "#f38ba8";
-      mauve = "#cba6f7";
-      pink = "#f5c2e7";
-      flamingo = "#f2cdcd";
-      rosewater = "#f5e0dc";
+      pine = "#31748f";
+      gold = "#f6c177";
+      love = "#eb6f92";
+      iris = "#c4a7e7";
+      rose = "#ebbcba";
     in
       /*
       css
@@ -290,16 +262,11 @@
         }
 
         window#waybar {
-            background-color: transparent;
-        }
-
-        window#waybar.solo {
-            /* Mocha, but translucent */
-            background-color: alpha(${mantle}, 0.7);
+            background-color: ${base};
         }
 
         #workspaces {
-            background-color: ${base};
+            background-color: ${overlay};
             margin: 5px;
             border-radius: 15px;
             padding: 0px 15px;
@@ -307,64 +274,57 @@
 
         #workspaces button {
             border-radius: 0px;
-            background-color: ${base};
-            color: ${peach};
-            border-bottom: 3px solid ${peach};
-            ${
-          if osConfig.networking.hostName == "terra"
-          then "padding: 0px 10px;"
-          else ""
-        }
+            background-color: ${overlay};
+            color: ${iris};
+            border-bottom: 3px solid ${iris};
+            padding: 0px 10px;
         }
 
         #workspaces button.visible {
-            color: ${yellow};
-            border-bottom: 3px solid ${yellow};
+            color: ${gold};
+            border-bottom: 3px solid ${gold};
         }
 
         #workspaces button.active,
         #workspaces button.focused {
-            color: ${blue};
-            border-bottom: 3px solid ${blue};
+            color: ${foam};
+            border-bottom: 3px solid ${foam};
         }
 
-        ${
-          if osConfig.networking.hostName == "terra"
-          then "#workspaces button.empty"
-          else "#workspaces button.persistent"
-        } {
+        #workspaces button.persistent
+        {
             color: ${text};
-            border-bottom: 3px solid ${base};
+            border-bottom: 3px solid ${overlay};
         }
 
         #tray {
-            background-color: ${base};
+            background-color: ${overlay};
             border-radius: 15px 15px 15px 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mode {
-            background-color: ${base};
+            background-color: ${overlay};
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mpris {
-            background-color: ${base};
+            background-color: ${overlay};
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mpris.spotify {
-            color: ${green};
+            color: ${pine};
         }
 
         #window {
             margin: 5px;
-            background-color: ${base};
+            background-color: ${overlay};
             padding: 0px 15px;
             border-radius: 15px;
         }
@@ -374,7 +334,7 @@
         }
 
         .modules-right {
-            background-color: ${base};
+            background-color: ${overlay};
             margin: 5px;
             border-radius: 15px;
             padding: 0px 15px 0px 15px;
@@ -388,55 +348,55 @@
         }
 
         #privacy {
-            background-color: ${base};
+            background-color: ${overlay};
             padding: 0px 5px 0px 0px;
         }
 
         #clock {
-            background-color: ${base};
-            color: ${mauve};
+            background-color: ${overlay};
+            color: ${iris};
             padding: 0px 5px 0px 5px;
         }
 
         #memory {
-            background-color: ${base};
+            background-color: ${overlay};
             color: ${sky};
             padding: 0px 5px 0px 5px;
         }
 
         #cpu {
-            background-color: ${base};
+            background-color: ${overlay};
             padding: 0px 5px 0px 5px;
         }
 
         #network {
-            background-color: ${base};
-            color: ${pink};
+            background-color: ${overlay};
+            color: ${rose};
             padding: 0px 5px 0px 5px;
         }
 
         #bluetooth {
-            background-color: ${base};
-            color: ${blue};
+            background-color: ${overlay};
+            color: ${foam};
             padding: 0px 5px 0px 5px;
         }
 
         #battery {
-            background-color: ${base};
+            background-color: ${overlay};
             padding: 0px 5px 0px 5px;
         }
 
         #battery.warning {
-            background-color: ${peach};
+            background-color: ${gold};
         }
 
         #battery.critical {
-            background-color: ${red};
+            background-color: ${love};
         }
 
         #idle_inhibitor {
-            background-color: ${base};
-            color: ${peach};
+            background-color: ${overlay};
+            color: ${gold};
             padding: 0px 0px 0px 5px;
         }
       '';

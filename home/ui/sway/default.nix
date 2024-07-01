@@ -2,13 +2,10 @@
   pkgs,
   swayfx,
   lib,
+  osConfig,
   ...
 } @ inputs: {
   home.packages = with pkgs; [
-    # Install the swayfx fork. For some reason it won't build when
-    # given as the package below.
-    swayfx.packages.${pkgs.system}.swayfx-unwrapped
-
     # XMonad/Qtile switch workspace switching
     i3-wk-switch
 
@@ -38,7 +35,10 @@
           "xkb_options" = "ctrl:nocaps";
         };
         "1386:967:Wacom_Intuos_BT_M_Pen" = {
-          "map_to_output" = "HDMI-A-5";
+          "map_to_output" =
+            if osConfig.networking.hostName == "terra"
+            then "HDMI-A-5"
+            else "eDP-1";
         };
       };
       keybindings = let
@@ -47,7 +47,10 @@
       in
         lib.mkOptionDefault {
           # Application hotkeys
-          "${mod}+Return" = "exec ${inputs.wezterm.packages.${pkgs.system}.default}/bin/wezterm";
+          "${mod}+Return" =
+            if osConfig.networking.hostName == "terra"
+            then "exec ${pkgs.foot}/bin/foot"
+            else "exec ${inputs.wezterm.packages.${pkgs.system}.default}/bin/wezterm";
           "${mod}+b" = "exec ${pkgs.librewolf}/bin/librewolf";
           "${mod}+Shift+b" = "exec ${pkgs.firefox}/bin/firefox";
           "${mod}+e" = "exec emacs";
@@ -102,7 +105,7 @@
           "XF86AudioPrev" = "exec playerctl previous";
           "XF86AudioStop" = "exec playerctl stop";
 
-          "XF86AudioRaiseVolume" = "exec swayosd-client --output-volume riase";
+          "XF86AudioRaiseVolume" = "exec swayosd-client --output-volume raise";
           "XF86AudioLowerVolume" = "exec swayosd-client --output-volume lower";
           "XF86AudioMute" = "exec swayosd-client --output-volume mute-toggle";
           "XF86AudioMicMute" = "exec swayosd-client --input-volume mute-toggle";
@@ -117,49 +120,49 @@
         };
       bars = [];
       colors = let
-        base = "#1e1e2e";
-        crust = "#11111b";
-        red = "#f38ba8";
-        peach = "#fab387";
-        yellow = "#f9e2af";
-        green = "#a6e3a1";
-        sapphire = "#74c7ec";
-        text = "#cdd6f4";
+        base = "#191724";
+        surface = "#1f1d2e";
+        love = "#eb6f92";
+        iris = "#c4a7e7";
+        gold = "#f6c177";
+        pine = "#31748f";
+        foam = "#9ccfd8";
+        text = "#e0def4";
       in {
-        background = crust;
+        background = surface;
         focused = {
-          background = green;
-          border = green;
-          childBorder = green;
-          indicator = sapphire;
+          background = pine;
+          border = pine;
+          childBorder = pine;
+          indicator = foam;
           text = base;
         };
         focusedInactive = {
-          background = peach;
-          border = peach;
-          childBorder = peach;
-          indicator = sapphire;
+          background = iris;
+          border = iris;
+          childBorder = iris;
+          indicator = foam;
           text = base;
         };
         placeholder = {
-          background = crust;
+          background = surface;
           border = base;
           childBorder = base;
-          indicator = sapphire;
+          indicator = foam;
           text = text;
         };
         unfocused = {
-          background = yellow;
-          border = yellow;
-          childBorder = yellow;
-          indicator = sapphire;
+          background = gold;
+          border = gold;
+          childBorder = gold;
+          indicator = foam;
           text = base;
         };
         urgent = {
-          background = red;
-          border = red;
-          childBorder = red;
-          indicator = sapphire;
+          background = love;
+          border = love;
+          childBorder = love;
+          indicator = foam;
           text = base;
         };
       };
@@ -184,13 +187,13 @@
           {title = "^(Open Folder)(.*)$";}
           {title = "^(Save As)(.*)$";}
           {title = "^(Library)(.*)$";}
-          {class = "^(Write:)(.*)(- Thunderbird)$";}
+          {app_id = "^(Write:)(.*)(- Thunderbird)$";}
           {title = "^(Write: \\(no subject\\))$";}
           {title = "^(Compact folders)$";}
           {title = "^(KeePassXC - Browser Access Request)$";}
           {title = "^(Unlock Database - KeePassXC)$";}
           {title = "^(Formula \\(pdflatex\\))$";}
-          {class = "zenity";}
+          {app_id = "zenity";}
         ];
         modifier = modifier;
         titlebar = false;
@@ -202,18 +205,18 @@
           # Inhibit idle
           {
             command = "inhibit_idle fullscreen";
-            criteria = {class = "^.*";};
+            criteria = {app_id = "^.*";};
           }
           # Floats + size adjustments
           {
             command = "floating enable; resize set 400 200";
-            criteria = {class = "qalculate-gtk";};
+            criteria = {app_id = "qalculate-gtk";};
           }
           {
             command = "floating enable, resize set 350 100";
             criteria = {
               title = "^(Progress)$";
-              class = "Zotero";
+              app_id = "Zotero";
             };
           }
         ];
@@ -230,18 +233,18 @@
         {command = "swww-daemon";}
         {command = "wl-paste --type text --watch cliphist store";}
         {command = "wl-paste --type image --watch cliphist store";}
-        {command = "protonmail-bridge --noniteractive &";}
         {command = "nm-applet";}
         {command = "/home/mjs/.config/sway/scripts/wallpaper.fish interval 300 &";}
         {command = "waybar";}
+        {command = "protonmail-bridge --noninteractive &";}
       ];
     };
-    extraConfig = ''
-      corner_radius 10
-      blur enable
-      blur_passes 3
-      layer_effects "waybar" blur enable
-    '';
+    # extraConfig = ''
+    #   corner_radius 10
+    #   blur enable
+    #   blur_passes 3
+    #   layer_effects "waybar" blur enable
+    # '';
     systemd.enable = true;
   };
 

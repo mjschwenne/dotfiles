@@ -1,3 +1,3 @@
-{ ... }: {
-  imports = [ ./common.nix ./graphical.nix ];
+{...}: {
+  imports = [./common.nix ./graphical.nix];
 }

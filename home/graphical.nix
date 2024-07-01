@@ -24,12 +24,13 @@
     pass-wayland
     pass-secret-service
     protonmail-bridge
+    protonmail-desktop
+    protonmail-bridge-gui
 
     # Document-based Applications
     evince
     xournalpp
     rnote
-    libsForQt5.okular
     poppler_utils
     nextcloud-client
 
@@ -56,35 +57,13 @@
         nicematrix
         pgfplots
         cancel
-        fontawesome
-        tcolorbox
-        environ
         tikzfill
         tikzmark
         enumitem
-        dashrule
-        ifmtarg
-        multirow
-        changepage
         biblatex
-        lato
-        fontaxes
         curve
         silence
-        fontawesome5
-        relsize
-        comment
         csquotes
-        xpatch
-        cochineal
-        xstring
-        cabin
-        inconsolata
-        upquote
-        fifo-stack
-        varwidth
-        tabto-ltx
-        totcount
         mathtools
         ;
     })
@@ -100,18 +79,18 @@
     webcamoid
     gnome.eog
     mate.engrampa
+    swappy
+    wl-mirror
 
     # Games
     cockatrice
     melonDS
+    # mindustry-wayland
 
     # CLI Utilities
     pandoc
     hugo
-    glow
     btop
-    iotop
-    iftop
     bluez
     socat
     jq
@@ -135,7 +114,6 @@
     kanshi
     grim
     slurp
-    hyprpicker
     waypaper
     wayland-logout
   ];
@@ -155,11 +133,8 @@ in {
   gtk = {
     enable = true;
     theme = {
-      name = "Catppuccin-Mocha-Standard-Pink-Dark";
-      package = pkgs.catppuccin-gtk.override {
-        accents = ["pink"];
-        variant = "mocha";
-      };
+      name = "rose-pine";
+      package = pkgs.rose-pine-gtk-theme;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -172,12 +147,11 @@ in {
     gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
   };
   home.sessionVariables = {
-    GTK_THEME = "Catppuccin-Mocha-Standard-Pink-Dark";
-    YDOTOOL_SOCKET = "/tmp/ydotools";
+    GTK_THEME = "rose-pine";
   };
   home.pointerCursor = {
-    package = pkgs.catppuccin-cursors.mochaLight;
-    name = "Catppuccin-Mocha-Light-Cursors";
+    package = pkgs.rose-pine-cursor;
+    name = "BreezeX-RosePine-Linux";
   };
 
   qt = {

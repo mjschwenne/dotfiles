@@ -2,7 +2,7 @@ configuration{
     modi: "run,drun,window";
     icon-theme: "Oranchelo";
     show-icons: true;
-    terminal: "kitty";
+    terminal: "foot";
     drun-display-format: "{icon} {name}";
     location: 0;
     disable-history: false;
@@ -14,5 +14,5 @@ configuration{
     sidebar-mode: true;
 }
 
-@theme "catppuccin-mocha"
+@theme "rose-pine"
 

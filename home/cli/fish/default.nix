@@ -1,19 +1,13 @@
 {osConfig, ...}: {
   programs.fish = {
     enable = true;
-    # interactiveShellInit = ''
-    #   if test -f ~/.cache/ags/user/colorschemes/sequences
-    #     cat ~/.cache/ags/user/colorschemes/sequences
-    #   end
-    # '';
     shellAliases = {
       vi = "nvim";
       dup-files = "find . -type f -printf '%p -> %f\\n' | sort -k2 | uniq -f1 --all-repeated=separate";
       flatten = ''
         find */ -type f -exec sh -c 'file=''${1#./}; mv "$file" "$(basename $file)"' _ '{}' \; ; find */ -depth -type d -exec rmdir '{}' \;'';
       mjs-bulk-rename = ''find . -depth -exec fish -c 'mjs-rename "{}"' \;'';
-      icat = "kitty +kitten icat";
-      kssh = "kitty +kitten ssh";
+      icat = "swayimg";
       m = "math";
       nix-shell = "nix-shell --run fish";
       cs400-ssh = ''
@@ -22,28 +16,6 @@
       ls = "eza";
     };
     functions = {
-      mjs-change-scale = ''
-        set -l monitor (hyprctl monitors -j | jq -c -r '.[] | if .focused then .name else empty end')
-        hyprctl keyword monitor "$monitor,preferred,auto,$argv[1]"
-        sleep 0.5
-        pkill ags
-        ags &
-        disown (pgrep ags)
-      '';
-      mjs-toggle-mirror = ''
-        set -l target ${
-          if osConfig.networking.hostName == "terra"
-          then "HDMI-A-1"
-          else "HDMI-A-2"
-        }
-        set -l source eDP-1
-
-        if test (hyprctl monitors | wc -l) -eq (hyprctl monitors all | wc -l)
-          hyprctl keyword monitor $target,preferred,auto,1,mirror,$source
-        else
-          hyprctl keyword monitor $target,preferred,auto,1
-        end
-      '';
       mjs-rename = ''
         for src in $argv
             set -l filename (string split -r -m 1 -f 1 '.' (basename $src))

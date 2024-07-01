@@ -27,11 +27,33 @@ return {
     -- vim options can be configured here
     options = {
       opt = { -- vim.opt.<key>
-        relativenumber = true, -- sets vim.opt.relativenumber
-        number = true, -- sets vim.opt.number
         spell = false, -- sets vim.opt.spell
-        signcolumn = "auto", -- sets vim.opt.signcolumn to auto
-        wrap = false, -- sets vim.opt.wrap
+        backup = false, -- Do not create a ~ backup file
+        clipboard = "unnamedplus", -- Use the '+' regiester for clipboard
+        fileencoding = "utf-8", -- Write all files in utf-8
+        -- foldmethod = "marker", -- Enable folding between {{{ }}} blocks
+        hlsearch = true, -- Highlight all matches during a search
+        ignorecase = true, -- Ignore case while searaching
+        pumheight = 10, -- Height of the popup menu
+        smartcase = true, -- Override ignorecase if search has captial letter
+        smartindent = true, -- Smart new line indentation
+        autoindent = true, -- Recommended with smartindent
+        splitbelow = true, -- Horitzontal splits always appear below
+        splitright = true, -- Vertical splits always appear right
+        timeoutlen = 500, -- Timeout for command key sequences
+        tabstop = 4, -- Tab width
+        shiftwidth = 4, -- Tab width if replaced by spaces
+        history = 50, -- Number of previous commands and searchs remembered
+        autochdir = true, -- Keep the cwd to the directory of the active buffer
+        guicursor = "i:block", -- Use block cursor in insert mode
+        number = true, -- Line numbers
+        relativenumber = true, -- Relative line numbers
+        numberwidth = 4, -- Number of characters for the line numbers
+        signcolumn = "yes:1", -- How to display the sign column
+        scrolloff = 8, -- Number of lines above/below scrolling cursor
+        sidescrolloff = 8, -- Number of character left/right scrolling cursor
+        wrap = false, -- Do not wrap lines
+        showmode = false, -- Do not show mode in command gutter
       },
       g = { -- vim.g.<key>
         -- configure global vim variables (vim.g)

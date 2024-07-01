@@ -19,10 +19,7 @@ repo.
 | [[https://fishshell.com/][fish]]                    | Shell                       |
 | [[https://sw.kovidgoyal.net/kitty/][kitty]]                   | Terminal Emulator           |
 | [[https://starship.rs/][starship]]                | Shell Prompt                |
-| [[https://github.com/hyprwm/Hyprland][hyprland]]                | Wayland Compositor          |
 | [[https://librewolf.net/][librewolf]]               | Web Browser                 |
-| [[https://elkowar.github.io/eww/][eww]]                     | Panel and Widgets           |
-| [[https://github.com/sddm/sddm][sddm]]                    | Display Manager             |
 | [[https://neovim.io/][neovim]]                  | Text Editor for Programming |
 | [[https://www.gnu.org/software/emacs/][emacs]]                   | Text Editor for Notes       |
 | [[https://pwmt.org/projects/zathura/][zathura]]                 | PDF Viewer                  |

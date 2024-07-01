@@ -1,12 +1,12 @@
 * {
-    bg-col:  #eff1f5;
-    bg-col-light: #eff1f5;
-    border-col: #eff1f5;
-    selected-col: #eff1f5;
-    blue: #1e66f5;
-    fg-col: #4c4f69;
-    fg-col2: #d20f39;
-    grey: #9ca0b0;
+    bg-col:  #191724;
+    bg-col-light: #1f1d2e;
+    border-col: #ebbcba;
+    selected-col: #1f1d2e;
+    blue: #9ccfd8;
+    fg-col: #e0def4;
+    fg-col2: #eb6f92;
+    grey: #c4a7e7;
 
     width: 600;
     font: "JetBrainsMono Nerd Font 14";
@@ -21,6 +21,7 @@ window {
     height: 360px;
     border: 3px;
     border-color: @border-col;
+	border-radius: 5px;
     background-color: @bg-col;
 }
 
