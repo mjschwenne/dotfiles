@@ -45,7 +45,6 @@ return {
         shiftwidth = 4, -- Tab width if replaced by spaces
         history = 50, -- Number of previous commands and searchs remembered
         autochdir = true, -- Keep the cwd to the directory of the active buffer
-        guicursor = "i:block", -- Use block cursor in insert mode
         number = true, -- Line numbers
         relativenumber = true, -- Relative line numbers
         numberwidth = 4, -- Number of characters for the line numbers

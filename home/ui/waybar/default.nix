@@ -16,7 +16,7 @@
         margin = "0 0 0 0";
         output =
           {
-            "terra" = ["HDMI-A-5" "DP-3"];
+            "terra" = ["DP-3" "DP-4"];
             # TODO update with correct second monitor names
             "mars" = ["eDP-1" "HDMI-1"];
             "luna" = ["eDP-1" "HDMI-1"];
