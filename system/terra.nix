@@ -89,6 +89,7 @@
   networking.hostName = "terra"; # Define your hostname.
 
   programs.steam.enable = true;
+  programs.kdeconnect.enable = true;
 
   services = {
     xserver = {

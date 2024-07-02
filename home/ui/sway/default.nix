@@ -26,10 +26,13 @@
     enable = true;
     package = null;
     extraOptions = ["--unsupported-gpu"];
-    checkConfig = false; # Must disable to use sawyfx features
+    checkConfig = true;
     config = rec {
       modifier = "Mod4";
-      terminal = "wezterm";
+      terminal =
+        if osConfig.networking.hostName == "terra"
+        then "foot"
+        else "wezterm";
       input = {
         "type:keyboard" = {
           "xkb_options" = "ctrl:nocaps";
@@ -37,7 +40,7 @@
         "1386:967:Wacom_Intuos_BT_M_Pen" = {
           "map_to_output" =
             if osConfig.networking.hostName == "terra"
-            then "HDMI-A-5"
+            then "DP-3"
             else "eDP-1";
         };
       };
@@ -68,7 +71,7 @@
           "${mod}+F9" = "exec spotify"; # Spotify is also installed via overlay
           "${mod}+F10" = "exec ${pkgs.vesktop}/bin/vesktop";
           "${mod}+F11" = "exec ${pkgs.evince}/bin/evince";
-          "${mod}+F12" = "exec pavucontrol"; # Not sure where this is installed from
+          "${mod}+F12" = "exec ${pkgs.pavucontrol}/bin/pavucontrol";
 
           # System controls
           "${mod}+n" = "exec swaync-client -t";
@@ -86,6 +89,8 @@
           "${mod}+i" = "floating toggle";
           "${mod}+o" = "sticky";
           "${mod}+m" = "mode resize";
+          "${mod}+c" = "mode keycursor";
+          "${mod}+d" = "layout default";
 
           # Workspace management
           "${mod}+1" = "${switch} 1";
@@ -176,7 +181,7 @@
       };
       assigns = {
         "8" = [{app_id = "^(thunderbird)$";}];
-        "9" = [{title = "^(Spotify Premium)$";}];
+        "9" = [{title = "^(Spotify)$";}];
         "10" = [{app_id = "^(vesktop)";}];
       };
       floating = {
@@ -209,7 +214,7 @@
           }
           # Floats + size adjustments
           {
-            command = "floating enable; resize set 400 200";
+            command = "floating enable, resize set 400 200";
             criteria = {app_id = "qalculate-gtk";};
           }
           {
@@ -239,12 +244,34 @@
         {command = "protonmail-bridge --noninteractive &";}
       ];
     };
-    # extraConfig = ''
-    #   corner_radius 10
-    #   blur enable
-    #   blur_passes 3
-    #   layer_effects "waybar" blur enable
-    # '';
+    # The modes home manager attribute set can only do basic keybindings and I need --no-repeat and --release options here
+    extraConfig = ''
+      #
+      # Use keyboard as mouse
+      #
+      mode "keycursor" {
+          bindsym h seat - cursor move -10 0
+          bindsym j seat - cursor move 0 +10
+          bindsym k seat - cursor move 0 -10
+          bindsym l seat - cursor move +10 0
+
+          bindsym Shift+h seat - cursor move -50 0
+          bindsym Shift+j seat - cursor move 0 +50
+          bindsym Shift+k seat - cursor move 0 -50
+          bindsym Shift+l seat - cursor move +50 0
+
+          bindsym Escape mode "default"
+
+          # Left click
+          bindsym --no-repeat Return seat - cursor press button1
+          bindsym --release Return seat - cursor release button1
+          #bindsym Return exec 'swaymsg seat - cursor press button1 && swaymsg seat - cursor release button1'
+
+          # Right click
+          bindsym --no-repeat Shift+Return seat - cursor press button3
+          bindsym --release Shift+Return seat - cursor release button3
+      }
+    '';
     systemd.enable = true;
   };
 
