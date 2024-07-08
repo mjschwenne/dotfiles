@@ -89,8 +89,12 @@
           "${mod}+i" = "floating toggle";
           "${mod}+o" = "sticky";
           "${mod}+m" = "mode resize";
-          "${mod}+c" = "mode keycursor";
           "${mod}+d" = "layout default";
+
+          # Cursor management
+          "${mod}+c" = "exec warpd --normal";
+          "${mod}+Shift+c" = "exec warpd --grid";
+          "${mod}+Control+c" = "exec warpd --hint2 --oneshot";
 
           # Workspace management
           "${mod}+1" = "${switch} 1";
@@ -203,6 +207,10 @@
         modifier = modifier;
         titlebar = false;
       };
+      focus = {
+        followMouse = "yes";
+        mouseWarping = "container";
+      };
       window = {
         border = 3;
         # These are window rules
@@ -244,34 +252,6 @@
         {command = "protonmail-bridge --noninteractive &";}
       ];
     };
-    # The modes home manager attribute set can only do basic keybindings and I need --no-repeat and --release options here
-    extraConfig = ''
-      #
-      # Use keyboard as mouse
-      #
-      mode "keycursor" {
-          bindsym h seat - cursor move -10 0
-          bindsym j seat - cursor move 0 +10
-          bindsym k seat - cursor move 0 -10
-          bindsym l seat - cursor move +10 0
-
-          bindsym Shift+h seat - cursor move -50 0
-          bindsym Shift+j seat - cursor move 0 +50
-          bindsym Shift+k seat - cursor move 0 -50
-          bindsym Shift+l seat - cursor move +50 0
-
-          bindsym Escape mode "default"
-
-          # Left click
-          bindsym --no-repeat Return seat - cursor press button1
-          bindsym --release Return seat - cursor release button1
-          #bindsym Return exec 'swaymsg seat - cursor press button1 && swaymsg seat - cursor release button1'
-
-          # Right click
-          bindsym --no-repeat Shift+Return seat - cursor press button3
-          bindsym --release Shift+Return seat - cursor release button3
-      }
-    '';
     systemd.enable = true;
   };
 

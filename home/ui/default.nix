@@ -7,5 +7,6 @@
     ./swaync
     ./waybar
     ./wlogout
+    ./warpd
   ];
 }
