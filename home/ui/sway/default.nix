@@ -196,8 +196,9 @@
           {title = "^(Open Folder)(.*)$";}
           {title = "^(Save As)(.*)$";}
           {title = "^(Library)(.*)$";}
-          {app_id = "^(Write:)(.*)(- Thunderbird)$";}
-          {title = "^(Write: \\(no subject\\))$";}
+          # {app_id = "^(Write:)(.*)(- Thunderbird)$";}
+          # {title = "^(Write: \\(no subject\\))$";}
+          {app_id = "^(thunderbird)$";}
           {title = "^(Compact folders)$";}
           {title = "^(KeePassXC - Browser Access Request)$";}
           {title = "^(Unlock Database - KeePassXC)$";}
@@ -232,6 +233,14 @@
               app_id = "Zotero";
             };
           }
+          # Make just the main thunderbird window tiling
+          {
+            command = "floating disable";
+            criteria = {
+              title = "^(.* - Mozilla Thunderbird)";
+              app_id = "thunderbird";
+            };
+          }
         ];
         titlebar = false;
       };
@@ -250,6 +259,8 @@
         {command = "/home/mjs/.config/sway/scripts/wallpaper.fish interval 300 &";}
         {command = "waybar";}
         {command = "protonmail-bridge --noninteractive &";}
+        {command = "systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP";}
+        {command = "hash dbus-update-activation-environment 2>/dev/null && dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_CURRENT_DESKTOP=sway";}
       ];
     };
     systemd.enable = true;
