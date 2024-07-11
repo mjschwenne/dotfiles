@@ -18,7 +18,7 @@
           {
             "terra" = ["DP-3" "DP-4"];
             # TODO update with correct second monitor names
-            "mars" = ["eDP-1" "HDMI-1"];
+            "mars" = ["eDP-1" "HDMI-A-1"];
             "luna" = ["eDP-1" "HDMI-1"];
           }
           ."${osConfig.networking.hostName}"

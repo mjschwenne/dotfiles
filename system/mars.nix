@@ -26,6 +26,7 @@
   networking.hostName = "mars"; # Define your hostname.
 
   programs.steam.enable = true;
+  programs.kdeconnect.enable = true;
 
   services.syncthing = {
     enable = true;
