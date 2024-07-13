@@ -72,6 +72,10 @@
 
   programs.dconf.enable = true;
 
+  virtualisation.podman = {
+    enable = true;
+  };
+
   xdg.portal = {
     enable = true;
     wlr.enable = true;

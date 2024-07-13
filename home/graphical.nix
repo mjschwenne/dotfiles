@@ -100,6 +100,7 @@
     google-cloud-sdk
     ledger
     python311Packages.gpustat
+    toolbox
 
     # Programming languages
     coq
