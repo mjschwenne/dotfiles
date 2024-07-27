@@ -21,5 +21,5 @@ return {
   { import = "astrocommunity.pack.rust" },
 
   -- Appearances
-  { import = "astrocommunity.colorscheme.rose-pine" },
+  { import = "astrocommunity.colorscheme.catppuccin" },
 }

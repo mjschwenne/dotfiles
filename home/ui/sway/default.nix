@@ -129,49 +129,49 @@
         };
       bars = [];
       colors = let
-        base = "#191724";
-        surface = "#1f1d2e";
-        love = "#eb6f92";
-        iris = "#c4a7e7";
-        gold = "#f6c177";
-        pine = "#31748f";
-        foam = "#9ccfd8";
-        text = "#e0def4";
+        base = "#1e1e2e";
+        crust = "#11111b";
+        red = "#f38ba8";
+        peach = "#fab387";
+        yellow = "#f9e2af";
+        green = "#a6e3a1";
+        sapphire = "#74c7ec";
+        text = "#cdd6f4";
       in {
-        background = surface;
+        background = crust;
         focused = {
-          background = pine;
-          border = pine;
-          childBorder = pine;
-          indicator = foam;
+          background = green;
+          border = green;
+          childBorder = green;
+          indicator = sapphire;
           text = base;
         };
         focusedInactive = {
-          background = iris;
-          border = iris;
-          childBorder = iris;
-          indicator = foam;
+          background = peach;
+          border = peach;
+          childBorder = peach;
+          indicator = sapphire;
           text = base;
         };
         placeholder = {
-          background = surface;
+          background = crust;
           border = base;
           childBorder = base;
-          indicator = foam;
+          indicator = sapphire;
           text = text;
         };
         unfocused = {
-          background = gold;
-          border = gold;
-          childBorder = gold;
-          indicator = foam;
+          background = yellow;
+          border = yellow;
+          childBorder = yellow;
+          indicator = sapphire;
           text = base;
         };
         urgent = {
-          background = love;
-          border = love;
-          childBorder = love;
-          indicator = foam;
+          background = red;
+          border = red;
+          childBorder = red;
+          indicator = sapphire;
           text = base;
         };
       };

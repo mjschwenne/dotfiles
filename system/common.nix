@@ -86,14 +86,11 @@
 
     # Python
     (python311.withPackages
-      (ps: with ps; [debugpy material-color-utilities]))
+      (ps: with ps; [debugpy]))
 
     # Rust
     rustc
     cargo
-
-    # Julia
-    julia-bin
 
     # Java
     jdk17
@@ -106,13 +103,11 @@
 
     # Build Utilities
     gnumake
-    cmake
 
     # Version control
     git
 
     # NixOS
-    nix-output-monitor
     home-manager
 
     # CLI Utilities
@@ -132,20 +127,16 @@
     curl
     dnsutils
     ldns
-    nmap
-    iperf3
 
     # Hardware Interfaces
     brightnessctl
     wirelesstools
+    kmonad
 
     # Archives
     gnutar
     zip
     unzip
-    zstd
-    xz
-    p7zip
 
     # Spellcheck
     enchant

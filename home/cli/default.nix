@@ -4,7 +4,7 @@
   ...
 }: {
   imports =
-    # Don't configure starship on sol
+    # Don't configure starship or distrobox on sol
     if osConfig.networking.hostName == "sol"
     then [
       ./fish
@@ -12,6 +12,7 @@
     else [
       ./fish
       ./starship
+      ./distrobox
     ];
 
   programs = {
@@ -39,26 +40,12 @@
   # Some common user-level packages
   home.packages = with pkgs; [
     # Fetches
-    neofetch
-    pfetch
+    fastfetch
 
     # Utilities
     ripgrep
     ripgrep-all
     eza
-    ranger
-    nix-prefetch
-    nix-prefetch-git
-    nix-prefetch-github # helps write derivations hosted on github
     speedtest-cli
-    bc
-
-    # Fun tools
-    cowsay
-    lolcat
-    boxes
-    figlet
-    fortune
-    tty-clock
   ];
 }

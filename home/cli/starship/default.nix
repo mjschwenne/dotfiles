@@ -6,7 +6,7 @@
     settings = {
       add_newline = false;
       format = ''
-        $time$directory$nix_shell$git_branch
+        $time$directory$nix_shell$container$git_branch
         $character
       '';
       character = {
@@ -61,6 +61,12 @@
         symbol = "󱄅 ";
         style = "bg:blue fg:black";
         format = " • [](bold fg:blue)[ $symbol]($style)[](bold fg:blue)";
+      };
+      container = {
+        symbol = "󰏖";
+        style = "bg:red fg:black";
+        format = " • [](bold fg:red)[$symbol]($style)[](bold fg:red)";
+        disabled = false;
       };
     };
   };

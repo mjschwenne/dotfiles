@@ -14,5 +14,5 @@ configuration{
     sidebar-mode: true;
 }
 
-@theme "rose-pine"
+@theme "catppuccin-mocha"
 

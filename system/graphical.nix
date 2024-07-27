@@ -48,15 +48,7 @@
 
   fonts.fontconfig.enable = true;
   fonts.packages = with pkgs; [
-    (nerdfonts.override {fonts = ["JetBrainsMono" "SpaceMono"];})
-    (google-fonts.override {
-      fonts = [
-        "Gabarito"
-        "Lexend"
-      ];
-    })
-    material-symbols
-    rubik
+    (nerdfonts.override {fonts = ["JetBrainsMono"];})
   ];
 
   services.greetd = {

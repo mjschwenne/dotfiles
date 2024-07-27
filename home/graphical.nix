@@ -24,15 +24,10 @@
     pass-wayland
     pass-secret-service
     protonmail-bridge
-    protonmail-desktop
-    protonmail-bridge-gui
 
     # Document-based Applications
-    evince
     xournalpp
-    rnote
     poppler_utils
-    nextcloud-client
 
     # Graphics Applications
     gimp
@@ -74,7 +69,6 @@
     pavucontrol
     playerctl
     networkmanagerapplet
-    meld
     qalculate-gtk
     webcamoid
     gnome.eog
@@ -85,37 +79,25 @@
     # Games
     cockatrice
     melonDS
-    # mindustry-wayland
 
     # CLI Utilities
     pandoc
     hugo
     btop
     bluez
-    socat
-    jq
-    jp
-    jc
     inotify-tools
     google-cloud-sdk
     ledger
     python311Packages.gpustat
-    toolbox
 
     # Programming languages
     coq
 
     # Wayland Utilities
     swww
-
-    wev
     wl-clipboard
-    wlsunset
-    wlr-randr
-    kanshi
     grim
     slurp
-    waypaper
     wayland-logout
   ];
   masterPkgs = with pkgs-master; [librewolf firefox protonvpn-cli protonvpn-gui];
@@ -134,8 +116,11 @@ in {
   gtk = {
     enable = true;
     theme = {
-      name = "rose-pine";
-      package = pkgs.rose-pine-gtk-theme;
+      name = "Catppuccin-Mocha-Standard-Pink-Dark";
+      package = pkgs.catppuccin-gtk.override {
+        accents = ["pink"];
+        variant = "mocha";
+      };
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -148,11 +133,11 @@ in {
     gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
   };
   home.sessionVariables = {
-    GTK_THEME = "rose-pine";
+    GTK_THEME = "Catppuccin-Mocha-Standard-Pink-Dark";
   };
   home.pointerCursor = {
-    package = pkgs.rose-pine-cursor;
-    name = "BreezeX-RosePine-Linux";
+    package = pkgs.catppuccin-cursors.mochaLight;
+    name = "Catppuccin-Mocha-Light-Cursors";
   };
 
   qt = {

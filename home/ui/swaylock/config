@@ -18,46 +18,38 @@ indicator-caps-lock
 grace=3
 grace-no-touch
 
-# Layout text colors
-layout-bg-color=#00000000
-layout-border-color=#00000000
-layout-text-color=#e0def4
+# colors 
+color=1e1e2e20
+separator-color=00000000
+key-hl-color=fab387
+bs-hl-color=fab387
 
-# Text color
+# text
 font="JetBrainsMono Nerd Font"
 font-size=64
-text-color=#31748f
-text-clear-color=#9ccfd8
-text-caps-lock-color=#f6c177
-text-ver-color=#c4a7e7
-text-wrong-color=#eb6f92
+text-caps-lock-color=f9e2af
+text-clear-color=cdd6f4
+text-color=cdd6f4
+text-ver-color=cdd6f4
+text-wrong-color=f38ba8
 
-# Highlight segments
-bs-hl-color=#19172466
-key-hl-color=#31748f
-caps-lock-bs-hl-color=#19172466
-caps-lock-key-hl-color=#f6c177
+# inside
+inside-clear-color=1e1e2e80
+inside-color=1e1e2e80
+inside-ver-color=1e1e2e80
+inside-wrong-color=1e1e2e80
 
-# Highlight segments separator
-separator-color=#00000000
+# line
+line-clear-color=11111b
+line-color=11111b
+line-ver-color=11111b
+line-wrong-color=11111b
+line-caps-lock-color=89b4fa
 
-# Inside of the indicator
-inside-color=#31748f55
-inside-clear-color=#9ccfd855
-inside-caps-lock-color=#f6c17755
-inside-ver-color=#c4a7e755
-inside-wrong-color=#eb6f9255
+# ring
+ring-clear-color=f9e2af
+ring-color=cdd6f4
+ring-ver-color=a6e3a1
+ring-wrong-color=f38ba8
+ring-caps-lock-color=f9e2af
 
-# Line between the inside and ring
-line-color=#31748f11
-line-clear-color=#9ccfd811
-line-caps-lock-color=#f6c17711
-line-ver-color=#c4a7e711
-line-wrong-color=#eb6f9211
-
-# Indicator ring
-ring-color=#31748faa
-ring-clear-color=#9ccfd8aa
-ring-caps-lock-color=#f6c177aa
-ring-ver-color=#c4a7e7aa
-ring-wrong-color=#eb6f92aa

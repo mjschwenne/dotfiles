@@ -239,16 +239,32 @@
     };
     # Style for all devices
     style = let
-      overlay = "#26233a";
-      base = "#191724";
-      text = "#e0def4";
-      foam = "#9ccfd8";
+      base = "#1e1e2e";
+      mantle = "#181825";
+      crust = "#11111b";
+      text = "#cdd6f4";
+      subtext0 = "#a6adc8";
+      subtext1 = "#bac2de";
+      surface0 = "#313244";
+      surface1 = "#45475a";
+      surface2 = "#585b70";
+      overlay0 = "#6c7086";
+      overlay1 = "#7f849c";
+      overlay2 = "#9399b2";
+      blue = "#89b4fa";
+      lavender = "#b4befe";
+      sapphire = "#74c7ec";
       sky = "#89dceb";
-      pine = "#31748f";
-      gold = "#f6c177";
-      love = "#eb6f92";
-      iris = "#c4a7e7";
-      rose = "#ebbcba";
+      teal = "#94e2d5";
+      green = "#a6e3a1";
+      yellow = "#f9e2af";
+      peach = "#fab387";
+      maroon = "#eba0ac";
+      red = "#f38ba8";
+      mauve = "#cba6f7";
+      pink = "#f5c2e7";
+      flamingo = "#f2cdcd";
+      rosewater = "#f5e0dc";
     in
       /*
       css
@@ -262,11 +278,16 @@
         }
 
         window#waybar {
-            background-color: ${base};
+            background-color: ${crust};
+        }
+
+        window#waybar.solo {
+            /* Mocha, but translucent */
+            background-color: ${crust};
         }
 
         #workspaces {
-            background-color: ${overlay};
+            background-color: ${base};
             margin: 5px;
             border-radius: 15px;
             padding: 0px 15px;
@@ -274,57 +295,64 @@
 
         #workspaces button {
             border-radius: 0px;
-            background-color: ${overlay};
-            color: ${iris};
-            border-bottom: 3px solid ${iris};
-            padding: 0px 10px;
+            background-color: ${base};
+            color: ${peach};
+            border-bottom: 3px solid ${peach};
+            ${
+          if osConfig.networking.hostName == "terra"
+          then "padding: 0px 10px;"
+          else ""
+        }
         }
 
         #workspaces button.visible {
-            color: ${gold};
-            border-bottom: 3px solid ${gold};
+            color: ${yellow};
+            border-bottom: 3px solid ${yellow};
         }
 
         #workspaces button.active,
         #workspaces button.focused {
-            color: ${foam};
-            border-bottom: 3px solid ${foam};
+            color: ${blue};
+            border-bottom: 3px solid ${blue};
         }
 
-        #workspaces button.persistent
-        {
+        ${
+          if osConfig.networking.hostName == "terra"
+          then "#workspaces button.empty"
+          else "#workspaces button.persistent"
+        } {
             color: ${text};
-            border-bottom: 3px solid ${overlay};
+            border-bottom: 3px solid ${base};
         }
 
         #tray {
-            background-color: ${overlay};
+            background-color: ${base};
             border-radius: 15px 15px 15px 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mode {
-            background-color: ${overlay};
+            background-color: ${base};
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mpris {
-            background-color: ${overlay};
+            background-color: ${base};
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mpris.spotify {
-            color: ${pine};
+            color: ${green};
         }
 
         #window {
             margin: 5px;
-            background-color: ${overlay};
+            background-color: ${base};
             padding: 0px 15px;
             border-radius: 15px;
         }
@@ -334,7 +362,7 @@
         }
 
         .modules-right {
-            background-color: ${overlay};
+            background-color: ${base};
             margin: 5px;
             border-radius: 15px;
             padding: 0px 15px 0px 15px;
@@ -348,55 +376,55 @@
         }
 
         #privacy {
-            background-color: ${overlay};
+            background-color: ${base};
             padding: 0px 5px 0px 0px;
         }
 
         #clock {
-            background-color: ${overlay};
-            color: ${iris};
+            background-color: ${base};
+            color: ${mauve};
             padding: 0px 5px 0px 5px;
         }
 
         #memory {
-            background-color: ${overlay};
+            background-color: ${base};
             color: ${sky};
             padding: 0px 5px 0px 5px;
         }
 
         #cpu {
-            background-color: ${overlay};
+            background-color: ${base};
             padding: 0px 5px 0px 5px;
         }
 
         #network {
-            background-color: ${overlay};
-            color: ${rose};
+            background-color: ${base};
+            color: ${pink};
             padding: 0px 5px 0px 5px;
         }
 
         #bluetooth {
-            background-color: ${overlay};
-            color: ${foam};
+            background-color: ${base};
+            color: ${blue};
             padding: 0px 5px 0px 5px;
         }
 
         #battery {
-            background-color: ${overlay};
+            background-color: ${base};
             padding: 0px 5px 0px 5px;
         }
 
         #battery.warning {
-            background-color: ${gold};
+            background-color: ${peach};
         }
 
         #battery.critical {
-            background-color: ${love};
+            background-color: ${red};
         }
 
         #idle_inhibitor {
-            background-color: ${overlay};
-            color: ${gold};
+            background-color: ${base};
+            color: ${peach};
             padding: 0px 0px 0px 5px;
         }
       '';
