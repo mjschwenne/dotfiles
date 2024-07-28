@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# contributor: Matt Schwennesen <matt@schwennesen.org>
-# key: \con
-# group: math
-# condition: 'auto
-# name: Contradiction
-# --
-\lightning$0

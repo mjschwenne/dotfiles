@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# contributor: Matt Schwennesen <matt@schwennesen.org>
-# key: \E
-# group: math
-# condition: 'auto
-# name: Expected Value
-# --
-\mathbbE$0

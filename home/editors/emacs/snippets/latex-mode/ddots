@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: ddots
-# key: ;/
-# group: math
-# condition: (and (texmathp) 'auto)
-# --
-\\ddots

@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# key: emph
-# group: font
-# name: Bold
-# --
-\\emph{$1}$0

@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# key: \E
-# name: Expectation
-# condition: (and (texmathp) (quote auto))
-# group: math
-# --
-\\mathbb{E} \\left[ $1 \\right] $0
