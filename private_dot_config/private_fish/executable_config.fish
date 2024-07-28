@@ -12,6 +12,7 @@ status is-login; and begin
     set -g -x EDITOR /home/mjs/.local/bin/nvim
     set -g -x GTK_THEME catppuccin-mocha-pink-standard+default
     eval (ssh-agent -c)
+    echo TEST
 end
 
 status is-interactive; and begin

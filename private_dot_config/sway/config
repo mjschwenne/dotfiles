@@ -342,7 +342,6 @@ exec nm-applet
 exec /home/mjs/.config/sway/scripts/container.fish
 exec wl-paste --type text --watch cliphist store
 exec wl-paste --type image --watch cliphist store
-exec keepassxc 
 exec flatpak run ch.protonmail.protonmail-bridge --no-window
 # Set the cursor theme
 exec gsettings set org.gnome.desktop.interface cursor-theme catppuccin-mocha-dark-cursors

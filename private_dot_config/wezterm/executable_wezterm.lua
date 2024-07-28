@@ -20,7 +20,7 @@ return {
   color_scheme = "Catppuccin Mocha",
   window_background_opacity = 1.0,
   hide_tab_bar_if_only_one_tab = true,
-  default_prog = { "fish", "-l" },
+  default_prog = { "fish" },
   enable_wayland = true,
 }
 
