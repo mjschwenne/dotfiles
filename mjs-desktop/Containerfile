@@ -1,0 +1,35 @@
+FROM registry.fedoraproject.org/fedora-toolbox:latest
+
+# Install i3-wk-switch and autotiling 
+RUN python -m ensurepip
+RUN pip3 install i3ipc 
+RUN wget https://github.com/nwg-piotr/autotiling/raw/master/autotiling/main.py
+RUN chmod +x main.py
+RUN mv main.py /usr/bin/autotiling 
+RUN wget https://github.com/tmfink/i3-wk-switch/raw/master/i3-wk-switch.py
+RUN chmod +x i3-wk-switch.py 
+RUN mv i3-wk-switch.py /usr/bin/i3-wk-switch
+
+# Install wpaperd
+RUN dnf -y install rust cargo rust-wayland-protocols+wayland-client-devel libglvnd-devel 
+RUN git clone https://github.com/danyspin97/wpaperd.git 
+WORKDIR /wpaperd 
+RUN cargo build --release 
+RUN mv target/release/wpaperd /usr/bin/wpaperd 
+RUN mv target/release/wpaperctl /usr/bin/wpaperctl
+
+# Install other packages 
+WORKDIR /
+COPY cli-packages /
+COPY graphical-packages /
+RUN dnf -y install $(<cli-packages)
+RUN dnf -y install $(<graphical-packages)
+RUN rm /cli-packages /graphical-packages
+
+# Install starship 
+RUN dnf copr enable -y atim/starship 
+RUN dnf -y install starship
+
+# Install librewolf
+RUN dnf copr enable -y bgstack15/AfterMozilla
+RUN dnf -y install librewolf

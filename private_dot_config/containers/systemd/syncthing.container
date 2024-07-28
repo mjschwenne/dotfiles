@@ -1,0 +1,21 @@
+[Unit]
+Description=Podman syncthing.service
+Wants=network-online.target
+After=network-online.target
+   
+[Container]
+Image=docker.io/syncthing/syncthing:latest
+AutoUpdate=registry
+PublishPort=127.0.0.1:8384:8384
+PublishPort=22000:22000/tcp
+PublishPort=22000:22000/udp
+PublishPort=21027:21027/udp
+UserNS=keep-id:uid=1000,gid=1000
+Volume=%h/.config/syncthing:/var/syncthing/config:Z
+Volume=%h/Documents:/org:Z
+Volume=%h/kdb:/kdb:Z
+Volume=%h/emulator:/emulator:Z
+Volume=%h/Zotero/storage:/zotero:Z
+
+[Install]
+WantedBy=default.target
