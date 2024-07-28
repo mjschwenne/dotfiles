@@ -1,5 +1,5 @@
 #!/usr/bin/fish
 
-swaylock &
+swaylock -C ~/.config/swaylock/config &
 sleep 5
 systemctl suspend
