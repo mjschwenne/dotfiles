@@ -84,7 +84,7 @@ input "type:keyboard" {
     bindsym $mod+F6 exec flatpak run io.github.Qalculate
     bindsym $mod+F7 exec emacs
     bindsym $mod+F8 exec flatpak run org.mozilla.Thunderbird
-    bindsym $mod+F9 exec spotify
+    bindsym $mod+F9 exec flatpak run com.spotify.Client
     bindsym $mod+F10 exec flatpak run dev.vencord.Vesktop
     bindsym $mod+F11 exec flatpak run org.zotero.Zotero
     bindsym $mod+F12 exec pavucontrol

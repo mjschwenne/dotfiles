@@ -162,8 +162,13 @@
       "tooltip-format-wifi": "{essid}  {bandwidthUpOctets}  {bandwidthDownOctets}"
     },
     "output": [
+      {{ if eq .chezmoi.hostname "mars" }}
       "eDP-1",
       "HDMI-A-1"
+      {{ else if eq .chezmoi.hostname "terra" }}
+      "DP-1",
+      "DP-2"
+      {{ end }}
     ],
     "position": "top",
     "privacy": {

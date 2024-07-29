@@ -1,6 +1,4 @@
 # general
-fade-in=0.3
-effect-blur=5x5
 ignore-empty-password
 clock
 timestr=%H:%M

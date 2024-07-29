@@ -31,5 +31,5 @@ RUN dnf copr enable -y atim/starship
 RUN dnf -y install starship
 
 # Install librewolf
-RUN dnf copr enable -y bgstack15/AfterMozilla
+RUN wget -P /etc/yum.repos.d/ https://rpm.librewolf.net/librewolf-repo.repo
 RUN dnf -y install librewolf
