@@ -11,7 +11,7 @@ return {
   -- Language packs
   { import = "astrocommunity.pack.bash" },
   { import = "astrocommunity.pack.cpp" },
-  { import = "astrocommunity.pack.haskell" },
+  -- { import = "astrocommunity.pack.haskell" },
   { import = "astrocommunity.pack.java" },
   -- { import = "astrocommunity.pack.json" },
   { import = "astrocommunity.pack.lua" },
@@ -21,5 +21,5 @@ return {
   { import = "astrocommunity.pack.rust" },
 
   -- Appearances
-  { import = "astrocommunity.colorscheme.rose-pine" },
+  { import = "astrocommunity.colorscheme.catppuccin" },
 }

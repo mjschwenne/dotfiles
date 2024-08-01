@@ -69,10 +69,20 @@
       };
     };
   };
-  security.pam.services.swaylock = {};
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services = {
+    greetd = {
+      enableGnomeKeyring = true;
+      gnupg.enable = true;
+    };
+    login = {
+      enableGnomeKeyring = true;
+      gnupg.enable = true;
+    };
+    swaylock = {};
+  };
 
   programs.dconf.enable = true;
-  services.xserver.desktopManager.plasma6.enable = true;
 
   virtualisation.podman = {
     enable = true;

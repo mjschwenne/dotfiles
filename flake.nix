@@ -22,7 +22,7 @@
     # Master branch, for when packages haven't migrated to the unstable branch
     nixpkgs-master.url = "github:NixOS/nixpkgs";
     # Stable branch, for when packages need to be rolled back
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -61,6 +61,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    catppuccin.url = "github:catppuccin/nix";
+
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -89,6 +91,7 @@
   outputs = {
     nixpkgs,
     home-manager,
+    catppuccin,
     ...
   } @ inputs: {
     nixosConfigurations = {
@@ -135,6 +138,7 @@
           };
         modules = [
           inputs.sops-nix.nixosModules.sops
+          catppuccin.nixosModules.catppuccin
           ./system/terra.nix
 
           home-manager.nixosModules.home-manager
@@ -154,7 +158,6 @@
                   };
                 };
             };
-            # The second one is a function which constructs the overlay so the parenthesis are required.
             nixpkgs.overlays = [inputs.emacs-overlay.overlay]; # inputs.nixpkgs-wayland.overlay];
           }
         ];
@@ -175,6 +178,7 @@
           };
         modules = [
           inputs.sops-nix.nixosModules.sops
+          catppuccin.nixosModules.catppuccin
           ./system/mars.nix
 
           home-manager.nixosModules.home-manager
@@ -215,6 +219,7 @@
         modules = [
           inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
           inputs.sops-nix.nixosModules.sops
+          catppuccin.nixosModules.catppuccin
           ./system/luna.nix
           home-manager.nixosModules.home-manager
           {
@@ -250,6 +255,7 @@
           };
         modules = [
           inputs.sops-nix.nixosModules.sops
+          catppuccin.nixosModules.catppuccin
           ./system/sol.nix
           home-manager.nixosModules.home-manager
           {

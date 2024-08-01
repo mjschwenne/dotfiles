@@ -6,7 +6,7 @@
     settings = {
       add_newline = false;
       format = ''
-        $time$directory$nix_shell$git_branch
+        $time$directory$nix_shell$container$python$git_branch
         $character
       '';
       character = {
@@ -61,6 +61,18 @@
         symbol = "󱄅 ";
         style = "bg:blue fg:black";
         format = " • [](bold fg:blue)[ $symbol]($style)[](bold fg:blue)";
+      };
+      container = {
+        disabled = false;
+        format = " • [](bold fg:blue)[ $symbol]($style)[](bold fg:blue)";
+        style = "bg:blue fg:black";
+        symbol = "󰏖 ";
+      };
+      python = {
+        disabled = false;
+        format = " • [](bold fg:green)[$symbol$virtualenv$version]($style)[](bold fg:green)";
+        style = "bg:green fg:black";
+        version_format = " v$major.$minor";
       };
     };
   };

@@ -38,7 +38,6 @@
     gimp
     inkscape
     zotero_7
-    mpv
     posterazor
     imagemagick
 
@@ -92,22 +91,17 @@
     hugo
     btop
     bluez
-    socat
-    jq
-    jp
-    jc
     inotify-tools
     google-cloud-sdk
     ledger
     python311Packages.gpustat
-    toolbox
+    distrobox
 
     # Programming languages
     coq
 
     # Wayland Utilities
     swww
-
     wev
     wl-clipboard
     wlsunset
@@ -115,7 +109,6 @@
     kanshi
     grim
     slurp
-    waypaper
     wayland-logout
   ];
   masterPkgs = with pkgs-master; [librewolf firefox protonvpn-cli protonvpn-gui];
@@ -131,53 +124,55 @@ in {
     };
   };
 
+  catppuccin = {
+    flavor = "mocha";
+    accent = "pink";
+    pointerCursor = {
+      enable = true;
+      accent = "dark";
+    };
+  };
+
   gtk = {
     enable = true;
-    theme = {
-      name = "rose-pine";
-      package = pkgs.rose-pine-gtk-theme;
-    };
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.catppuccin-papirus-folders.override {
-        flavor = "mocha";
-        accent = "pink";
-      };
+    catppuccin = {
+      enable = true;
+      icon.enable = true;
     };
     font = {name = "JetBrainsMono Nerd Font";};
     gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
   };
   home.sessionVariables = {
-    GTK_THEME = "rose-pine";
-  };
-  home.pointerCursor = {
-    package = pkgs.rose-pine-cursor;
-    name = "BreezeX-RosePine-Linux";
+    # GTK_THEME = "catppuccin-mocha-pink-standard+default";
+    GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
   };
 
   qt = {
     enable = true;
     platformTheme.name = "qtct";
-    style.name = "kvantum";
-    style.package = pkgs.libsForQt5.qtstyleplugin-kvantum;
+    style.catppuccin = {
+      enable = true;
+      apply = true;
+    };
   };
-  home.file.".config/Kvantum/Catppuccin-Mocha-Pink" = {
-    source = ./ui/qt/Catppuccin-Mocha-Pink;
-    recursive = true;
-  };
-  imports = [./ui ./applications ./editors/emacs];
+  imports = [./desktop ./applications ./editors/emacs];
 
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
 
   home.packages = packages ++ masterPkgs;
 
+  services = {
+    gnome-keyring.enable = true;
+    gpg-agent.pinentryPackage = pkgs.pinentry-gnome3;
+  };
+
   xdg = {
     configFile = {
       "mimeapps.list".force = true;
-      "Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini {}).generate "kvantum.kvconfig" {
-        General.theme = "Catppuccin-Mocha-Pink";
-      };
+      "distrobox/distrobox.conf".text = ''
+        container_additional_volumes="/nix/store:/nix/store:ro /etc/profiles/per-user/mjs:/etc/profiles/per-user/mjs:ro /etc/static/profiles/per-user/mjs:/etc/static/profiles/per-user/mjs:ro /run/secrets:/run/secrets:ro"
+      '';
     };
     mimeApps = {
       enable = true;

@@ -6,6 +6,7 @@
   programs = {
     alacritty = {
       enable = true;
+      catppuccin.enable = true;
       settings = {
         shell = "fish";
         env = {
@@ -18,7 +19,6 @@
             y = 5;
           };
         };
-        import = ["~/.config/alacritty/rose-pine.toml"];
         font = {
           normal = {
             family = "JetBrainsMono Nerd Font";
@@ -42,6 +42,7 @@
 
     foot = {
       enable = true;
+      catppuccin.enable = true;
       settings = {
         main = {
           shell = "fish";
@@ -56,35 +57,13 @@
         };
         cursor = {
           style = "block";
-          color = "191724 e0def4";
-        };
-        colors = {
-          background = "191724";
-          foreground = "e0def4";
-          regular0 = "26233a"; # black (Overlay)
-          regular1 = "eb6f92"; # red (Love)
-          regular2 = "31748f"; # green (Pine)
-          regular3 = "f6c177"; # yellow (Gold)
-          regular4 = "9ccfd8"; # blue (Foam)
-          regular5 = "c4a7e7"; # magenta (Iris)
-          regular6 = "ebbcba"; # cyan (Rose)
-          regular7 = "e0def4"; # white (Text)
-
-          bright0 = "6e6a86"; # bright black (Overlay)
-          bright1 = "eb6f92"; # bright red (Love)
-          bright2 = "31748f"; # bright green (Pine)
-          bright3 = "f6c177"; # bright yellow (Gold)
-          bright4 = "9ccfd8"; # bright blue (Foam)
-          bright5 = "c4a7e7"; # bright magenta (Iris)
-          bright6 = "ebbcba"; # bright cyan (Rose)
-          bright7 = "e0def4"; # bright white (Text)alpha = 1.0;
         };
       };
     };
 
     kitty = {
       enable = true;
-      theme = "Rosé Pine";
+      catppuccin.enable = true;
       font.name = "JetBrainsMono Nerd Font";
       shellIntegration.mode = "no-cursor";
       settings = {
@@ -156,7 +135,7 @@
             ${preferred_adapter."${osConfig.networking.hostName}"}
             font = wezterm.font("JetBrainsMono Nerd Font", {weight = "Light"}),
             font_size = 11.0,
-            color_scheme = "rose-pine",
+            color_scheme = "Catppuccin Mocha",
             window_background_opacity = 1.0,
             hide_tab_bar_if_only_one_tab = true,
             default_prog = { "fish", "-l" },
