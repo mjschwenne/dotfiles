@@ -3,7 +3,7 @@
   pkgs,
   pkgs-master,
   ...
-}: let
+} @ inputs: let
   packages = with pkgs; [
     # Web browsers
     brave
@@ -113,6 +113,8 @@
   ];
   masterPkgs = with pkgs-master; [librewolf firefox protonvpn-cli protonvpn-gui];
 in {
+  imports = [inputs.catppuccin.homeManagerModules.catppuccin ./desktop ./applications ./editors/emacs];
+
   programs.ssh = {
     matchBlocks = {
       "sol" = {
@@ -125,6 +127,7 @@ in {
   };
 
   catppuccin = {
+    enable = true;
     flavor = "mocha";
     accent = "pink";
     pointerCursor = {
@@ -149,13 +152,15 @@ in {
 
   qt = {
     enable = true;
-    platformTheme.name = "qtct";
-    style.catppuccin = {
-      enable = true;
-      apply = true;
+    platformTheme.name = "kvantum";
+    style = {
+      name = "kvantum";
+      catppuccin = {
+        enable = true;
+        apply = true;
+      };
     };
   };
-  imports = [./desktop ./applications ./editors/emacs];
 
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;

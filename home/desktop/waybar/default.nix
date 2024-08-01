@@ -316,11 +316,8 @@
             border-bottom: 3px solid ${blue};
         }
 
-        ${
-          if osConfig.networking.hostName == "terra"
-          then "#workspaces button.empty"
-          else "#workspaces button.persistent"
-        } {
+        #workspaces button.persistent
+        {
             color: ${text};
             border-bottom: 3px solid ${base};
         }
