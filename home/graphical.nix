@@ -76,7 +76,7 @@
     meld
     qalculate-gtk
     webcamoid
-    gnome.eog
+    eog
     mate.engrampa
     swappy
     wl-mirror

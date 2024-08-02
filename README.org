@@ -49,7 +49,7 @@ sudo ln -s /home/<user>/.dotfiles /etc/nixos
 Then run ~sudo nixos-rebuild switch ~/.dotfiles#<configuration>~ with the
 configuration being one of:
 
-- ~terra~: My main desktop, including nvidia drivers and CUDA support.
+- ~terra~: My main desktop.
 - ~mars~: My main laptop.
 - ~luna~: My surface, using nixos-hardware to get the surface kernel patches.
 - ~sol~: A second laptop running various web services. No GUI. 
