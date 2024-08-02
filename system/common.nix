@@ -70,6 +70,13 @@
     age.keyFile = "/home/mjs/.config/sops/age/keys.txt";
   };
 
+  # Catppuccin
+  catppuccin = {
+    flavor = "mocha";
+    accent = "pink";
+  };
+  console.catppuccin.enable = true;
+
   # Need to enable the user shell program
   programs.fish.enable = true;
 
@@ -86,14 +93,11 @@
 
     # Python
     (python311.withPackages
-      (ps: with ps; [debugpy material-color-utilities]))
+      (ps: with ps; [debugpy]))
 
     # Rust
     rustc
     cargo
-
-    # Julia
-    julia-bin
 
     # Java
     jdk17

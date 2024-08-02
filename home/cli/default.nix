@@ -34,19 +34,22 @@
     };
 
     nix-index.enable = true;
+
+    btop = {
+      enable = true;
+      catppuccin.enable = true;
+    };
   };
 
   # Some common user-level packages
   home.packages = with pkgs; [
     # Fetches
-    neofetch
-    pfetch
+    fastfetch
 
     # Utilities
     ripgrep
     ripgrep-all
     eza
-    ranger
     nix-prefetch
     nix-prefetch-git
     nix-prefetch-github # helps write derivations hosted on github

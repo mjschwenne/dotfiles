@@ -27,10 +27,7 @@
   };
 
   # limit cores to try and cap memory useage... Which is crazy for a desktop with 64 GB RAM and 64 GB Swap...
-  nix.settings.cores = 16;
-  nix.settings.max-jobs = 1;
   nixpkgs.config.allowBroken = true;
-  # Nvidia graphics setup
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -41,49 +38,7 @@
 
   # Variabled needed to run sway
   environment.variables = {
-    WLR_DRM_DEVICES = "/dev/dri/card1";
-    WLR_RENDERER = "vulkan";
-    VK_INSTANCE_LAYERS = "VK_LAYER_KHRONOS_validation";
-    GBM_BACKEND = "nvidia-drm";
-    __GL_GSYNC_ALLOWED = 0;
-    __GL_VRR_ALLOWED = 0;
-    WLR_DRM_NO_ATOMIC = 1;
-    QT_AUTO_SCREEN_SCALE_FACTOR = 1;
-    QT_QPA_PLATFORM = "wayland";
-    QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
-    GDK_BACKEND = "wayland";
-    XNT_DESKTOP = "sway";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     WLR_NO_HARDWARE_CURSORS = 1;
-  };
-
-  nixpkgs.config.cudaSupport = true;
-
-  hardware.nvidia = {
-    # Modesetting is required.
-    modesetting.enable = true;
-
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    powerManagement.enable = true;
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
-
-    # Use the NVidia open source kernel module (not to be confused with the
-    # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of
-    # supported GPUs is at:
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
-    # Only available from driver 515.43.04+
-    # Currently alpha-quality/buggy, so false is currently the recommended setting.
-    open = false;
-
-    # Enable the Nvidia settings menu,
-    # accessible via `nvidia-settings`.
-    nvidiaSettings = true;
-
-    # Right now 555 seems to be the most stable
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
 
   networking.hostName = "terra"; # Define your hostname.
@@ -93,7 +48,6 @@
   services = {
     xserver = {
       wacom.enable = true;
-      videoDrivers = ["nvidia"];
     };
 
     syncthing = {

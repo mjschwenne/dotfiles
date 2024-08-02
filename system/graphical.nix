@@ -5,7 +5,7 @@
   ...
 } @ inputs: {
   # Enable sound with pipewire.
-  sound.enable = true;
+  # sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -42,33 +42,37 @@
     # pulseaudio
 
     # Install window manager and greeter
-    inputs.nixpkgs-wayland.packages."${pkgs.system}".sway-unwrapped
+    # sway
+    swayfx
     greetd.tuigreet
   ];
 
   fonts.fontconfig.enable = true;
   fonts.packages = with pkgs; [
-    (nerdfonts.override {fonts = ["JetBrainsMono" "SpaceMono"];})
-    (google-fonts.override {
-      fonts = [
-        "Gabarito"
-        "Lexend"
-      ];
-    })
-    material-symbols
-    rubik
+    (nerdfonts.override {fonts = ["JetBrainsMono"];})
   ];
 
   services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = ''${pkgs.greetd.tuigreet}/bin/tuigreet --remember --time --cmd "sway --unsupported-gpu"'';
+        command = ''${pkgs.greetd.tuigreet}/bin/tuigreet --remember --time --cmd "sway"'';
         user = "mjs";
       };
     };
   };
-  security.pam.services.swaylock = {};
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services = {
+    greetd = {
+      enableGnomeKeyring = true;
+      gnupg.enable = true;
+    };
+    login = {
+      enableGnomeKeyring = true;
+      gnupg.enable = true;
+    };
+    swaylock = {};
+  };
 
   programs.dconf.enable = true;
 
