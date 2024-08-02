@@ -146,8 +146,8 @@ in {
     gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
   };
   home.sessionVariables = {
-    # GTK_THEME = "catppuccin-mocha-pink-standard+default";
     GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
+    MOZ_ENABLE_DBUS = 1;
   };
 
   qt = {
