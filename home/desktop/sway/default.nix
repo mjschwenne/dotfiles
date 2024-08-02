@@ -1,6 +1,5 @@
 {
   pkgs,
-  swayfx,
   lib,
   osConfig,
   ...
@@ -22,14 +21,10 @@
   wayland.windowManager.sway = {
     enable = true;
     package = null;
-    extraOptions = ["--unsupported-gpu"];
-    checkConfig = true;
+    checkConfig = false;
     config = rec {
       modifier = "Mod4";
-      terminal =
-        if osConfig.networking.hostName == "terra"
-        then "foot"
-        else "wezterm";
+      terminal = "wezterm";
       input = {
         "type:keyboard" = {
           "xkb_options" = "ctrl:nocaps";
@@ -47,10 +42,7 @@
       in
         lib.mkOptionDefault {
           # Application hotkeys
-          "${mod}+Return" =
-            if osConfig.networking.hostName == "terra"
-            then "exec ${pkgs.foot}/bin/foot"
-            else "exec ${inputs.wezterm.packages.${pkgs.system}.default}/bin/wezterm";
+          "${mod}+Return" = "exec ${inputs.wezterm.packages.${pkgs.system}.default}/bin/wezterm";
           "${mod}+b" = "exec ${pkgs.librewolf}/bin/librewolf";
           "${mod}+Shift+b" = "exec ${pkgs.firefox}/bin/firefox";
           "${mod}+e" = "exec emacs";
@@ -254,6 +246,12 @@
         {command = "hash dbus-update-activation-environment 2>/dev/null && dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_CURRENT_DESKTOP=sway";}
       ];
     };
+    extraConfig = ''
+      corner_radius 10
+      blur enable
+      blur_passes 3
+      layer_effects "waybar" blur enable
+    '';
     systemd.enable = true;
   };
 

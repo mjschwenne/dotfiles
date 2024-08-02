@@ -12,7 +12,7 @@
       bar = {
         layer = "top";
         position = "top";
-        height = 30;
+        height = 37;
         margin = "0 0 0 0";
         output =
           {
@@ -298,11 +298,6 @@
             background-color: ${base};
             color: ${peach};
             border-bottom: 3px solid ${peach};
-            ${
-          if osConfig.networking.hostName == "terra"
-          then "padding: 0px 10px;"
-          else ""
-        }
         }
 
         #workspaces button.visible {

@@ -50,12 +50,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # nixpkgs with wayland nvidia?
-    nixpkgs-wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -158,7 +152,7 @@
                   };
                 };
             };
-            nixpkgs.overlays = [inputs.emacs-overlay.overlay]; # inputs.nixpkgs-wayland.overlay];
+            nixpkgs.overlays = [inputs.emacs-overlay.overlay];
           }
         ];
       };

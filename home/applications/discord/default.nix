@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  xdg.configFile."vesktop/themes/rose-pine.theme.css".source = ./rose-pine.theme.css;
+  xdg.configFile."vesktop/themes/mocha.theme.css".source = ./mocha.theme.css;
 
   home.packages = with pkgs; [
     vesktop
