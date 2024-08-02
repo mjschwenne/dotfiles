@@ -74,7 +74,7 @@
                     driver_info = "Mesa 24.0.5",
                     name = "AMD Radeon R5 M465 Series (RADV ICELAND)",
                     vendor = 4098,
-              }
+              },
             '';
         };
       in
