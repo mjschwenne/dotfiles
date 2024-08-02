@@ -67,7 +67,7 @@
     };
 
     foundry = {
-      url = "github:reckenrode/nix-foundryvtt/f624c0ceabe13dd876ecff871e0dc7f55f96e993";
+      url = "github:reckenrode/nix-foundryvtt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

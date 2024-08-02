@@ -50,6 +50,7 @@
   services.foundryvtt = {
     enable = true;
     hostName = "schwennesen.org";
+    package = foundry.packages.${pkgs.system}.foundryvtt_12;
     proxySSL = true;
     proxyPort = 443;
   };
@@ -63,7 +64,12 @@
       '';
 
       "foundry.schwennesen.org".extraConfig = ''
-        reverse_proxy localhost:30000
+        reverse_proxy localhost:30000 {
+          header_up Host {host}
+          header_up X-Real-IP {remote_host}
+          header_up X-Forwarded-For {remote_host}
+          header_up X-Forwarded-Proto {scheme}
+        }
       '';
 
       "office.schwennesen.org".extraConfig = ''

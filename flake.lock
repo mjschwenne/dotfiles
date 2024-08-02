@@ -154,17 +154,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1701473318,
-        "narHash": "sha256-QdCJN8GeNl/V8wMjrvNkrWzNXnahgfjBfCSya4qQdrc=",
+        "lastModified": 1719967113,
+        "narHash": "sha256-VAoPzPnKeMpJds3ncmQtsJcNL5i9lDqKY68bttbMtyQ=",
         "owner": "reckenrode",
         "repo": "nix-foundryvtt",
-        "rev": "f624c0ceabe13dd876ecff871e0dc7f55f96e993",
+        "rev": "93ab5a66478a111c2ef1e7c3e85ffc360b7f75df",
         "type": "github"
       },
       "original": {
         "owner": "reckenrode",
         "repo": "nix-foundryvtt",
-        "rev": "f624c0ceabe13dd876ecff871e0dc7f55f96e993",
         "type": "github"
       }
     },
