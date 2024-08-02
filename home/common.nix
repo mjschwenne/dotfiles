@@ -1,4 +1,4 @@
-{osConfig, ...}: {
+{osConfig, ...} @ inputs: {
   home = {
     username = "mjs";
     homeDirectory = "/home/mjs";
@@ -17,6 +17,7 @@
   };
 
   imports = [
+    inputs.catppuccin.homeManagerModules.catppuccin
     ./cli
 
     # Neovim config

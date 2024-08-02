@@ -113,7 +113,7 @@
   ];
   masterPkgs = with pkgs-master; [librewolf firefox protonvpn-cli protonvpn-gui];
 in {
-  imports = [inputs.catppuccin.homeManagerModules.catppuccin ./desktop ./applications ./editors/emacs];
+  imports = [./desktop ./applications ./editors/emacs];
 
   programs.ssh = {
     matchBlocks = {
