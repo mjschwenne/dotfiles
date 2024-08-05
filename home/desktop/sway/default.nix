@@ -170,7 +170,7 @@
       };
       assigns = {
         "8" = [{app_id = "^(thunderbird)$";}];
-        "9" = [{title = "^(Spotify)$";}];
+        "9" = [{title = "^(Spotify Premium)$";}];
         "10" = [{app_id = "^(vesktop)";}];
       };
       floating = {
