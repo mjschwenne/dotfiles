@@ -66,9 +66,7 @@
           "${mod}+n" = "exec swaync-client -t";
           "${mod}+Control+q" = "exit";
           "${mod}+Control+r" = "reload";
-          "${mod}+Control+s" = ''exec XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';
           "${mod}+Control+v" = "exec pavucontrol";
-          "${mod}+Control+w" = "exec waypaper --backend swww";
           "${mod}+z" = "exec /home/mjs/.config/sway/scripts/lock.fish";
           "${mod}+Control+z" = "exec wlogout -b 5 -T 400 -B 400";
 
@@ -79,6 +77,9 @@
           "${mod}+o" = "sticky";
           "${mod}+m" = "mode resize";
           "${mod}+d" = "layout default";
+          "${mod}+w" = "layout toggle tabbed split";
+          "${mod}+s" = "layout toggle stacking split";
+          "${mod}+c" = "splith";
 
           # Workspace management
           "${mod}+1" = "${switch} 1";
@@ -169,7 +170,7 @@
       };
       assigns = {
         "8" = [{app_id = "^(thunderbird)$";}];
-        "9" = [{title = "^(Spotify)$";}];
+        "9" = [{title = "^(Spotify Premium)$";}];
         "10" = [{app_id = "^(vesktop)";}];
       };
       floating = {

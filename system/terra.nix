@@ -36,6 +36,36 @@
     ];
   };
 
+  services.pipewire.extraConfig.pipewire."90-gpu-output" = {
+    "context.modules" = [
+      {
+        name = "libpipewire-module-combine-stream";
+        args = {
+          "combine.mode" = "sink";
+          "node.name" = "combined_gpu_sink";
+          "node.description" = "All GPU Sinks";
+          "combine.latency-compensate" = false;
+          "combine.props" = {
+            "audio.position" = ["FL" "FR"];
+          };
+          "stream.props" = {};
+          "stream.rules" = [
+            {
+              matches = [
+                {
+                  "media.class" = "Audio/Sink";
+                  "node.name" = "~alsa_output.pci-0000_03_00.1.pro-output.*";
+                }
+              ];
+              actions = {
+                create-stream = {};
+              };
+            }
+          ];
+        };
+      }
+    ];
+  };
   # Variabled needed to run sway
   environment.variables = {
     WLR_NO_HARDWARE_CURSORS = 1;

@@ -77,7 +77,8 @@
            (evil-want-integration t)
            (evil-cross-lines t)
            (evil-echo-state nil)
-           (evil-undo-system 'undo-redo))
+           (evil-undo-system 'undo-redo)
+           (evil-want-C-u-scroll t))
   :init (evil-mode 1)
   :config
   ;; Make evil search similar to vim
