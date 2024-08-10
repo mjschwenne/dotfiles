@@ -50,6 +50,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Always up-to-date emacs
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -75,6 +76,12 @@
       url = "github:wez/wezterm?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Keyboard tool
+    kmonad = {
+      url = "git+https://github.com/kmonad/kmonad?submodules=1&dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # `outputs` are all the build result of the flake.
@@ -86,6 +93,9 @@
     nixpkgs,
     home-manager,
     catppuccin,
+    kmonad,
+    sops-nix,
+    nixos-hardware,
     ...
   } @ inputs: {
     nixosConfigurations = {
@@ -131,8 +141,9 @@
             };
           };
         modules = [
-          inputs.sops-nix.nixosModules.sops
+          sops-nix.nixosModules.sops
           catppuccin.nixosModules.catppuccin
+          kmonad.nixosModules.default
           ./system/terra.nix
 
           home-manager.nixosModules.home-manager
@@ -171,8 +182,9 @@
             };
           };
         modules = [
-          inputs.sops-nix.nixosModules.sops
+          sops-nix.nixosModules.sops
           catppuccin.nixosModules.catppuccin
+          kmonad.nixosModules.default
           ./system/mars.nix
 
           home-manager.nixosModules.home-manager
@@ -211,10 +223,12 @@
             };
           };
         modules = [
-          inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
-          inputs.sops-nix.nixosModules.sops
+          nixos-hardware.nixosModules.microsoft-surface-pro-intel
+          sops-nix.nixosModules.sops
           catppuccin.nixosModules.catppuccin
+          kmonad.nixosModules.default
           ./system/luna.nix
+
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -248,9 +262,11 @@
             };
           };
         modules = [
-          inputs.sops-nix.nixosModules.sops
+          sops-nix.nixosModules.sops
           catppuccin.nixosModules.catppuccin
+          kmonad.nixosModules.default
           ./system/sol.nix
+
           home-manager.nixosModules.home-manager
           {
             home-manager = {

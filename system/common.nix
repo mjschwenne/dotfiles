@@ -9,11 +9,11 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   nix = {
-    channel.enable = true;
+    channel.enable = false;
     registry.nixpkgs.flake = inputs.nixpkgs;
-    nixPath = [
-      "nixpkgs=${inputs.nixpkgs.outPath}"
-    ];
+    # nixPath = [
+    #   "nixpkgs=${nixpkgs.outPath}"
+    # ];
     settings = {
       experimental-features = ["nix-command" "flakes"];
       trusted-users = ["root" "mjs"];
@@ -21,7 +21,7 @@
         "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
         "sol1:FnmeWYY2OGCZpx7+ZKBoOui6UrrUqASpap+FYHXMPsc="
       ];
-      nix-path = "${inputs.nixpkgs.outPath}";
+      nix-path = "nixpkgs=flake:nixpkgs";
     };
   };
 
@@ -161,6 +161,10 @@
     gnupg
     age
   ];
+
+  services.kmonad = {
+    enable = true;
+  };
 
   # Text editor
   programs.neovim = {
