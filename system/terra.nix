@@ -100,8 +100,11 @@
           "mars" = {
             id = "5APBYBW-OQQQUSK-C6LV2SD-B6DZLJL-WKAO532-YBCFNQH-3GHTPT2-47S2WAX";
           };
-          "phone" = {
+          "mercury" = {
             id = "SVMWORW-JCZ26YN-7P77FJC-YYUNZ46-3PXZZQH-TMZGH5F-LD3TVJ4-XEVQMAE";
+          };
+          "enceladus" = {
+            id = "YJKHP64-5LEKLBH-OUFD4FP-SPDVVIH-IKQRV7W-FAETK7P-M3H477W-XNZ5PA7";
           };
         };
 
@@ -112,15 +115,19 @@
           };
           "zotero" = {
             path = "/home/mjs/Zotero/storage";
-            devices = ["sol" "luna" "mars"];
+            devices = ["sol" "luna" "mars" "enceladus"];
           };
           "kdb" = {
             path = "/home/mjs/kdb";
-            devices = ["sol" "luna" "phone" "mars"];
+            devices = ["sol" "luna" "mercury" "mars" "enceladus"];
           };
           "emulator" = {
             path = "/home/mjs/workspace/emulation";
-            devices = ["sol" "luna" "mars" "phone"];
+            devices = ["sol" "luna" "mars" "mercury"];
+          };
+          "notes" = {
+            path = "/home/mjs/notes";
+            devices = ["sol" "luna" "mars" "mercury" "enceladus"];
           };
         };
       };
