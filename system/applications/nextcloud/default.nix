@@ -26,6 +26,16 @@
             port = 19000;
           }
         ];
+        extraConfig = ''
+          location ~ \.php(?:$|/) {
+            fastcgi_param REQUEST_METHOD $request_method;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_pass unix:/run/phpfpm/nextcloud.sock;
+            fastcgi_buffering on;
+            fastcgi_buffers 8 8k;
+            fastcgi_busy_buffers_size 16k;
+          }
+        '';
       };
       "office.schwennesen.org" = {
         listen = [
@@ -75,6 +85,11 @@
         "opcache.interned_strings_buffer" = "24";
         "maintenace_window_start" = "1";
         "allow_local_remote_servers" = "true";
+        "cgi.fix_pathinfo" = "1";
+        "log_type" = "file";
+        "logfile" = "nextcloud.log";
+        "loglevel" = 3;
+        "logdateformat" = "F d, Y H:i:s";
       };
 
       autoUpdateApps = {
