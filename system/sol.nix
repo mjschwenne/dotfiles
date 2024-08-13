@@ -99,7 +99,7 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [80 443];
+    allowedTCPPorts = [80 443 8443];
   };
 
   # Enable the OpenSSH daemon.
@@ -169,8 +169,8 @@
           devices = ["terra" "luna" "mars" "mercury"];
         };
         "notes" = {
-          path = "/home/mjs/notes";
-          devices = ["sol" "luna" "terra" "mercury" "enceladus"];
+          path = "/var/lib/syncthing/notes";
+          devices = ["mars" "luna" "terra" "mercury" "enceladus"];
         };
       };
     };
@@ -179,8 +179,7 @@
   systemd.services.stdiscosrv = {
     enable = true;
     description = "Syncthing discovery server";
-    unitConfig.Type = "simple";
-    serviceConfig.ExecStart = ''/run/current-system/sw/bin/stdiscosrv -db-dir="/home/mjs/.syncthing/discovery.db" -http'';
+    serviceConfig.ExecStart = ''/run/current-system/sw/bin/stdiscosrv -db-dir="/home/mjs/.syncthing/discovery.db" -http -listen=":8443"'';
     wantedBy = ["multi-user.target"];
     after = ["network.target"];
   };
