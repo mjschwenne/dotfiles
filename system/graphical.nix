@@ -79,6 +79,8 @@
   virtualisation.podman = {
     enable = true;
   };
+  # Need flatpak to use distrobox-host-exec
+  services.flatpak.enable = true;
 
   xdg.portal = {
     enable = true;

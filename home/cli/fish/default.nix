@@ -16,6 +16,13 @@
       ls = "eza";
     };
     functions = {
+      mjs-git = ''
+        if test -n "$CONTAINER_ID"
+          flatpak-spawn --host --env=GIT_SSH_COMMAND=/run/current-system/sw/bin/ssh /etc/profiles/per-user/mjs/bin/git $argv
+        else
+          git $argv
+        end
+      '';
       mjs-rename = ''
         for src in $argv
             set -l filename (string split -r -m 1 -f 1 '.' (basename $src))
