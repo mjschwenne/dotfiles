@@ -3,6 +3,10 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ./nextcloud-extras.nix
+  ];
+
   sops.secrets."nextcloud/adminpass" = {
     owner = "nextcloud";
   };
@@ -16,7 +20,9 @@
       datepattern = ,?\s*"time"\s*:\s*"%%Y-%%m-%%d[T ]%%H:%%M:%%S(%%z)?"
     '';
   };
-
+  users.users.nginx.isSystemUser = true;
+  users.users.nginx.group = "nginx";
+  users.groups.nginx = {};
   services = {
     nginx.virtualHosts = {
       "cloud.schwennesen.org" = {
@@ -26,16 +32,6 @@
             port = 19000;
           }
         ];
-        extraConfig = ''
-          location ~ \.php(?:$|/) {
-            fastcgi_param REQUEST_METHOD $request_method;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_pass unix:/run/phpfpm/nextcloud.sock;
-            fastcgi_buffering on;
-            fastcgi_buffers 8 8k;
-            fastcgi_busy_buffers_size 16k;
-          }
-        '';
       };
       "office.schwennesen.org" = {
         listen = [
@@ -69,6 +65,7 @@
       enable = true;
       package = pkgs.nextcloud29;
       hostName = "cloud.schwennesen.org";
+      webserver = "nginx";
 
       https = true;
 
@@ -102,7 +99,7 @@
       extraApps = with config.services.nextcloud.package.packages.apps; {
         # List of apps we want to install and are already packaged in
         # https://github.com/NixOS/nixpkgs/blob/master/pkgs/servers/nextcloud/packages/nextcloud-apps.json
-        inherit calendar contacts mail notes tasks onlyoffice forms;
+        inherit calendar notes tasks onlyoffice forms;
 
         # Custom app installation example.
         # integration_excalidraw = pkgs.fetchNextcloudApp {
