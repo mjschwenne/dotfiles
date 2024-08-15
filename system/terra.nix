@@ -103,6 +103,9 @@
           "mercury" = {
             id = "SVMWORW-JCZ26YN-7P77FJC-YYUNZ46-3PXZZQH-TMZGH5F-LD3TVJ4-XEVQMAE";
           };
+          "enceladus" = {
+            id = "DVP6EYQ-22EPU7T-A7UYHCB-5H7SQKS-5Q32KE7-NCZPQAC-TAFXCWS-TDOOHAW";
+          };
         };
 
         folders = {
@@ -112,11 +115,11 @@
           };
           "zotero" = {
             path = "/home/mjs/Zotero/storage";
-            devices = ["sol" "luna" "mars"];
+            devices = ["sol" "luna" "mars" "enceladus" "mercury"];
           };
           "kdb" = {
             path = "/home/mjs/kdb";
-            devices = ["sol" "luna" "mercury" "mars"];
+            devices = ["sol" "luna" "mercury" "mars" "enceladus"];
           };
           "emulator" = {
             path = "/home/mjs/workspace/emulation";
