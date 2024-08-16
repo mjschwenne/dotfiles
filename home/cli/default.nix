@@ -24,6 +24,10 @@
       enable = true;
       userName = "Matt Schwennesen";
       userEmail = "mjschwenne@gmail.com";
+      extraConfig = {
+        diff.tool = "nvimdiff";
+        merge.tool = "nvimdiff";
+      };
     };
 
     direnv = {
