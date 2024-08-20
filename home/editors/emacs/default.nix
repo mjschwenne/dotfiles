@@ -15,8 +15,7 @@
       # NB: Config files cannot contain unicode characters, since
       #     they're being parsed in nix, which lacks unicode
       #     support.
-      # config = ./emacs.org;
-      config = ./init.el;
+      config = ./mjs/init.el;
 
       # Whether to include your config as a default init file.
       # If being bool, the value of config is used.
@@ -76,16 +75,19 @@
   ];
 
   home.file = {
-    ".emacs.d/init.el".source = ./init.el;
-    ".emacs.d/rose-pine-theme.el".source = ./rose-pine-theme.el;
-    ".emacs.d/snippets" = {
-      source = ./snippets;
+    ".config/emacs-config/mjs/init.el".source = ./mjs/init.el;
+    ".config/emacs-config/mjs/snippets" = {
+      source = ./mjs/snippets;
       recursive = true;
     };
-    ".emacs.d/autoloads" = {
-      source = ./autoloads;
+    ".config/emacs-config/mjs/autoloads" = {
+      source = ./mjs/autoloads;
       recursive = true;
     };
-    ".emacs.d/logo.webp".source = ./emacs.webp;
+    ".config/emacs-config/mjs/logo.webp".source = ./mjs/emacs.webp;
+    ".config/emacs-config/doom-config" = {
+      source = ./doom;
+      recursive = true;
+    };
   };
 }

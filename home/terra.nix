@@ -26,5 +26,8 @@
     # Audio
     audacity
     ardour
+
+    # Networking
+    qbittorrent
   ];
 }

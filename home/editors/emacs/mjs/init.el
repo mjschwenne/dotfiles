@@ -43,10 +43,10 @@
 (add-to-list 'default-frame-alist '(alpha-background . 80))
 
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
-(add-to-list 'load-path "/home/mjs/.emacs.d/autoloads/")
+(add-to-list 'load-path "/home/mjs/.config/emacs-configs/mjs/autoloads/")
 (loaddefs-generate
- "/home/mjs/.emacs.d/autoloads"
- "/home/mjs/.emacs.d/autoloads/auto.el")
+ "/home/mjs/.config/emacs-configs/mjs/autoloads"
+ "/home/mjs/.config/emacs-configs/mjs/autoloads/auto.el")
 (require 'auto)
 
 (use-package diminish
@@ -458,7 +458,7 @@
             "a" #'dashboard-jump-to-agenda
             "r" #'dashboard-jump-to-recents)
   :custom
-  (dashboard-startup-banner "~/.emacs.d/logo.webp")
+  (dashboard-startup-banner "~/.config/emacs-configs/mjs/logo.webp")
   (dashboard-display-icons-p t)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-set-navigator t)
@@ -1915,7 +1915,7 @@ used if TAG-LIST is empty."
          (org-mode . yas-minor-mode)
          (post-self-insert . mjs/yas-try-expanding-auto-snippets))
   :custom (yas-triggers-in-field t)
-  (yas-snippets-dirs '("~/.emacs.d/snippets"))
+  (yas-snippets-dirs '("~/.config/emacs-configs/mjs/snippets"))
   (yas-verbosity 4)
   :config (use-package warnings
             :ensure nil

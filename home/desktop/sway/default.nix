@@ -29,10 +29,10 @@
         "type:keyboard" = {
           "xkb_options" = "ctrl:nocaps";
         };
-        "1386:967:Wacom_Intuos_BT_M_Pen" = {
+        "1386:968:Wacom_Intuos_BT_M_Pen" = {
           "map_to_output" =
             if osConfig.networking.hostName == "terra"
-            then "DP-3"
+            then "DP-4"
             else "eDP-1";
         };
       };
