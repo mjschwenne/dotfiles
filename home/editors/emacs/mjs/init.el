@@ -9,7 +9,6 @@
 (setq use-package-verbose t
 	  use-package-always-defer t
 	  use-package-always-ensure t
-	  use-package-expand-minimally t
 	  use-package-compute-statistics t
 	  use-package-enable-imenu-support t)
 
@@ -36,17 +35,17 @@
 (use-package catppuccin-theme
   :defer nil
   :custom (catppuccin-flavor 'mocha)
-  :config (load-theme 'catppuccin t))
+  :config (require 'catppuccin-theme) (load-theme 'catppuccin t))
 
 (set-frame-parameter nil 'alpha-background 80)
 
 (add-to-list 'default-frame-alist '(alpha-background . 80))
 
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
-(add-to-list 'load-path "/home/mjs/.config/emacs-configs/mjs/autoloads/")
+(add-to-list 'load-path (expand-file-name "autoloads" user-emacs-directory))
 (loaddefs-generate
- "/home/mjs/.config/emacs-configs/mjs/autoloads"
- "/home/mjs/.config/emacs-configs/mjs/autoloads/auto.el")
+  (expand-file-name "autoloads" user-emacs-directory)
+  (expand-file-name "autoloads/auto.el" user-emacs-directory))
 (require 'auto)
 
 (use-package diminish
@@ -54,9 +53,10 @@
 
 (use-package which-key
   :diminish which-key-mode
-  :init (which-key-mode 1))
+  :init (require 'which-key) (which-key-mode 1))
 
 (use-package general :defer nil :config
+  (require 'general)
   (general-evil-setup)
   (general-auto-unbind-keys)
   (general-create-definer mjs-leader-def
@@ -79,7 +79,7 @@
            (evil-echo-state nil)
            (evil-undo-system 'undo-redo)
            (evil-want-C-u-scroll t))
-  :init (evil-mode 1)
+  :init (require 'evil) (evil-mode 1)
   :config
   ;; Make evil search similar to vim
   (evil-select-search-module 'evil-search-module 'evil-search)
@@ -116,7 +116,7 @@
   :after evil
   :diminish evil-collection-unimpaired-mode
   :custom (evil-collection-setup-minibuffer t)
-  :init (evil-collection-init))
+  :init (require 'evil-collection) (evil-collection-init))
 
 (use-package evil-args
   :after evil
@@ -152,7 +152,7 @@
   :after evil
   :diminish evil-escape-mode
   :custom (evil-escape-key-sequence "jk")
-  :init (evil-escape-mode))
+  :init (require 'evil-escape) (evil-escape-mode))
 
 (use-package evil-exchange
   :after evil
@@ -161,7 +161,7 @@
 (use-package evil-goggles
   :after evil
   :diminish evil-goggles-mode
-  :init (evil-goggles-mode 1))
+  :init (require 'evil-goggles) (evil-goggles-mode 1))
 
 (use-package evil-indent-plus
   :after evil
@@ -191,7 +191,7 @@
   :diminish evil-snipe-local-mode
   :custom ((evil-snipe-smart-case t)
            (evil-snipe-tab-increment t))
-  :init (evil-snipe-mode +1)
+  :init (require 'evil-snipe) (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
 
 (use-package evil-visualstar
@@ -340,7 +340,7 @@
   :hook prog-mode)
 
 (use-package telephone-line
-  :init (telephone-line-defsegment* mjs/popup-segment ()
+  :init (require 'telephone-line) (telephone-line-defsegment* mjs/popup-segment ()
           (cond ((not (boundp 'popper-popup-status)) "")
                 ((eq popper-popup-status 'popup) "POPUP")
                 ((eq popper-popup-status 'raised) "RAISED")
@@ -438,7 +438,7 @@
 
 (use-package vi-tilde-fringe
   :diminish vi-tilde-fringe-mode
-  :init (global-vi-tilde-fringe-mode))
+  :init (require 'vi-tilde-fringe) (global-vi-tilde-fringe-mode))
 
 (use-package nerd-icons)
 
@@ -449,6 +449,7 @@
                        (not (org-in-archived-heading-p))
                        (string= (org-get-todo-state) "NEXT"))
             (point)))
+  (require 'dashboard)
   (dashboard-setup-startup-hook)
   (mjs-leader-def :keymaps 'override
     "D" '("Open Dashboard" . dashboard-open))
@@ -458,7 +459,7 @@
             "a" #'dashboard-jump-to-agenda
             "r" #'dashboard-jump-to-recents)
   :custom
-  (dashboard-startup-banner "~/.config/emacs-configs/mjs/logo.webp")
+  (dashboard-startup-banner (expand-file-name "logo.webp" user-emacs-directory))
   (dashboard-display-icons-p t)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-set-navigator t)
@@ -501,7 +502,8 @@
                            (mode . (helpful-mode help-mode))
                            (direction . right)
                            (window-width 0.5))))
-  :init (popper-mode +1)
+  :init (require 'popper) (popper-mode +1)
+  (require 'popper-echo)
   (popper-echo-mode +1)
   (mjs-leader-def :keymaps 'override
 	"p" '(nil :which-key "Popup")
@@ -550,6 +552,7 @@
   ;; While my understanding is that this should go in the :config
   ;; section, it doesn't seem to actually cause the mode to be
   ;; properly enabled when called from that section for some reason.
+  (require 'vertico)
   (vertico-mode)
   (savehist-mode)
   (general-define-key :keymaps 'vertico-map :states '(insert normal visual motion)
@@ -576,12 +579,12 @@
 (use-package vertico-reverse
   :after vertico
   :ensure nil
-  :init (vertico-reverse-mode))
+  :init (require 'vertico-reverse) (vertico-reverse-mode))
 
 (use-package marginalia
   :general (:keymaps 'minibuffer-local-map
                      "M-A" #'marginalia-cycle)
-  :init (marginalia-mode))
+  :init (require 'marginalia) (marginalia-mode))
 
 (use-package nerd-icons-completion
   :config (nerd-icons-completion-mode))
@@ -660,7 +663,7 @@
                      [tab] #'corfu-next
                      "S-TAB" #'corfu-previous
                      [backtab] #'corfu-previous)
-  :init (global-corfu-mode))
+  :init (require 'corfu) (global-corfu-mode))
 
 (use-package cape
   :after corfu
@@ -1915,7 +1918,7 @@ used if TAG-LIST is empty."
          (org-mode . yas-minor-mode)
          (post-self-insert . mjs/yas-try-expanding-auto-snippets))
   :custom (yas-triggers-in-field t)
-  (yas-snippets-dirs '("~/.config/emacs-configs/mjs/snippets"))
+  (yas-snippets-dirs '((expand-file-name "snippets" user-emacs-directory)))
   (yas-verbosity 4)
   :config (use-package warnings
             :ensure nil
@@ -2098,6 +2101,7 @@ used if TAG-LIST is empty."
   :general (mjs-leader-def :keymaps 'override
              "d" '("Direnv Allow" . direnv-allow))
   :init
+  (require 'direnv)
   (direnv-mode))
 
 (use-package sly

@@ -3,91 +3,94 @@
   pkgs,
   builtins,
   ...
-} @ inputs: {
+} @ inputs: let
+  emacs = pkgs.emacsWithPackagesFromUsePackage {
+    # Your Emacs config file. Org mode babel files are also
+    # supported.
+    # NB: Config files cannot contain unicode characters, since
+    #     they're being parsed in nix, which lacks unicode
+    #     support.
+    config = ./mjs/init.el;
+
+    # Whether to include your config as a default init file.
+    # If being bool, the value of config is used.
+    # Its value can also be a derivation like this if you want to do some
+    # substitution:
+    #   defaultInitFile = pkgs.substituteAll {
+    #     name = "default.el";
+    #     src = ./emacs.el;
+    #     inherit (config.xdg) configHome dataHome;
+    #   };
+    defaultInitFile = false;
+
+    # Package is optional, defaults to pkgs.emacs
+    package = pkgs.emacs-unstable-pgtk.override {};
+
+    # By default emacsWithPackagesFromUsePackage will only pull in
+    # packages with `:ensure`, `:ensure t` or `:ensure <package name>`.
+    # Setting `alwaysEnsure` to `true` emulates `use-package-always-ensure`
+    # and pulls in all use-package references not explicitly disabled via
+    # `:ensure nil` or `:disabled`.
+    # Note that this is NOT recommended unless you've actually set
+    # `use-package-always-ensure` to `t` in your config.
+    alwaysEnsure = true;
+
+    # For Org mode babel files, by default only code blocks with
+    # `:tangle yes` are considered. Setting `alwaysTangle` to `true`
+    # will include all code blocks missing the `:tangle` argument,
+    # defaulting it to `yes`.
+    # Note that this is NOT recommended unless you have something like
+    # `#+PROPERTY: header-args:emacs-lisp :tangle yes` in your config,
+    # which defaults `:tangle` to `yes`.
+    alwaysTangle = true;
+
+    override = epkgs:
+      epkgs
+      // {
+        org-timeblock = pkgs.callPackage ./org-timeblock.nix {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) trivialBuild org-ql persist;
+        };
+        calfw-blocks = pkgs.callPackage ./calfw-blocks.nix {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) trivialBuild calfw calfw-org;
+        };
+        # org-auctex = pkgs.callPackage ./org-auctex.nix {
+        #   inherit (epkgs) trivialBuild auctex;
+        # };
+      };
+
+    # Optionally provide extra packages not in the configuration file.
+    extraEmacsPackages = epkgs: [
+      epkgs.org-timeblock
+      epkgs.calfw-blocks
+      epkgs.autothemer
+    ];
+  };
+in {
   nixpkgs.overlays = [
     inputs.emacs-overlay.overlay
   ];
 
   home.packages = [
-    (pkgs.emacsWithPackagesFromUsePackage {
-      # Your Emacs config file. Org mode babel files are also
-      # supported.
-      # NB: Config files cannot contain unicode characters, since
-      #     they're being parsed in nix, which lacks unicode
-      #     support.
-      config = ./mjs/init.el;
-
-      # Whether to include your config as a default init file.
-      # If being bool, the value of config is used.
-      # Its value can also be a derivation like this if you want to do some
-      # substitution:
-      #   defaultInitFile = pkgs.substituteAll {
-      #     name = "default.el";
-      #     src = ./emacs.el;
-      #     inherit (config.xdg) configHome dataHome;
-      #   };
-      defaultInitFile = false;
-
-      # Package is optional, defaults to pkgs.emacs
-      package = pkgs.emacs-unstable-pgtk.override {};
-
-      # By default emacsWithPackagesFromUsePackage will only pull in
-      # packages with `:ensure`, `:ensure t` or `:ensure <package name>`.
-      # Setting `alwaysEnsure` to `true` emulates `use-package-always-ensure`
-      # and pulls in all use-package references not explicitly disabled via
-      # `:ensure nil` or `:disabled`.
-      # Note that this is NOT recommended unless you've actually set
-      # `use-package-always-ensure` to `t` in your config.
-      alwaysEnsure = true;
-
-      # For Org mode babel files, by default only code blocks with
-      # `:tangle yes` are considered. Setting `alwaysTangle` to `true`
-      # will include all code blocks missing the `:tangle` argument,
-      # defaulting it to `yes`.
-      # Note that this is NOT recommended unless you have something like
-      # `#+PROPERTY: header-args:emacs-lisp :tangle yes` in your config,
-      # which defaults `:tangle` to `yes`.
-      alwaysTangle = true;
-
-      override = epkgs:
-        epkgs
-        // {
-          org-timeblock = pkgs.callPackage ./org-timeblock.nix {
-            inherit (pkgs) fetchFromGitHub;
-            inherit (epkgs) trivialBuild org-ql persist;
-          };
-          calfw-blocks = pkgs.callPackage ./calfw-blocks.nix {
-            inherit (pkgs) fetchFromGitHub;
-            inherit (epkgs) trivialBuild calfw calfw-org;
-          };
-          # org-auctex = pkgs.callPackage ./org-auctex.nix {
-          #   inherit (epkgs) trivialBuild auctex;
-          # };
-        };
-
-      # Optionally provide extra packages not in the configuration file.
-      extraEmacsPackages = epkgs: [
-        epkgs.org-timeblock
-        epkgs.calfw-blocks
-        epkgs.autothemer
-      ];
-    })
+    emacs
   ];
 
   home.file = {
-    ".config/emacs-config/mjs/init.el".source = ./mjs/init.el;
-    ".config/emacs-config/mjs/snippets" = {
-      source = ./mjs/snippets;
+    ".config/emacs-configs/mjs" = {
+      source = ./mjs;
       recursive = true;
     };
-    ".config/emacs-config/mjs/autoloads" = {
-      source = ./mjs/autoloads;
-      recursive = true;
-    };
-    ".config/emacs-config/mjs/logo.webp".source = ./mjs/emacs.webp;
-    ".config/emacs-config/doom-config" = {
+    ".config/emacs-configs/doom-config" = {
       source = ./doom;
       recursive = true;
     };
+    ".emacs-profiles.el".text = ''
+      (("mjs" . ((user-emacs-directory . "~/.config/emacs-configs/mjs/")
+                (nix-elisp-bundle . "${emacs.deps}")
+                (straight-p . nil)))
+       ("default" . ((user-emacs-directory . "~/.config/emacs-configs/doom/")
+      			(env . (("DOOMDIR" . "~/.config/emacs-configs/doom-config/"))))))
+    '';
   };
 }
