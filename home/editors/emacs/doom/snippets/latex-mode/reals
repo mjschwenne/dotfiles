@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: \R
+# name: Real Numbers
+# condition: (and (texmathp) (quote auto))
+# group: math
+# --
+\\mathbb{R} $0

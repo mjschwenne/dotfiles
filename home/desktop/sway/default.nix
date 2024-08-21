@@ -114,49 +114,49 @@
         };
       bars = [];
       colors = let
-        base = "#1e1e2e";
-        crust = "#11111b";
-        red = "#f38ba8";
-        peach = "#fab387";
-        yellow = "#f9e2af";
-        green = "#a6e3a1";
-        sapphire = "#74c7ec";
-        text = "#cdd6f4";
+        base = "#2e3440";
+        dark = "#2e3440";
+        red = "#bf616a";
+        orange = "#d08770";
+        yellow = "#ebcb8b";
+        green = "#a3be8c";
+        blue = "#5e81ac";
+        text = "#d8dee9";
       in {
-        background = crust;
+        background = dark;
         focused = {
           background = green;
           border = green;
           childBorder = green;
-          indicator = sapphire;
+          indicator = blue;
           text = base;
         };
         focusedInactive = {
-          background = peach;
-          border = peach;
-          childBorder = peach;
-          indicator = sapphire;
+          background = orange;
+          border = orange;
+          childBorder = orange;
+          indicator = blue;
           text = base;
         };
         placeholder = {
-          background = crust;
+          background = dark;
           border = base;
           childBorder = base;
-          indicator = sapphire;
+          indicator = blue;
           text = text;
         };
         unfocused = {
           background = yellow;
           border = yellow;
           childBorder = yellow;
-          indicator = sapphire;
+          indicator = blue;
           text = base;
         };
         urgent = {
           background = red;
           border = red;
           childBorder = red;
-          indicator = sapphire;
+          indicator = blue;
           text = base;
         };
       };

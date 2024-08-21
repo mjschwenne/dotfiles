@@ -9,8 +9,8 @@ in {
 
   programs.spicetify = {
     enable = true;
-    theme = spicePkgs.themes.catppuccin;
-    colorScheme = "mocha";
+    theme = spicePkgs.themes.comfy;
+    colorScheme = "Nord";
     windowManagerPatch = true;
   };
 

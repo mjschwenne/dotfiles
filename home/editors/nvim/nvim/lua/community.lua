@@ -21,5 +21,5 @@ return {
   { import = "astrocommunity.pack.rust" },
 
   -- Appearances
-  { import = "astrocommunity.colorscheme.catppuccin" },
+  { import = "astrocommunity.colorscheme.nord-nvim" },
 }

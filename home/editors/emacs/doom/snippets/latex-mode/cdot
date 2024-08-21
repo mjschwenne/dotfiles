@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: cdot
+# key: **
+# condition: (and (texmathp) 'auto)
+# group: math
+# --
+\\cdot

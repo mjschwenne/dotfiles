@@ -56,8 +56,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    catppuccin.url = "github:catppuccin/nix";
-
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -92,7 +90,6 @@
   outputs = {
     nixpkgs,
     home-manager,
-    catppuccin,
     kmonad,
     sops-nix,
     nixos-hardware,
@@ -142,7 +139,6 @@
           };
         modules = [
           sops-nix.nixosModules.sops
-          catppuccin.nixosModules.catppuccin
           kmonad.nixosModules.default
           ./system/terra.nix
 
@@ -183,7 +179,6 @@
           };
         modules = [
           sops-nix.nixosModules.sops
-          catppuccin.nixosModules.catppuccin
           kmonad.nixosModules.default
           ./system/mars.nix
 
@@ -225,7 +220,6 @@
         modules = [
           nixos-hardware.nixosModules.microsoft-surface-pro-intel
           sops-nix.nixosModules.sops
-          catppuccin.nixosModules.catppuccin
           kmonad.nixosModules.default
           ./system/luna.nix
 
@@ -263,7 +257,6 @@
           };
         modules = [
           sops-nix.nixosModules.sops
-          catppuccin.nixosModules.catppuccin
           kmonad.nixosModules.default
           ./system/sol.nix
 

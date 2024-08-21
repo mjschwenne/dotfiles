@@ -49,8 +49,16 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
 
-(package! org-fragtog)
-(package! olivetti)
-(package! vulpea)
 (package! rainbow-mode)
+
+;; Org-mode appearance
+(package! olivetti)
 (package! org-modern)
+
+;; Org-mode behavior
+(package! org-fragtog)
+(package! vulpea)
+
+;; Org-mode citations
+(package! citar)
+(package! citar-embrak)

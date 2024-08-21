@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# contributor: Matt Schwennesen <matt@schwennesen.org>
+# key: \C
+# group: math
+# condition: 'auto
+# name: complexity class
+# --
+\mathcalC$0

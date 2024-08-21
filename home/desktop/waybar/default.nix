@@ -239,39 +239,29 @@
     };
     # Style for all devices
     style = let
-      base = "#1e1e2e";
-      mantle = "#181825";
-      crust = "#11111b";
-      text = "#cdd6f4";
-      subtext0 = "#a6adc8";
-      subtext1 = "#bac2de";
-      surface0 = "#313244";
-      surface1 = "#45475a";
-      surface2 = "#585b70";
-      overlay0 = "#6c7086";
-      overlay1 = "#7f849c";
-      overlay2 = "#9399b2";
-      blue = "#89b4fa";
-      lavender = "#b4befe";
-      sapphire = "#74c7ec";
-      sky = "#89dceb";
-      teal = "#94e2d5";
-      green = "#a6e3a1";
-      yellow = "#f9e2af";
-      peach = "#fab387";
-      maroon = "#eba0ac";
-      red = "#f38ba8";
-      mauve = "#cba6f7";
-      pink = "#f5c2e7";
-      flamingo = "#f2cdcd";
-      rosewater = "#f5e0dc";
+      nord0 = "#2e3440";
+      nord1 = "#3b4252";
+      nord2 = "#434c5e";
+      nord3 = "#4c566a";
+      nord4 = "#d8dee9";
+      nord5 = "#e5e9f0";
+      nord6 = "#eceff4";
+      nord7 = "#8fbcbb";
+      nord8 = "#88c0d0";
+      nord9 = "#81a1c1";
+      nord10 = "#5e81ac";
+      nord11 = "#bf616a";
+      nord12 = "#d08770";
+      nord13 = "#ebcb8b";
+      nord14 = "#a3be8c";
+      nord15 = "#b48ead";
     in
       /*
       css
       */
       ''
         * {
-            color: ${text};
+            color: ${nord4};
             border: 0;
             padding: 0 0;
             font-family: "JetBrains Mono Nerd Font";
@@ -282,12 +272,11 @@
         }
 
         window#waybar.solo {
-            /* Mocha, but translucent */
-            background-color: alpha(${mantle}, 0.7);
+            background-color: alpha(${nord0}, 0.9);
         }
 
         #workspaces {
-            background-color: ${base};
+            background-color: ${nord1};
             margin: 5px;
             border-radius: 15px;
             padding: 0px 15px;
@@ -295,66 +284,67 @@
 
         #workspaces button {
             border-radius: 0px;
-            background-color: ${base};
-            color: ${peach};
-            border-bottom: 3px solid ${peach};
+            background-color: ${nord1};
+            color: ${nord12};
+            border-bottom: 3px solid ${nord12};
+            padding: 0px 10px;
         }
 
         #workspaces button.visible {
-            color: ${yellow};
-            border-bottom: 3px solid ${yellow};
+            color: ${nord13};
+            border-bottom: 3px solid ${nord13};
         }
 
         #workspaces button.active,
         #workspaces button.focused {
-            color: ${blue};
-            border-bottom: 3px solid ${blue};
+            color: ${nord9};
+            border-bottom: 3px solid ${nord9};
         }
 
         #workspaces button.persistent
         {
-            color: ${text};
-            border-bottom: 3px solid ${base};
+            color: ${nord4};
+            border-bottom: 3px solid ${nord1};
         }
 
         #tray {
-            background-color: ${base};
+            background-color: ${nord1};
             border-radius: 15px 15px 15px 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mode {
-            background-color: ${base};
+            background-color: ${nord1};
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mpris {
-            background-color: ${base};
+            background-color: ${nord1};
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mpris.spotify {
-            color: ${green};
+            color: ${nord14};
         }
 
         #window {
             margin: 5px;
-            background-color: ${base};
+            background-color: ${nord1};
             padding: 0px 15px;
             border-radius: 15px;
         }
 
         window#waybar.empty #window {
-        	background: rgba(12, 12, 12, 0.0);
+        	background: rgba(46, 52, 64, 0.0);
         }
 
         .modules-right {
-            background-color: ${base};
+            background-color: ${nord1};
             margin: 5px;
             border-radius: 15px;
             padding: 0px 15px 0px 15px;
@@ -368,55 +358,57 @@
         }
 
         #privacy {
-            background-color: ${base};
+            background-color: ${nord1};
             padding: 0px 5px 0px 0px;
         }
 
         #clock {
-            background-color: ${base};
-            color: ${mauve};
+            background-color: ${nord1};
+            color: ${nord8};
             padding: 0px 5px 0px 5px;
         }
 
         #memory {
-            background-color: ${base};
-            color: ${sky};
+            background-color: ${nord1};
+            color: ${nord15};
             padding: 0px 5px 0px 5px;
         }
 
         #cpu {
-            background-color: ${base};
+            background-color: ${nord1};
             padding: 0px 5px 0px 5px;
         }
 
         #network {
-            background-color: ${base};
-            color: ${pink};
+            background-color: ${nord1};
+            color: ${nord7};
             padding: 0px 5px 0px 5px;
         }
 
         #bluetooth {
-            background-color: ${base};
-            color: ${blue};
+            background-color: ${nord1};
+            color: ${nord10};
             padding: 0px 5px 0px 5px;
         }
 
         #battery {
-            background-color: ${base};
+            background-color: ${nord1};
             padding: 0px 5px 0px 5px;
         }
 
         #battery.warning {
-            background-color: ${peach};
+            background-color: ${nord13};
+            color: ${nord1};
         }
 
         #battery.critical {
-            background-color: ${red};
+            background-color: ${nord11};
+            color: ${nord1};
         }
 
         #idle_inhibitor {
-            background-color: ${base};
-            color: ${peach};
+            background-color: ${nord1};
+            color: ${nord11};
             padding: 0px 0px 0px 5px;
         }
       '';

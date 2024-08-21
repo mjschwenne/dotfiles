@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# contributor: Matt Schwennesen <matt@schwennesen.org>
+# key: \R
+# group: math
+# condition: 'auto
+# name: Real Numbers
+# --
+\mathbbR$0

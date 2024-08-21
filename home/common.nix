@@ -22,7 +22,6 @@
   };
 
   imports = [
-    inputs.catppuccin.homeManagerModules.catppuccin
     ./cli
 
     # Neovim config

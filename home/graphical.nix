@@ -126,26 +126,25 @@ in {
     };
   };
 
-  catppuccin = {
-    enable = true;
-    flavor = "mocha";
-    accent = "pink";
-    pointerCursor = {
-      enable = true;
-      accent = "dark";
-    };
-  };
-
   gtk = {
     enable = true;
-    catppuccin = {
-      enable = true;
-      icon.enable = true;
+    theme = {
+      name = "Nordic";
+      package = pkgs.nordic;
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-nord;
     };
     font = {name = "JetBrainsMono Nerd Font";};
     gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
   };
+  home.pointerCursor = {
+    name = "Nordzy-cursors";
+    package = pkgs.nordzy-cursor-theme;
+  };
   home.sessionVariables = {
+    GTK_THEME = "Nordic";
     GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
     MOZ_ENABLE_DBUS = 1;
   };
@@ -155,13 +154,9 @@ in {
     platformTheme.name = "kvantum";
     style = {
       name = "kvantum";
-      catppuccin = {
-        enable = true;
-        apply = true;
-      };
+      package = pkgs.libsForQt5.qtstyleplugin-kvantum;
     };
   };
-
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
 
@@ -178,6 +173,10 @@ in {
       "distrobox/distrobox.conf".text = ''
         container_additional_volumes="/nix/store:/nix/store:ro /etc/profiles/per-user/mjs:/etc/profiles/per-user/mjs:ro /etc/static/profiles/per-user/mjs:/etc/static/profiles/per-user/mjs:ro /run/secrets:/run/secrets:ro"
       '';
+      "Kvantum/Nord" = {
+        source = ./desktop/qt/Nord;
+        recursive = true;
+      };
     };
     mimeApps = {
       enable = true;

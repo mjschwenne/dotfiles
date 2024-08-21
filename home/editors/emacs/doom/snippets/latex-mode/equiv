@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: equiv
+# key: eqv
+# condition: (and (texmathp) 'auto)
+# --
+\\equiv$0

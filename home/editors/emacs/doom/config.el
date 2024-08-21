@@ -54,18 +54,10 @@
 
 ;; Make evil-snipe search the whole buffer by default
 (customize-set-variable 'evil-snipe-scope 'buffer)
-(customize-set-variable 'evil-want-C-u-scroll nil)
+(customize-set-variable 'evil-want-C-u-scroll t)
 
 ;; Configuration for Built-in Modes
 
-(add-hook 'org-mode-hook 'auto-fill-mode)
-;; Image previewing in org mode
-(customize-set-variable 'org-startup-with-inline-images t)
-;; Normally, this would be set with `customize-set-variable`, but DOOM Emacs has a function
-;; which is loaded as part of their org initialization which overrides this variable.
-;; While I could change that, I want to be able to pull the DOOM repo without issue so
-;; I'm using advice to update that value after anytime the function in question is called.
-(advice-add '+org-init-appearance-h :after (lambda () (customize-set-variable 'org-image-actual-width '(600))))
 ;; The default font scaling for org-tree-slide is one step too large. The defualt value is 5
 ;; so we should set it to 4.
 (customize-set-variable '+org-present-text-scale 4)
@@ -101,36 +93,192 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+(setq confirm-kill-emacs nil)
+
+;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
+(add-to-list 'load-path (expand-file-name "autoloads" doom-user-dir))
+(loaddefs-generate
+ (expand-file-name "autoloads" doom-user-dir)
+ (expand-file-name "autoloads/auto.el" doom-user-dir))
+(require 'auto)
 
 (after! vertico
   (setq vertico-resize t)
   (vertico-reverse-mode t))
 
+(use-package! org
+  :after org
+  :custom ((org-entities-user
+            '(("mathcalC" "\\mathcal{C}" nil "&x1D49E" "C" "C" "𝒞")
+              ("mathbbE" "\\mathbb{E}" nil "&x1D53C" "E" "E" "𝔼")
+              ("mathcalF" "\\mathcal{F}" nil "&x1D4D5" "F" "F" "𝓕")
+              ("mathbbN" "\\mathbb{N}" nil "&x2115" "N" "N" "ℕ")
+              ("mathcalO" "\\mathcal{O}" nil "&x1D4AA" "O" "O" "𝒪")
+              ("mathbbP" "\\mathbb{P}" nil "&x2119" "P" "P" "ℙ")
+              ("mathbbR" "\\mathbb{R}" nil "&x211D" "R" "R" "ℝ")
+              ("subsetneqq" "\\subsetneqq" nil "&x2ACB" "subsetneqq" "subsetneqq" "⫋")
+              ("supseteq" "\\supseteq" nil "&x2287" "supseteq" "supseteq" "⊇")
+              ("bot" "\\bot" nil "&x22A5" "_|_" "_|_" "⊥")
+              ("top" "\\top" nil "&x22A4" "T" "T" "⊤")
+              ("lightning" "\\lightning" nil "&x21AF" "</" "</" "↯")
+              ("qed" "\\qedsymbol" nil "&x25A1" "[]" "[]" "☐")))
+           (org-startup-with-latex-preview t)
+           (org-preview-latex-default-process 'dvisvgm)
+           (org-startup-align-all-tables t)
+           (org-startup-folded 'showall)
+           (org-startup-with-inline-images t)
+           (org-image-actual-width 600)
+           (org-ellipsis " ▾")
+           (org-agenda-start-with-log-mode t)
+           (org-log-done 'time)
+           (org-log-into-drawer t)
+           (org-treat-insert-todo-heading-as-state-change t)
+           (org-agenda-start-day nil)
+           (org-agenda-hide-tags-regexp ".")
+           (org-agenda-files (list (concat org-directory "agenda/")))
+           (org-agenda-custom-commands
+            '(("d" "MJS Daily"
+               ((agenda* ""
+                         ((org-agenda-log-mode-items '(closed clock))
+                          (org-deadline-warning-days 0)
+                          (org-agenda-span 1)))
+                (tags-todo "DEADLINE<=\"<+14d>\""
+                           ((org-agenda-entry-types '(:deadline))
+                            (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'deadline)] ")
+                            (org-agenda-skip-function
+                             '(org-agenda-skip-entry-if 'notregexp "\\*+ \\(NEXT\\|TODO\\)"))
+                            (org-agenda-overriding-header "\nDeadlines\n")))
+                (tags "SCHEDULED<=\"<today>\"-TODO=\"DONE\"-TODO=\"KILL\"-STYLE=\"habit\""
+                      ((org-agenda-overriding-header "\nScheduled\n")
+                       (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'scheduled)] ")))
+                (tags "STYLE=\"habit\"" ((org-agenda-overriding-header "\nHabits\n")))
+                (todo "NEXT"
+                      ((org-agenda-prefix-format " %i %-12:c [%e] ")
+                       (org-agenda-overriding-header "\nTasks\n")))
+                (tags-todo "inbox"
+                           ((org-agenda-prefix-format " %?-12t% s")
+                            (org-agenda-overriding-header "\nInbox\n")))
+                (tags "CLOSED>=\"<today>\""
+                      ((org-agenda-overriding-header "\nCompleted today\n")))))))
+           (org-refile-targets '(("projects.org" :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
+           (org-refile-use-outline-path 'file)
+           (org-outline-path-complete-in-steps nil))
+  :hook ((org-mode . auto-fill-mode))
+  :config
+  ;; Regular org capture templates
+  (setq org-capture-templates
+        `(("c" "Class Lecture" plain
+           (function (lambda () (mjs/class-capture)))
+           ,(concat "#+filetags: :%(format mjs--capture-title):\n"
+                    "#+title: %(format mjs--capture-title) (%<%d %B %Y>)\n"
+                    "#+author: %(user-full-name)\n\n%?")
+           :jump-to-captured t
+           :immediate-finish t)
+          ("C" "New Contact" entry
+           (file+headline ,(concat org-directory "contacts.org") "Other")
+           ,(concat
+             "** %(org-contacts-template-name)\n"
+             ":PROPERTIES:\n"
+             ":ADDRESS: %^{Address?}\n"
+             ":BIRTHDAY: %^{yyyy-mm-dd}\n"
+             ":EMAIL: %(org-contacts-template-email)\n"
+             ":NOTE: %?\n"
+             ":END:")
+           :empty-lines 1)
+          ("e" "Etera Session" entry
+           (file "ttrpg/games/etera/notes.org")
+           "\n* Session %<%Y-%m-%d>\n\n%?\n"
+           :jump-to-captured t
+           :immediate-finish t)
+          ("g" "Graves Session" entry
+           (file "ttrpg/games/graves-and-groves/sessions.org")
+           "\n\n* Session %<%Y-%m-%d>\n\n%?\n"
+           :prepend t
+           :jump-to-captured t
+           :immediate-finish t)
+          ("i" "Inbox" entry
+           (file "agenda/inbox.org")
+           ,(concat "* TODO %?\n"
+                    "/Entered on/ %U")
+           :empty-lines 1
+           :prepend t)
+          ("m" "Meeting" entry
+           (file+headline "agenda/agenda.org" "Future")
+           ,(concat "* %? :meeting:\n"
+                    "SCHEDULED: %^{Meeting Time}T"))
+          ("n" "Meeting Notes" entry
+           (file "agenda/notes.org")
+           ,(concat "* Notes (%a)\n"
+                    "/Entered on/ %U\n\n%?"))
+          ("o" "Obscured Realms Session" entry
+           (file "ttrpg/games/obscured-realms/sessions.org")
+           "\n* Session %<%Y-%m-%d>\n\n%?"
+           :jump-to-captured t
+           :immediate-finish t)))
+  ;; Load build-in org modules
+  (add-to-list 'org-modules 'org-habit t)
+  (advice-add #'org-agenda-finalize :before #'mjs/org-agenda-mark-habits)
+  (add-to-list 'org-modules 'org-tempo t)
+
+  ;; Load some helpful latex pacakges for all latex fragments
+  (add-to-list 'org-latex-packages-alist '("" "sfmath" t))
+  (add-to-list 'org-latex-packages-alist '("margin=1in" "geometry" t))
+  (add-to-list 'org-latex-packages-alist '("" "parskip" t))
+  (add-to-list 'org-latex-packages-alist '("" "nicematrix" t))
+  (add-to-list 'org-latex-packages-alist '("" "amsthm" t))
+  (add-to-list 'org-latex-packages-alist '("" "cancel" t))
+
+  ;; Load babel langagues
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((C . t)
+     (dot . t)
+     (emacs-lisp . t)
+     (latex . t)
+     (python . t)
+     (R . t)
+     (java . t))))
+
+(use-package! org-habit
+  :custom-face
+  (org-habit-ready-face ((t (:background "#8fbcbb"))))
+  (org-habit-ready-future-face ((t (:background "#8fbcbb"))))
+  (org-habit-clear-face ((t (:background "#5e81ac"))))
+  (org-habit-clear-future-face ((t (:background "#5e81ac"))))
+  (org-habit-alert-face ((t (:background "#ebcb8b"))))
+  (org-habit-alert-future-face ((t (:background "#ebcb8b"))))
+  (org-habit-overdue-face ((t (:background "#bf616a"))))
+  (org-habit-overdue-future-face ((t (:background "#bf616a")))))
+
+(use-package! org-tempo
+  :custom (org-structure-template-alist '(("t" . "LaTeX latex")
+                                          ("j" . "src java")
+                                          ("p" . "src python")
+                                          ("sj" . "src javascript")
+                                          ("sh" . "src haskell")
+                                          ("st" . "src latex")
+                                          ("el" . "src emacs-lisp")
+                                          ("cp" . "src cpp")
+                                          ("sC" . "src C")
+                                          ("a" . "export ascii")
+                                          ("c" . "center")
+                                          ("C" . "comment")
+                                          ("e" . "example")
+                                          ("E" . "export")
+                                          ("l" . "export latex")
+                                          ("q" . "quote")
+                                          ("s" . "src")
+                                          ("v" . "verse"))))
+
 (after! org-roam
   (setq org-roam-directory (file-truename org-directory)))
-
-(use-package! olivetti-mode
-  :init (setq olivetti-body-width 100)
-  :hook org-mode)
 
 (use-package! vulpea
   :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-mode)))
 
-(use-package! org
-  :custom (org-entities-user
-           '(("mathcalC" "\\mathcal{C}" nil "&x1D49E" "C" "C" "𝒞")
-             ("mathbbE" "\\mathbb{E}" nil "&x1D53C" "E" "E" "𝔼")
-             ("mathcalF" "\\mathcal{F}" nil "&x1D4D5" "F" "F" "𝓕")
-             ("mathbbN" "\\mathbb{N}" nil "&x2115" "N" "N" "ℕ")
-             ("mathcalO" "\\mathcal{O}" nil "&x1D4AA" "O" "O" "𝒪")
-             ("mathbbP" "\\mathbb{P}" nil "&x2119" "P" "P" "ℙ")
-             ("mathbbR" "\\mathbb{R}" nil "&x211D" "R" "R" "ℝ")
-             ("subsetneqq" "\\subsetneqq" nil "&x2ACB" "subsetneqq" "subsetneqq" "⫋")
-             ("supseteq" "\\supseteq" nil "&x2287" "supseteq" "supseteq" "⊇")
-             ("bot" "\\bot" nil "&x22A5" "_|_" "_|_" "⊥")
-             ("top" "\\top" nil "&x22A4" "T" "T" "⊤")
-             ("lightning" "\\lightning" nil "&x21AF" "</" "</" "↯")
-             ("qed" "\\qedsymbol" nil "&x25A1" "[]" "[]" "☐"))))
+(use-package! olivetti-mode
+  :init (setq olivetti-body-width 100)
+  :hook org-mode)
 
 (use-package! org-appear
   :after org
@@ -144,15 +292,105 @@
                       (add-hook 'evil-insert-state-exit-hook
                                 #'org-appear-manual-stop nil t))))
 
+(use-package! org-fragtog
+  :hook (org-mode . (lambda ()
+                      (add-hook 'evil-insert-state-entry-hook (lambda ()
+                                                                (when (eq major-mode 'org-mode)
+                                                                  (org-fragtog-mode +1))))
+                      (add-hook 'evil-insert-state-exit-hook (lambda ()
+                                                               (when (eq major-mode 'org-mode)
+                                                                 (progn
+                                                                   (org-fragtog-mode -1)
+                                                                   (if (org-inside-LaTeX-fragment-p) (org-latex-preview)))))))))
+
 (use-package! org-modern
   :init (global-org-modern-mode)
   :config (set-face-attribute 'org-modern-done nil
                               :background "#4c566a" :foreground "#eceff4"))
 
+;; Citations
+(use-package! oc
+  :custom ((org-cite-global-bibliograph '("~/Documents/zotero.bib"))
+           (org-cite-csl-styles-dir "~/Zotero/sytles/")
+           (org-cite-export-processors '((latex biblatex)
+                                         (md . (csl "ieee.csl"))
+                                         (t . (csl "ieee.csl")))))
+  :custom-face
+  (org-cite ((t (:foreground "#a3be8c"))))
+  (org-cite-key ((t (:foreground "#a3be8c" :slant italic))))
+  :config
+  (map! :localleader
+        :map org-mode-map
+        :desc "Citation"
+        :n "C" #'org-cite-insert))
+
+(use-package! citar
+  :custom (citar-bibliography org-cite-global-bibliography)
+  :hook ((LaTeX-mode . citar-capf-setup)
+         (org-mode . citar-capf-setup))
+  :config
+  (defvar citar-indicator-files-icon
+    (citar-indicator-create
+     :symbol (nerd-icons-faicon
+              "nf-fa-file_pdf_o"
+              :face 'nerd-icons-lred)
+     :function #'citar-has-files
+     :padding " "
+     :tag "has:files"))
+  (defvar citar-indicator-notes-icon
+    (citar-indicator-create
+     :symbol (nerd-icons-sucicon
+              "nf-custom-orgmode"
+              :face 'nerd-icons-lgreen)
+     :function #'citar-has-notes
+     :padding " "
+     :tag "has:notes"))
+  (defvar citar-indicator-links-icon
+    (citar-indicator-create
+     :symbol (nerd-icons-octicon
+              "nf-oct-link"
+              :face 'nerd-icons-lblue)
+     :function #'citar-has-links
+     :padding " "
+     :tag "has:links"))
+  (defvar citar-indicator-cited-icon
+    (citar-indicator-create
+     :symbol (nerd-icons-octicon
+              "nf-oct-book"
+              :face 'nerd-icons-lred)
+     :function #'citar-is-cited
+     :padding " "
+     :tag "is:cited"))
+  (setq citar-indicators
+        (list citar-indicator-files-icon
+              citar-indicator-notes-icon
+              citar-indicator-links-icon
+              citar-indicator-cited-icon)))
+
+(use-package! citar-org
+  :after oc
+  :custom ((org-cite-insert-processor 'citar)
+           (org-cite-follow-processor 'citar)
+           (org-cite-activate-processor 'citar)))
+
+(use-package! citar-embark
+  :after citar
+  :diminish citar-embark-mode
+  :no-require
+  :init (setq citar-at-point-function 'embark-act)
+  :hook ((org-mode . citar-embark-mode)
+         (LaTeX-mode . citar-embark-mode)))
+
+;; Coq
 (use-package! proof-general
   :hook (coq-mode . (lambda ()
                       (set-face-background 'proof-locked-face
-                                           "#3b4252"))))
+                                           "#3b4252")))
+  :config (map!
+           :map proof-mode-map
+           :i "C-n" #'proof-assert-next-command-interactive
+           :i "C-p" #'proof-undo-last-successful-command))
 
+;; Programming
 (use-package! rainbow-mode
   :hook prog-mode)
