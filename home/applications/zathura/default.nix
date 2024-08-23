@@ -42,6 +42,5 @@
     set recolor-darkcolor           "#ECEFF4"
     set recolor                     "true"
     set font                        "JetBrainsMono Nerd Font"
-    set guioptions                  none
   '';
 }

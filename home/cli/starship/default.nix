@@ -56,6 +56,7 @@
         disabled = false;
         time_format = "%R";
         format = "[](bold fg:yellow)[ $time](bold bg:yellow fg:black)[](bold fg:yellow) •• ";
+        utc_time_offset = "-5";
       };
       nix_shell = {
         symbol = "󱄅 ";

@@ -165,6 +165,8 @@
            (org-outline-path-complete-in-steps nil))
   :hook ((org-mode . auto-fill-mode))
   :config
+  ;; Update one very important keybinding
+  (map! :map org-mode-map :n "RET" #'+org/dwim-at-point)
   ;; Regular org capture templates
   (setq org-capture-templates
         `(("c" "Class Lecture" plain
@@ -310,7 +312,7 @@
 
 ;; Citations
 (use-package! oc
-  :custom ((org-cite-global-bibliograph '("~/Documents/zotero.bib"))
+  :custom ((org-cite-global-bibliography '("~/Documents/zotero.bib"))
            (org-cite-csl-styles-dir "~/Zotero/sytles/")
            (org-cite-export-processors '((latex biblatex)
                                          (md . (csl "ieee.csl"))
@@ -325,6 +327,7 @@
         :n "C" #'org-cite-insert))
 
 (use-package! citar
+  :after oc
   :custom (citar-bibliography org-cite-global-bibliography)
   :hook ((LaTeX-mode . citar-capf-setup)
          (org-mode . citar-capf-setup))
@@ -368,7 +371,7 @@
               citar-indicator-cited-icon)))
 
 (use-package! citar-org
-  :after oc
+  :after citar
   :custom ((org-cite-insert-processor 'citar)
            (org-cite-follow-processor 'citar)
            (org-cite-activate-processor 'citar)))
@@ -386,10 +389,99 @@
   :hook (coq-mode . (lambda ()
                       (set-face-background 'proof-locked-face
                                            "#3b4252")))
-  :config (map!
-           :map proof-mode-map
-           :i "C-n" #'proof-assert-next-command-interactive
-           :i "C-p" #'proof-undo-last-successful-command))
+  :custom
+  (coq-smie-user-tokens
+   '(("," . ":=")
+     ("∗" . "->")
+     ("-∗" . "->")
+     ("∗-∗" . "->")
+     ("==∗" . "->")
+     ("=∗" . "->") 			;; Hack to match ={E1,E2}=∗
+     ("|==>" . ":=")
+     ("⊢" . "->")
+     ("⊣⊢" . "->")
+     ("↔" . "->")
+     ("←" . "<-")
+     ("→" . "->")
+     ("=" . "->")
+     ("==" . "->")
+     ("/\\" . "->")
+     ("⋅" . "->")
+     (":>" . ":=")
+     ("by" . "now")
+     ("forall" . "now")              ;; NB: this breaks current ∀ indentation.
+     )
+   )
+  )
+
+(use-package! math-symbol-lists
+  :demand t
+  :init
+  (defun mjs/inherit-input-method ()
+    "Inherit input method from `minibuffer-selected-window'."
+    (let* ((win (minibuffer-selected-window))
+           (buf (and win (window-buffer win))))
+      (when buf
+        (activate-input-method (buffer-local-value 'current-input-method buf)))))
+  :config
+  (add-hook 'coq-mode-hook (lambda () (set-input-method "math")))
+  (add-hook 'minibuffer-setup-hook #'mjs/inherit-input-method)
+  (quail-define-package "math" "UTF-8" "Ω" t)
+  (quail-define-rules
+   ("\\fun"    ?λ)
+   ("\\mult"   ?⋅)
+   ("\\ent"    ?⊢)
+   ("\\valid"  ?✓)
+   ("\\diamond" ?◇)
+   ("\\box"    ?□)
+   ("\\bbox"   ?■)
+   ("\\later"  ?▷)
+   ("\\pred"   ?φ)
+   ("\\and"    ?∧)
+   ("\\or"     ?∨)
+   ("\\comp"   ?∘)
+   ("\\ccomp"  ?◎)
+   ("\\all"    ?∀)
+   ("\\ex"     ?∃)
+   ("\\to"     ?→)
+   ("\\sep"    ?∗)
+   ("\\lc"     ?⌜)
+   ("\\rc"     ?⌝)
+   ("\\Lc"     ?⎡)
+   ("\\Rc"     ?⎤)
+   ("\\lam"    ?λ)
+   ("\\empty"  ?∅)
+   ("\\Lam"    ?Λ)
+   ("\\Sig"    ?Σ)
+   ("\\-"      ?∖)
+   ("\\aa"     ?●)
+   ("\\af"     ?◯)
+   ("\\auth"   ?●)
+   ("\\frag"   ?◯)
+   ("\\iff"    ?↔)
+   ("\\gname"  ?γ)
+   ("\\incl"   ?≼)
+   ("\\latert" ?▶)
+   ("\\update" ?⇝)
+
+   ;; accents (for iLöb)
+   ("\\\"o" ?ö)
+
+   ;; subscripts and superscripts
+   ("^^+" ?⁺) ("__+" ?₊) ("^^-" ?⁻)
+   ("__0" ?₀) ("__1" ?₁) ("__2" ?₂) ("__3" ?₃) ("__4" ?₄)
+   ("__5" ?₅) ("__6" ?₆) ("__7" ?₇) ("__8" ?₈) ("__9" ?₉)
+
+   ("__a" ?ₐ) ("__e" ?ₑ) ("__h" ?ₕ) ("__i" ?ᵢ) ("__k" ?ₖ)
+   ("__l" ?ₗ) ("__m" ?ₘ) ("__n" ?ₙ) ("__o" ?ₒ) ("__p" ?ₚ)
+   ("__r" ?ᵣ) ("__s" ?ₛ) ("__t" ?ₜ) ("__u" ?ᵤ) ("__v" ?ᵥ) ("__x" ?ₓ))
+  (mapc (lambda (x)
+          (if (cddr x)
+              (quail-defrule (cadr x) (car (cddr x)))))
+                                        ; need to reverse since different emacs packages disagree on whether
+                                        ; the first or last entry should take priority...
+                                        ; see <https://mattermost.mpi-sws.org/iris/pl/46onxnb3tb8ndg8b6h1z1f7tny> for discussion
+        (reverse (append math-symbol-list-basic math-symbol-list-extended))))
 
 ;; Programming
 (use-package! rainbow-mode

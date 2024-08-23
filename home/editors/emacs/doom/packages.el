@@ -61,4 +61,3 @@
 
 ;; Org-mode citations
 (package! citar)
-(package! citar-embrak)
