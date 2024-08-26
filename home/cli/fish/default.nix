@@ -1,6 +1,9 @@
 {osConfig, ...}: {
   programs.fish = {
     enable = true;
+    interactiveShellInit = ''
+      fish_config theme choose Nord
+    '';
     shellAliases = {
       vi = "nvim";
       dup-files = "find . -type f -printf '%p -> %f\\n' | sort -k2 | uniq -f1 --all-repeated=separate";
