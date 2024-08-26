@@ -486,3 +486,7 @@
 ;; Programming
 (use-package! rainbow-mode
   :hook prog-mode)
+
+;; Media
+(use-package! ready-player
+  :config (ready-player-mode +1))

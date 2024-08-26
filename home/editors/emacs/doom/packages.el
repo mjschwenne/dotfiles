@@ -61,3 +61,6 @@
 
 ;; Org-mode citations
 (package! citar)
+
+;; Media Support
+(package! ready-player)
