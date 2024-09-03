@@ -19,6 +19,7 @@ return {
   { import = "astrocommunity.pack.nix" },
   { import = "astrocommunity.pack.python" },
   { import = "astrocommunity.pack.rust" },
+  { import = "astrocommunity.pack.go" },
 
   -- Appearances
   { import = "astrocommunity.colorscheme.nord-nvim" },
