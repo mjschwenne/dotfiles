@@ -40,8 +40,8 @@
 (setq display-line-numbers-type 'relative)
 
 ;; Transparency
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'alpha-background '(90 . 90))
+(add-to-list 'default-frame-alist '(alpha-background . (90 . 90)))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -208,17 +208,16 @@
              ":NOTE: %?\n"
              ":END:")
            :empty-lines 1)
-          ("e" "Etera Session" entry
-           (file "ttrpg/games/etera/notes.org")
-           "\n* Session %<%Y-%m-%d>\n\n%?\n"
-           :jump-to-captured t
-           :immediate-finish t)
-          ("g" "Graves Session" entry
-           (file "ttrpg/games/graves-and-groves/sessions.org")
-           "\n\n* Session %<%Y-%m-%d>\n\n%?\n"
-           :prepend t
-           :jump-to-captured t
-           :immediate-finish t)
+          ("g" "Grackle" entry
+           (file "agenda/grackle.org")
+           ,(concat "* %<%Y-%m-%d> %?\n"
+                    "** Recap\n"
+                    "** Goals\n"
+                    "*** Primary\n"
+                    "*** Secondary\n")
+           :empty-lines 1
+           :immediate-finish t
+           :jump-to-captured t)
           ("i" "Inbox" entry
            (file "agenda/inbox.org")
            ,(concat "* TODO %?\n"
@@ -233,9 +232,24 @@
            (file "agenda/notes.org")
            ,(concat "* Notes (%a)\n"
                     "/Entered on/ %U\n\n%?"))
-          ("o" "Obscured Realms Session" entry
+          ("t" "Tabletop Gaming")
+          ("te" "Etera Session" entry
+           (file "ttrpg/games/etera/notes.org")
+           "* Session %<%Y-%m-%d>\n\n%?"
+           :empty-lines 1
+           :jump-to-captured t
+           :immediate-finish t)
+          ("tg" "Graves Session" entry
+           (file "ttrpg/games/graves-and-groves/sessions.org")
+           "* Session %<%Y-%m-%d>\n\n%?"
+           :empty-lines 1
+           :prepend t
+           :jump-to-captured t
+           :immediate-finish t)
+          ("to" "Obscured Realms Session" entry
            (file "ttrpg/games/obscured-realms/sessions.org")
-           "\n* Session %<%Y-%m-%d>\n\n%?"
+           "* Session %<%Y-%m-%d>\n\n%?"
+           :empty-lines 1
            :jump-to-captured t
            :immediate-finish t)))
   ;; Load build-in org modules

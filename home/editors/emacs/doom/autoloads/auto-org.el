@@ -38,8 +38,8 @@
              in (cl-remove-if-not #'listp org-todo-keywords)
              for keywords =
              (mapcar (lambda (x) (if (string-match "^\\([^(]+\\)(" x)
-                                     (match-string 1 x)
-                                   x))
+                                (match-string 1 x)
+                              x))
                      keyword-spec)
              if (eq type 'sequence)
              if (member keyword keywords)
@@ -334,8 +334,8 @@ re-align the table if necessary. (Necessary because org-mode has a
 (defun mjs/agenda-time-format (type)
   (let* ((current-date (format-time-string "%Y-%m-%d" (current-time)))
          (timestamp (format-time-string "%Y-%m-%d" (if (equal type 'deadline)
-                                                      (org-get-deadline-time (point))
-                                                    (org-get-scheduled-time (point)))))
+                                                       (org-get-deadline-time (point))
+                                                     (org-get-scheduled-time (point)))))
          (difference (days-between timestamp current-date))
          (time-remaining (cond ((eq difference 0) "today")
                                ((<= (abs difference) 1)
@@ -384,7 +384,7 @@ has the effect of displaying consistency graphs for these habits."
 ;;;###autoload
 (defun mjs/class-capture ()
   (let* ((class (completing-read "Class: "
-                                 '("cs400" "cs502" "cs538" "cs710" "cs760")
+                                 '("ta-cs400-fa24" "cs704" "cs799" "cs839")
                                  nil t))
          (file-name (expand-file-name
                      (concat "classes/" class "/"
@@ -505,10 +505,10 @@ hence \"everywhere\"."
                       (org-roam-node-id (org-roam-node-from-title-or-alias
                                          (substring-no-properties str)))
                       "][" str "]]"))
-              ;; Proceed with the next completion function if the returned titles
-              ;; do not match. This allows the default Org capfs or custom capfs
-              ;; of lower priority to run.
-              :exclusive 'no))))
+            ;; Proceed with the next completion function if the returned titles
+            ;; do not match. This allows the default Org capfs or custom capfs
+            ;; of lower priority to run.
+            :exclusive 'no))))
 
 ;;;###autoload
 (defun mjs/search-org-files (query)
@@ -520,19 +520,19 @@ hence \"everywhere\"."
 ;;;###autoload
 (defun mjs/move-and-update-file-links (source-file dest-dir &optional search-dir)
   "Move SOURCE-FILE to DEST-DIR, updating all org file links in SEARCH-DIR"
-    (interactive "fSource File: \nDDestination Directory: \n")
-    (let* ((search-dir (if (stringp search-dir) search-dir org-directory))
-           (source-file-name (file-name-nondirectory source-file))
-           (dest-file (file-name-concat dest-dir source-file-name))
-           (file-regexp
-            (format
-             "\\[\\[\\(file\\|pdf\\):\\([^]:]*%s\\)\\(::[0-9]+\\)?\\]\\[\\([^]]*\\)\\]\\]"
-                             source-file-name)))
+  (interactive "fSource File: \nDDestination Directory: \n")
+  (let* ((search-dir (if (stringp search-dir) search-dir org-directory))
+         (source-file-name (file-name-nondirectory source-file))
+         (dest-file (file-name-concat dest-dir source-file-name))
+         (file-regexp
+          (format
+           "\\[\\[\\(file\\|pdf\\):\\([^]:]*%s\\)\\(::[0-9]+\\)?\\]\\[\\([^]]*\\)\\]\\]"
+           source-file-name)))
 
-      (rename-file source-file dest-file t)
-      ; Iterate over all files in the search directory referencing the source file
-      (dolist (file (mjs/search-org-files source-file-name))
-        (with-current-buffer (find-file-noselect file) ; Open that file as a buffer
+    (rename-file source-file dest-file t)
+                                        ; Iterate over all files in the search directory referencing the source file
+    (dolist (file (mjs/search-org-files source-file-name))
+      (with-current-buffer (find-file-noselect file) ; Open that file as a buffer
         ;; Here is where the find and replace can happen
         (let ((relative-dest-file (file-relative-name dest-file
                                                       (file-name-directory file))))
@@ -541,8 +541,8 @@ hence \"everywhere\"."
           (while (re-search-forward file-regexp nil t)
             (replace-match relative-dest-file nil nil nil 2)
             )
-        (save-buffer)
-        ))
+          (save-buffer)
+          ))
       )))
 
 ;;;###autoload
@@ -560,9 +560,9 @@ hence \"everywhere\"."
         (unless (file-directory-p dest-file-dir)
           (make-directory dest-file-dir))
         (mjs/move-and-update-file-links file dest-file-dir search-dir)
-      ))
+        ))
     (delete-directory source-dir)
-  ))
+    ))
 
 ;;;###autoload
 (defun mjs/regenerate-file-links (src &optional search-dir kill)
@@ -570,9 +570,9 @@ hence \"everywhere\"."
   (interactive (list (current-buffer)))
   (let* ((search-dir (if (stringp search-dir) search-dir org-directory))
          (src-buf (cond
-               ((bufferp src) src)
-               ((stringp src) (find-file-noselect src)) ; Assume this is a filename
-               (t (current-buffer))))
+                   ((bufferp src) src)
+                   ((stringp src) (find-file-noselect src)) ; Assume this is a filename
+                   (t (current-buffer))))
          (src-file (buffer-file-name src-buf))
          (file-link-regexp
           "\\[\\[\\(file\\|pdf\\):\\([^]:]*\\)\\(::[0-9]+\\)?\\]\\(\\[[^]]*\\]\\)\\]"))
@@ -602,57 +602,57 @@ hence \"everywhere\"."
 
 ;;;###autoload
 (defun mjs/clean-org-cliplink ()
-          (interactive)
-          (org-cliplink-insert-transformed-title
-          (org-cliplink-clipboard-content)     ;take the URL from the CLIPBOARD
-          (lambda (url title)
-              (let* ((parsed-url (url-generic-parse-url url)) ;parse the url
-                (clean-title
-                  (cond
-                  ;; if the host is one of these, cleanup the title
-                  ((string= (url-host parsed-url) "aonprd.com")
-                    (replace-regexp-in-string " - .*" "" title))
-                  ((string= (url-host parsed-url) "2e.aonprd.com")
-                    (replace-regexp-in-string " - .*" "" title))
-                  ((string= (url-host parsed-url) "en.wikipedia.org")
-                   (replace-regexp-in-string " - .*" "" title))
-                  ((string= (url-host parsed-url) "github.com")
-                   (replace-regexp-in-string "^Github - " "" title))
-                  ;; otherwise keep the original title
-                  (t title))))
-          ;; forward the title to the default org-cliplink transformer
-          (org-cliplink-org-mode-link-transformer url clean-title)))))
+  (interactive)
+  (org-cliplink-insert-transformed-title
+   (org-cliplink-clipboard-content)     ;take the URL from the CLIPBOARD
+   (lambda (url title)
+     (let* ((parsed-url (url-generic-parse-url url)) ;parse the url
+            (clean-title
+             (cond
+              ;; if the host is one of these, cleanup the title
+              ((string= (url-host parsed-url) "aonprd.com")
+               (replace-regexp-in-string " - .*" "" title))
+              ((string= (url-host parsed-url) "2e.aonprd.com")
+               (replace-regexp-in-string " - .*" "" title))
+              ((string= (url-host parsed-url) "en.wikipedia.org")
+               (replace-regexp-in-string " - .*" "" title))
+              ((string= (url-host parsed-url) "github.com")
+               (replace-regexp-in-string "^Github - " "" title))
+              ;; otherwise keep the original title
+              (t title))))
+       ;; forward the title to the default org-cliplink transformer
+       (org-cliplink-org-mode-link-transformer url clean-title)))))
 
 ;;;###autoload
 (defun mjs/hugo-blowfish-thumbnail (&rest args)
-    (interactive)
-    (if-let ((hugo-info (org-collect-keywords '("hugo_base_dir" "hugo_section")))
-            (base-dir (nth 1 (nth 0 hugo-info)))
-            (base-section (nth 1 (nth 1 hugo-info)))
-            (thumbnail (or (org-entry-get (point) "blowfish_thumbnail")
-                            (nth 1 (car (org-collect-keywords '("blowfish_thumbnail"))))))
-            (thumbnail-path (file-name-concat base-dir "assets"
-                                                thumbnail))
-            (bundle-name (or (org-entry-get (point) "export_hugo_bundle")
+  (interactive)
+  (if-let ((hugo-info (org-collect-keywords '("hugo_base_dir" "hugo_section")))
+           (base-dir (nth 1 (nth 0 hugo-info)))
+           (base-section (nth 1 (nth 1 hugo-info)))
+           (thumbnail (or (org-entry-get (point) "blowfish_thumbnail")
+                          (nth 1 (car (org-collect-keywords '("blowfish_thumbnail"))))))
+           (thumbnail-path (file-name-concat base-dir "assets"
+                                             thumbnail))
+           (bundle-name (or (org-entry-get (point) "export_hugo_bundle")
                             (nth 1 (car (org-collect-keywords '("hugo_bundle"))))))
-            (dest-path (concat
-                        (file-name-concat base-dir
-                                            "content"
-                                            base-section
-                                            bundle-name
-                                            "featured")
-                        (file-name-extension thumbnail t))))
-    (copy-file thumbnail-path dest-path t)
+           (dest-path (concat
+                       (file-name-concat base-dir
+                                         "content"
+                                         base-section
+                                         bundle-name
+                                         "featured")
+                       (file-name-extension thumbnail t))))
+      (copy-file thumbnail-path dest-path t)
     (user-error "Could not move blowfish thumbnail image.")))
 
 ;;;###autoload
 (defun mjs/parent-tag (tag)
   "Search `org-tag-persistent-alist' for the parent of TAG"
   (if-let ((end-idx (cl-position `(,tag) org-tag-persistent-alist :test #'equal))
-		   (group-start-idx (cl-position '(:grouptags) org-tag-persistent-alist
-										 :test #'equal :from-end t :end end-idx)))
+	   (group-start-idx (cl-position '(:grouptags) org-tag-persistent-alist
+					 :test #'equal :from-end t :end end-idx)))
 
-	  (car (nth (- group-start-idx 1) org-tag-persistent-alist))))
+      (car (nth (- group-start-idx 1) org-tag-persistent-alist))))
 
 ;;;###autoload
 (defun mjs/all-parent-tags (tag)
@@ -671,7 +671,7 @@ Returns a list including TAG itself."
 (defun mjs/children-tags (tag)
   "Search `org-tag-persistent-alist' for the children of TAG"
   (if-let ((group-head-idx (cl-position `(,tag) org-tag-persistent-alist
-                                   :test #'equal :from-end t))
+                                        :test #'equal :from-end t))
            (group-p (equal '(:grouptags) (nth (+ 1 group-head-idx)
                                               org-tag-persistent-alist)))
            (group-end-idx (cl-position '(:endgrouptag) org-tag-persistent-alist
@@ -725,7 +725,7 @@ Prompt for CONTEXT from CONTEXT-PLIST."
    #'mjs/org-roam-filter-context-fn
    nil
    :templates (mjs/org-roam-templates-context-fn)))
-  
+
 ;;;###autoload
 (defun mjs/org-roam-capture (&optional goto keys)
   "Call `org-roam-capture' with templates from context."
