@@ -106,6 +106,27 @@
   (setq vertico-resize t)
   (vertico-reverse-mode t))
 
+;; Ligatures
+;; Enable them in text modes like org and markdown...
+(add-to-list '+ligatures-alist
+             '(text-mode
+               "|||>" "<|||" "<==>" "<!--" "####" "~~>" "||=" "||>"
+               ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+               "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+               "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+               "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+               "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+               "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+               "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+               ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+               "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+               "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+               "?=" "?." "??" ";;" "/*" "/>" "//" "__" "~~" "(*" "*)"
+               "\\\\" "://"))
+;; while removing them from coq mode so that I can see what's a unicode symbol and
+;; that's not.
+(add-to-list '+ligatures-in-modes 'coq-mode t)
+
 (use-package! org
   :after org
   :custom ((org-entities-user
@@ -424,7 +445,18 @@
       (when buf
         (activate-input-method (buffer-local-value 'current-input-method buf)))))
   :config
-  (add-hook 'coq-mode-hook (lambda () (set-input-method "math")))
+  (add-hook 'coq-mode-hook (lambda () (set-input-method "math")
+                             (ligature-mode -1)
+                             ;; Remove the :: symbol
+                             (setq prettify-symbols-alist '())
+                             (setq coq-prettify-symbols-alist '(("/\\" . 8743)
+                                                                ("\\/" . 8744)
+                                                                ("forall" . 8704)
+                                                                ("fun" . 955)
+                                                                ("exists" . 8707)
+                                                                ("->" . 8594)
+                                                                ("<-" . 8592)
+                                                                ("=>" . 8658)))))
   (add-hook 'minibuffer-setup-hook #'mjs/inherit-input-method)
   (quail-define-package "math" "UTF-8" "Ω" t)
   (quail-define-rules

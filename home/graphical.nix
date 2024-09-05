@@ -56,14 +56,35 @@
         nicematrix
         pgfplots
         cancel
+        fontawesome
+        tcolorbox
+        environ
         tikzfill
         tikzmark
         enumitem
+        dashrule
+        ifmtarg
+        multirow
+        changepage
         biblatex
+        lato
+        fontaxes
         curve
         silence
+        fontawesome5
+        relsize
+        comment
         csquotes
-        mathtools
+        xpatch
+        cochineal
+        xstring
+        cabin
+        inconsolata
+        upquote
+        fifo-stack
+        varwidth
+        tabto-ltx
+        totcount
         ;
     })
     ghostscript
