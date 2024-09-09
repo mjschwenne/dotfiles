@@ -45,6 +45,9 @@
     # sway
     swayfx
     greetd.tuigreet
+
+    # Misc Utils
+    libtool
   ];
 
   fonts.fontconfig.enable = true;

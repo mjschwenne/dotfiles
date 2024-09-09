@@ -13,6 +13,12 @@
         identitiesOnly = true;
         identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/github/key".path;
       };
+      "git.doit.wisc.edu" = {
+        user = "git";
+        hostname = "git.doit.wisc.edu";
+        identitiesOnly = true;
+        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/github/key".path;
+      };
     };
   };
 
