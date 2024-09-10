@@ -78,6 +78,7 @@
 
   virtualisation.podman = {
     enable = true;
+    dockerCompat = true;
   };
   # Need flatpak to use distrobox-host-exec
   services.flatpak.enable = true;
