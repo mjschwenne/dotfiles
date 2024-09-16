@@ -17,25 +17,24 @@
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/f89a757c-9c56-4b93-bf86-666b5318a8b6";
-    fsType = "ext4";
-  };
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/4a8099f8-c679-4fe8-8c94-15949438e2c1";
+      fsType = "ext4";
+    };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/3638-EECD";
-    fsType = "vfat";
-  };
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/5A1D-CEA8";
+      fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
 
-  fileSystems."/nix" = {
-    device = "/dev/disk/by-label/nix";
-    fsType = "ext4";
-    neededForBoot = true;
-    options = ["noatime"];
-  };
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/16dacec8-eabb-4e1a-bfbc-10132452608b";
+      fsType = "ext4";
+    };
 
   swapDevices = [
-    {device = "/dev/disk/by-uuid/8ceca976-4eeb-4780-99bf-16129a24a58a";}
+    {device = "/dev/disk/by-uuid/2d9c69bf-12cd-4a00-9f8b-0b480ce0c3ca";}
   ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
@@ -46,6 +45,5 @@
   # networking.interfaces.wlp1s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
