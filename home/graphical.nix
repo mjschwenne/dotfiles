@@ -33,6 +33,7 @@
     rnote
     poppler_utils
     nextcloud-client
+    pdfcpu
 
     # Graphics Applications
     gimp
