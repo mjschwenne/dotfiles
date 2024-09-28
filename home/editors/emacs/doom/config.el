@@ -536,3 +536,9 @@
 ;; Media
 (use-package! ready-player
   :config (ready-player-mode +1))
+
+;; LaTeX
+(use-package! texpresso
+  :hook LaTeX-mode
+  :config
+  (map! :map LaTeX-mode-map :localleader :desc "TeXpresso" :n "t" #'texpresso))

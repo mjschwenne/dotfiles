@@ -23,8 +23,8 @@
       nil
       pyright
       rust-analyzer
-      nodePackages.typescript-language-server
-      nodePackages.bash-language-server
+      typescript-language-server
+      bash-language-server
       texlab
       coqPackages.coq-lsp
 

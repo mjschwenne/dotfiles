@@ -59,7 +59,7 @@ return {
       "pyright",
       "rust_analyzer",
       "texlab",
-      "tsserver",
+      "ts_ls",
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields

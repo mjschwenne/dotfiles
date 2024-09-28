@@ -64,3 +64,8 @@
 
 ;; Media Support
 (package! ready-player)
+
+;; TeXpresso Integration
+(package! texpresso
+  :recipe (:host github :repo "let-def/texpresso"
+           :files ("emacs/texpresso.el" "emacs/texpresso-map.el")))

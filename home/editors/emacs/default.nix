@@ -74,6 +74,7 @@ in {
 
   home.packages = [
     emacs
+    pkgs.texpresso
   ];
 
   home.file = {
