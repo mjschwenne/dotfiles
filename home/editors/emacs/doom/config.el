@@ -538,6 +538,49 @@
   :config (ready-player-mode +1))
 
 ;; LaTeX
+(after! latex
+  (add-hook! LaTeX-mode
+             #'prettify-symbols-mode
+             #'auto-fill-mode
+             #'TeX-fold-mode
+             #'TeX-PDF-mode)
+  (customize-set-variable 'TeX-newline-function #'reindent-then-newline-and-indent)
+  (customize-set-variable 'TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)
+                                                   ("Zathura" "zathura --synctex-forward :: %o")))
+  (customize-set-variable 'TeX-view-program-selection '((output-pdf "PDF Tools")))
+  (customize-set-variable 'TeX-source-correlate-start-server t)
+  (customize-set-variable 'TeX-save-query nil)
+  (customize-set-variable 'TeX-engine 'luatex)
+  (customize-set-variable 'TeX-parse-self t)
+  (customize-set-variable 'TeX-auto-save t)
+  (map! :map LaTeX-mode-map :localleader
+        :desc "Compile Document" :n "c" #'TeX-command-run-all
+        :desc "Clean Document" :n "C" #'TeX-clean
+        :desc "Indent Line" :n "i" #'LaTeX-indent-line
+        :desc "View PDF" :n "v" #'TeX-view))
+
+(after! yasnippet
+  (add-hook! 'post-self-insert-hook #'mjs/yas-try-expanding-auto-snippets)
+  (customize-set-variable 'yas-triggers-in-field t)
+  (map! :map yas-keymap
+        :i "<tab>" #'mjs/yas-next-field-or-cdlatex
+        :i "TAB" #'mjs/yas-next-field-or-cdlatex))
+
+(after! cdlatex
+  (add-hook! LaTeX-mode-hook #'turn-on-cdlatex)
+  (add-hook! cdlatex-tab-hook #'yas-expand #'mjs/cdlatex-in-yas-field)
+  (customize-set-variable 'textmathp-tex-commands '(("bmatrix" env-on)
+                                                    ("pmatrix" env-on)
+                                                    ("mathpar" env-on)))
+  (customize-set-variable 'cdlatex-env-alist '(("proof" "\\begin{proof}\n?\n\\end{proof}" nil)
+                                               ("optp" "\\begin{array}{r@{\\quad}l}\n\\min & ? \ns.t. & \n\\end{array}" nil)))
+  (add-to-list 'cdlatex-command-alist '("proof" "Insert proof env" ""
+                                        cdlatex-environment ("proof") t nil))
+  (add-to-list 'cdlatex-command-alist '("emph" "Insert emphasis" "\\emph{?}"
+                                        cdlatex-position-cursor nil t nil))
+  (map! :map LaTeX-mode-map
+        :i "<tab>" #'cdlatex-tab))
+
 (use-package! texpresso
   :hook LaTeX-mode
   :config
