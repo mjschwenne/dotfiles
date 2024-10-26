@@ -585,3 +585,5 @@
   :hook LaTeX-mode
   :config
   (map! :map LaTeX-mode-map :localleader :desc "TeXpresso" :n "t" #'texpresso))
+
+(use-package! quarto-mode)
