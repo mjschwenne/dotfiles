@@ -20,7 +20,7 @@
 
   home.packages = with pkgs; [
     # Graphics
-    blender-hip
+    # blender-hip
     krita
 
     # Audio

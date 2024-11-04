@@ -1,61 +1,85 @@
 {
-  stdenv,
   lib,
-  autoPatchelfHook,
+  stdenv,
+  requireFile,
   dpkg,
-  libXcursor,
-  libXinerama,
-  libXext,
-  libXrandr,
-  libXi,
+  xorg,
   libGL,
-  zlib,
-  libkrb5,
   udev,
-  makeWrapper,
+  pulseaudio,
+  libkrb5,
   zenity,
+  zlib,
+  makeWrapper,
 }:
-stdenv.mkDerivation {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dungeondraft";
-  version = "1.1.0.3";
+  version = "1.1.0.6";
 
-  src = /nix/store/s0rhwf1k8gwgafr95p0fgk14ybqh839x-Dungeondraft-1.1.0.3-Linux64.deb;
+  nativeBuildInputs = [makeWrapper];
 
-  dontBuild = true;
+  src = requireFile {
+    name = "Dungeondraft-${finalAttrs.version}-Linux64.deb";
+    url = "https://dungeondraft.net/";
+    hash = "sha256-ffT2zOQWKb6W6dQGuKbfejNCl6dondo4CB6JKTReVDs=";
+  };
+  sourceRoot = ".";
+  unpackCmd = "${dpkg}/bin/dpkg-deb -x $curSrc .";
+
   dontConfigure = true;
-
-  unpackPhase = ''
-    dpkg-deb -x $src .
-  '';
-
-  buildInputs = [
-    libXcursor
-    libXinerama
-    libXext
-    libXrandr
-    libXi
-    libGL
-    zlib
-    libkrb5
-  ];
-
-  nativeBuildInputs = [
-    autoPatchelfHook
-    dpkg
-    makeWrapper
-  ];
+  dontBuild = true;
 
   installPhase = ''
-    mkdir -p $out/opt/Dungeondraft
-    mv opt/Dungeondraft/* $out/opt/Dungeondraft
-    # Can't use wrapProgram because godot seems to load data files based upon executable name
-    makeWrapper $out/opt/Dungeondraft/Dungeondraft.x86_64 $out/opt/Dungeondraft/Dungeondraft.x86_64.wrapped \
-      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [udev]} \
-      --prefix PATH : ${lib.makeBinPath [zenity]}
-    mkdir -p $out/share/applications
-    mv usr/share/applications/* $out/share/applications
-    sed -i "s|Exec=/opt/Dungeondraft/Dungeondraft.x86_64|Exec=$out/opt/Dungeondraft/Dungeondraft.x86_64.wrapped|g" $out/share/applications/Dungeondraft.desktop
-    sed -i "s|Path=/opt/Dungeondraft|Path=$out/opt/Dungeondraft|g" $out/share/applications/Dungeondraft.desktop
-    sed -i "s|Icon=/opt/Dungeondraft/Dungeondraft.png|Icon=$out/opt/Dungeondraft/Dungeondraft.png|g" $out/share/applications/Dungeondraft.desktop
+    runHook preInstall
+    mkdir -p $out/bin
+    cp -R usr/share opt $out/
+    substituteInPlace \
+      $out/share/applications/Dungeondraft.desktop \
+      --replace /opt/ $out/opt/
+    ln -s $out/opt/Dungeondraft/Dungeondraft.x86_64 $out/bin/Dungeondraft.x86_64
+    runHook postInstall
   '';
-}
+  preFixup = let
+    binaryLibPath = lib.makeLibraryPath [
+      xorg.libXcursor
+      xorg.libXinerama
+      xorg.libXext
+      xorg.libXrandr
+      xorg.libXrender
+      xorg.libX11
+      xorg.libXi
+      libGL
+      udev
+      pulseaudio
+      zenity
+    ];
+    libmonoNativeLibPath = lib.makeLibraryPath [libkrb5];
+    libmonoPosixHelperLibPath = lib.makeLibraryPath [zlib];
+  in ''
+    patchelf \
+      --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
+      --set-rpath "${binaryLibPath}" \
+      $out/opt/Dungeondraft/Dungeondraft.x86_64
+    chmod +x \
+      $out/opt/Dungeondraft/data_Dungeondraft/Mono/lib/*
+    patchelf \
+      --set-rpath "${libmonoNativeLibPath}" \
+      $out/opt/Dungeondraft/data_Dungeondraft/Mono/lib/libmono-native.so
+    patchelf \
+      --set-rpath "${libmonoPosixHelperLibPath}" \
+      $out/opt/Dungeondraft/data_Dungeondraft/Mono/lib/libMonoPosixHelper.so
+  '';
+  postInstall = ''
+    wrapProgram $out/bin/Dungeondraft.x86_64 \
+      --prefix PATH : ${lib.makeBinPath [zenity]}
+  '';
+
+  meta = {
+    homepage = "https://dungeondraft.net/";
+    description = "A mapmaking tool for Tabletop Roleplaying Games, designed for battlemap scale";
+    license = lib.licenses.unfree;
+    platforms = ["x86_64-linux"];
+    maintainers = with lib.maintainers; [jsusk];
+    sourceProvenance = with lib.sourceTypes; [binaryNativeCode];
+  };
+})

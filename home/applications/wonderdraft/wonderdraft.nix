@@ -6,7 +6,7 @@
   autoPatchelfHook,
   xorg,
   libpulseaudio,
-  alsaLib,
+  alsa-lib,
   libGL,
 }: let
   version = "1.1.7.3";
@@ -43,7 +43,7 @@ in
       xorg.libXinerama
       xorg.libXrandr
       xorg.libXi
-      alsaLib
+      alsa-lib
       libpulseaudio
       libGL
     ];

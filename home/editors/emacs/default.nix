@@ -62,7 +62,7 @@
 
     # Optionally provide extra packages not in the configuration file.
     extraEmacsPackages = epkgs: [
-      epkgs.org-timeblock
+      # epkgs.org-timeblock
       epkgs.calfw-blocks
       epkgs.autothemer
     ];
