@@ -5,12 +5,6 @@ running NixOS on my desktop, two laptops and a Microsoft surface. If you are
 looking for my old Ubuntu or Arco Linux rices, check out the other branches of this
 repo.
 
-* Screenshots
-
-[[file:screen-shot1.png]]
-
-[[file:screen-shot2.png]]
-
 * Software
 
 |-------------------------+-----------------------------|
