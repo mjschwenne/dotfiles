@@ -127,6 +127,8 @@
             hide_tab_bar_if_only_one_tab = true,
             default_prog = { "fish", "-l" },
             enable_wayland = true,
+            check_for_updates = false,
+            -- show_update_window = false,
           }
         '';
     };
