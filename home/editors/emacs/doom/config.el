@@ -61,6 +61,7 @@
 ;; The default font scaling for org-tree-slide is one step too large. The defualt value is 5
 ;; so we should set it to 4.
 (customize-set-variable '+org-present-text-scale 4)
+(customize-set-variable 'org-tags-column -80)
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
