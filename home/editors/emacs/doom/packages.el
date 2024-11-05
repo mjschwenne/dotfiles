@@ -72,3 +72,6 @@
 
 ;; Quarto
 (package! quarto-mode)
+
+;; protobuf 
+(package! protobuf-mode)
