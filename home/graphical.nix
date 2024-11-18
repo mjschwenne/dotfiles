@@ -11,6 +11,9 @@
     # Instant Communications
     slack
     zoom-us
+    kbfs
+    keybase
+    keybase-gui
 
     # Network Utilities
     remmina
