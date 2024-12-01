@@ -99,7 +99,15 @@
       extraApps = with config.services.nextcloud.package.packages.apps; {
         # List of apps we want to install and are already packaged in
         # https://github.com/NixOS/nixpkgs/blob/master/pkgs/servers/nextcloud/packages/nextcloud-apps.json
-        inherit calendar notes tasks onlyoffice forms;
+        inherit
+          calendar
+          notes
+          tasks
+          /*
+          onlyoffice
+          */
+          forms
+          ;
 
         # Custom app installation example.
         # integration_excalidraw = pkgs.fetchNextcloudApp {
@@ -136,7 +144,7 @@
     };
 
     onlyoffice = {
-      enable = true;
+      enable = false;
       hostname = "office.schwennesen.org";
     };
   };
@@ -148,7 +156,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    gnome.gnome-keyring
+    gnome-keyring
     protonmail-bridge
     pass
   ];

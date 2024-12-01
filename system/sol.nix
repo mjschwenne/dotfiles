@@ -171,7 +171,7 @@
   systemd.services.stdiscosrv = {
     enable = true;
     description = "Syncthing discovery server";
-    serviceConfig.ExecStart = ''/run/current-system/sw/bin/stdiscosrv -db-dir="/home/mjs/.syncthing/discovery.db" -http -listen=":8443"'';
+    serviceConfig.ExecStart = ''/run/current-system/sw/bin/stdiscosrv --db-dir="/home/mjs/.syncthing/discovery.db" --http --listen=":8443"'';
     wantedBy = ["multi-user.target"];
     after = ["network.target"];
   };
