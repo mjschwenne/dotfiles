@@ -1,4 +1,8 @@
-{osConfig, ...} @ inputs: {
+{
+  osConfig,
+  pkgs,
+  ...
+} @ inputs: {
   home = {
     username = "mjs";
     homeDirectory = "/home/mjs";
@@ -33,6 +37,8 @@
     # Neovim config
     ./editors/nvim
   ];
+
+  home.packages = with pkgs; [zoxide];
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
