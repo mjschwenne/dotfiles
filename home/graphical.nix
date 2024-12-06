@@ -105,6 +105,7 @@
     mate.engrampa
     swappy
     wl-mirror
+    wdisplays
 
     # Games
     cockatrice
