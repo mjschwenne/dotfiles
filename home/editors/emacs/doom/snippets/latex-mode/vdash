@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# contributor: Matt Schwennesen <matt@schwennesen.org>
+# key: |-
+# name: \vdash
+# group: math
+# condition: (and (texmathp) 'auto)
+# --
+\\vdash
