@@ -554,6 +554,7 @@
   (customize-set-variable 'TeX-engine 'luatex)
   (customize-set-variable 'TeX-parse-self t)
   (customize-set-variable 'TeX-auto-save t)
+  (customize-set-variable 'texmathp-tex-commands '(("mathpar" env-on)))
   (map! :map LaTeX-mode-map :localleader
         :desc "Compile Document" :n "c" #'TeX-command-run-all
         :desc "Clean Document" :n "C" #'TeX-clean
@@ -583,7 +584,6 @@
         :i "<tab>" #'cdlatex-tab))
 
 (use-package! texpresso
-  :hook LaTeX-mode
   :config
   (map! :map LaTeX-mode-map :localleader :desc "TeXpresso" :n "t" #'texpresso))
 
