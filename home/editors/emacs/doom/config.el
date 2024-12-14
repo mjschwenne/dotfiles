@@ -575,6 +575,7 @@
                                                     ("pmatrix" env-on)
                                                     ("mathpar" env-on)))
   (customize-set-variable 'cdlatex-env-alist '(("proof" "\\begin{proof}\n?\n\\end{proof}" nil)
+                                               ("mathpar" "\\begin{mathpar}\n?\n\\end{mathpar}" nil)
                                                ("optp" "\\begin{array}{r@{\\quad}l}\n\\min & ? \ns.t. & \n\\end{array}" nil)))
   (add-to-list 'cdlatex-command-alist '("proof" "Insert proof env" ""
                                         cdlatex-environment ("proof") t nil))
