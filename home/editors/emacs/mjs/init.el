@@ -32,14 +32,29 @@
               scroll-margin 8 hscroll-margin 8
               scroll-conservatively 101)
 
+(use-package doom-themes
+  :defer nil
+  :custom ((doom-themes-enable-bold t)
+           (doom-themes-enable-italic t))
+  :config
+  (load-theme 'doom-nord t))
+
+(use-package solaire-mode
+  :defer nil
+  :config
+  (solaire-global-mode +1))
+  ;; (dolist (face '(mode-line mode-line-inactive))
+  ;; (setf (alist-get face solaire-mode-remap-modeline) nil)))
+
 (use-package catppuccin-theme
   :defer nil
   :custom (catppuccin-flavor 'mocha)
-  :config (require 'catppuccin-theme) (load-theme 'catppuccin t))
+  ;; :config (load-theme 'catppuccin t)
+  )
 
-(set-frame-parameter nil 'alpha-background 80)
+(set-frame-parameter nil 'alpha-background 90)
 
-(add-to-list 'default-frame-alist '(alpha-background . 80))
+(add-to-list 'default-frame-alist '(alpha-background . 90))
 
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path (expand-file-name "autoloads" user-emacs-directory))
@@ -53,10 +68,12 @@
 
 (use-package which-key
   :diminish which-key-mode
-  :init (require 'which-key) (which-key-mode 1))
+  :defer nil
+  :config (which-key-mode 1))
 
-(use-package general :defer nil :config
-  (require 'general)
+(use-package general
+  :defer nil
+  :config
   (general-evil-setup)
   (general-auto-unbind-keys)
   (general-create-definer mjs-leader-def
@@ -72,6 +89,7 @@
   (general-unbind :states '(insert motion visual) :keymaps 'global "M-SPC"))
 
 (use-package evil
+  :defer nil
   :diminish evil-mode
   :custom ((evil-want-keybinding nil)
            (evil-want-integration t)
@@ -79,7 +97,6 @@
            (evil-echo-state nil)
            (evil-undo-system 'undo-redo)
            (evil-want-C-u-scroll t))
-  :init (require 'evil) (evil-mode 1)
   :config
   ;; Make evil search similar to vim
   (evil-select-search-module 'evil-search-module 'evil-search)
@@ -101,9 +118,12 @@
                       "C-j" #'evil-window-down
                       "C-k" #'evil-window-up
                       "C-l" #'evil-window-right
-                      "C-c" #'evil-window-delete))
+                      "C-c" #'evil-window-delete)
+
+  (evil-mode 1))
 
 (use-package evil-org
+  :defer nil
   :after org evil
   :diminish evil-org-mode
   :hook (org-mode . evil-org-mode)
@@ -114,9 +134,10 @@
 
 (use-package evil-collection
   :after evil
+  :defer nil
   :diminish evil-collection-unimpaired-mode
   :custom (evil-collection-setup-minibuffer t)
-  :init (require 'evil-collection) (evil-collection-init))
+  :config (evil-collection-init))
 
 (use-package evil-args
   :after evil
@@ -150,9 +171,10 @@
 
 (use-package evil-escape
   :after evil
+  :defer nil 
   :diminish evil-escape-mode
   :custom (evil-escape-key-sequence "jk")
-  :init (require 'evil-escape) (evil-escape-mode))
+  :config (evil-escape-mode))
 
 (use-package evil-exchange
   :after evil
@@ -160,8 +182,9 @@
 
 (use-package evil-goggles
   :after evil
+  :defer nil
   :diminish evil-goggles-mode
-  :init (require 'evil-goggles) (evil-goggles-mode 1))
+  :config (evil-goggles-mode 1))
 
 (use-package evil-indent-plus
   :after evil
@@ -188,10 +211,12 @@
 
 (use-package evil-snipe
   :after evil
+  :defer nil
   :diminish evil-snipe-local-mode
   :custom ((evil-snipe-smart-case t)
            (evil-snipe-tab-increment t))
-  :init (require 'evil-snipe) (evil-snipe-mode +1)
+  :config
+  (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
 
 (use-package evil-visualstar
@@ -205,13 +230,15 @@
 
 (use-package vimish-fold
   :after evil
+  :defer nil
   :diminish vimish-fold-mode)
 
 (use-package evil-vimish-fold
   :after vimish-fold
+  :defer nil
   :diminish evil-vimish-fold-mode
   :custom (evil-vimish-fold-targets-mode '(prog-mode conf-mode text-mode))
-  :init (global-evil-vimish-fold-mode))
+  :config (global-evil-vimish-fold-mode))
 
 (use-package restart-emacs
   :commands restart-emacs)
@@ -340,7 +367,19 @@
   :hook prog-mode)
 
 (use-package telephone-line
-  :init (require 'telephone-line) (telephone-line-defsegment* mjs/popup-segment ()
+  :defer nil
+  :custom (telephone-line-lhs
+           '((evil . (telephone-line-evil-tag-segment))
+             (accent . (telephone-line-process-segment
+                        mjs/minor-mode-segment mjs/popup-segment))
+             (nil . (mjs/buffer-mod))))
+  (telephone-line-rhs
+   '((nil . (telephone-line-misc-info-segment
+             telephone-line-atom-encoding-segment))
+     (accent . (telephone-line-major-mode-segment))
+     (evil . (mjs/buffer-position))))
+  :config
+  (telephone-line-defsegment* mjs/popup-segment ()
           (cond ((not (boundp 'popper-popup-status)) "")
                 ((eq popper-popup-status 'popup) "POPUP")
                 ((eq popper-popup-status 'raised) "RAISED")
@@ -394,18 +433,6 @@
                    local-map ,(make-mode-line-mouse-map
                                'mouse-2 #'mode-line-widen)
                    face ,face)))
-  (telephone-line-mode +1)
-  :custom (telephone-line-lhs
-           '((evil . (telephone-line-evil-tag-segment))
-             (accent . (telephone-line-process-segment
-                        mjs/minor-mode-segment mjs/popup-segment))
-             (nil . (mjs/buffer-mod))))
-  (telephone-line-rhs
-   '((nil . (telephone-line-misc-info-segment
-             telephone-line-atom-encoding-segment))
-     (accent . (telephone-line-major-mode-segment))
-     (evil . (mjs/buffer-position))))
-  :config
   (set-face-foreground 'telephone-line-evil
                        (catppuccin-get-color 'base))
   (set-face-background 'telephone-line-evil-normal
@@ -428,7 +455,8 @@
                       :background (catppuccin-get-color 'surface0))
   (set-face-attribute 'mode-line nil
                       :foreground (catppuccin-get-color 'text)
-                      :background (catppuccin-get-color 'base)))
+                      :background (catppuccin-get-color 'base))
+  (telephone-line-mode 1))
 
 (setq display-line-numbers-type 'relative
       display-line-numbers-current-absolute t)
@@ -437,19 +465,20 @@
 (add-hook 'conf-mode-hook #'display-line-numbers-mode)
 
 (use-package vi-tilde-fringe
+  :defer nil
   :diminish vi-tilde-fringe-mode
-  :init (require 'vi-tilde-fringe) (global-vi-tilde-fringe-mode))
+  :config (global-vi-tilde-fringe-mode))
 
 (use-package nerd-icons)
 
 (use-package dashboard
-  :init (defun mjs/dashboard-next-items ()
+  :defer nil
+  :config (defun mjs/dashboard-next-items ()
           (unless (and (org-entry-is-todo-p)
                        (not (org-entry-is-done-p))
                        (not (org-in-archived-heading-p))
                        (string= (org-get-todo-state) "NEXT"))
             (point)))
-  (require 'dashboard)
   (dashboard-setup-startup-hook)
   (mjs-leader-def :keymaps 'override
     "D" '("Open Dashboard" . dashboard-open))
@@ -473,6 +502,7 @@
   (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs")))
 
 (use-package popper
+  :defer nil
   :custom (popper-reference-buffers '("\\*Messages\\*"
                                       "Output\\*$"
                                       "\\*Backtrace\\*"
@@ -502,7 +532,8 @@
                            (mode . (helpful-mode help-mode))
                            (direction . right)
                            (window-width 0.5))))
-  :init (require 'popper) (popper-mode +1)
+  :config
+  (popper-mode +1)
   (require 'popper-echo)
   (popper-echo-mode +1)
   (mjs-leader-def :keymaps 'override
@@ -519,6 +550,15 @@
   (advice-add #'evil-force-normal-state :after #'mjs/escape-popups))
 
 (use-package helpful
+  :commands (helpful-callable
+             helpful-function
+             helpful-macro
+             helpful-command
+             helpful-key
+             helpful-variable
+             helpful-at-point
+             helpful-symbol
+             helpful-kill-buffers)
   :init (mjs-leader-def :keymaps 'override
           "h" '(nil :which-key "Help")
           "h f" '("Callable" . helpful-callable)
@@ -535,10 +575,11 @@
           "h q" '("Kill Help Buffers" . helpful-kill-buffers)))
 
 (use-package vertico
+  :defer nil
   :custom (vertico-resize t)
   (vertico-cycle t)
   (enable-recursive-minibuffers t)
-  :init (defun crm-indicator (args)
+  :config  (defun crm-indicator (args)
           (cons (format "[CRM%s] %s"
                         (replace-regexp-in-string
                          "\\`\\[.*?\\*\\|\\[.*?]\\*\\'" ""
@@ -549,10 +590,6 @@
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible f face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-  ;; While my understanding is that this should go in the :config
-  ;; section, it doesn't seem to actually cause the mode to be
-  ;; properly enabled when called from that section for some reason.
-  (require 'vertico)
   (vertico-mode)
   (savehist-mode)
   (general-define-key :keymaps 'vertico-map :states '(insert normal visual motion)
@@ -574,22 +611,26 @@
 
 (use-package vertico-directory
   :after vertico
+  :defer nil
   :ensure nil)
 
 (use-package vertico-reverse
   :after vertico
+  :defer nil
   :ensure nil
-  :init (require 'vertico-reverse) (vertico-reverse-mode))
+  :config (vertico-reverse-mode))
 
 (use-package marginalia
   :general (:keymaps 'minibuffer-local-map
                      "M-A" #'marginalia-cycle)
-  :init (require 'marginalia) (marginalia-mode))
+  :defer nil
+  :config (marginalia-mode))
 
 (use-package nerd-icons-completion
   :config (nerd-icons-completion-mode))
 
 (use-package orderless
+  :defer nil
   :ensure t
   :custom (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
@@ -653,6 +694,7 @@
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package corfu
+  :defer nil
   :custom (corfu-cycle t)
   (completion-cycle-threshold 3)
   (corfu-auto t)
@@ -663,10 +705,11 @@
                      [tab] #'corfu-next
                      "S-TAB" #'corfu-previous
                      [backtab] #'corfu-previous)
-  :init (require 'corfu) (global-corfu-mode))
+  :config (global-corfu-mode))
 
 (use-package cape
   :after corfu
+  :defer nil
   :hook (prog-mode . (lambda ()
                        (add-to-list 'completion-at-point-functions #'cape-keyword)))
   (text-mode . (lambda ()
@@ -676,8 +719,13 @@
                 (add-to-list 'completion-at-point-functions #'cape-elisp-block)))
   :config (add-to-list 'completion-at-point-functions #'cape-file))
 
+(use-package cape-keyword
+  :ensure nil
+  :commands (cape-keyword))
+
 (use-package company-wordfreq
   :after cape
+  :commands (company-wordfreq)
   :init (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-wordfreq)))
 
 (global-prettify-symbols-mode +1)
@@ -1233,6 +1281,7 @@
 
 (use-package org-appear
   :after org
+  :defer nil
   :custom (org-hide-emphasis-markers t)
   (org-appear-autolinks t)
   (org-appear-trigger 'manual)
@@ -1248,7 +1297,7 @@
   (olivetti-lighter " 󰘞")
   :hook (org-mode . olivetti-mode)
   :init (diminish 'visual-line-mode)
-  :init (mjs-local-leader-def :keymaps 'org-mode-map
+  (mjs-local-leader-def :keymaps 'org-mode-map
           "o" '("Toggle Olivetti" . olivetti-mode)))
 
 (use-package flycheck
@@ -1819,6 +1868,7 @@ used if TAG-LIST is empty."
                (org-cite-key ((t (:foreground ,(catppuccin-get-color 'green) :slant italic)))))
 
 (use-package citar
+  :defer nil
   :custom (citar-bibliography org-cite-global-bibliography)
   :hook ((LaTeX-mode . citar-capf-setup)
          (org-mode . citar-capf-setup))
@@ -2098,10 +2148,10 @@ used if TAG-LIST is empty."
            (calfw-blocks-lines-per-hour 2)))
 
 (use-package direnv
+  :defer nil
   :general (mjs-leader-def :keymaps 'override
              "d" '("Direnv Allow" . direnv-allow))
-  :init
-  (require 'direnv)
+  :config 
   (direnv-mode))
 
 (use-package sly
@@ -2148,3 +2198,81 @@ used if TAG-LIST is empty."
   :hook (coq-mode . (lambda ()
                       (set-face-background 'proof-locked-face
                         (catppuccin-get-color 'surface0)))))
+
+;; Packages:
+;; 
+;; org-modern
+;; texpresso
+;; ready-player
+;; quarto-mode
+;; protobuf mode
+;; ts-fold
+;; apheleia
+;; dirvish + diredfl
+;; quickrun
+;; magit
+;; makefile-executor
+
+;; company-coq
+
+;; go-eldoc
+;; go-mode
+;; gorepl-mode
+;; go-tag
+;; go-gen-test
+;; company-go
+;; flycheck-golangci-lint
+
+;; evil-tex
+;; adaptive-wrap
+;; latex-preview-pane
+;; company-auctex
+;; company-reftex
+;; company-math
+
+;; ledger-mode
+;; evil-ledger
+;; flycheck-ledger
+
+;; markdown-mode
+;; markdown-toc
+;; edit-indirect (required by markdown-mode according to DOOM)
+;; evil-markdown
+
+;; org-pomodoro
+
+;; pip-requirements
+;; lsp-pyright
+;; pyvenv
+;; python-pytest
+;; pyimport
+;; py-isort
+
+;; fish-mode
+;; company-shell?
+
+;; doom-modeline
+;; evil-anzu?
+
+;; indent-bars
+
+;; hl-todo
+
+;; diff-hl
+
+;; Doom themes
+
+;; Maybe
+;;
+;; Flymake, flymake-popup-tip flymake-popon
+
+;; Modules:
+;;
+;; file templates
+;; fold
+;; snippets
+;; electric
+;; undo -> vundo, undo-fu-session, undo-fu
+;; lsp -> eglot, consult-lsp, lsp-ui, flycheck-eglot
+;; pdf
+;; tree sitter

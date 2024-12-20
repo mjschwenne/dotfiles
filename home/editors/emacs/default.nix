@@ -78,20 +78,21 @@ in {
   ];
 
   home.file = {
-    ".config/emacs-configs/mjs" = {
+    ".emacs.d" = {
       source = ./mjs;
       recursive = true;
     };
+    ".config/emacs-config/mjs/logo.webp".source = ./mjs/emacs.webp;
     ".config/emacs-configs/doom-config" = {
       source = ./doom;
       recursive = true;
     };
-    ".emacs-profiles.el".text = ''
-      (("mjs" . ((user-emacs-directory . "~/.config/emacs-configs/mjs/")
-                (nix-elisp-bundle . "${emacs.deps}")
-                (straight-p . nil)))
-       ("default" . ((user-emacs-directory . "~/.config/emacs-configs/doom/")
-      			(env . (("DOOMDIR" . "~/.config/emacs-configs/doom-config/"))))))
-    '';
+    # ".emacs-profiles.el".text = ''
+    #   (("mjs" . ((user-emacs-directory . "~/.config/emacs-configs/mjs/")
+    #             (nix-elisp-bundle . "${emacs.deps}")
+    #             (straight-p . nil)))
+    #    ("default" . ((user-emacs-directory . "~/.config/emacs-configs/doom/")
+    #   			(env . (("DOOMDIR" . "~/.config/emacs-configs/doom-config/"))))))
+    # '';
   };
 }
