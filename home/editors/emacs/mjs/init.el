@@ -723,14 +723,17 @@
   :ensure nil
   :commands (cape-keyword))
 
+(use-package company)
+
 (use-package company-wordfreq
-  :after cape
+  :after (cape company)
   :commands (company-wordfreq)
   :init (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-wordfreq)))
 
 (global-prettify-symbols-mode +1)
 
 (add-hook 'emacs-lisp-mode-hook (lambda () (setq mode-name "󰘧 Emacs Lisp")))
+(add-hook 'emacs-lisp-mode-hook #'electric-pair-mode)
 
 (use-package lispy
   :diminish "'󰅲"
@@ -1259,7 +1262,6 @@
   :after org
   :hook (org-mode . eros-mode))
 
-
 (use-package org-contacts
   :after org
   :custom (org-contacts-files
@@ -1363,40 +1365,6 @@ the characters."
                                  (char-to-string org-indent-boundary-char)))
                     nil 'face 'org-indent))))))
   (advice-add 'org-indent--compute-prefixes :override #'mjs/org-indent-compute-prefixes))
-
-(use-package svg-tag-mode
-  :hook org-mode
-  :custom (svg-tag-tags
-           '(("^\\*+ \\(TODO\\|BLOCKED\\)" .
-              ((lambda (tag)
-                 (svg-lib-tag tag nil
-                              :margin 0
-                              :font-family "JetBrainsMono Nerd Font"
-                              :font-weight 500
-                              :background (catppuccin-get-color 'peach)
-                              :foreground (catppuccin-get-color 'base)
-                              ))))
-             ("^\\*+ \\(NEXT\\)" . ((lambda (tag)
-                                      (svg-lib-tag tag nil
-                                                   :margin 0
-                                                   :font-family "JetBrainsMono Nerd Font"
-                                                   :font-weight 500
-                                                   :background (catppuccin-get-color 'green)
-                                                   :foreground (catppuccin-get-color 'base)))))
-             ("^\\*+ \\(DONE\\|KILLED\\)" . ((lambda (tag)
-                                               (svg-lib-tag tag nil
-                                                            :margin 0
-                                                            :font-family "JetBrainsMono Nerd Font"
-                                                            :font-weight 500
-                                                            :foreground (catppuccin-get-color 'overlay0)))))
-             ("\\(:TODO:\\)" . ((lambda (tag)
-                                  (svg-lib-tag (substring tag 1 5) nil
-                                               :margin 0
-                                               :font-family "JetBrainsMono Nerd Font"
-                                               :font-weight 500
-                                               :background (catppuccin-get-color 'peach)
-                                               :foreground (catppuccin-get-color 'base)))))
-             )))
 
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
@@ -1857,6 +1825,7 @@ used if TAG-LIST is empty."
 
 (use-package oc
   :ensure nil
+  :after org
   :custom ((org-cite-global-bibliography '("~/Documents/zotero.bib"))
            (org-cite-csl-styles-dir "~/Zotero/styles/")
            (org-cite-export-processors '((latex biblatex)
@@ -1865,10 +1834,12 @@ used if TAG-LIST is empty."
   :general (mjs-local-leader-def :keymaps 'org-mode-map
              "C" '("Citation" . org-cite-insert))
   :custom-face (org-cite ((t (:foreground ,(catppuccin-get-color 'green)))))
-               (org-cite-key ((t (:foreground ,(catppuccin-get-color 'green) :slant italic)))))
+  (org-cite-key ((t (:foreground ,(catppuccin-get-color 'green) :slant italic))))
+  :config )
 
 (use-package citar
   :defer nil
+  :after oc
   :custom (citar-bibliography org-cite-global-bibliography)
   :hook ((LaTeX-mode . citar-capf-setup)
          (org-mode . citar-capf-setup))
@@ -2182,22 +2153,175 @@ used if TAG-LIST is empty."
   (haskell-mode . interactive-haskell-mode))
 
 (use-package proof-general
-  :general (mjs-local-leader-def :keymaps 'coq-mode-map
-             "a" '("Active Script" . proof-toggle-active-scripting)
-             "b" '("Assert Buffer" . proof-process-buffer)
-             "c" '("Clear Buffers" . pg-response-clear-displays)
-             "i" '("Interrupt Assistant" . proof-interrupt-process)
-             "n" '("Assert Next Command" . proof-assert-next-command-interactive)
-             "p" '("Undo Last Command" . proof-undo-last-successful-command)
-             "l" '("Assert to Line" . proof-goto-point)
-             "L" '("Retract to Line" . proof-retract-until-point-interactive)
-             "r" '("Retract Buffer" . proof-retract-buffer)
-             "x" '("Exit Assistant" . proof-shell-exit))
-  :diminish proof-active-buffer-fake-minor-mode
-  :diminish (holes-mode . "󰠣 ")
   :hook (coq-mode . (lambda ()
                       (set-face-background 'proof-locked-face
-                        (catppuccin-get-color 'surface0)))))
+                                           "#3b4252")))
+  :custom (coq-smie-user-tokens
+           '(("," . ":=")
+             ("∗" . "->")
+             ("-∗" . "->")
+             ("∗-∗" . "->")
+             ("==∗" . "->")
+             ("=∗" . "->") 			;; Hack to match ={E1,E2}=∗
+             ("|==>" . ":=")
+             ("⊢" . "->")
+             ("⊣⊢" . "->")
+             ("↔" . "->")
+             ("←" . "<-")
+             ("→" . "->")
+             ("=" . "->")
+             ("==" . "->")
+             ("/\\" . "->")
+             ("⋅" . "->")
+             (":>" . ":=")
+             ("by" . "now")
+             ("forall" . "now")              ;; NB: this breaks current ∀ indentation.
+             )
+           )
+  :mode ("\\.v\\'" . coq-mode)
+  :general (mjs-local-leader-def :keymaps 'coq-mode-map
+             "a" '("Active Script" . proof-toggle-active-scripting)
+             "g" '(nil :which-key "Goto")
+             "g e" '("Command End" . proof-goto-command-end)
+             "g l" '("Locked" . proof-goto-end-of-locked)
+             "g s" '("Command Start" . proof-goto-command-start)
+             "i" '(nil :which-key "Information")
+             "i b" '("About" . coq-About)
+             "i B" '("About with All" . coq-About-with-all)
+             "i c" '("Check" . coq-Check)
+             "i C" '("Check with All" . coq-Check-show-all)
+             "i f" '("Find Theorems" . proof-find-theorems)
+             "i p" '("Print" . coq-Print)
+             "i P" '("Print with All" . coq-Print-with-all)
+             "i i" '(nil :which-key "Implicit")
+             "i i b" '("About with Implicits" . coq-About-with-implicits)
+             "i i c" '("Check with Implicits" . coq-Check-show-implicits)
+             "i i p" '("Print with Implicits" . coq-Print-with-implicits)
+             "I" '(nil :which-key "Insert")
+             "I c" '("Command" . coq-insert-command)
+             "I e" '("End Section" . coq-end-Section)
+             "I i" '("Intros" . coq-insert-intros)
+             "I r" '("Requires" . coq-insert-requires)
+             "I s" '("Section or Module" . coq-insert-section-or-module)
+             "I t" '("Tactic" . coq-insert-tactic)
+             "I T" '("Tactical" . coq-insert-tactical)
+             "l" '(nil :which-key "Layout")
+             "l c" '("Clear Buffers" . pg-response-clear-displays)
+             "l l" '("Adjust Layout" . proof-layout-windows)
+             "l p" '("Proof State" . proof-prf)
+             "." '("Assert to Line" . proof-goto-point)
+             "L" '("Retract to Line" . proof-retract-until-point-interactive)
+             "n" '("Assert Next Command" . proof-assert-next-command-interactive)
+             "N" '("Undo Last Command" . proof-undo-last-successful-command)
+             "p" '(nil :which-key "Proof")
+             "p i" '("Interrupt" . proof-interrupt-process)
+             "p p" '("Process Buffer" . proof-process-buffer)
+             "p q" '("Quit" . proof-shell-exit)
+             "p r" '("Retract" . proof-retract-buffer)
+             "]" '("Assert Next Command" . proof-assert-next-command-interactive)
+             "[" '("Undo Last Command" . proof-undo-last-successful-command))
+  :diminish proof-active-buffer-fake-minor-mode
+  :diminish hs-minor-mode 
+  :diminish outline-minor-mode
+  :diminish (holes-mode . "󰠣 "))
+
+(use-package math-symbol-lists
+  :demand t
+  :init
+  (defun mjs/inherit-input-method ()
+    "Inherit input method from `minibuffer-selected-window'."
+    (let* ((win (minibuffer-selected-window))
+           (buf (and win (window-buffer win))))
+      (when buf
+        (activate-input-method (buffer-local-value 'current-input-method buf)))))
+  :config
+  (add-hook 'coq-mode-hook (lambda () (set-input-method "math")
+                             (ligature-mode -1)
+                             ;; Remove the :: symbol
+                             (setq prettify-symbols-alist '())
+                             (setq coq-prettify-symbols-alist '(("/\\" . 8743)
+                                                                ("\\/" . 8744)
+                                                                ("forall" . 8704)
+                                                                ("fun" . 955)
+                                                                ("exists" . 8707)
+                                                                ("->" . 8594)
+                                                                ("<-" . 8592)
+                                                                ("=>" . 8658)))))
+  (add-hook 'minibuffer-setup-hook #'mjs/inherit-input-method)
+  (quail-define-package "math" "UTF-8" "Ω" t)
+  (quail-define-rules
+   ("\\fun"    955)
+   ("\\mult"   8901)
+   ("\\ent"    8866)
+   ("\\valid"  10003)
+   ("\\diamond" 9671)
+   ("\\box"    9633)
+   ("\\bbox"   9632)
+   ("\\later"  9655)
+   ("\\pred"   966)
+   ("\\and"    8743)
+   ("\\or"     8744)
+   ("\\comp"   8728)
+   ("\\ccomp"  9678)
+   ("\\all"    8704)
+   ("\\ex"     8707)
+   ("\\to"     8594)
+   ("\\sep"    8727)
+   ("\\lc"     8988)
+   ("\\rc"     8989)
+   ("\\Lc"     9121)
+   ("\\Rc"     9124)
+   ("\\lam"    955)
+   ("\\empty"  8709)
+   ("\\Lam"    923)
+   ("\\Sig"    931)
+   ("\\-"      8726)
+   ("\\aa"     9679)
+   ("\\af"     9711)
+   ("\\auth"   9679)
+   ("\\frag"   9711)
+   ("\\iff"    8596)
+   ("\\gname"  947)
+   ("\\incl"   8828)
+   ("\\latert" 9654)
+   ("\\update" 8669)
+
+   ;; accents (for iLöb)
+   ("\\\"o" 246)
+
+   ;; subscripts and superscripts
+   ("^^+" 8314) ("___+" 8330) ("^^-" 8315)
+   ("___0" 8320) ("___1" 8321) ("___2" 8322) ("___3" 8323) ("___4" 8324)
+   ("___5" 8325) ("___6" 8326) ("___7" 8327) ("___8" 8328) ("___9" 8329)
+
+   ("___a" 8336) ("___e" 8337) ("___h" 8341) ("___i" 7522) ("___k" 8342)
+   ("___l" 8343) ("___m" 8344) ("___n" 8345) ("___o" 8338) ("___p" 8346)
+   ("___r" 7523) ("___s" 8347) ("___t" 8348) ("___u" 7524) ("___v" 7525) ("___x" 8339))
+  (mapc (lambda (x)
+          (if (cddr x)
+              (quail-defrule (cadr x) (car (cddr x)))))
+                                        ; need to reverse since different emacs packages disagree on whether
+                                        ; the first or last entry should take priority...
+                                        ; see <https://mattermost.mpi-sws.org/iris/pl/46onxnb3tb8ndg8b6h1z1f7tny> for discussion
+        (reverse (append math-symbol-list-basic math-symbol-list-extended))))
+
+(use-package company-coq
+  :after proof-general
+  :diminish (company-coq-mode . "🐔 ")
+  :hook (coq-mode . company-coq-mode)
+  :general (mjs-local-leader-def :keymaps 'coq-mode-map
+             "f" '("Fold" . company-coq-fold)
+             "g d" '("Definition" . company-coq-jump-to-definition)
+             "g p" '("Proof" . company-coq-end-of-proof)
+             "i o" '("Occurrences" . company-coq-occur)
+             "I l" '("Lemma from Goal" . company-coq-lemma-from-goal)
+             "I m" '("Match" . company-coq-insert-match-construct)
+             "h" '(nil :which-key "Help")
+             "h e" '("Error" . company-coq-document-error)
+             "h E" '("Browse Errors" . company-coq-browse-error-messages)
+             "h h" '("Coq Documentation" . company-coq-doc)
+             "u" '("Unfold" . company-coq-unfold))
+  :config (add-to-list 'company-coq-disabled-features 'company))
 
 ;; Packages:
 ;; 
@@ -2212,8 +2336,6 @@ used if TAG-LIST is empty."
 ;; quickrun
 ;; magit
 ;; makefile-executor
-
-;; company-coq
 
 ;; go-eldoc
 ;; go-mode
@@ -2259,8 +2381,6 @@ used if TAG-LIST is empty."
 ;; hl-todo
 
 ;; diff-hl
-
-;; Doom themes
 
 ;; Maybe
 ;;
