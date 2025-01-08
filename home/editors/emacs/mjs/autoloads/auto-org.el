@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;;;###autoload
 (defun mjs/org-babel-remove-result-blocks (remove-all)
   (interactive "P")

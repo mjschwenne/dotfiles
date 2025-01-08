@@ -1,11 +1,13 @@
 ;; -*- lexical-binding: t; -*-
 
+;;; Code:
 (setq user-full-name "Matt Schwennesen"
       user-login-name "matt"
       user-real-login-name "mjs"
       user-mail-address "matt@schwennesen.org")
 
 (require 'use-package)
+;; (setq debug-on-error t)
 (setq use-package-verbose t
 	  use-package-always-defer t
 	  use-package-always-ensure t
@@ -38,13 +40,6 @@
            (doom-themes-enable-italic t))
   :config
   (load-theme 'doom-nord t))
-
-(use-package solaire-mode
-  :defer nil
-  :config
-  (solaire-global-mode +1))
-  ;; (dolist (face '(mode-line mode-line-inactive))
-  ;; (setf (alist-get face solaire-mode-remap-modeline) nil)))
 
 (use-package catppuccin-theme
   :defer nil
@@ -337,7 +332,8 @@
      "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
      "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
      "\\\\" "://"))
-  ;; Enable most ligatures in text mode, but not all of them since some can mess with formatting
+  ;; Enable most ligatures in text mode, but not all of them since some can
+  ;; mess with formatting
   ;; in org-mode or markdown documents
   (ligature-set-ligatures
    'text-mode
@@ -366,6 +362,24 @@
   :diminish "󰙸 "
   :hook prog-mode)
 
+(use-package hl-todo
+  :custom (hl-todo-highlight-punctuation ":")
+  (hl-todo-keyword-faces
+   '(
+     ("DONE" . "#a3be8c")
+     ("OKAY" . "#88c0d0")
+     ("NEXT" . "#88c0d0")
+     ("NOTE" . "#88c0d0")
+     ("TODO" . "#ebcb8b")
+     ("HOLD" . "#ebcb8b")
+     ("HACK" . "#ebcb8b")
+     ("XXX*" . "#ebcb8b")
+     ("BUG" . "#bf616a")
+     ("FIXME". "#bf616a")
+     ("FAIL" . "#bf616a")
+    ))
+  :hook (prog-mode . hl-todo-mode))
+
 (use-package telephone-line
   :defer nil
   :custom (telephone-line-lhs
@@ -375,10 +389,15 @@
              (nil . (mjs/buffer-mod))))
   (telephone-line-rhs
    '((nil . (telephone-line-misc-info-segment
+             mjs/anzu-segment
              telephone-line-atom-encoding-segment))
      (accent . (telephone-line-major-mode-segment))
      (evil . (mjs/buffer-position))))
   :config
+  (telephone-line-defsegment* mjs/anzu-segment ()
+    (funcall anzu-mode-line-update-function
+             anzu--current-position
+             anzu--total-matched))
   (telephone-line-defsegment* mjs/popup-segment ()
           (cond ((not (boundp 'popper-popup-status)) "")
                 ((eq popper-popup-status 'popup) "POPUP")
@@ -390,15 +409,15 @@
       (concat
        (if read-only
            (propertize "󱙃 "
-                       'face `(:inherit mode-line-emphasis
-                                        :foreground ,(catppuccin-get-color 'yellow)))
+                       'face '(:inherit mode-line-emphasis
+                                        :foreground "#ebcb8b"))
          (if modifed
              (propertize "󰆓 "
-                         'face `(:inherit mode-line-emphasis
-                                          :foreground ,(catppuccin-get-color 'red)))
+                         'face '(:inherit mode-line-emphasis
+                                          :foreground "#bf616a"))
            (propertize "󰆓 "
-                       'face `(:inherit mode-line-emphasis
-                                        :foreground ,(catppuccin-get-color 'green)))))
+                       'face '(:inherit mode-line-emphasis
+                                        :foreground "#a3be8c"))))
        (propertize (buffer-name) 'face 'mode-line-emphasis))))
   (telephone-line-defsegment* mjs/buffer-position ()
     (cond ((eq major-mode 'pdf-view-mode)
@@ -433,30 +452,39 @@
                    local-map ,(make-mode-line-mouse-map
                                'mouse-2 #'mode-line-widen)
                    face ,face)))
-  (set-face-foreground 'telephone-line-evil
-                       (catppuccin-get-color 'base))
-  (set-face-background 'telephone-line-evil-normal
-                       (catppuccin-get-color 'blue))
-  (set-face-background 'telephone-line-evil-insert
-                       (catppuccin-get-color 'green))
-  (set-face-background 'telephone-line-evil-visual
-                       (catppuccin-get-color 'mauve))
-  (set-face-background 'telephone-line-evil-emacs
-                       (catppuccin-get-color 'red))
-  (set-face-background 'telephone-line-evil-operator
-                       (catppuccin-get-color 'peach))
-  (set-face-background 'telephone-line-evil-motion
-                       (catppuccin-get-color 'pink))
+  (set-face-foreground 'telephone-line-evil "#3b4252")
+  (set-face-background 'telephone-line-evil-normal "#5e81ac")
+  (set-face-background 'telephone-line-evil-insert "#a3be8c")
+  (set-face-foreground 'telephone-line-evil-insert "#3b4252")
+  (set-face-background 'telephone-line-evil-visual "#b48ead")
+  (set-face-foreground 'telephone-line-evil-visual "#3b4252")
+  (set-face-background 'telephone-line-evil-emacs "#bf616a")
+  (set-face-background 'telephone-line-evil-operator "#d08770")
+  (set-face-foreground 'telephone-line-evil-operator "#3b4252")
+  (set-face-background 'telephone-line-evil-motion "#8fbcbb")
   (set-face-attribute 'telephone-line-accent-active nil
-                      :foreground (catppuccin-get-color 'text)
-                      :background (catppuccin-get-color 'surface1))
+                      :foreground "#d8dee9"
+                      :background "#434c5e")
   (set-face-attribute 'telephone-line-accent-inactive nil
-                      :foreground (catppuccin-get-color 'text)
-                      :background (catppuccin-get-color 'surface0))
+                      :foreground "#d8dee9"
+                      :background "#4c566a")
   (set-face-attribute 'mode-line nil
-                      :foreground (catppuccin-get-color 'text)
-                      :background (catppuccin-get-color 'base))
+                      :foreground "#d8dee9"
+                      :background "#3b4252")
   (telephone-line-mode 1))
+
+(use-package anzu
+  :after evil
+  :defer nil
+  :custom ((anzu-mode-lighter "")
+           (anzu-cons-mode-line-p nil))
+  :custom-face
+  (anzu-mode-line ((t  :foreground "#d8dee9")))
+  :config (global-anzu-mode))
+
+(use-package evil-anzu
+  :after evil
+  :defer nil)
 
 (setq display-line-numbers-type 'relative
       display-line-numbers-current-absolute t)
@@ -568,7 +596,7 @@
           "h M" '("Macro" . helpful-macro)
           "h x" '("Command" . helpful-command)
           "h k" '("Key" . helpful-key)
-          "h K" '("Kaymap" . describe-keymap)
+          "h K" '("Keymap" . describe-keymap)
           "h v" '("Variable" . helpful-variable)
           "h p" '("Thing-at-Point" . helpful-at-point)
           "h s" '("Symbol" . helpful-symbol)
@@ -1175,11 +1203,11 @@
            "\n* Session %<%Y-%m-%d>\n\n%?"
            :jump-to-captured t
            :immediate-finish t)))
-  (set-face-foreground 'org-verbatim (catppuccin-get-color 'mauve))
+  (set-face-foreground 'org-verbatim "#b48ead")
   (set-face-attribute 'org-quote nil
-                      :background (catppuccin-get-color 'mantle)
+                      :background "#3b4252" 
                       :extend t)
-  (set-face-foreground 'org-table (catppuccin-get-color 'subtext1))
+  (set-face-foreground 'org-table "#d8dee9")
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -1219,15 +1247,15 @@
 (use-package org-habit
   :ensure nil
   :config
-  (set-face-foreground 'org-habit-ready-face (catppuccin-get-color 'base))
-  (set-face-background 'org-habit-ready-face (catppuccin-get-color 'green))
-  (set-face-background 'org-habit-ready-future-face (catppuccin-get-color 'green))
-  (set-face-background 'org-habit-clear-face (catppuccin-get-color 'blue))
-  (set-face-background 'org-habit-clear-future-face (catppuccin-get-color 'blue))
-  (set-face-background 'org-habit-alert-face (catppuccin-get-color 'yellow))
-  (set-face-background 'org-habit-alert-future-face (catppuccin-get-color 'yellow))
-  (set-face-background 'org-habit-overdue-face (catppuccin-get-color 'red))
-  (set-face-background 'org-habit-overdue-future-face (catppuccin-get-color 'red)))
+  (set-face-foreground 'org-habit-ready-face "#2e3440")
+  (set-face-background 'org-habit-ready-face "#a3be8c")
+  (set-face-background 'org-habit-ready-future-face "#a3be8c")
+  (set-face-background 'org-habit-clear-face "#5e81ac")
+  (set-face-background 'org-habit-clear-future-face "#5e81ac")
+  (set-face-background 'org-habit-alert-face "#ebcb8b")
+  (set-face-background 'org-habit-alert-future-face "#ebcb8b")
+  (set-face-background 'org-habit-overdue-face "#bf616a")
+  (set-face-background 'org-habit-overdue-future-face "#bf616a"))
 
 (use-package ob-rust
   :after org)
@@ -1302,12 +1330,21 @@
   (mjs-local-leader-def :keymaps 'org-mode-map
           "o" '("Toggle Olivetti" . olivetti-mode)))
 
+(use-package org-modern
+  :after org
+  :hook (org-mode . org-modern-mode)
+  :config (set-face-attribute 'org-modern-done nil
+                              :background "#4c566a" :foreground "#eceff4"))
+
 (use-package flycheck
   :diminish " 󰨮"
-  :custom (flycheck-global-modes '(not org-capture-mode)))
+  :defer nil
+  :custom (flycheck-global-modes '(not org-capture-mode))
+  :config (global-flycheck-mode))
 
-(use-package flycheck-vale
-  :config (flycheck-vale-setup))
+(use-package flycheck-ledger
+  :after (flycheck ledger)
+  :hook (ledger-mode . (lambda () (require 'flycheck-ledger))))
 
 (use-package jinx
   :diminish " 󰓆"
@@ -1446,8 +1483,7 @@ the characters."
       (evil-set-register
        (or reg ?\")
        (mapconcat #'identity txt))))
-  (add-hook 'pdf-annot-edit-contents-minor-mode-hook #'mjs/pdf-annot-update-header)
-  (pdf-tools-install-noverify))
+  (add-hook 'pdf-annot-edit-contents-minor-mode-hook #'mjs/pdf-annot-update-header))
 
 (use-package saveplace-pdf-view
   :after pdf-view)
@@ -1833,16 +1869,13 @@ used if TAG-LIST is empty."
                                          (t . (csl "ieee.csl")))))
   :general (mjs-local-leader-def :keymaps 'org-mode-map
              "C" '("Citation" . org-cite-insert))
-  :custom-face (org-cite ((t (:foreground ,(catppuccin-get-color 'green)))))
-  (org-cite-key ((t (:foreground ,(catppuccin-get-color 'green) :slant italic))))
+  :custom-face (org-cite ((t (:foreground "#a3be8c"))))
+  (org-cite-key ((t (:foreground "#a3be8c" :slant italic))))
   :config )
 
 (use-package citar
-  :defer nil
   :after oc
   :custom (citar-bibliography org-cite-global-bibliography)
-  :hook ((LaTeX-mode . citar-capf-setup)
-         (org-mode . citar-capf-setup))
   :config
   (defvar citar-indicator-files-icon
     (citar-indicator-create
@@ -1896,6 +1929,12 @@ used if TAG-LIST is empty."
   :init (setq citar-at-point-function 'embark-act)
   :hook ((org-mode . citar-embark-mode)
          (LaTeX-mode . citar-embark-mode)))
+
+(use-package citar-capf
+  :after citar
+  :ensure nil
+  :hook ((org-mode . citar-capf-setup)
+         (LaTeX-mode . citar-capf-setup)))
 
 (use-package latex
   :ensure auctex
@@ -1996,9 +2035,110 @@ used if TAG-LIST is empty."
                                         lazytab-position-cursor-and-edit
                                         nil t nil)))
 
+;; HACK: It's really funny if `edit-indirect' is an
+;; indirect dependency of `markdown-mode'
+(use-package edit-indirect)
+
+(use-package markdown-mode
+  :mode ("/README\\(?:\\.md\\)?\\'" . gfm-mode)
+  :custom ((markdown-italic-underscore t)
+           (markdown-asymmetric-header t)
+           (markdown-gfm-additional-languages '("sh"))
+           (markdown-make-gfm-checkboxes-buttons t)
+           (markdown-fontify-whole-heading-line t)
+           (markdown-fontify-code-blocks-natively t)
+           (markdown-open-command "xdg-open")
+           (markdown-content-type "application/xhtml+xml")
+           (markdown-css-paths
+            '("https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"
+
+              "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"))
+           (markdown-xhtml-header-content
+            (concat "<meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>"
+                    "<style> body { box-sizing: border-box; max-width: 740px; width: 100%;margin: 40px auto; padding: 0 10px; } </style>"
+                    "<script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script>"
+                    "<script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script>"
+                    "<script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightBlock(code); }); });</script>")))
+  :general (mjs-local-leader-def :keymaps 'markdown-mode-map
+             "'" '("Edit Code Block" . markdown-edit-code-block)
+             "o" '("Open Markdown" . markdown-open)
+             "p" '("Preview Markdown" . markdown-preview)
+             "e" '("Export Markdown" . markdown-export)
+             "i" '(nil :which-key "Insert")
+             "i T" '("Table of Content" . markdown-toc-generate-toc)
+             "i i" '("Image" . markdown-insert-image)
+             "i l" '("Link" . markdown-insert-link)
+             "i -" '("Heading" . markdown-insert-hr)
+             "i 1" '("Heading 1" . markdown-insert-header-atx-1)
+             "i 2" '("Heading 2" . markdown-insert-header-atx-2)
+             "i 3" '("Heading 3" . markdown-insert-header-atx-3)
+             "i 4" '("Heading 4" . markdown-insert-header-atx-4)
+             "i 5" '("Heading 5" . markdown-insert-header-atx-5)
+             "i 6" '("Heading 6" . markdown-insert-header-atx-6)
+             "i C" '("Code Block" . markdown-insert-gfm-code-block)
+             "i P" '("Pre Region" . markdown-pre-region)
+             "i Q" '("Blockquote Region" . markdown-blockquote-region)
+             "i [" '("Checkbox" . markdown-insert-gfm-checkbox)
+             "i b" '("Bold" . markdown-insert-bold)
+             "i c" '("Inline Code" . markdown-insert-code)
+             "i e" '("Italic" . markdown-insert-italic)
+             "i f" '("Footnote" . markdown-insert-footnote)
+             "i h" '("Header DWIM" . markdown-insert-header-dwim)
+             "i i" '("Italic" . markdown-insert-italic)
+             "i k" '("Kbd" . markdown-insert-kbd)
+             "i p" '("Pre" . markdown-insert-pre)
+             "i q" '("New Blockquote" . markdown-insert-blockquote)
+             "i s" '("Strike Through" . markdown-insert-strike-through)
+             "i t" '("Table" . markdown-insert-table)
+             "i w" '("Wiki Link" . markdown-insert-wiki-link)
+             "t" '(nil :which-key "Toggle")
+             "t e" '("Inline LaTeX" . markdown-toggle-math)
+             "t f" '("Code Highlights" . markdown-toggle-fontify-code-blocks-natively)
+             "t i" '("Inline Images" . markdown-toggle-inline-images)
+             "t l" '("URL Hiding" . markdown-toggle-url-hiding)
+             "t m" '("Markup Hiding" . markdown-toggle-markup-hiding)
+             "t w" '("Wiki Links" . markdown-toggle-wiki-links)
+             "t x" '("GFM Checkboxes" . markdown-toggle-gfm-checkbox)))
+  ;; FIXME: These pieces of advice break all markdown mode fontification :(
+  ;; :config
+  ;; (advice-add #'markdown-fontify-code-block-natively
+  ;;             :around #'mjs/markdown-optimize-src-buffer-modes)
+  ;; (advice-add #'markdown-match-generic-metadata
+  ;;             :override #'mjs/markdown-disable-front-matter-fontification))
+
+(use-package evil-markdown
+  :hook (markdown-mode . evil-markdown-mode)
+  :general (:keymaps 'evil-markdown-mode-map :states 'normal
+                     "TAB" #'markdown-cycle
+                     "S-TAB" #'markdown-shifttab
+                     "M-r" #'browse-url-of-file)
+  (:keymaps 'evil-markdown-mode-map :states 'insert
+            "M-*" #'markdown-insert-list-item
+            "M-b" #'markdown-insert-bold
+            "M-i" #'markdown-insert-italic
+            "M-`" #'mjs/markdown-insert-strikethrough
+            "M--" #'markdown-insert-hr)
+  (:keymaps 'evil-markdown-mode-map :states 'motion
+            "]h" #'markdown-next-visible-heading
+            "[h" #'markdown-previous-visible-heading
+            "[p" #'markdown-promote
+            "]p" #'markdown-demote
+            "[l" #'markdown-previous-link
+            "]l" #'markdown-next-link)
+  :diminish evil-markdown-mode
+  :config (add-hook 'evil-markdown-mode-hook #'evil-normalize-keymaps))
+
+(use-package quarto-mode)
+
+(use-package ready-player
+  :config (ready-player-mode +1))
+
 (use-package ledger-mode
+  :mode ("\\.ldg\\'" . ledger-mode)
   :custom (ledger-clear-whole-transactions 1)
-  (ledger-mode-should-check-version nil))
+  (ledger-mode-should-check-version nil)
+  :diminish outline-minor-mode
+  :hook (ledger-mode . outline-minor-mode))
 
 (use-package evil-ledger
   :diminish evil-ledger-mode
@@ -2045,38 +2185,36 @@ used if TAG-LIST is empty."
                         (general-define-key :states '(normal motion) :keymaps 'local
                                             "q" #'kill-buffer-and-window)))
   :custom-face
-  (cfw:face-title ((t  :foreground ,(catppuccin-get-color 'yellow)
+  (cfw:face-title ((t  :foreground "#ebcb8b"
                        :weight bold
                        :height 2.0)))
-  (cfw:face-header ((t :foreground ,(catppuccin-get-color 'yellow)
-                       :weight bold)))
-  (cfw:face-sunday ((t :foreground ,(catppuccin-get-color 'red)
-                       :weight bold)))
-  (cfw:face-saturday ((t :foreground ,(catppuccin-get-color 'blue)
+  (cfw:face-header ((t :foreground "#ebcb8b" :weight bold)))
+  (cfw:face-sunday ((t :foreground "#bf616a" :weight bold)))
+  (cfw:face-saturday ((t :foreground "#5e81ac"
                          :weight bold)))
-  (cfw:face-holiday ((t :background ,(catppuccin-get-color 'mantle)
-                        :foreground ,(catppuccin-get-color 'red)
+  (cfw:face-holiday ((t :background "#2e3440" 
+                        :foreground "#bf616a"
                         :weight bold)))
-  (cfw:face-grid ((t :foreground ,(catppuccin-get-color 'subtext0))))
-  (cfw:face-default-content ((t :foreground ,(catppuccin-get-color 'green))))
-  (cfw:face-periods ((t :foreground ,(catppuccin-get-color 'sky))))
-  (cfw:face-day-title ((t :background ,(catppuccin-get-color 'mantle))))
+  (cfw:face-grid ((t :foreground "#d8dee9")))
+  (cfw:face-default-content ((t :foreground "#a3be8c")))
+  (cfw:face-periods ((t :foreground "#88c0d0")))
+  (cfw:face-day-title ((t :background "#3b4252")))
   (cfw:face-default-day ((t :weight bold :inherit cfw:face-day-title)))
-  (cfw:face-annotation ((t :foreground ,(catppuccin-get-color 'text)
+  (cfw:face-annotation ((t :foreground "#eceff4" 
                            :inherit cfw:face-day-title)))
-  (cfw:face-disable ((t :foreground ,(catppuccin-get-color 'subtext0)
+  (cfw:face-disable ((t :foreground "#e5e9f0" 
                         :inherit cfw:face-day-title)))
-  (cfw:face-today-title ((t :foreground ,(catppuccin-get-color 'base)
-                            :background ,(catppuccin-get-color 'green)
+  (cfw:face-today-title ((t :foreground "#2e3440"
+                            :background "#a3be8c" 
                             :weight bold)))
-  (cfw:face-today ((t :background: ,(catppuccin-get-color 'mantle)
+  (cfw:face-today ((t :background: "#434c5e"
                       :weight bold)))
-  (cfw:face-select ((t :background ,(catppuccin-get-color 'overlay2))))
-  (cfw:face-toolbar ((t :foreground ,(catppuccin-get-color 'sapphire)
-                        :background ,(catppuccin-get-color 'sapphire))))
-  (cfw:face-toolbar-button-off ((t :foreground ,(catppuccin-get-color 'subtext0)
+  (cfw:face-select ((t :background "#4c566a")))
+  (cfw:face-toolbar ((t :foreground "#8fbcbb"
+                        :background "#8fbcbb")))
+  (cfw:face-toolbar-button-off ((t :foreground "#d8dee9" 
                                    :weight bold)))
-  (cfw:face-toolbar-button-on ((t :foreground ,(catppuccin-get-color 'subtext1)
+  (cfw:face-toolbar-button-on ((t :foreground "#e5e9f0"
                                    :weight bold)))
   :config
   (evil-set-initial-state 'cfw:calendar-mode 'normal))
@@ -2323,13 +2461,10 @@ used if TAG-LIST is empty."
              "u" '("Unfold" . company-coq-unfold))
   :config (add-to-list 'company-coq-disabled-features 'company))
 
+(use-package protobuf-mode)
+
 ;; Packages:
 ;; 
-;; org-modern
-;; texpresso
-;; ready-player
-;; quarto-mode
-;; protobuf mode
 ;; ts-fold
 ;; apheleia
 ;; dirvish + diredfl
@@ -2352,10 +2487,6 @@ used if TAG-LIST is empty."
 ;; company-reftex
 ;; company-math
 
-;; ledger-mode
-;; evil-ledger
-;; flycheck-ledger
-
 ;; markdown-mode
 ;; markdown-toc
 ;; edit-indirect (required by markdown-mode according to DOOM)
@@ -2363,24 +2494,8 @@ used if TAG-LIST is empty."
 
 ;; org-pomodoro
 
-;; pip-requirements
-;; lsp-pyright
-;; pyvenv
-;; python-pytest
-;; pyimport
-;; py-isort
-
 ;; fish-mode
 ;; company-shell?
-
-;; doom-modeline
-;; evil-anzu?
-
-;; indent-bars
-
-;; hl-todo
-
-;; diff-hl
 
 ;; Maybe
 ;;

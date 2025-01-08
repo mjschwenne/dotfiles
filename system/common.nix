@@ -64,7 +64,7 @@
   };
 
   sops = {
-    defaultSopsFile = ../secrets.yaml;
+    defaultSopsFile = ../file.yaml;
     defaultSopsFormat = "yaml";
 
     age.keyFile = "/home/mjs/.config/sops/age/keys.txt";
