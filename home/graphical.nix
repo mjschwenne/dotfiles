@@ -2,15 +2,18 @@
   osConfig,
   pkgs,
   pkgs-master,
+  pkgs-stable,
   ...
 } @ inputs: let
   packages = with pkgs; [
     # Web browsers
+    librewolf
+    firefox
     brave
 
     # Instant Communications
     slack
-    zoom-us
+    # zoom-us
     kbfs
     keybase
     keybase-gui
@@ -137,7 +140,8 @@
     slurp
     wayland-logout
   ];
-  masterPkgs = with pkgs-master; [librewolf firefox protonvpn-cli protonvpn-gui];
+  masterPkgs = with pkgs-master; [protonvpn-cli protonvpn-gui];
+  stablePkgs = with pkgs-stable; [zoom-us];
 in {
   imports = [./desktop ./applications ./editors/emacs];
 
@@ -186,7 +190,7 @@ in {
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
 
-  home.packages = packages ++ masterPkgs;
+  home.packages = packages ++ masterPkgs ++ stablePkgs;
 
   services = {
     gnome-keyring.enable = true;
