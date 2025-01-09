@@ -41,12 +41,6 @@
   :config
   (load-theme 'doom-nord t))
 
-(use-package catppuccin-theme
-  :defer nil
-  :custom (catppuccin-flavor 'mocha)
-  ;; :config (load-theme 'catppuccin t)
-  )
-
 (set-frame-parameter nil 'alpha-background 90)
 
 (add-to-list 'default-frame-alist '(alpha-background . 90))
@@ -764,6 +758,175 @@
 (add-hook 'emacs-lisp-mode-hook (lambda () (setq mode-name "󰘧 Emacs Lisp")))
 (add-hook 'emacs-lisp-mode-hook #'electric-pair-mode)
 
+(defcustom mjs/indent-bars-inhibit-functions ()
+  "A list of predicate functions.
+
+Each function will be run to check if `indent-bars' should be enabled.
+If any function returns non-nil, the mode will not be activated."
+  :type 'hook
+  :group 'mjs/indent-bars)
+
+(use-package indent-bars
+  :unless noninteractive
+  :hook (((prog-mode conf-mode) . mjs/indent-bars-init-maybe-h)
+         (enable-theme-functions . #'indent-bars-reset-styles))
+  :init (defun mjs/indent-bars-init-maybe-h ()
+          "Enable `indent-bars-mode' depending on `mjs/indent-bars-inhibit-functions'."
+          (unless (run-hook-with-args-until-success 'mjs/indent-bars-inhibit-functions)
+            (indent-bars-mode +1)))
+  :custom ((indent-bars-prefer-character nil)
+           (indent-bars-starting-column 0)
+           (indent-bars-width-frac 0.15)
+           (indent-bars-color-by-depth nil)
+           (indent-bars-color '(font-lock-comment-face :face-bg nil :blend 0.425))
+           (indent-bars-highlight-current-depth nil)
+           (indent-bars-treesit-support nil))
+  :config
+  ;; Org's virtual indentation messes up indent-bars
+  (add-hook 'mjs/indent-bars-inhibit-functions
+            (lambda () (bound-and-true-p org-indent-mode)))
+  ;; Don't display guides in childframe popups
+  (add-hook 'mjs/indent-bars-inhibit-functions
+            (lambda () (frame-parameter nil 'parent-frame)))
+  (defun mjs/indent-bars-prevent-passing-newline-a (fn col &rest args)
+    "The way `indent-bars-display-on-blank-lines' functions, it places text
+properties with a display property containing a newline, which confuses
+`move-to-column'. This breaks `next-line' and `evil-next-line' without this
+advice."
+    (if-let* ((indent-bars-mode)
+              (indent-bars-display-on-blank-lines)
+              (nlp (line-end-position))
+              (dprop (get-text-property nlp 'display))
+              ((seq-contains-p dprop ?\n))
+              ((> col (- nlp (point)))))
+        (goto-char nlp)
+      (apply fn col args)))
+  (advice-add 'move-to-column :around #'mjs/indent-bars-prevent-passing-newline-a)
+  (defun mjs/indent-bars-remove-after-lsp-ui-peek-a (&rest _)
+    (when (and indent-bars-mode
+               (not indent-bars-prefer-character)
+               (overlayp lsp-ui-peek--overlay))
+      (save-excursion
+        (let ((indent-bars--display-function #'ignore)
+              (indent-bars--display-blank-lines-function #'ignore))
+          (indent-bars--fontify (overlay-start lsp-ui-peek--overlay)
+                                (1+ (overlay-end lsp-ui-peek--overlay))
+                                nil)))))
+  (advice-add 'lsp-ui-peek--peek-now :after #'mjs/indent-bars-remove-after-lsp-ui-peek-a)
+  (defun mjs/indent-bars-restore-after-lsp-ui-peek-a (&rest _)
+    (unless indent-bars-prefer-character (indent-bars-setup)))
+  (advice-add 'lsp-ui-peek--peek-hide :after #'mjs/indent-bars-restore-after-lsp-ui-peek-a))
+
+;; STYLE: Redefine fringe bitmaps to be sleeker by making them solid bars
+;; without borders that only take up half the horizontal space in the fringe.
+;; This approach lets us avoid robbing fringe space from other packages/modes
+;; that may need it like magit, flycheck, etc.
+(if (fboundp 'fringe-mode) (fringe-mode '8))
+(setq-default fringes-outside-margins t)
+
+(use-package diff-hl-flydiff
+  :ensure nil
+  :commands diff-hl-flydiff-mode)
+
+(use-package diff-hl
+  :defer nil
+  :commands diff-hl-stage-current-hunk diff-hl-revert-hunk diff-hl-next-hunk diff-hl-previous-hunk
+  :custom-face (diff-hl-insert ((t (:background nil))))
+  (diff-hl-delete ((t (:background nil))))
+  (diff-hl-change ((t (:background nil))))
+  :custom ((diff-hl-draw-borders nil)
+           (diff-hl-fringe-bmp-function #'mjs/diff-hl-type-at-pos-fn)
+           (diff-hl-global-modes '(not image-mode pdf-view-mode))
+           (vc-git-diff-switches '("--histogram"))
+           (diff-hl-flydiff-delay 0.5)
+           (diff-hl-update-async t)
+           (diff-hl-show-stages-changes nil))
+  :hook (diff-hl-mode . diff-hl-flydiff-mode)
+  :hook (vc-dir-mode . turn-on-diff-hl-mode)
+  :hook (dired-mode . mjs/diff-hl-enable-maybe-h)
+  :hook (diff-hl-flydiff-mode . mjs/diff-hl-init-flydiff-mode-h)
+  :init
+  (let* ((width 2)
+         (bitmap (vector (1- (expt 2 width)))))
+    (define-fringe-bitmap 'mjs/diff-hl-bitmap bitmap 1 width '(top t))
+    (define-fringe-bitmap 'mjs/diff-hl-delete-bitmap
+      [216 108 54 27 54 108 216] nil nil 'center))
+  (defun mjs/diff-hl-type-at-pos-fn (type _pos)
+    (if (eq type 'delete)
+        'mjs/diff-hl-delete-bitmap
+      'mjs/diff-hl-bitmap))
+  (defun mjs/diff-hl-enable-maybe-h ()
+    "Conditionally enable `diff-hl-dired-mode' in dired buffers.
+Respects `diff-hl-disable-on-remote'."
+    (unless (and (bound-and-true-p diff-hl-disable-on-remote)
+                 (file-remote-p default-directory))
+      (diff-hl-dired-mode +1)))
+  :config
+  (defun mjs/diff-hl-save-excursion-a (fn &rest args)
+    "Suppresses unexpected cursor movement by `diff-hl-revert-hunk'."
+    (let ((pt (point)))
+      (prog1 (apply fn args)
+        (goto-char pt))))
+  (advice-add 'diff-hl-revert-hunk :around #'mjs/diff-hl-save-excursion-a)
+  (defun mjs/diff-hl-init-flydiff-mode-h ()
+    (if diff-hl-flydiff-mode
+        (add-hook 'evil-insert-state-exit-hook #'diff-hl-flydiff-update)
+      (remove-hook 'evil-insert-state-exit-hook #'diff-hl-flydiff-update)))
+  (defun mjs/diff-hl-shrink-popup-a (fn &rest args)
+    "The revert popup consumes 50% of the frame, regardless of the size of the
+reversion. This resizes the popup to match its contents."
+    (cl-letf* ((refine-mode diff-auto-refine-mode)
+               (diff-auto-refine-mode t)
+               (diff-refine-hunk (lambda ()
+                                   (when refine-mode
+                                     (funcall diff-refine-hunk))
+                                   (shrink-window-if-larger-than-buffer))))
+      (apply fn args)))
+  (advice-add 'diff-hl-revert-hunk-1 :around #'mjs/diff-hl-shrink-popup-a)
+  (defun mjs/diff-hl-kill-thread (&optional block?)
+    (when-let ((th mjs/diff-hl-thread))
+      (when (thread-live-p th)
+        (thread-signal th 'quit nil)
+        (when block?
+          (conditional-case _
+                            (thread-join th)
+                            ((quit error) nil))))))
+  (defvar-local mjs/diff-hl-thread nil)
+  (defun mjs/diff-hl-debounce-threads-a (&rest _)
+    (unless (or inhibit-redisplay
+                non-essential
+                delay-mode-hooks
+                (null (buffer-file-name (buffer-base-buffer)))
+                (null (get-buffer-window (current-buffer))))
+      (if (and diff-hl-update-async
+               (not
+                (run-hook-with-args-until-success 'diff-hl-async-inhibit-functions
+                                                  default-directory)))
+          (progn
+            (mjs/diff-hl-kill-thread)
+            (setq mjs/diff-hl-thread
+                  (make-thread (lambda ()
+                                 (unwind-protect
+                                     (diff-hl--update-safe)
+                                   (setq mjs/diff-hl-thread nil)))
+                               "diff-hl--update-safe")))
+        (diff-hl--update))
+      t))
+  (advice-add 'diff-hl-update :override #'mjs/diff-hl-debounce-threads-a)
+  (defun mjs/diff-hl-only-tick-on-success-a (&rest _)
+    (unless (equal diff-hl--modified-tick (buffer-chars-modified-tick))
+      (when (diff-hl-update)
+        (setq diff-hl--modified-tick (buffer-chars-modified-tick)))))
+  (advice-add 'diff-hl-update-once :override #'mjs/diff-hl-only-tick-on-success-a)
+  ;; HACK: This advice won't work in *all* cases since it's a C function and any call
+  ;; from C doesn't trigger advice, but the thread issues are typically elisp calls.
+  (defun mjs/diff-hl-kill-diff-hl-thread-a (&optional buf)
+    (when-let ((buf (ignore-errors (window-normalize-buffer))))
+      (with-current-buffer buf
+        (mjs/diff-hl-kill-thread t))))
+  (advice-add 'kill-buffer :before #'mjs/diff-hl-kill-diff-hl-thread-a)
+  (global-diff-hl-mode))
+
 (use-package lispy
   :diminish "'󰅲"
   :init (mjs-local-leader-def :keymaps 'emacs-lisp-mode-map
@@ -1354,8 +1517,12 @@
 (use-package flycheck
   :diminish "󰨮 "
   :defer nil
-  :custom (flycheck-global-modes '(not org-mode org-capture-mode))
-  :config (global-flycheck-mode))
+  :custom ((flycheck-global-modes '(not org-mode org-capture-mode))
+           (flycheck-indication-mode 'right-fringe))
+  :config
+  (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
+    [16 48 112 240 112 48 16] nil nil 'center)
+  (global-flycheck-mode))
 
 (use-package flycheck-ledger
   :after (flycheck ledger)
@@ -2494,8 +2661,10 @@ used if TAG-LIST is empty."
 
 ;; Packages:
 ;; 
-;; ts-fold
-;; apheleia
+;; ts-fold and combobulate
+;; shackle
+;; apheleia (format module)
+;; projectile
 ;; dirvish + diredfl
 ;; quickrun
 ;; magit
@@ -2532,3 +2701,5 @@ used if TAG-LIST is empty."
 ;; lsp -> eglot, consult-lsp, lsp-ui, flycheck-eglot
 ;; pdf
 ;; tree sitter
+
+;; magit :: https://github.com/doomemacs/doomemacs/blob/2b4f762b1e6a366cfcd9ffb3e17f127c64df2657/modules/ui/vc-gutter/config.el#L130
