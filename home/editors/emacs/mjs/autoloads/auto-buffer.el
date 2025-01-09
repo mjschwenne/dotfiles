@@ -80,7 +80,7 @@ If TRASH is non-nil, the file is deleted without being moved to trash."
     ;; If recentf mode is enabled, pruge the file from the list of
     ;; recent files.
     (when (bound-and-true-p recentf-mode)
-      (recentf-remove-if-non-kept path))
+      (recentf-remove-if-non-kept file))
     (message "Deleted %S" (abbreviate-file-name file))))
 
 ;;;###autoload
