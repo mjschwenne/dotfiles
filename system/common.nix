@@ -11,9 +11,6 @@
   nix = {
     channel.enable = false;
     registry.nixpkgs.flake = inputs.nixpkgs;
-    # nixPath = [
-    #   "nixpkgs=${nixpkgs.outPath}"
-    # ];
     settings = {
       experimental-features = ["nix-command" "flakes"];
       trusted-users = ["root" "mjs"];
