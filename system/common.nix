@@ -168,6 +168,12 @@
     enchant
     hunspell
     hunspellDicts.en_US-large
+    (aspellWithDicts (dicts:
+      with dicts; [
+        en
+        en-computers
+        en-science
+      ]))
 
     # Security
     sops

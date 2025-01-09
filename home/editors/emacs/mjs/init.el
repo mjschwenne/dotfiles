@@ -7,7 +7,7 @@
       user-mail-address "matt@schwennesen.org")
 
 (require 'use-package)
-;; (setq debug-on-error t)
+
 (setq use-package-verbose t
 	  use-package-always-defer t
 	  use-package-always-ensure t
@@ -751,7 +751,8 @@
   :ensure nil
   :commands (cape-keyword))
 
-(use-package company)
+(use-package company
+  :commands company-dabbrev)
 
 (use-package company-wordfreq
   :after (cape company)
@@ -1296,6 +1297,7 @@
            (list (concat org-directory "contacts.org"))))
 
 (use-package org-fragtog
+  :commands org-fragtog-mode
   :hook (org-mode . (lambda ()
                       (add-hook 'evil-insert-state-entry-hook
                                 (lambda ()
@@ -1336,10 +1338,23 @@
   :config (set-face-attribute 'org-modern-done nil
                               :background "#4c566a" :foreground "#eceff4"))
 
+(use-package org-pomodoro
+  :after org
+  :custom ((org-pomodoro-format " %s")
+           (org-pomodoro-short-break-format "󱁕 %s")
+           (org-pomodoro-long-break-format "󱁕 %s")
+           (org-pomodoro-start-sound-p t)
+           (org-pomodoro-audio-player "play"))
+  :custom-face (org-pomodoro-mode-line-break ((t (:foreground "#a3be8c"))))
+  :general (mjs-local-leader-def :keymaps 'org-mode-map
+             "t p" '("Pomodoro" . org-pomodoro))
+  (mjs-leader-def :keymaps 'override
+    "n p" '("Pomodoro" . org-pomodoro)))
+
 (use-package flycheck
-  :diminish " 󰨮"
+  :diminish "󰨮 "
   :defer nil
-  :custom (flycheck-global-modes '(not org-capture-mode))
+  :custom (flycheck-global-modes '(not org-mode org-capture-mode))
   :config (global-flycheck-mode))
 
 (use-package flycheck-ledger
@@ -2316,7 +2331,6 @@ used if TAG-LIST is empty."
              ("forall" . "now")              ;; NB: this breaks current ∀ indentation.
              )
            )
-  :mode ("\\.v\\'" . coq-mode)
   :general (mjs-local-leader-def :keymaps 'coq-mode-map
              "a" '("Active Script" . proof-toggle-active-scripting)
              "g" '(nil :which-key "Goto")
@@ -2358,8 +2372,8 @@ used if TAG-LIST is empty."
              "p r" '("Retract" . proof-retract-buffer)
              "]" '("Assert Next Command" . proof-assert-next-command-interactive)
              "[" '("Undo Last Command" . proof-undo-last-successful-command))
-  :diminish proof-active-buffer-fake-minor-mode
   :diminish hs-minor-mode 
+  :diminish proof-active-buffer-fake-minor-mode
   :diminish outline-minor-mode
   :diminish (holes-mode . "󰠣 "))
 
@@ -2461,7 +2475,22 @@ used if TAG-LIST is empty."
              "u" '("Unfold" . company-coq-unfold))
   :config (add-to-list 'company-coq-disabled-features 'company))
 
-(use-package protobuf-mode)
+(use-package protobuf-mode
+  :mode ("\\.proto\\'" . protobuf-mode))
+
+(use-package go-mode
+  :mode ("\\.go\\'" . go-mode))
+
+(use-package go-eldoc
+  :hook (go-mode . go-eldoc-setup))
+
+(use-package flycheck-golangci-lint
+  :ensure t
+  :hook (go-mode . flycheck-golangci-lint-setup))
+
+(use-package eglot
+  :ensure nil
+  :hook (go-mode . eglot))
 
 ;; Packages:
 ;; 
@@ -2472,13 +2501,7 @@ used if TAG-LIST is empty."
 ;; magit
 ;; makefile-executor
 
-;; go-eldoc
-;; go-mode
-;; gorepl-mode
-;; go-tag
-;; go-gen-test
 ;; company-go
-;; flycheck-golangci-lint
 
 ;; evil-tex
 ;; adaptive-wrap
@@ -2491,8 +2514,6 @@ used if TAG-LIST is empty."
 ;; markdown-toc
 ;; edit-indirect (required by markdown-mode according to DOOM)
 ;; evil-markdown
-
-;; org-pomodoro
 
 ;; fish-mode
 ;; company-shell?

@@ -38,7 +38,7 @@
     ./editors/nvim
   ];
 
-  home.packages = with pkgs; [zoxide];
+  home.packages = with pkgs; [zoxide sox];
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
