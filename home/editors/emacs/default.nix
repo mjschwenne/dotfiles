@@ -95,5 +95,6 @@ in {
     #    ("default" . ((user-emacs-directory . "~/.config/emacs-configs/doom/")
     #   			(env . (("DOOMDIR" . "~/.config/emacs-configs/doom-config/"))))))
     # '';
+    ".emacs.d/words.txt".source = ./lang-english.txt;
   };
 }

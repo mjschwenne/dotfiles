@@ -722,6 +722,8 @@
   (corfu-auto t)
   (corfu-quit-no-match t)
   (corfu-preselect 'prompt)
+  (cape-dict-file (expand-file-name "words.txt" user-emacs-directory))
+  (ispell-alternate-dictionary (expand-file-name "words.txt" user-emacs-directory))
   :general (:keymaps 'corfu-map
                      "TAB" #'corfu-next
                      [tab] #'corfu-next
@@ -1339,7 +1341,8 @@ reversion. This resizes the popup to match its contents."
            :empty-lines 1)
           ("e" "Etera Session" entry
            (file "ttrpg/games/etera/notes.org")
-           "\n* Session %<%Y-%m-%d>\n\n%?\n"
+           "* Session %<%Y-%m-%d>\n\n%?"
+           :empty-lines 1
            :jump-to-captured t
            :immediate-finish t)
           ("g" "Graves Session" entry
