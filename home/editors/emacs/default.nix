@@ -83,18 +83,6 @@ in {
       recursive = true;
     };
     ".emacs.d/logo.webp".source = ./mjs/emacs.webp;
-    # ".config/emacs-config/mjs/logo.webp".source = ./mjs/emacs.webp;
-    # ".config/emacs-configs/doom-config" = {
-    #   source = ./doom;
-    #   recursive = true;
-    # };
-    # ".emacs-profiles.el".text = ''
-    #   (("mjs" . ((user-emacs-directory . "~/.config/emacs-configs/mjs/")
-    #             (nix-elisp-bundle . "${emacs.deps}")
-    #             (straight-p . nil)))
-    #    ("default" . ((user-emacs-directory . "~/.config/emacs-configs/doom/")
-    #   			(env . (("DOOMDIR" . "~/.config/emacs-configs/doom-config/"))))))
-    # '';
     ".emacs.d/words.txt".source = ./lang-english.txt;
   };
 }

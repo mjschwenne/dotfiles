@@ -48,8 +48,8 @@
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path (expand-file-name "autoloads" user-emacs-directory))
 (loaddefs-generate
-  (expand-file-name "autoloads" user-emacs-directory)
-  (expand-file-name "autoloads/auto.el" user-emacs-directory))
+ (expand-file-name "autoloads" user-emacs-directory)
+ (expand-file-name "autoloads/auto.el" user-emacs-directory))
 (require 'auto)
 
 (use-package diminish
@@ -143,14 +143,14 @@
            "L" 'evil-forward-arg
            "H" 'evil-backward-arg))
 
-; (use-package evil-easymotion
-;   :after evil
-;   :general (:states 'motion "SPC SPC" '(nil :which-key "Easy Motion")
-;                             "SPC SPC" evilem-map))
+                                        ; (use-package evil-easymotion
+                                        ;   :after evil
+                                        ;   :general (:states 'motion "SPC SPC" '(nil :which-key "Easy Motion")
+                                        ;                             "SPC SPC" evilem-map))
 
 (use-package evil-surround
   :after evil
-  :config (global-evil-surround-mode 1))
+  :hook (emacs-startup . global-evil-surround-mode))
 
 (use-package evil-embrace
   :after evil-surround
@@ -224,10 +224,9 @@
 
 (use-package evil-vimish-fold
   :after vimish-fold
-  :defer nil
+  :hook (emacs-startup . global-evil-vimish-fold-mode)
   :diminish evil-vimish-fold-mode
-  :custom (evil-vimish-fold-targets-mode '(prog-mode conf-mode text-mode))
-  :config (global-evil-vimish-fold-mode))
+  :custom (evil-vimish-fold-targets-mode '(prog-mode conf-mode text-mode)))
 
 (use-package restart-emacs
   :commands restart-emacs)
@@ -371,7 +370,7 @@
      ("BUG" . "#bf616a")
      ("FIXME". "#bf616a")
      ("FAIL" . "#bf616a")
-    ))
+     ))
   :hook (prog-mode . hl-todo-mode))
 
 (use-package telephone-line
@@ -379,11 +378,13 @@
   :custom (telephone-line-lhs
            '((evil . (telephone-line-evil-tag-segment))
              (accent . (telephone-line-process-segment
-                        mjs/minor-mode-segment mjs/popup-segment))
+                        mjs/minor-mode-segment
+                        mjs/popup-segment))
              (nil . (mjs/buffer-mod))))
   (telephone-line-rhs
    '((nil . (telephone-line-misc-info-segment
              mjs/anzu-segment
+             mjs/flycheck-status
              telephone-line-atom-encoding-segment))
      (accent . (telephone-line-major-mode-segment))
      (evil . (mjs/buffer-position))))
@@ -393,10 +394,10 @@
              anzu--current-position
              anzu--total-matched))
   (telephone-line-defsegment* mjs/popup-segment ()
-          (cond ((not (boundp 'popper-popup-status)) "")
-                ((eq popper-popup-status 'popup) "POPUP")
-                ((eq popper-popup-status 'raised) "RAISED")
-                ((eq popper-popup-status 'user-popper) "U POP")))
+    (cond ((not (boundp 'popper-popup-status)) "")
+          ((eq popper-popup-status 'popup) "POPUP")
+          ((eq popper-popup-status 'raised) "RAISED")
+          ((eq popper-popup-status 'user-popper) "U POP")))
   (telephone-line-defsegment* mjs/buffer-mod ()
     (let* ((read-only (or buffer-read-only (string-match-p "\\*.*\\*" (buffer-name))))
            (modifed (buffer-modified-p)))
@@ -413,6 +414,26 @@
                        'face '(:inherit mode-line-emphasis
                                         :foreground "#a3be8c"))))
        (propertize (buffer-name) 'face 'mode-line-emphasis))))
+  (telephone-line-defsegment* mjs/flycheck-status ()
+    (if (bound-and-true-p flycheck-mode)
+        (let* ((flycheck-status (flycheck-count-errors flycheck-current-errors))
+               (status (if (eq flycheck-last-status-change 'finished)
+                           "󰨮 "
+                         "󰃤 "))
+               (errors (number-to-string
+                        (alist-get 'error flycheck-status 0)))
+               (warnings (number-to-string
+                          (alist-get 'warning flycheck-status 0)))
+               (infos (number-to-string
+                       (alist-get 'info flycheck-status 0))))
+          (concat status
+                  (propertize " " 'face '(:foreground "#bf616a"))
+                  (propertize errors 'face '(:foreground "#bf616a"))
+                  (propertize "  " 'face '(:foreground "#ebcb8b"))
+                  (propertize warnings 'face '(:foreground "#ebcb8b"))
+                  (propertize "  " 'face '(:foreground "#a3be8c"))
+                  (propertize infos 'face '(:foreground "#a3be8c"))))
+      ""))
   (telephone-line-defsegment* mjs/buffer-position ()
     (cond ((eq major-mode 'pdf-view-mode)
            (let* ((current (pdf-view-current-page))
@@ -469,12 +490,11 @@
 
 (use-package anzu
   :after evil
-  :defer nil
+  :hook (emacs-startup . global-anzu-mode)
   :custom ((anzu-mode-lighter "")
            (anzu-cons-mode-line-p nil))
   :custom-face
-  (anzu-mode-line ((t  :foreground "#d8dee9")))
-  :config (global-anzu-mode))
+  (anzu-mode-line ((t  :foreground "#d8dee9"))))
 
 (use-package evil-anzu
   :after evil
@@ -487,20 +507,19 @@
 (add-hook 'conf-mode-hook #'display-line-numbers-mode)
 
 (use-package vi-tilde-fringe
-  :defer nil
   :diminish vi-tilde-fringe-mode
-  :config (global-vi-tilde-fringe-mode))
+  :hook (emacs-startup . global-vi-tilde-fringe-mode))
 
 (use-package nerd-icons)
 
 (use-package dashboard
   :defer nil
   :config (defun mjs/dashboard-next-items ()
-          (unless (and (org-entry-is-todo-p)
-                       (not (org-entry-is-done-p))
-                       (not (org-in-archived-heading-p))
-                       (string= (org-get-todo-state) "NEXT"))
-            (point)))
+            (unless (and (org-entry-is-todo-p)
+                         (not (org-entry-is-done-p))
+                         (not (org-in-archived-heading-p))
+                         (string= (org-get-todo-state) "NEXT"))
+              (point)))
   (dashboard-setup-startup-hook)
   (mjs-leader-def :keymaps 'override
     "D" '("Open Dashboard" . dashboard-open))
@@ -602,12 +621,12 @@
   (vertico-cycle t)
   (enable-recursive-minibuffers t)
   :config  (defun crm-indicator (args)
-          (cons (format "[CRM%s] %s"
-                        (replace-regexp-in-string
-                         "\\`\\[.*?\\*\\|\\[.*?]\\*\\'" ""
-                         crm-separator)
-                        (car args))
-                (cdr args)))
+             (cons (format "[CRM%s] %s"
+                           (replace-regexp-in-string
+                            "\\`\\[.*?\\*\\|\\[.*?]\\*\\'" ""
+                            crm-separator)
+                           (car args))
+                   (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible f face minibuffer-prompt))
@@ -695,7 +714,8 @@
 	         "s y"   '(nil :which-key "Yank")
 	         "s y k" '("Kill Ring" . consult-yank-from-kill-ring)
 	         "s y p" '("Pop" . consult-yank-pop)
-	         "s y r" '("Replace" . consult-yank-replace))
+	         "s y r" '("Replace" . consult-yank-replace)
+             "c s" '("Search Symbols" . consult-eglot-symbols))
   :custom (register-preview-function #'consult-register-format)
   (register-preview-delay 0.5)
   :config
@@ -709,14 +729,14 @@
           "e A" '("Embark DWIM"      . embark-dwim)
           "h e" '("Emark Bindings" . embark-bindings))
   :custom (prefix-help-command #'embark-prefix-help-command)
-           ;; (embark-prompter #'embark-completing-read-prompter))
+  ;; (embark-prompter #'embark-completing-read-prompter))
   :config (setq embark-indicator 'embark-minimal-indicator))
 
 (use-package embark-consult
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package corfu
-  :defer nil
+  :hook (emacs-startup . global-corfu-mode)
   :custom (corfu-cycle t)
   (completion-cycle-threshold 3)
   (corfu-auto t)
@@ -728,8 +748,7 @@
                      "TAB" #'corfu-next
                      [tab] #'corfu-next
                      "S-TAB" #'corfu-previous
-                     [backtab] #'corfu-previous)
-  :config (global-corfu-mode))
+                     [backtab] #'corfu-previous))
 
 (use-package cape
   :after corfu
@@ -930,11 +949,9 @@ reversion. This resizes the popup to match its contents."
   (global-diff-hl-mode))
 
 (use-package lispy
-  :diminish "'󰅲"
+  :diminish "'󰅲 "
   :init (mjs-local-leader-def :keymaps 'emacs-lisp-mode-map
           "l" '("Lispy" . lispy-mode)))
-
-(diminish 'eldoc-mode)
 
 (use-package macrostep
   :commands marcostep-expand
@@ -956,6 +973,11 @@ reversion. This resizes the popup to match its contents."
   :diminish highlight-quoted-mode
   :hook (emacs-lisp-mode . highlight-quoted-mode))
 
+(use-package eldoc
+  :ensure nil
+  :diminish eldoc-mode
+  :custom (eldoc-minor-mode-string ""))
+
 (mjs-leader-def :keymaps 'override
   "a"     '("Agenda" . org-agenda)
   "A"     '("GTD Agenda" . (lambda () (interactive) (org-agenda nil "g")))
@@ -973,9 +995,9 @@ reversion. This resizes the popup to match its contents."
                                (interactive)
                                (message "%s"
                                         (mapconcat (lambda (tag)
-                                            (concat "#" tag))
-                                          mjs/org-auto-tags--current-list
-                                          " "))))
+                                                     (concat "#" tag))
+                                                   mjs/org-auto-tags--current-list
+                                                   " "))))
   "n c s" '("Change Tags" . mjs/org-auto-tags--set)
   "n C"   '("GOTO Clock" . org-clock-goto)
   "n l"   '("Store Link" . org-store-link)
@@ -984,16 +1006,16 @@ reversion. This resizes the popup to match its contents."
   "n t"   '("TODO List" . org-todo-list)
   "n T"   '("Tag View" . org-tags-view))
 
-  (custom-set-variables '(org-emphasis-alist
-                          (quote (("*" bold)
-                                  ("/" italic)
-                                  ("_" underline)
-                                  ("=" org-verbatim verbatim)
-                                  ("~" org-code verbatim)
-                                  ("+"
-                                   (:strike-through t))
-                                  ("!"
-                                  (:overline t))))))
+(custom-set-variables '(org-emphasis-alist
+                        (quote (("*" bold)
+                                ("/" italic)
+                                ("_" underline)
+                                ("=" org-verbatim verbatim)
+                                ("~" org-code verbatim)
+                                ("+"
+                                 (:strike-through t))
+                                ("!"
+                                 (:overline t))))))
 
 (use-package org
   ;; For whatever reason, `org' gets upset if these aren't defined soon enough
@@ -1347,7 +1369,8 @@ reversion. This resizes the popup to match its contents."
            :immediate-finish t)
           ("g" "Graves Session" entry
            (file "ttrpg/games/graves-and-groves/sessions.org")
-           "\n\n* Session %<%Y-%m-%d>\n\n%?\n"
+           "* Session %<%Y-%m-%d>\n\n%?"
+           :empty-lines 1
            :prepend t
            :jump-to-captured t
            :immediate-finish t)
@@ -1367,7 +1390,8 @@ reversion. This resizes the popup to match its contents."
                     "/Entered on/ %U\n\n%?"))
           ("o" "Obscured Realms Session" entry
            (file "ttrpg/games/obscured-realms/sessions.org")
-           "\n* Session %<%Y-%m-%d>\n\n%?"
+           "* Session %<%Y-%m-%d>\n\n%?"
+           :empty-lines 1
            :jump-to-captured t
            :immediate-finish t)))
   (set-face-foreground 'org-verbatim "#b48ead")
@@ -1496,7 +1520,7 @@ reversion. This resizes the popup to match its contents."
   :hook (org-mode . olivetti-mode)
   :init (diminish 'visual-line-mode)
   (mjs-local-leader-def :keymaps 'org-mode-map
-          "o" '("Toggle Olivetti" . olivetti-mode)))
+    "o" '("Toggle Olivetti" . olivetti-mode)))
 
 (use-package org-modern
   :after org
@@ -1518,14 +1542,15 @@ reversion. This resizes the popup to match its contents."
     "n p" '("Pomodoro" . org-pomodoro)))
 
 (use-package flycheck
-  :diminish "󰨮 "
+  :hook (emacs-startup . global-flycheck-mode)
+  :diminish flycheck-mode
   :defer nil
-  :custom ((flycheck-global-modes '(not org-mode org-capture-mode))
-           (flycheck-indication-mode 'right-fringe))
+  :custom ((flycheck-global-modes t)
+           (flycheck-indication-mode 'right-fringe)
+           (flycheck-mode-line))
   :config
   (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
-    [16 48 112 240 112 48 16] nil nil 'center)
-  (global-flycheck-mode))
+    [16 48 112 240 112 48 16] nil nil 'center))
 
 (use-package flycheck-ledger
   :after (flycheck ledger)
@@ -1810,8 +1835,8 @@ links (e.x. \"[[id:01234][|]]\").")
                          "#+title: ${title}\n\n")
                  org-roam-directory
                  "/ttrpg/games/great-basin/characters/template.org")
-       :target (file "ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
-       :unnarrowed t)
+        :target (file "ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
+        :unnarrowed t)
        ("ge" "Great Basin Event" plain
         ,(format "%s%%[%s%s]"
                  (concat "#+filetags: :great_basin:event:\n"
@@ -1930,15 +1955,15 @@ are a subset of TAG-LIST, with the exception of the `:none' context which is onl
 used if TAG-LIST is empty."
     (if (and tag-list (> (length tag-list) 0))
         (-flatten-n 1
-         (-non-nil (seq-map-indexed
-                    (lambda (context index)
-                      (when (and (cl-oddp index)
-                                 (not (string= (plist-get context :name) "none"))
-                                 (gnus-subsetp (plist-get context :tags)
-                                               mjs/org-auto-tags--current-list))
-                        (mjs/org-roam-templates-list
-                         (intern-soft (concat ":" (plist-get context :name))))))
-                    mjs/org-context-plist)))
+                    (-non-nil (seq-map-indexed
+                               (lambda (context index)
+                                 (when (and (cl-oddp index)
+                                            (not (string= (plist-get context :name) "none"))
+                                            (gnus-subsetp (plist-get context :tags)
+                                                          mjs/org-auto-tags--current-list))
+                                   (mjs/org-roam-templates-list
+                                    (intern-soft (concat ":" (plist-get context :name))))))
+                               mjs/org-context-plist)))
       (mjs/org-roam-templates-list :all)))
 
   (advice-add #'org-roam-complete-link-at-point
@@ -2284,12 +2309,12 @@ used if TAG-LIST is empty."
              "t m" '("Markup Hiding" . markdown-toggle-markup-hiding)
              "t w" '("Wiki Links" . markdown-toggle-wiki-links)
              "t x" '("GFM Checkboxes" . markdown-toggle-gfm-checkbox)))
-  ;; FIXME: These pieces of advice break all markdown mode fontification :(
-  ;; :config
-  ;; (advice-add #'markdown-fontify-code-block-natively
-  ;;             :around #'mjs/markdown-optimize-src-buffer-modes)
-  ;; (advice-add #'markdown-match-generic-metadata
-  ;;             :override #'mjs/markdown-disable-front-matter-fontification))
+;; FIXME: These pieces of advice break all markdown mode fontification :(
+;; :config
+;; (advice-add #'markdown-fontify-code-block-natively
+;;             :around #'mjs/markdown-optimize-src-buffer-modes)
+;; (advice-add #'markdown-match-generic-metadata
+;;             :override #'mjs/markdown-disable-front-matter-fontification))
 
 (use-package evil-markdown
   :hook (markdown-mode . evil-markdown-mode)
@@ -2400,7 +2425,7 @@ used if TAG-LIST is empty."
   (cfw:face-toolbar-button-off ((t :foreground "#d8dee9" 
                                    :weight bold)))
   (cfw:face-toolbar-button-on ((t :foreground "#e5e9f0"
-                                   :weight bold)))
+                                  :weight bold)))
   :config
   (evil-set-initial-state 'cfw:calendar-mode 'normal))
 
@@ -2545,7 +2570,7 @@ used if TAG-LIST is empty."
   :diminish hs-minor-mode 
   :diminish proof-active-buffer-fake-minor-mode
   :diminish outline-minor-mode
-  :diminish (holes-mode . "󰠣 "))
+  :diminish (holes-mode . " 󰠣"))
 
 (use-package math-symbol-lists
   :demand t
@@ -2629,7 +2654,7 @@ used if TAG-LIST is empty."
 
 (use-package company-coq
   :after proof-general
-  :diminish (company-coq-mode . "🐔 ")
+  :diminish (company-coq-mode . " 🐔")
   :hook (coq-mode . company-coq-mode)
   :general (mjs-local-leader-def :keymaps 'coq-mode-map
              "f" '("Fold" . company-coq-fold)
@@ -2649,7 +2674,8 @@ used if TAG-LIST is empty."
   :mode ("\\.proto\\'" . protobuf-mode))
 
 (use-package go-mode
-  :mode ("\\.go\\'" . go-mode))
+  :mode ("\\.go\\'" . go-mode)
+  :hook (go-mode . flycheck-mode))
 
 (use-package go-eldoc
   :hook (go-mode . go-eldoc-setup))
@@ -2660,20 +2686,66 @@ used if TAG-LIST is empty."
 
 (use-package eglot
   :ensure nil
-  :hook (go-mode . eglot))
+  :commands (eglot eglot-ensure)
+  :hook (go-mode . eglot-ensure))
+
+(use-package flycheck-eglot
+  :hook (emacs-startup . global-flycheck-eglot-mode))
+
+(use-package consult-eglot
+  :commands consult-eglot-symbols)
+
+(use-package sideline
+  :diminish sideline-mode)
+
+(use-package sideline-flycheck
+  :hook (flycheck-mode . sideline-mode)
+  :hook (flycheck-mode . sideline-flycheck-setup)
+  :init (setq sideline-backends-right '(sideline-flycheck)))
+
+(use-package flycheck-popup-tip
+  ;; Leaving this here, but I think I'm going to use
+  ;; sideline-flycheck for now to match my preferred
+  ;; setup from neovim.
+  :custom (flycheck-popup-tip-error-prefix "⚠ ")
+  :config
+  (defun mjs/disable-flycheck-popup-tip-maybe-a (&rest _)
+    (if (and (bound-and-true-p evil-local-mode)
+             (not (evil-emacs-state-p)))
+        (evil-normal-state-p)
+      (and (not (region-active-p))
+           (not (bound-and-true-p company-backend))
+           (not (ignore-errors (>= corfu--index 0))))))
+  (advice-add 'flycheck-popup-tip-show-popup :before-while #'mjs/disable-flycheck-popup-tip-maybe-a))
+
+(use-package apheleia
+  :hook (emacs-startup . apheleia-global-mode)
+  ;; For some reason, it isn't getting automatically turned on
+  ;; in `go-mode'
+  :hook (go-mode . apheleia-mode)
+  :custom (apheleia-mode-lighter "󰛖 ")
+  :config
+  (push '(go-mode . (lsp gofmt)) apheleia-mode-alist)
+  (cl-defun mjs/format-with-eglot (&key buffer callback &allow-other-keys)
+    "Format the current buffer or region with any available eglot formatter.
+
+Won't forward the buffer to chained formatters if successful."
+    (with-current-buffer buffer
+      (or (with-demoted-errors "%s"
+            (always (eglot-format)))
+          ;; try the next chained formatter(s)
+          (ignore (funcall callback)))))
+  (add-to-list 'apheleia-formatters '(lsp . mjs/format-with-eglot)))
 
 ;; Packages:
 ;; 
 ;; ts-fold and combobulate
 ;; shackle
-;; apheleia (format module)
 ;; projectile
 ;; dirvish + diredfl
 ;; quickrun
 ;; magit
 ;; makefile-executor
-
-;; company-go
 
 ;; evil-tex
 ;; adaptive-wrap
@@ -2682,17 +2754,8 @@ used if TAG-LIST is empty."
 ;; company-reftex
 ;; company-math
 
-;; markdown-mode
-;; markdown-toc
-;; edit-indirect (required by markdown-mode according to DOOM)
-;; evil-markdown
-
 ;; fish-mode
 ;; company-shell?
-
-;; Maybe
-;;
-;; Flymake, flymake-popup-tip flymake-popon
 
 ;; Modules:
 ;;
@@ -2701,7 +2764,6 @@ used if TAG-LIST is empty."
 ;; snippets
 ;; electric
 ;; undo -> vundo, undo-fu-session, undo-fu
-;; lsp -> eglot, consult-lsp, lsp-ui, flycheck-eglot
 ;; pdf
 ;; tree sitter
 
