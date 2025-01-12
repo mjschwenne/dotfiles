@@ -65,6 +65,8 @@
       # epkgs.org-timeblock
       epkgs.calfw-blocks
       epkgs.autothemer
+      epkgs.vterm
+      epkgs.treesit-grammars.with-all-grammars
     ];
   };
 in {

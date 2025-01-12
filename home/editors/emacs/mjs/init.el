@@ -551,37 +551,49 @@
                                       "\\*Warnings\\*"
                                       "\\*Async Shell Command\\*"
                                       "\\*Org Agenda\\*"
-                                      ("\\*Org Links\\*" . hide)
                                       help-mode
                                       "\\*info\\*"
                                       helpful-mode
                                       compilation-mode
                                       "\\*Embark Actions\\*"
                                       cfw:details-mode
+                                      vterm-mode
                                       ))
   (popper-display-control nil)
   (popper-mode-line "")
-  (display-buffer-alist '(("\\*Org Links\\*" (display-buffer-at-bottom)
-                           (window-height . 2))
-                          ("\\*Org Agenda\\*" (display-buffer-in-direction)
+  (display-buffer-alist '(("\\*Org Links\\*" display-buffer-no-window)
+                          ("\\*Org Agenda\\*" (display-buffer-in-direction
+                                               display-buffer-pop-up-window
+                                               display-buffer-full-frame)
                            (direction . left)
-                           (window-width . 0.5))
+                           (window-min-width 80)
+                           (window-width . fit-window-to-buffer-horizontally)
+                           (window . root)
+                           (dedicated . t))
                           ("\\*Embark Actions\\*" (display-buffer-at-bottom)
                            (window-height . 14))
-                          ("^\\*[hH]elp" (display-buffer-reuse-mode-window
-                                          display-buffer-in-direction)
-                           (mode . (helpful-mode help-mode))
-                           (direction . right)
-                           (window-width 0.5))))
+                          ((or (major-mode . Info-mode)
+                               (major-mode . help-mode)
+                               (major-mode . helpful-mode))
+                           (display-buffer-reuse-mode-window
+                            display-buffer-pop-up-window)
+                           (mode . (helpful-mode help-mode Info-mode))
+                           (dedicated . t))
+                          ("\\*vterm\\*" display-buffer-in-direction
+                           (direction . bottom)
+                           (window . root)
+                           (window-height . 0.3)
+                           (dedicated . t)
+                           (inhibit-same-window . nil))))
   :config
   (popper-mode +1)
   (require 'popper-echo)
   (popper-echo-mode +1)
   (mjs-leader-def :keymaps 'override
 	"p" '(nil :which-key "Popup")
-	"p p" '("Toggle Popup" . popper-toggle-latest)
+	"p p" '("Toggle Popup" . popper-toggle)
 	"t"   '(nil :which-key "Toggle")
-	"t p" '("Toggle Popup" . popper-toggle-latest)
+	"t p" '("Toggle Popup" . popper-toggle)
 	"p c" '("Cycle Popups" . popper-cycle)
 	"p m" '("Make Popup" . popper-toggle-type)
 	"p k" '("Kill Popup" . popper-kill-latest-popup))
@@ -1649,9 +1661,9 @@ the characters."
                             ;; disable triggering visual mode on selection in PDFView buffers
                             (add-hook 'evil-local-mode-hook
                                       (lambda () (remove-hook
-                                             'activate-mark-hook
-                                             'evil-visual-activate-hook
-                                             t))
+                                                  'activate-mark-hook
+                                                  'evil-visual-activate-hook
+                                                  t))
                                       nil t)
                             ;; implement yank ourselves
                             (evil-define-key 'normal pdf-view-mode-map
@@ -2674,20 +2686,20 @@ used if TAG-LIST is empty."
   :mode ("\\.proto\\'" . protobuf-mode))
 
 (use-package go-mode
-  :mode ("\\.go\\'" . go-mode)
-  :hook (go-mode . flycheck-mode))
+  :mode ("\\.go\\'" . go-ts-mode)
+  :hook (go-ts-mode . flycheck-mode))
 
 (use-package go-eldoc
-  :hook (go-mode . go-eldoc-setup))
+  :hook (go-ts-mode . go-eldoc-setup))
 
 (use-package flycheck-golangci-lint
   :ensure t
-  :hook (go-mode . flycheck-golangci-lint-setup))
+  :hook (go-ts-mode . flycheck-golangci-lint-setup))
 
 (use-package eglot
   :ensure nil
   :commands (eglot eglot-ensure)
-  :hook (go-mode . eglot-ensure))
+  :hook (go-ts-mode . eglot-ensure))
 
 (use-package flycheck-eglot
   :hook (emacs-startup . global-flycheck-eglot-mode))
@@ -2721,11 +2733,11 @@ used if TAG-LIST is empty."
 (use-package apheleia
   :hook (emacs-startup . apheleia-global-mode)
   ;; For some reason, it isn't getting automatically turned on
-  ;; in `go-mode'
-  :hook (go-mode . apheleia-mode)
-  :custom (apheleia-mode-lighter "󰛖 ")
+  ;; in `go-ts-mode'
+  :hook (go-ts-mode . apheleia-mode)
+  :custom (apheleia-mode-lighter " 󰛖")
   :config
-  (push '(go-mode . (lsp gofmt)) apheleia-mode-alist)
+  (push '(go-ts-mode . (lsp gofmt)) apheleia-mode-alist)
   (cl-defun mjs/format-with-eglot (&key buffer callback &allow-other-keys)
     "Format the current buffer or region with any available eglot formatter.
 
@@ -2737,10 +2749,25 @@ Won't forward the buffer to chained formatters if successful."
           (ignore (funcall callback)))))
   (add-to-list 'apheleia-formatters '(lsp . mjs/format-with-eglot)))
 
+(use-package hide-mode-line
+  :commands hide-mode-line-mode)
+
+(use-package vterm
+  :commands (vterm-mode vterm vterm-other-window)
+  :hook (vterm-mode . hide-mode-line-mode)
+  :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
+                                       hscroll-margin 0)))
+  :hook (vterm-mode . (lambda () (hl-line-mode -1)))
+  :general
+  (mjs-leader-def :keymap 'override
+    "t t" '("Terminal" vterm))
+  (:states 'insert :keymap 'vterm-mode-map
+           "C-q" #'vterm-send-next-key)
+  :custom ((vterm-kill-buffer-on-exit t)
+           (vterm-max-scrollback 5000)))
+
 ;; Packages:
 ;; 
-;; ts-fold and combobulate
-;; shackle
 ;; projectile
 ;; dirvish + diredfl
 ;; quickrun
