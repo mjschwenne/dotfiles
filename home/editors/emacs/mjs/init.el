@@ -1661,9 +1661,9 @@ the characters."
                             ;; disable triggering visual mode on selection in PDFView buffers
                             (add-hook 'evil-local-mode-hook
                                       (lambda () (remove-hook
-                                                  'activate-mark-hook
-                                                  'evil-visual-activate-hook
-                                                  t))
+                                             'activate-mark-hook
+                                             'evil-visual-activate-hook
+                                             t))
                                       nil t)
                             ;; implement yank ourselves
                             (evil-define-key 'normal pdf-view-mode-map
@@ -2513,6 +2513,8 @@ used if TAG-LIST is empty."
   (haskell-mode . interactive-haskell-mode))
 
 (use-package proof-general
+  :mode ("\\.v\\'" . coq-mode)
+  :commands coq-mode
   :hook (coq-mode . (lambda ()
                       (set-face-background 'proof-locked-face
                                            "#3b4252")))
@@ -2756,7 +2758,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                       hscroll-margin 0)))
+                                  hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
