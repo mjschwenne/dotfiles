@@ -781,10 +781,10 @@
 (use-package company
   :commands company-dabbrev)
 
-(use-package company-wordfreq
-  :after (cape company)
-  :commands (company-wordfreq)
-  :init (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-wordfreq)))
+;; (use-package company-wordfreq
+;;   :after (cape company)
+;;   :commands (company-wordfreq)
+;;   :init (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-wordfreq)))
 
 (global-prettify-symbols-mode +1)
 
@@ -1086,11 +1086,11 @@ reversion. This resizes the popup to match its contents."
     "f r"    '("Regenerate Links" . mjs/regenerate-file-links)
     "f R"    '("Regenerate Links Globally" . mjs/regenerate-file-links-globally)
     "h"      '(nil :which-key "Heading")
-    "h b"    '("Mark BLOCKED" . (lambda () (interactive) (org-todo "BLOCKED")))
+    "h b"    '("Mark HOLD" . (lambda () (interactive) (org-todo "HOLD")))
     "h d"    '("Mark DONE" . (lambda () (interactive) (org-todo "DONE")))
     "h H"    '("Toggle Heading" . org-toggle-heading)
     "h h"    '("Promote Heading" . org-metaright)
-    "h k"    '("Mark KILLED" . (lambda () (interactive) (org-todo "KILLED")))
+    "h k"    '("Mark KILL" . (lambda () (interactive) (org-todo "KILL")))
     "h l"    '("Demote Heading" . org-metaleft)
     "h n"    '("Mark NEXT" . (lambda () (interactive) (org-todo "NEXT")))
     "h s"    '("Set Heading State" . org-todo)
@@ -1163,61 +1163,6 @@ reversion. This resizes the popup to match its contents."
               (:endgroup)
               ("merge")
               (:startgrouptag)
-              ("kb")
-              (:grouptags)
-              ("comp_op")
-              ("math")
-              ("processes")
-              ("prog")
-              (:endgrouptag)
-              (:startgrouptag)
-              ("math")
-              (:grouptags)
-              ("combinatorics")
-              ("lin_alg")
-              ("modeling")
-              ("stats")
-              ("opt")
-              ("complexity")
-              (:endgrouptag)
-              (:startgrouptag)
-              ("prog")
-              (:grouptags)
-              ("C")
-              ("lisp")
-              ("pl_theory")
-              (:endgrouptag)
-              (:startgrouptag)
-              ("comp_op")
-              (:grouptags)
-              ("net")
-              (:endgrouptag)
-              (:startgrouptag)
-              ("stats")
-              (:grouptags)
-              ("conf_ints")
-              ("hyp_tests")
-              ("prob")
-              ("regression")
-              (:endgrouptag)
-              (:startgrouptag)
-              ("opt")
-              (:grouptags)
-              ("lin_prog")
-              (:endgrouptag)
-              (:startgrouptag)
-              ("modeling")
-              (:grouptags)
-              ("association_analysis")
-              ("classification")
-              ("clustering")
-              ("decision_tree")
-              ("info_ret")
-              ("recommender")
-              ("text_mining")
-              ("regression")
-              (:endgrouptag)
-              (:startgrouptag)
               ("ttrpg")
               (:grouptags)
 			  ;; Specific games
@@ -1234,46 +1179,6 @@ reversion. This resizes the popup to match its contents."
               ("object")
               ("session")
               ("stat")
-              (:endgrouptag)
-              (:startgrouptag)
-              ("great_basin")
-              (:grouptags)
-              ;; Individual factions
-              ("andorr_again")
-              ("arendelle")
-              ("atreides")
-              ("atrxous")
-              ("caerwent")
-              ("death_raising")
-              ("eichen")
-              ("galimatias")
-              ("lake")
-              ("koncord")
-              ("kudw")
-              ("niven")
-              ("roks")
-              ("syndicate")
-              ("trobreryn")
-              ("vi")
-              ("xylte")
-              (:endgrouptag)
-              (:startgroup)
-              ("character")
-              (:grouptags)
-              ("player")
-              ("npc")
-              (:endgroup)
-              (:startgrouptag)
-              ("npc")
-              (:grouptags)
-              ("deity")
-              ("elemental_beast")
-              ("herald")
-              (:endgrouptag)
-              (:startgrouptag)
-              ("roks")
-              (:grouptags)
-              ("valt")
               (:endgrouptag)))
            (org-agenda-start-with-log-mode t)
            (org-log-done 'time)
@@ -1281,7 +1186,7 @@ reversion. This resizes the popup to match its contents."
            (org-treat-insert-todo-heading-as-state-change t)
            (org-agenda-hide-tags-regexp ".")
            (org-agenda-files (list (concat org-directory "agenda/")))
-           (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "BLOCKED(b)" "|" "DONE(d)" "KILLED(k)")))
+           (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)" "KILL(k)")))
            (org-agenda-custom-commands
             '(("g" "Get Things Done"
                ((agenda* ""
@@ -1306,7 +1211,8 @@ reversion. This resizes the popup to match its contents."
                             (org-agenda-overriding-header "\nInbox\n")))
                 (tags "CLOSED>=\"<today>\""
                       ((org-agenda-overriding-header "\nCompleted today\n")))))))
-           (org-refile-targets '(("projects.org" :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
+           (org-refile-targets '((org-agenda-files
+                                  :regexp . "\\(?:\\(?:Note\\|Task\\)s\\)")))
            (org-refile-use-outline-path 'file)
            (org-outline-path-complete-in-steps nil)
            (org-entities-user
@@ -1661,9 +1567,9 @@ the characters."
                             ;; disable triggering visual mode on selection in PDFView buffers
                             (add-hook 'evil-local-mode-hook
                                       (lambda () (remove-hook
-                                             'activate-mark-hook
-                                             'evil-visual-activate-hook
-                                             t))
+                                                  'activate-mark-hook
+                                                  'evil-visual-activate-hook
+                                                  t))
                                       nil t)
                             ;; implement yank ourselves
                             (evil-define-key 'normal pdf-view-mode-map
@@ -2093,7 +1999,9 @@ used if TAG-LIST is empty."
              "C" '("Citation" . org-cite-insert))
   :custom-face (org-cite ((t (:foreground "#a3be8c"))))
   (org-cite-key ((t (:foreground "#a3be8c" :slant italic))))
-  :config )
+  :config
+  (require 'citar)
+  (require 'citar-org))
 
 (use-package citar
   :after oc
@@ -2139,7 +2047,7 @@ used if TAG-LIST is empty."
 
 (use-package citar-org
   :ensure nil
-  :after oc
+  :after (oc citar)
   :custom ((org-cite-insert-processor 'citar)
            (org-cite-follow-processor 'citar)
            (org-cite-activate-processor 'citar)))
@@ -2147,7 +2055,6 @@ used if TAG-LIST is empty."
 (use-package citar-embark
   :after citar
   :diminish citar-embark-mode
-  :no-require
   :init (setq citar-at-point-function 'embark-act)
   :hook ((org-mode . citar-embark-mode)
          (LaTeX-mode . citar-embark-mode)))
@@ -2552,8 +2459,13 @@ used if TAG-LIST is empty."
              "i c" '("Check" . coq-Check)
              "i C" '("Check with All" . coq-Check-show-all)
              "i f" '("Find Theorems" . proof-find-theorems)
+             "i l" '(nil :which-key "Locate")
+             "i l c" '("Constant" . coq-LocateConstant)
+             "i l l" '("Library" . coq-LocateLibrary)
+             "i l n" '("Notation" . coq-LocateNotation)
              "i p" '("Print" . coq-Print)
              "i P" '("Print with All" . coq-Print-with-all)
+             "i s" '("Search" . coq-Search)
              "i i" '(nil :which-key "Implicit")
              "i i b" '("About with Implicits" . coq-About-with-implicits)
              "i i c" '("Check with Implicits" . coq-Check-show-implicits)
@@ -2573,7 +2485,7 @@ used if TAG-LIST is empty."
              "." '("Assert to Line" . proof-goto-point)
              "L" '("Retract to Line" . proof-retract-until-point-interactive)
              "n" '("Assert Next Command" . proof-assert-next-command-interactive)
-             "N" '("Undo Last Command" . proof-undo-last-successful-command)
+             "m" '("Undo Last Command" . proof-undo-last-successful-command)
              "p" '(nil :which-key "Proof")
              "p i" '("Interrupt" . proof-interrupt-process)
              "p p" '("Process Buffer" . proof-process-buffer)
@@ -2581,6 +2493,9 @@ used if TAG-LIST is empty."
              "p r" '("Retract" . proof-retract-buffer)
              "]" '("Assert Next Command" . proof-assert-next-command-interactive)
              "[" '("Undo Last Command" . proof-undo-last-successful-command))
+  (:states 'insert :keymap 'coq-mode-keymap
+           "M-n" #'proof-assert-next-command-interactive
+           "M-m" #'proof-undo-last-successful-command)
   :diminish hs-minor-mode 
   :diminish proof-active-buffer-fake-minor-mode
   :diminish outline-minor-mode

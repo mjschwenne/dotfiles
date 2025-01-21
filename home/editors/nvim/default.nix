@@ -28,19 +28,6 @@
       texlab
       coqPackages.coq-lsp
 
-      # none-ls sources
-      alejandra
-      proselint
-      statix
-      checkmake
-      google-java-format
-      deadnix
-      mypy
-      black
-      isort
-      shfmt
-      stylua
-
       # language specific stuff
       lldb
       haskellPackages.fast-tags
