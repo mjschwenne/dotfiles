@@ -1407,9 +1407,9 @@ reversion. This resizes the popup to match its contents."
            :jump-to-captured t
            :immediate-finish t)))
   (set-face-foreground 'org-verbatim "#b48ead")
-  (set-face-attribute 'org-quote nil
-                      :background "#3b4252" 
-                      :extend t)
+  ;; (set-face-attribute 'org-quote nil
+  ;;                     :background "#3b4252" 
+  ;;                     :extend t)
   (set-face-foreground 'org-table "#d8dee9")
 
   (org-babel-do-load-languages
@@ -2758,7 +2758,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                  hscroll-margin 0)))
+                                       hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override

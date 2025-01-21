@@ -67,6 +67,7 @@
       epkgs.autothemer
       epkgs.vterm
       epkgs.treesit-grammars.with-all-grammars
+      epkgs.peg
     ];
   };
 in {
