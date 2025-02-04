@@ -34,8 +34,7 @@
   imports = [
     ./cli
 
-    # Neovim config
-    ./editors/nvim
+    ./editors
   ];
 
   home.packages = with pkgs; [zoxide sox];
