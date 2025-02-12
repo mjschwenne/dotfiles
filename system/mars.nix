@@ -61,10 +61,6 @@
           path = "/home/mjs/Documents";
           devices = ["sol" "luna" "terra"];
         };
-        "zotero" = {
-          path = "/home/mjs/Zotero/storage";
-          devices = ["sol" "luna" "terra" "enceladus" "mercury"];
-        };
         "kdb" = {
           path = "/home/mjs/kdb";
           devices = ["sol" "luna" "mercury" "terra" "enceladus"];
