@@ -2,7 +2,7 @@
   imports = [./emacs ./nvim];
 
   # System-wide checkers and linters shared between nvim and emacs
-  packages = with pkgs; [
+  home.packages = with pkgs; [
     alejandra
     proselint
     statix

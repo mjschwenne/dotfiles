@@ -150,7 +150,7 @@
   masterPkgs = with pkgs-master; [protonvpn-cli protonvpn-gui];
   stablePkgs = with pkgs-stable; [];
 in {
-  imports = [./desktop ./applications ./editors/emacs];
+  imports = [./desktop ./applications];
 
   programs.ssh = {
     matchBlocks = {
