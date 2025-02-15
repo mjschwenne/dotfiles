@@ -29,7 +29,7 @@
       coqPackages.coq-lsp
 
       # language specific stuff
-      lldb
+      # lldb
       haskellPackages.fast-tags
       haskellPackages.haskell-debug-adapter
     ];

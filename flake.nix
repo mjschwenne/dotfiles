@@ -77,7 +77,7 @@
 
     # Keyboard tool
     kmonad = {
-      url = "git+https://github.com/kmonad/kmonad?submodules=1&dir=nix";
+      url = "github:kmonad/kmonad?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -277,6 +277,9 @@
                   };
                 };
             };
+            nixpkgs.overlays = [
+              inputs.emacs-overlay.overlay
+            ];
           }
         ];
       };
