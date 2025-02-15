@@ -51,6 +51,7 @@ return {
       "bashls",
       "clangd",
       "coq_lsp",
+      "gopls",
       "hls",
       "jdtls",
       "lua_ls",

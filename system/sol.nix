@@ -152,10 +152,6 @@
           path = "/var/lib/syncthing/documents";
           devices = ["terra" "luna" "mars"];
         };
-        "zotero" = {
-          path = "/var/lib/syncthing/zotero";
-          devices = ["terra" "luna" "mars" "enceladus" "mercury"];
-        };
         "kdb" = {
           path = "/var/lib/syncthing/kdb";
           devices = ["terra" "luna" "mercury" "mars" "enceladus"];

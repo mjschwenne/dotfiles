@@ -9,7 +9,7 @@
     # Web browsers
     librewolf
     firefox
-    brave
+    # brave
 
     # Instant Communications
     slack
