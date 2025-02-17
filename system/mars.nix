@@ -28,6 +28,13 @@
   programs.steam.enable = true;
   programs.kdeconnect.enable = true;
 
+  # android stuff for supernote
+  programs.adb.enable = true;
+  users.users.mjs.extraGroups = ["adbusers"];
+  services.udev.packages = [
+    pkgs.android-udev-rules
+  ];
+
   services.syncthing = {
     enable = true;
     user = "mjs";
