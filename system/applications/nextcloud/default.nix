@@ -103,9 +103,7 @@
           calendar
           notes
           tasks
-          /*
           onlyoffice
-          */
           forms
           ;
 
@@ -144,9 +142,12 @@
     };
 
     onlyoffice = {
-      enable = false;
+      enable = true;
       hostname = "office.schwennesen.org";
     };
+
+    rabbitmq.enable = true;
+    rabbitmq.package = pkgs.rabbitmq-server;
   };
 
   programs.gnupg.agent = {
