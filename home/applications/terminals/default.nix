@@ -118,7 +118,7 @@
         ''
           local wezterm = require 'wezterm'
           return {
-            front_end = "WebGpu",
+            front_end = "OpenGL",
             ${preferred_adapter."${osConfig.networking.hostName}"}
             font = wezterm.font("JetBrainsMono Nerd Font", {weight = "Light"}),
             font_size = 11.0,

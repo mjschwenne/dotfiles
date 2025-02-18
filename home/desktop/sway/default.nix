@@ -185,7 +185,7 @@
         or {};
       assigns = {
         "8" = [{app_id = "^(thunderbird)$";}];
-        "9" = [{title = "^(Spotify)$";}]; # I swear spotify changes this with every update
+        "9" = [{title = "^(Spotify Premium)$";}]; # I swear spotify changes this with every update
         "10" = [{app_id = "^(vesktop)";}];
       };
       floating = {
