@@ -17,7 +17,7 @@
         output =
           {
             "terra" = ["DP-3" "DP-4"];
-            "mars" = ["eDP-1" "HDMI-A-1"];
+            "mars" = ["eDP-1" "DP-1" "HDMI-A-1"];
             "luna" = ["eDP-1" "HDMI-A-2"];
           }
           ."${osConfig.networking.hostName}"

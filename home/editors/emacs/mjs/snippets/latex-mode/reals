@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# key: \R
+# key: \real
 # name: Real Numbers
 # condition: (and (texmathp) (quote auto))
 # group: math

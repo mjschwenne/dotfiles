@@ -1,6 +1,0 @@
-# key: nEE
-# name: notexists
-# condition: (and (texmathp) 'auto)
-# group: math
-# --
-\\nexists

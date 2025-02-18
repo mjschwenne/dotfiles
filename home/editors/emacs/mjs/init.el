@@ -540,7 +540,8 @@
                      (agenda . 10)))
   (dashboard-item-names '(("Recent Files:" . "Recently Opened:")
                           ("Agenda for the coming week:" . "NEXT Items:")))
-  (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs")))
+  (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs"))
+  (initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
 
 (use-package popper
   :defer nil
@@ -1896,6 +1897,7 @@ used if TAG-LIST is empty."
   :hook (org-roam-db-autosync-mode . vulpea-db-autosync-enable))
 
 (use-package org-cliplink
+  :commands mjs/clean-org-cliplink
   :general (mjs-local-leader-def :keymaps 'org-mode-map
              "l c" '("Paste URL" . mjs/clean-org-cliplink)
              "l C" '("Paste Raw URL" . org-cliplink)))

@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# contributor: Matt Schwennesen <matt@schwennesen.org>
-# key: \F
-# group: math
-# condition: 'auto
-# name: Field
-# --
-\mathcalF$0

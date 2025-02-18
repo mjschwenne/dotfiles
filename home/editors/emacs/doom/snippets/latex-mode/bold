@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# contributor: Márcio M. Ribeiro <marcio.mr@gmail.com>
-# key: bf
-# group: font
-# name: Bold
-# --
-{\bf $1}$0
