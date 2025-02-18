@@ -75,6 +75,8 @@
 
   programs.steam.enable = true;
 
+  hardware.keyboard.zsa.enable = true;
+
   services = {
     xserver = {
       wacom.enable = true;

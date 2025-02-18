@@ -23,6 +23,8 @@
     # blender-hip
     krita
 
+    keymapp
+
     # Audio
     audacity
     ardour

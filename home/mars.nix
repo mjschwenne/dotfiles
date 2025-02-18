@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   home.username = "mjs";
   home.homeDirectory = "/home/mjs";
 
@@ -7,5 +7,9 @@
     ./graphical.nix
     ./applications
     ./applications/r
+  ];
+
+  home.packages = with pkgs; [
+    keymapp
   ];
 }

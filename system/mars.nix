@@ -35,6 +35,8 @@
     pkgs.android-udev-rules
   ];
 
+  hardware.keyboard.zsa.enable = true;
+
   services.syncthing = {
     enable = true;
     user = "mjs";
