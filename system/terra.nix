@@ -77,6 +77,13 @@
 
   hardware.keyboard.zsa.enable = true;
 
+  # android stuff for supernote
+  programs.adb.enable = true;
+  users.users.mjs.extraGroups = ["adbusers"];
+  services.udev.packages = [
+    pkgs.android-udev-rules
+  ];
+
   services = {
     xserver = {
       wacom.enable = true;
