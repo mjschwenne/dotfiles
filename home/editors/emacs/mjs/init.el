@@ -160,7 +160,7 @@
 
 (use-package evil-escape
   :after evil
-  :defer nil 
+  :defer nil
   :diminish evil-escape-mode
   :custom (evil-escape-key-sequence "jk")
   :config (evil-escape-mode))
@@ -2081,6 +2081,8 @@ used if TAG-LIST is empty."
 		  				 (when (eq major-mode 'latex-mode)
 						   (TeX-command-run-all nil)))))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
+           (TeX-command "LaTeX")
+           (TeX-check-TeX nil)
            (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)
                                     ("Zathura" "zathura --synctex-forward :: %o")))
            (TeX-view-program-selection '((output-pdf "PDF Tools")))
