@@ -2071,6 +2071,7 @@ used if TAG-LIST is empty."
 
 (use-package latex
   :ensure auctex
+  :mode ("\\.tex\\'" . LaTeX-mode)
   :hook ((LaTeX-mode . (lambda () (setq mode-name " LaTeX")))
          (LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . TeX-fold-mode)
@@ -2078,7 +2079,7 @@ used if TAG-LIST is empty."
          (LaTeX-mode . mjs/preview-scale-adjustment)
          (LaTeX-mode . auto-fill-mode)
          (after-save . (lambda ()
-		  				 (when (eq major-mode 'latex-mode)
+		  				 (when (eq major-mode #'LaTeX-mode)
 						   (TeX-command-run-all nil)))))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
            (TeX-command "LaTeX")
@@ -2679,7 +2680,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                       hscroll-margin 0)))
+                                  hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
