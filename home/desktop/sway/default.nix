@@ -35,6 +35,13 @@
             then "DP-4"
             else "eDP-1";
         };
+        # Luna touchscreen and stylus
+        "1118:31:IPTSD_Virtual_Stylus_045E:001F" = {
+          "map_to_output" = "eDP-1";
+        };
+        "1118:31:IPTSD_Virtual_Touchscreen_045E:001F" = {
+          "map_to_output" = "eDP-1";
+        };
       };
       keybindings = let
         mod = modifier;
