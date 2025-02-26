@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: infimum
-# key: inf
+# key: infimum
 # condition: (and (texmathp) 'auto)
 # group: math
 # --

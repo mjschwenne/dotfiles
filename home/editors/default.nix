@@ -24,7 +24,7 @@
       {
         "checks": {
           "annotations.misc": false,
-          "lexical_illusions.misc": false,
+          "lexical_illusions.misc": false
         }
       }
     '';

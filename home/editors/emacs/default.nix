@@ -75,9 +75,12 @@ in {
     inputs.emacs-overlay.overlay
   ];
 
-  home.packages = [
-    emacs
-  ];
+  programs.emacs = {
+    enable = true;
+    package = emacs;
+  };
+
+  services.emacs.enable = true;
 
   home.file = {
     ".emacs.d" = {

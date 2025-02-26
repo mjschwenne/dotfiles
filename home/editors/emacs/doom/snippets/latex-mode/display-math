@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# key: dm
-# name: Display Math
-# condition: (and (not (texmathp)) (quote auto))
-# group: math
-# --
-`(open-line 1) (LaTeX-indent-line)`\[ $0 \]

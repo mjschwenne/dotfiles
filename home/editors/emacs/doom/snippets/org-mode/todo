@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# contributor: Matt Schwennesen <matt@schwennesen.org>
-# key: \T
-# group: text
-# condition: 'auto
-# name: TODO
-# --
-:TODO: $0

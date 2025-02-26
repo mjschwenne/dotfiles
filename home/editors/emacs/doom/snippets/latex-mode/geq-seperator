@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: Greater then or Equal to Separator
-# key: ,>
-# condition: (and (texmathp) 'auto)
-# group: math
-# --
-&\geq $0

@@ -160,7 +160,7 @@
 
 (use-package evil-escape
   :after evil
-  :defer nil 
+  :defer nil
   :diminish evil-escape-mode
   :custom (evil-escape-key-sequence "jk")
   :config (evil-escape-mode))
@@ -540,7 +540,8 @@
                      (agenda . 10)))
   (dashboard-item-names '(("Recent Files:" . "Recently Opened:")
                           ("Agenda for the coming week:" . "NEXT Items:")))
-  (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs")))
+  (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs"))
+  (initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
 
 (use-package popper
   :defer nil
@@ -1896,6 +1897,7 @@ used if TAG-LIST is empty."
   :hook (org-roam-db-autosync-mode . vulpea-db-autosync-enable))
 
 (use-package org-cliplink
+  :commands mjs/clean-org-cliplink
   :general (mjs-local-leader-def :keymaps 'org-mode-map
              "l c" '("Paste URL" . mjs/clean-org-cliplink)
              "l C" '("Paste Raw URL" . org-cliplink)))
@@ -2069,6 +2071,7 @@ used if TAG-LIST is empty."
 
 (use-package latex
   :ensure auctex
+  :mode ("\\.tex\\'" . LaTeX-mode)
   :hook ((LaTeX-mode . (lambda () (setq mode-name " LaTeX")))
          (LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . TeX-fold-mode)
@@ -2076,9 +2079,11 @@ used if TAG-LIST is empty."
          (LaTeX-mode . mjs/preview-scale-adjustment)
          (LaTeX-mode . auto-fill-mode)
          (after-save . (lambda ()
-		  				 (when (eq major-mode 'latex-mode)
+		  				 (when (eq major-mode #'LaTeX-mode)
 						   (TeX-command-run-all nil)))))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
+           (TeX-command "LaTeX")
+           (TeX-check-TeX nil)
            (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)
                                     ("Zathura" "zathura --synctex-forward :: %o")))
            (TeX-view-program-selection '((output-pdf "PDF Tools")))
@@ -2675,7 +2680,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                       hscroll-margin 0)))
+                                  hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override

@@ -52,7 +52,8 @@
           "${mod}+Return" = "exec ${inputs.wezterm.packages.${pkgs.system}.default}/bin/wezterm";
           "${mod}+b" = "exec ${pkgs.librewolf}/bin/librewolf";
           "${mod}+Shift+b" = "exec ${pkgs.firefox}/bin/firefox";
-          "${mod}+e" = "exec emacs";
+          "${mod}+e" = "exec emacsclient -c";
+          "${mod}+Shift+e" = "exec emacs";
           "${mod}+p" = "exec ${pkgs.keepassxc}/bin/keepassxc";
           "${mod}+r" = "exec ${pkgs.rofi-wayland}/bin/rofi -show drun";
 
@@ -62,7 +63,7 @@
           "${mod}+F4" = "exec ${pkgs.brave}/bin/brave";
           "${mod}+F5" = "exec ${pkgs.firefox}/bin/firefox";
           "${mod}+F6" = "exec ${pkgs.qalculate-gtk}/bin/qalculate-gtk";
-          "${mod}+F7" = "exec emacs"; # Emacs is installed from the overlay, not pkgs
+          "${mod}+F7" = "exec emacsclient -c"; # Emacs is installed from the overlay, not pkgs
           "${mod}+F8" = "exec ${pkgs.thunderbird}/bin/thunderbird";
           "${mod}+F9" = "exec spotify"; # Spotify is also installed via overlay
           "${mod}+F10" = "exec ${pkgs.vesktop}/bin/vesktop";
@@ -175,9 +176,23 @@
         smartGaps = true;
         smartBorders = "no_gaps";
       };
+      output =
+        {
+          "mars" = {
+            DP-1 = {
+              scale = "2";
+              position = "0 0";
+            };
+            eDP-1 = {
+              position = "1920 0";
+            };
+          };
+        }
+        ."${osConfig.networking.hostName}"
+        or {};
       assigns = {
         "8" = [{app_id = "^(thunderbird)$";}];
-        "9" = [{title = "^(Spotify)$";}]; # I swear spotify changes this with every update
+        "9" = [{title = "^(Spotify Premium)$";}]; # I swear spotify changes this with every update
         "10" = [{app_id = "^(vesktop)";}];
       };
       floating = {
