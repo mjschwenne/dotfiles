@@ -15,7 +15,7 @@
   users.users.mjs.extraGroups = ["surface-control"];
   services.iptsd = {
     enable = true;
-    config.Touch.DisableOnStylus = true;
+    config.Touchscreen.DisableOnStylus = true;
   };
 
   environment.systemPackages = with pkgs; [
