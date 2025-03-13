@@ -26,7 +26,6 @@
     "ssh/terra/sol/key".owner = "mjs";
   };
 
-  # limit cores to try and cap memory useage... Which is crazy for a desktop with 64 GB RAM and 64 GB Swap...
   nixpkgs.config.allowBroken = true;
   hardware.graphics = {
     enable = true;

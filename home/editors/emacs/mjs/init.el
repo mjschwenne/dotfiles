@@ -1326,6 +1326,7 @@ reversion. This resizes the popup to match its contents."
      (dot . t)
      (emacs-lisp . t)
      (latex . t)
+     (mermaid . t)
      (python . t)
      (R . t)
      (java . t)
@@ -1370,6 +1371,9 @@ reversion. This resizes the popup to match its contents."
   (set-face-background 'org-habit-overdue-future-face "#bf616a"))
 
 (use-package ob-rust
+  :after org)
+
+(use-package ob-mermaid
   :after org)
 
 (use-package org-tempo
@@ -2082,7 +2086,7 @@ used if TAG-LIST is empty."
 		  				 (when (eq major-mode #'LaTeX-mode)
 						   (TeX-command-run-all nil)))))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
-           (TeX-command "LaTeX")
+           (TeX-command-default "LaTeX")
            (TeX-check-TeX nil)
            (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)
                                     ("Zathura" "zathura --synctex-forward :: %o")))
@@ -2680,7 +2684,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                  hscroll-margin 0)))
+                                       hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
