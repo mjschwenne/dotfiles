@@ -17,6 +17,7 @@
     kbfs
     keybase
     keybase-gui
+    signal-desktop
 
     # Network Utilities
     remmina

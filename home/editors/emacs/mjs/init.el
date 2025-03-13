@@ -780,12 +780,8 @@
   :commands (cape-keyword))
 
 (use-package company
+  :diminish company-mode
   :commands company-dabbrev)
-
-;; (use-package company-wordfreq
-;;   :after (cape company)
-;;   :commands (company-wordfreq)
-;;   :init (add-to-list 'completion-at-point-functions (cape-company-to-capf #'company-wordfreq)))
 
 (global-prettify-symbols-mode +1)
 
@@ -865,9 +861,9 @@ advice."
 (use-package diff-hl
   :defer nil
   :commands diff-hl-stage-current-hunk diff-hl-revert-hunk diff-hl-next-hunk diff-hl-previous-hunk
-  :custom-face (diff-hl-insert ((t (:background nil))))
-  (diff-hl-delete ((t (:background nil))))
-  (diff-hl-change ((t (:background nil))))
+  :custom-face (diff-hl-insert ((t (:background "unspecified"))))
+  (diff-hl-delete ((t (:background "unspecified"))))
+  (diff-hl-change ((t (:background "unspecified"))))
   :custom ((diff-hl-draw-borders nil)
            (diff-hl-fringe-bmp-function #'mjs/diff-hl-type-at-pos-fn)
            (diff-hl-global-modes '(not image-mode pdf-view-mode))
@@ -2502,7 +2498,8 @@ used if TAG-LIST is empty."
              "[" '("Undo Last Command" . proof-undo-last-successful-command))
   (:states 'insert :keymap 'coq-mode-keymap
            "M-n" #'proof-assert-next-command-interactive
-           "M-m" #'proof-undo-last-successful-command)
+           "M-m" #'proof-undo-last-successful-command
+           "M-." #'proof-goto-point)
   :diminish hs-minor-mode 
   :diminish proof-active-buffer-fake-minor-mode
   :diminish outline-minor-mode
@@ -2606,6 +2603,55 @@ used if TAG-LIST is empty."
              "u" '("Unfold" . company-coq-unfold))
   :config (add-to-list 'company-coq-disabled-features 'company))
 
+(use-package fstar-mode
+  :mode ("\\.fst\\'" . fstar-mode)
+  :commands fstar-mode
+  :general (mjs-local-leader-def :keymaps 'fstar-mode-map
+             "n" '("Assert Next Command" . fstar-subp-advance-next)
+             "m" '("Undo Last Command" . fstar-subp-retract-one)
+             "." '("Assert to Line" . fstar-subp-advance-or-retract-to-point)
+             "l" '("Assert to Line Lax" . fstar-subp-advance-or-retract-to-point-lax)
+             "x" '("Kill Background Z3" . fstar-subp-kill-one-or-many)
+             "b" '("Eval Buffer Lax" . fstar-subp-advance-to-point-max-lax)
+             "r" '("Reload Buffer" . fstar-subp-reload-to-point)
+             "k" '("Kill Z3" . fstar-subp-kill-z3)
+
+             "<" '("Jump Definition" . fstar-jump-to-definition)
+             ">" '("Jump Related Error" . fstar-jump-to-related-error)
+             "j" '(nil :which-key "Jump")
+             "j j" '("Definition" . fstar-jump-to-definition)
+             "j f" '("Definition (Frame)" . fstar-jump-to-definition-other-frame)
+             "j w" '("Definition (Window)" . fstar-jump-to-definition-other-window)
+             "j e" '("Related Error" . fstar-jump-to-related-error)
+             "j F" '("Related Error (Frame)" . fstar-jump-to-related-error-other-frame)
+             "j W" '("Related Error (Window)" . fstar-jump-to-related-error-other-window)
+             "j d" '("Dependency" . fstar-visit-dependency)
+             "j a" '("Interface" . fstar-visit-interface-or-implementation)
+             "j u" '("Unprocessed" . fstar-subp-goto-beginning-of-unprocessed)
+
+             "h" '(nil :which-key "Help")
+             "h y" '("Yank Help" . fstar-copy-help-at-point)
+             "h w" '("Wiki" . fstar-browse-wiki)
+             "h W" '("Wiki (Browser)" . fstar-browse-wiki-in-browser)
+             "h o" '("List Options" . fstar-list-options)
+             "h p" '("Print Type" . fstar-quick-peek)
+             "h ." '("Display Error" . display-local-help)
+
+             "c" '("Insert Match" . fstar-insert-match-dwim)
+             "e" '("Eval" . fstar-eval)
+             "E" '("Eval Custom" . fstar-eval-custom)
+             "s" '("Search" . fstar-search)
+             "d" '("Docs" . fstar-doc)
+             "p" '("Print Term" . fstar-print)
+             "q" '("Quit" . fstar-quit-windows)
+             "o" '("Outline" . fstar-outline))
+  (:states 'insert :keymap 'fstar-mode-map
+           "M-n" #'fstar-subp-advance-next
+           "M-m" #'fstar-subp-retract-one
+           "M-." #'fstar-subp-advance-or-retract-to-point)
+  :custom-face (fstar-subp-overlay-processed-face ((t (:background "#3b4252"))))
+  )
+
 (use-package protobuf-mode
   :mode ("\\.proto\\'" . protobuf-mode))
 
@@ -2680,7 +2726,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                  hscroll-margin 0)))
+                                       hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
