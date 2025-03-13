@@ -75,6 +75,10 @@
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+    };
+
     # Keyboard tool
     kmonad = {
       url = "github:kmonad/kmonad?dir=nix";

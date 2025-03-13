@@ -14,13 +14,6 @@
     # Instant Communications
     slack
     zoom-us
-    # (pkgs.zoom-us.overrideAttrs {
-    #   version = "6.2.11.5069";
-    #   src = pkgs.fetchurl {
-    #     url = "https://zoom.us/client/6.2.11.5069/zoom_x86_64.pkg.tar.xz";
-    #     hash = "sha256-k8T/lmfgAFxW1nwEyh61lagrlHP5geT2tA7e5j61+qw=";
-    #   };
-    # })
     kbfs
     keybase
     keybase-gui
@@ -102,6 +95,7 @@
         ;
     })
     ghostscript
+    biber
 
     # Graphical Utilities
     blueberry
@@ -179,6 +173,7 @@ in {
   };
   home.pointerCursor = {
     name = "Nordzy-cursors";
+    gtk.enable = true;
     package = pkgs.nordzy-cursor-theme;
   };
   home.sessionVariables = {
