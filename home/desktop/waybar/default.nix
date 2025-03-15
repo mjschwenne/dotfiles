@@ -6,7 +6,8 @@
 }: {
   programs.waybar = {
     enable = true;
-    package = waybar.packages.${pkgs.system}.waybar;
+    # package = waybar.packages.${pkgs.system}.waybar;
+    package = pkgs.waybar;
     systemd.enable = false;
     settings = {
       bar = {
