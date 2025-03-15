@@ -71,10 +71,6 @@
     ];
   };
 in {
-  nixpkgs.overlays = [
-    inputs.emacs-overlay.overlay
-  ];
-
   programs.emacs = {
     enable = true;
     package = emacs;
