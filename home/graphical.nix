@@ -45,7 +45,6 @@
     # Graphics Applications
     gimp
     inkscape
-    zotero_7
     posterazor
     imagemagick
 
@@ -143,7 +142,7 @@
     slurp
     wayland-logout
   ];
-  masterPkgs = with pkgs-master; [protonvpn-cli protonvpn-gui];
+  masterPkgs = with pkgs-master; [protonvpn-cli protonvpn-gui zotero];
   stablePkgs = with pkgs-stable; [];
 in {
   imports = [./desktop ./applications];
