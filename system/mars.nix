@@ -19,13 +19,21 @@
   security.polkit.enable = true;
 
   sops.secrets = {
-    "ssh/mars/github/key".owner = "mjs";
+    "ssh/mars/ssh/key".owner = "mjs";
     "ssh/mars/sol/key".owner = "mjs";
+    "nextdns/config".owner = "root";
   };
 
   networking.hostName = "mars"; # Define your hostname.
+  networking.nameservers = ["127.0.0.1" "::1"];
+  services.nextdns = {
+    enable = true;
+    arguments = [
+      "-config-file"
+      ''${config.sops.secrets."nextdns/config".path}''
+    ];
+  };
 
-  programs.steam.enable = true;
   programs.kdeconnect.enable = true;
 
   # android stuff for supernote
