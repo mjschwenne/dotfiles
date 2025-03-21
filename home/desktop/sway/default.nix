@@ -24,8 +24,7 @@
     checkConfig = false;
     config = rec {
       modifier = "Mod4";
-      terminal = "ghostty";
-      # terminal = "wezterm";
+      terminal = "kitty";
       input = {
         "type:keyboard" = {
           "xkb_options" = "ctrl:nocaps";
@@ -50,8 +49,8 @@
       in
         lib.mkOptionDefault {
           # Application hotkeys
-          # "${mod}+Return" = "exec ${inputs.wezterm.packages.${pkgs.system}.default}/bin/wezterm";
-          "${mod}+Return" = "exec ${inputs.ghostty.packages.${pkgs.system}.default}/bin/ghostty";
+          # "${mod}+Return" = "exec ${inputs.ghostty.packages.${pkgs.system}.default}/bin/ghostty";
+          "${mod}+Return" = "exec ${pkgs.kitty}/bin/kitty";
           "${mod}+b" = "exec ${pkgs.librewolf}/bin/librewolf";
           "${mod}+Shift+b" = "exec ${pkgs.firefox}/bin/firefox";
           "${mod}+e" = "exec emacsclient -c";

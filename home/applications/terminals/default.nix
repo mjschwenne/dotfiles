@@ -61,6 +61,22 @@
       };
     };
 
+    kitty = {
+      enable = true;
+      themeFile = "Nord";
+      font.name = "JetBrainsMono Nerd Font";
+      shellIntegration = {
+        enableFishIntegration = true;
+        mode = "no-cursor";
+      };
+      settings = {
+        disable_ligatures = "never";
+        cursor_shape = "block";
+        share_connections = "no";
+        background_opacity = 0.9;
+      };
+    };
+
     ghostty = {
       enable = true;
       enableFishIntegration = true;
