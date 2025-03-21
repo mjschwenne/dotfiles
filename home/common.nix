@@ -15,13 +15,13 @@
         user = "git";
         hostname = "github.com";
         identitiesOnly = true;
-        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/github/key".path;
+        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/ssh/key".path;
       };
       "git.doit.wisc.edu" = {
         user = "git";
         hostname = "git.doit.wisc.edu";
         identitiesOnly = true;
-        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/github/key".path;
+        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/ssh/key".path;
       };
     };
   };
@@ -47,7 +47,7 @@
   # You can update home Manager without changing this value. See
   # the home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "23.05";
+  home.stateVersion = "24.11";
 
   # Let home Manager install and manage itself.
   programs.home-manager.enable = true;

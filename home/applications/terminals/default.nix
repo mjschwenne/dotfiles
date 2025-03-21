@@ -109,6 +109,20 @@
                 vendor = 4098,
               },
             '';
+          "venus" =
+            /*
+            lua
+            */
+            ''
+              webgpu_preferred_adapter = {
+                    backend = "Vulkan",
+                    device = 32069,
+                    device_type = "IntegratedGpu",
+                    driver_info = "Mesa 25.0.1",
+                    name = "Intel(R) Graphics (MTL)",
+                    vendor = 32902
+              },
+            '';
           "luna" =
             /*
             lua
