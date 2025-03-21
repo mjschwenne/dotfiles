@@ -7,7 +7,6 @@
 } @ inputs: let
   packages = with pkgs; [
     # Web browsers
-    librewolf
     firefox
     brave
 
