@@ -1,12 +1,8 @@
 {pkgs, ...}: {
   programs.swaylock = {
     enable = true;
-    package = pkgs.swaylock-effects;
+    package = pkgs.swaylock;
   };
-
-  # home = {
-  #   packages = with pkgs; [swaylock-effects swayidle];
-  # };
 
   xdg.configFile = {
     "swaylock/config".source = ./config;

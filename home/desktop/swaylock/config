@@ -1,5 +1,4 @@
 # general
-fade-in=0.3
 ignore-empty-password
 clock
 timestr=%H:%M
