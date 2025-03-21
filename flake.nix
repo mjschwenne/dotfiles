@@ -167,6 +167,46 @@
           }
         ];
       };
+      
+      "venus" = nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+
+        specialArgs =
+          inputs
+          // {
+            pkgs-master = import inputs.nixpkgs-master {
+              inherit system;
+            };
+            pkgs-stable = import inputs.nixpkgs-stable {
+              inherit system;
+            };
+          };
+        modules = [
+          sops-nix.nixosModules.sops
+          kmonad.nixosModules.default
+          ./system/venus.nix
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.mjs = import ./home/venus.nix;
+              extraSpecialArgs =
+                inputs
+                // {
+                  pkgs-master = import inputs.nixpkgs-master {
+                    inherit system;
+                  };
+                  pkgs-stable = import inputs.nixpkgs-stable {
+                    inherit system;
+                  };
+                };
+            };
+            nixpkgs.overlays = [inputs.emacs-overlay.overlay];
+          }
+        ];
+      };
 
       "mars" = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";

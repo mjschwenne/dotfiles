@@ -18,6 +18,7 @@
         output =
           {
             "terra" = ["DP-3" "DP-4"];
+            "venus" = ["eDP-1" "DP-1"];
             "mars" = ["eDP-1" "DP-1" "HDMI-A-1"];
             "luna" = ["eDP-1" "HDMI-A-2"];
           }
