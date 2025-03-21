@@ -39,6 +39,11 @@
       DisplayBookmarksToolbar = "never"; # alternatives: "always" or "newtab"
       DisplayMenuBar = "never"; # alternatives: "always", "never" or "default-on"
       SearchBar = "unified"; # alternative: "separate"
+      SecurityDevices = {
+        Add = {
+          "OpenSC PKCS#11" = "${pkgs.opensc}/lib/opensc-pkcs11.so";
+        };
+      };
     };
     profiles.default = {
       # userChrome = builtins.readFile ./userChrome.css;
