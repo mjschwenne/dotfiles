@@ -92,6 +92,8 @@
 
   # Power management
   services.upower.enable = true;
+  # Tailscale VPN
+  services.tailscale.enable = true;
 
   environment.systemPackages = with pkgs; [
     # Languages

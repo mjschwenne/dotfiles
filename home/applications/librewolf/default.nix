@@ -4,18 +4,22 @@
     policies = {
       ExtensionSettings = {
         "*".installation_mode = "blocked";
+
         "addon@simplelogin" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/simplelogin/latest.xpi";
           installation_mode = "force_installed";
         };
+
         "keepassxc-browser@keepassxc.org" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc_browser/latest.xpi";
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
           installation_mode = "force_installed";
         };
+
         "zotero@chnm.gmu.edu" = {
           install_url = "https://www.zotero.org/download/connector/dl?browser=firefox&version=5.0.151";
           installation_mode = "force_installed";
         };
+
         "uBlock0@raymondhill.net" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
           installation_mode = "force_installed";
