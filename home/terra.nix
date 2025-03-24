@@ -15,7 +15,6 @@
     ./applications/obs
     ./applications/wonderdraft
     ./applications/dungeondraft
-    ./applications/r
   ];
 
   home.packages = with pkgs; [
@@ -24,10 +23,6 @@
     krita
 
     keymapp
-
-    # Audio
-    audacity
-    ardour
 
     # Networking
     qbittorrent

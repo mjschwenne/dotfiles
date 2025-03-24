@@ -26,9 +26,6 @@
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      # The `follows` keyword in inputs is used for inheritance.
-      # Here, `inputs.nixpkgs` of home-manager is kept consistent with the `inputs.nixpkgs` of the current flake,
-      # to avoid problems caused by different versions of nixpkgs.
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -56,6 +53,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Nvim configuration
+    nvf = {
+      url = "github:notashelf/nvf";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -72,11 +75,6 @@
 
     wezterm = {
       url = "github:wez/wezterm?dir=nix";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    ghostty = {
-      url = "github:ghostty-org/ghostty";
     };
 
     # Keyboard tool
@@ -96,6 +94,7 @@
     home-manager,
     kmonad,
     sops-nix,
+    nvf,
     nixos-hardware,
     ...
   } @ inputs: {
@@ -167,7 +166,7 @@
           }
         ];
       };
-      
+
       "venus" = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
 

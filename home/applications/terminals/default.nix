@@ -1,7 +1,6 @@
 {
   pkgs,
   osConfig,
-  ghostty,
   ...
 } @ inputs: {
   programs = {
@@ -74,19 +73,6 @@
         cursor_shape = "block";
         share_connections = "no";
         background_opacity = 0.9;
-      };
-    };
-
-    ghostty = {
-      enable = true;
-      enableFishIntegration = true;
-      package = ghostty.packages.${pkgs.system}.default;
-      settings = {
-        theme = "nord";
-        cursor-style = "block";
-        shell-integration-features = "no-cursor";
-        background-opacity = 0.9;
-        resize-overlay = "never";
       };
     };
 

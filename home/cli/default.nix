@@ -8,11 +8,9 @@
     if osConfig.networking.hostName == "sol"
     then [
       ./fish
-      ./superfile
     ]
     else [
       ./fish
-      ./superfile
       ./starship
     ];
 
@@ -43,6 +41,10 @@
 
     btop = {
       enable = true;
+      settings = {
+        color_theme = "TTY";
+        theme_background = false;
+      };
     };
   };
 

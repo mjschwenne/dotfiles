@@ -2,7 +2,7 @@
   osConfig,
   pkgs,
   ...
-} @ inputs: {
+}: {
   home = {
     username = "mjs";
     homeDirectory = "/home/mjs";
