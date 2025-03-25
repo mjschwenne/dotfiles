@@ -1,0 +1,69 @@
+(defcfg
+    input (device-file "/dev/input/by-id/usb-Kinesis_Freestyle_Edge_RGB_Keyboard_264575131106-if01-event-kbd")
+    output (uinput-sink "Freestyle KMonad Output")
+    cmp-seq ralt 
+    cmp-seq-delay 5 
+    key-seq-delay 5 
+    fallthrough true 
+    allow-cmd false 
+    implicit-around around
+)
+;; Can't have spc in the src twice, since KMonad can't tell the difference between a 
+;; left and right space. The two spacebars work, but will always be identical
+(defsrc
+  esc  f1   f2   f3   f4   f5   f6         f7   f8   f9   f10  f11  f12  prnt pause del
+  grv  1    2    3    4    5    6          7    8    9    0    -    =    bspc      home
+  tab  q    w    e    r    t               y    u    i    o    p    [    ]     \   end
+  caps a    s    d    f    g               h    j    k    l    ;    '          ret pgup
+  lsft z    x    c    v    b               n    m    ,    .    /    rsft       up  pgdn
+  lctl lmet lalt           spc                            ralt rctl      left down rght
+)
+
+(defalias 
+    num (layer-toggle numbers)
+    arr (layer-toggle arrows)
+    ;; These don't need timeouts or the like since ctl taps and the like are ignored
+    ect (tap-next esc lctl)
+    tmt (tap-next tab lmet)
+)
+
+
+#| --- Layer Template -----------------------------------------------------------------
+
+(deflayer template
+  _    _    _    _    _    _    _          _    _    _    _    _    _    _    _    _   
+  _    _    _    _    _    _    _          _    _    _    _    _    _    _         _   
+  _    _    _    _    _    _               _    _    _    _    _    _    _    _    _   
+  _    _    _    _    _    _               _    _    _    _    _    _         _    _   
+  _    _    _    _    _    _               _    _    _    _    _    _         _    _   
+  _    _    _              _                              _    _         _    _    _   
+)
+
+   --------------------------------------------------------------------------------- |#
+
+(deflayer querty 
+  esc  f1   f2   f3   f4   f5   f6         f7   f8   f9   f10  f11  f12  prnt pause del
+  grv  1    2    3    4    5    6          7    8    9    0    -    =    bspc      home
+  @tmt q    w    e    r    t               y    u    i    o    p    [    ]     \   end
+  @ect a    s    d    f    g               h    j    k    l    ;    '          ret pgup
+  lsft z    x    c    v    b               n    m    ,    .    /    rsft       up  pgdn
+  @arr @num lalt           spc                            @num @arr      left down rght
+)
+
+(deflayer numbers
+  _    _    _    _    _    _    _          _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _          XX   XX   /    *    -    XX   _         _
+  _    !    @    {    }    _               XX   7    8    9    +    \(   \)   XX   _
+  _    |    \_   =    \    _               XX   4    5    6    XX   XX        _    _
+  _    %    ^    [    ]    _               XX   1    2    3    .    XX        _    _
+  _    _    _              spc                            0    XX        _    _    _ 
+)
+
+(deflayer arrows
+  _    _    _    _    _    _    _          _    _    _    _    _    _    _    _    _   
+  _    _    _    _    _    _    _          _    _    _    _    _    _    _         _   
+  _    _    up   _    _    _               _    _    _    _    _    _    _    _    _   
+  _    left down rght _    _               _    _    _    _    _    _         _    _   
+  _    _    _    _    _    _               _    _    _    _    _    _         _    _   
+  _    _    _              _                              _    _         _    _    _   
+)

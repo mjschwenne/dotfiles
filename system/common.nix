@@ -174,10 +174,6 @@
     age
   ];
 
-  services.kmonad = {
-    enable = true;
-  };
-
   # Text editor
   programs.neovim = {
     enable = true;
