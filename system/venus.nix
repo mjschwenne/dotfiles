@@ -46,6 +46,20 @@
     pkgs.android-udev-rules
   ];
 
+  # fingerprint reader
+  services.fprintd = {
+    enable = true;
+  };
+  systemd.services.fprintd = {
+    wantedBy = ["multi-user.target"];
+    serviceConfig.Type = "simple";
+  };
+  security.pam.services = {
+    greetd.fprintAuth = false;
+    login.fprintAuth = true;
+    swaylock.fprintAuth = true;
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
