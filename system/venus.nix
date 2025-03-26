@@ -26,6 +26,7 @@
   sops.secrets = {
     "ssh/venus/ssh/key".owner = "mjs";
     "ssh/venus/sol/key".owner = "mjs";
+    "ssh/venus/tailscale".owner = "mjs";
   };
 
   nixpkgs.config.allowBroken = true;
@@ -36,6 +37,9 @@
       pkgs.vulkan-validation-layers
     ];
   };
+
+  # tailscale
+  services.tailscale.authKeyFile = config.sops.secrets."ssh/venus/tailscale".path;
 
   hardware.keyboard.zsa.enable = true;
 
