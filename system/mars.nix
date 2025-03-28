@@ -26,6 +26,7 @@
   sops.secrets = {
     "mars/ssh/key".owner = "mjs";
     "mars/sol/key".owner = "mjs";
+    "mars/tailscale".owner = "mjs";
     "nextdns/config".owner = "root";
     "caddy/envfile".owner = "caddy";
   };
@@ -38,6 +39,11 @@
       "-config-file"
       ''${config.sops.secrets."nextdns/config".path}''
     ];
+  };
+  # tailscale
+  services.tailscale = {
+    extraUpFlags = ["--ssh"];
+    authKeyFile = config.sops.secrets."mars/tailscale".path;
   };
   services.caddy = {
     enable = true;

@@ -39,7 +39,7 @@
   };
 
   # tailscale
-  services.tailscale.authKeyFile = config.sops.secrets."ssh/venus/tailscale".path;
+  services.tailscale.authKeyFile = config.sops.secrets."venus/tailscale".path;
 
   hardware.keyboard.zsa.enable = true;
 
