@@ -33,14 +33,14 @@
           }
         ];
       };
-      "office.schwennesen.org" = {
-        listen = [
-          {
-            addr = "127.0.0.1";
-            port = 19001;
-          }
-        ];
-      };
+      # "office.schwennesen.org" = {
+      #   listen = [
+      #     {
+      #       addr = "127.0.0.1";
+      #       port = 19001;
+      #     }
+      #   ];
+      # };
     };
 
     fail2ban = {
@@ -63,7 +63,7 @@
 
     nextcloud = {
       enable = true;
-      package = pkgs.nextcloud30;
+      package = pkgs.nextcloud31;
       hostName = "cloud.schwennesen.org";
       webserver = "nginx";
 
@@ -102,16 +102,13 @@
         inherit
           calendar
           notes
-          tasks
-          onlyoffice
-          forms
           ;
 
-        # Custom app installation example.
-        # integration_excalidraw = pkgs.fetchNextcloudApp {
-        #   url = "https://github.com/nextcloud-releases/integration_excalidraw/releases/download/v2.1.0/integration_excalidraw-v2.1.0.tar.gz";
-        #   sha256 = "sha256-ufYw6pVcvHy/ASRuXzsEUCviEVe2kkhsvc75eGDfRFs=";
-        #   license = "agpl3";
+        # Custom app example
+        # whiteboard = pkgs.fetchNextcloudApp {
+        #   url = "https://github.com/nextcloud/whiteboard/archive/refs/tags/v1.0.5.tar.gz";
+        #   sha256 = "sha256-ohNqGJVZ8w86jfYMOz1G8vbgdeKeIFTbuIcr8s6i8JM=";
+        #   license = "agpl3Only";
         # };
       };
 
@@ -139,11 +136,6 @@
         adminpassFile = config.sops.secrets."nextcloud/adminpass".path;
         dbtype = "pgsql";
       };
-    };
-
-    onlyoffice = {
-      enable = true;
-      hostname = "office.schwennesen.org";
     };
 
     rabbitmq.enable = true;

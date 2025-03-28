@@ -1,3 +1,5 @@
+caddy:
+    envfile: ENC[AES256_GCM,data:0CQJ0clGzSjZNBi3cTIy14n0W3KV1G5pqIUNUvhf8cuoppC8PlTHz6Yft6W/s43G0u/abCqTW1fwMmWNUc21vPAZCJKZIkCuCbA/srHoB1LAYziE+bBOPWIfTYdtW8yJitP6/c5LibWH4JvPrCDTVq8/LAB9d2nmZpYTEyU6EW2dfaLmUiSP06vS3zXivnxykNH7J9yZ8BEir80sV+SXebWoqbizfS15KEuoC4mP+U7TrWhwTO6l8OO/HyFt+3O39t49aSVTjQ==,iv:CGapsZBiwp1XxSFmwT8xlYAp86/Z1zInXPLkwqvd6bo=,tag:hexLWWCFjZKN5TEfB8RIvw==,type:str]
 nextcloud:
     adminuser: ENC[AES256_GCM,data:0P59GL4=,iv:9Bid4ofapY4Lzt3Ucv8kypOXJWVXCCOETqtbQFwL9sk=,tag:1QL59sVy0ZPT++t9urqJQw==,type:str]
     adminpass: ENC[AES256_GCM,data:h/CDmfAC1dU3MJ0c6k7+OfkXE9g=,iv:txTxewgY7GYUi4VzpHSjZfYQHMDd+QxB+OOXUIE+ZQ8=,tag:TWopSnHyg7ATGlIXlqnXPA==,type:str]
@@ -57,8 +59,8 @@ sops:
             MEJGaUpCUmJOZEJ4SENJQkZlZyt5L0kK3qt7lQJlO3Dz6zX139KIcPcgeaSDeUos
             a72Fy9MMegoFB40rP9W74LszWEwIw1iugqb+TTIzbYQft8qTcUkqmw==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-03-21T16:43:40Z"
-    mac: ENC[AES256_GCM,data:tDPvrkqPfmUlGlAvPHicGyh9cs3cgUN7RWBunyVMfco/1AN/bHaVRSjEtzY2BtyAdU9mBfiV+qV54HC7r65sc3IwKSUeCrXLJC7UX283jKajiS0MVI4/EF9Tzg0y7DTF4/SQwc4zX61eoQfUUFuPajxykknZg7XzQtj49s05Q9E=,iv:F/qVkt2QbkYXmv2Yx5CUyozlbB1/HfSuvOkaJ6IBaW0=,tag:PLJwEcolgfgXDkyH7TOaMQ==,type:str]
+    lastmodified: "2025-03-28T17:06:08Z"
+    mac: ENC[AES256_GCM,data:24YpynDd52P15WdBDsmlM4b49n5wo26h3ShSfo07Ht40KMwwJ74YnWQQJwFdiSUerT3zR4BFxTmukBqbGJAAfOmCMHQDi30KsGWXbJatDSV98mF9cLBLmzacSEdASK8MNJcf6YYp6vPXj/UUw4DDUqqM1PejtoKDnNdGUCZyf0c=,iv:SR6F8N8x41qX6c8zHwemn+1yVGgvTmhqypGLY2i1meQ=,tag:sJoWsKCds6o84iwvwVD8gQ==,type:str]
     pgp: []
     unencrypted_suffix: _unencrypted
     version: 3.9.4

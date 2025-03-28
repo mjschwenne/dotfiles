@@ -113,8 +113,8 @@
   # programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
-    enableSSHSupport = false;
-    pinentryPackage = pkgs.pinentry-gnome3;
+    # enableSSHSupport = false;
+    # pinentryPackage = pkgs.pinentry-gnome3;
   };
 
   # Enable CUPS to print documents.

@@ -8,6 +8,7 @@
     ./mars-hardware.nix
     ./common.nix
     ./graphical.nix
+    ./applications/nextcloud
   ];
 
   # Bootloader.
@@ -18,10 +19,15 @@
   '';
   security.polkit.enable = true;
 
+  # Disable suspend when laptop lid is closed
+  services.logind.lidSwitch = "ignore";
+  boot.kernelParams = ["consoleblank=60"];
+
   sops.secrets = {
     "ssh/mars/ssh/key".owner = "mjs";
     "ssh/mars/sol/key".owner = "mjs";
     "nextdns/config".owner = "root";
+    "caddy/envfile".owner = "caddy";
   };
 
   networking.hostName = "mars"; # Define your hostname.
@@ -32,6 +38,41 @@
       "-config-file"
       ''${config.sops.secrets."nextdns/config".path}''
     ];
+  };
+  services.caddy = {
+    enable = true;
+    package = pkgs.caddy.withPlugins {
+      plugins = ["github.com/caddy-dns/porkbun@v0.2.1"];
+      hash = "sha256-X8QbRc2ahW1B5niV8i3sbfpe1OPYoaQ4LwbfeaWvfjg=";
+    };
+    environmentFile = ''${config.sops.secrets."caddy/envfile".path}'';
+    extraConfig = ''
+      (ts_host) {
+          bind {env.TAILNET_IP}
+
+          @blocked not remote_ip 100.64.0.0/10
+
+          tls {
+              resolvers 1.1.1.1
+              dns porkbun {
+                  api_key {env.PORKBUN_API_KEY}
+                  api_secret_key {env.PORKBUN_API_PASSWORD}
+              }
+          }
+
+          respond @blocked "Unauthorized" 403
+      }
+    '';
+    virtualHosts."cloud.schwennesen.org".extraConfig = ''
+      import ts_host
+      reverse_proxy localhost:19000
+    '';
+    virtualHosts."office.schwennesen.org".extraConfig = ''
+      import ts_host
+      reverse_proxy localhost:8000 {
+        header_up X-Forward-Proto https
+      }
+    '';
   };
 
   programs.kdeconnect.enable = true;
