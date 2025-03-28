@@ -31,11 +31,11 @@
   };
 
   sops.secrets = {
-    "ssh/sol/ssh/key".owner = "mjs";
-    "ssh/sol/nix-serve/key".owner = "mjs";
+    "sol/ssh/key".owner = "mjs";
+    "sol/nix-serve/key".owner = "mjs";
   };
 
-  services.nix-serve.secretKeyFile = config.sops.secrets."ssh/sol/nix-serve/key".path;
+  services.nix-serve.secretKeyFile = config.sops.secrets."sol/nix-serve/key".path;
 
   # Disable suspend when laptop lid is closed
   services.logind.lidSwitch = "ignore";

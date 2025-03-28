@@ -6,7 +6,6 @@
     ./common.nix
     ./graphical.nix
     ./applications
-    ./applications/r
   ];
 
   home.packages = with pkgs; [

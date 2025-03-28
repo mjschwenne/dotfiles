@@ -24,8 +24,9 @@
   networking.hostName = "venus";
 
   sops.secrets = {
-    "ssh/venus/ssh/key".owner = "mjs";
-    "ssh/venus/sol/key".owner = "mjs";
+    "venus/ssh/key".owner = "mjs";
+    "venus/sol/key".owner = "mjs";
+    "venus/tailscale".owner = "mjs";
   };
 
   nixpkgs.config.allowBroken = true;
@@ -37,6 +38,9 @@
     ];
   };
 
+  # tailscale
+  services.tailscale.authKeyFile = config.sops.secrets."ssh/venus/tailscale".path;
+
   hardware.keyboard.zsa.enable = true;
 
   # android stuff for supernote
@@ -45,6 +49,20 @@
   services.udev.packages = [
     pkgs.android-udev-rules
   ];
+
+  # fingerprint reader
+  services.fprintd = {
+    enable = true;
+  };
+  systemd.services.fprintd = {
+    wantedBy = ["multi-user.target"];
+    serviceConfig.Type = "simple";
+  };
+  security.pam.services = {
+    greetd.fprintAuth = false;
+    login.fprintAuth = true;
+    swaylock.fprintAuth = true;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

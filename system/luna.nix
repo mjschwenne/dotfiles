@@ -23,8 +23,8 @@
   ];
 
   sops.secrets = {
-    "ssh/luna/ssh/key".owner = "mjs";
-    "ssh/luna/sol/key".owner = "mjs";
+    "luna/ssh/key".owner = "mjs";
+    "luna/sol/key".owner = "mjs";
   };
 
   # Enable thermald, which should prevent overheating

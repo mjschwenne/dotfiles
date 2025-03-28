@@ -188,6 +188,15 @@
               position = "1920 0";
             };
           };
+          "venus" = {
+            DP-1 = {
+              scale = "1.6";
+              position = "0 0";
+            };
+            eDP-1 = {
+              position = "2400 0";
+            };
+          };
         }
         ."${osConfig.networking.hostName}"
         or {};
@@ -268,6 +277,7 @@
         {command = "keepassxc";}
         {command = "systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP";}
         {command = "hash dbus-update-activation-environment 2>/dev/null && dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_CURRENT_DESKTOP=sway";}
+        {command = "trayscale --hide-window";}
       ];
     };
     extraConfig = ''

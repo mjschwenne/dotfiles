@@ -104,15 +104,12 @@
     gdb
 
     # Python
-    (python311.withPackages
+    (python313.withPackages
       (ps: with ps; [debugpy]))
 
     # Rust
     rustc
     cargo
-
-    # Java
-    jdk17
 
     # Haskell
     ghc
@@ -138,7 +135,6 @@
     file
     gawk
     htop
-    calc
     rename
     smartmontools
     killall
@@ -149,7 +145,6 @@
     dnsutils
     ldns
     nmap
-    iperf3
 
     # Hardware Interfaces
     brightnessctl
@@ -161,7 +156,6 @@
     unzip
     zstd
     xz
-    p7zip
 
     # Spellcheck
     enchant
@@ -179,10 +173,6 @@
     gnupg
     age
   ];
-
-  services.kmonad = {
-    enable = true;
-  };
 
   # Text editor
   programs.neovim = {

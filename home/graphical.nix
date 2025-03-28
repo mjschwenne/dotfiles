@@ -4,7 +4,7 @@
   pkgs-master,
   pkgs-stable,
   ...
-} @ inputs: let
+}: let
   packages = with pkgs; [
     # Web browsers
     firefox
@@ -21,22 +21,19 @@
     # Network Utilities
     remmina
     openconnect
+    trayscale
 
     # Password Manager
     keepassxc
 
     # Email
     thunderbird
-    pass-wayland
-    pass-secret-service
     protonmail-bridge
     protonmail-desktop
     protonmail-bridge-gui
 
     # Document-based Applications
-    evince
     xournalpp
-    rnote
     poppler_utils
     nextcloud-client
     pdfcpu
@@ -44,8 +41,6 @@
     # Graphics Applications
     gimp
     inkscape
-    posterazor
-    imagemagick
 
     # LaTeX
     (texlive.combine {
@@ -103,7 +98,6 @@
     networkmanagerapplet
     meld
     qalculate-gtk
-    webcamoid
     eog
     mate.engrampa
     swappy
@@ -113,7 +107,6 @@
     # Games
     cockatrice
     melonDS
-    # mindustry-wayland
 
     # CLI Utilities
     pandoc
@@ -121,9 +114,8 @@
     btop
     bluez
     inotify-tools
-    google-cloud-sdk
     ledger
-    python311Packages.gpustat
+    python313Packages.gpustat
     distrobox
     graphviz
 
@@ -134,7 +126,6 @@
     swww
     wev
     wl-clipboard
-    wlsunset
     wlr-randr
     kanshi
     grim
@@ -152,7 +143,7 @@ in {
         user = "mjs";
         hostname = "192.168.0.206";
         identitiesOnly = true;
-        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/sol/key".path;
+        identityFile = osConfig.sops.secrets."${osConfig.networking.hostName}/sol/key".path;
       };
     };
   };

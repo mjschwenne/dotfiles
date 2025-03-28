@@ -24,8 +24,8 @@
   boot.kernelParams = ["consoleblank=60"];
 
   sops.secrets = {
-    "ssh/mars/ssh/key".owner = "mjs";
-    "ssh/mars/sol/key".owner = "mjs";
+    "mars/ssh/key".owner = "mjs";
+    "mars/sol/key".owner = "mjs";
     "nextdns/config".owner = "root";
     "caddy/envfile".owner = "caddy";
   };
