@@ -12,11 +12,13 @@
   ];
 
   # Bootloader.
-  boot.extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
-  boot.kernelModules = ["v4l2loopback"];
-  boot.extraModprobeConfig = ''
-    options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
-  '';
+  boot = {
+    extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
+    kernelModules = ["v4l2loopback"];
+    extraModprobeConfig = ''
+      options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+    '';
+  };
   security.polkit.enable = true;
 
   # Disable suspend when laptop lid is closed
@@ -33,52 +35,70 @@
 
   networking.hostName = "mars"; # Define your hostname.
   networking.nameservers = ["127.0.0.1" "::1"];
-  services.nextdns = {
-    enable = true;
-    arguments = [
-      "-config-file"
-      ''${config.sops.secrets."nextdns/config".path}''
+  services = {
+    nextdns = {
+      enable = true;
+      arguments = [
+        "-config-file"
+        ''${config.sops.secrets."nextdns/config".path}''
+      ];
+    };
+    tailscale = {
+      extraUpFlags = ["--ssh"];
+      authKeyFile = config.sops.secrets."mars/tailscale".path;
+    };
+    caddy = {
+      enable = true;
+      package = pkgs.caddy.withPlugins {
+        plugins = ["github.com/caddy-dns/porkbun@v0.2.1"];
+        hash = "sha256-X8QbRc2ahW1B5niV8i3sbfpe1OPYoaQ4LwbfeaWvfjg=";
+      };
+      environmentFile = ''${config.sops.secrets."caddy/envfile".path}'';
+      extraConfig = ''
+        (ts_host) {
+            bind {env.TAILNET_IP}
+
+            @blocked not remote_ip 100.64.0.0/10
+
+            tls {
+                resolvers 1.1.1.1
+                dns porkbun {
+                    api_key {env.PORKBUN_API_KEY}
+                    api_secret_key {env.PORKBUN_API_PASSWORD}
+                }
+            }
+
+            respond @blocked "Unauthorized" 403
+        }
+      '';
+      virtualHosts."cloud.schwennesen.org".extraConfig = ''
+        import ts_host
+        reverse_proxy localhost:19000
+      '';
+      virtualHosts."office.schwennesen.org".extraConfig = ''
+        import ts_host
+        reverse_proxy localhost:8000 {
+          header_up X-Forward-Proto https
+        }
+      '';
+    };
+    udev.packages = [
+      pkgs.android-udev-rules
     ];
   };
-  # tailscale
-  services.tailscale = {
-    extraUpFlags = ["--ssh"];
-    authKeyFile = config.sops.secrets."mars/tailscale".path;
-  };
-  services.caddy = {
-    enable = true;
-    package = pkgs.caddy.withPlugins {
-      plugins = ["github.com/caddy-dns/porkbun@v0.2.1"];
-      hash = "sha256-X8QbRc2ahW1B5niV8i3sbfpe1OPYoaQ4LwbfeaWvfjg=";
+  systemd.services = {
+    mjs-tailscale-up = {
+      enable = true;
+      after = ["tailscaled.service" "sys-subsystem-net-devices-tailscale0.device"];
+      wantedBy = ["multi-user.target"];
+      serviceConfig.Type = "oneshot";
+      script = ''
+        timeout 60s ${pkgs.bash}/bin/bash -c "until ${pkgs.tailscale}/bin/tailscale status --peers=false; do sleep 1; done"
+      '';
     };
-    environmentFile = ''${config.sops.secrets."caddy/envfile".path}'';
-    extraConfig = ''
-      (ts_host) {
-          bind {env.TAILNET_IP}
-
-          @blocked not remote_ip 100.64.0.0/10
-
-          tls {
-              resolvers 1.1.1.1
-              dns porkbun {
-                  api_key {env.PORKBUN_API_KEY}
-                  api_secret_key {env.PORKBUN_API_PASSWORD}
-              }
-          }
-
-          respond @blocked "Unauthorized" 403
-      }
-    '';
-    virtualHosts."cloud.schwennesen.org".extraConfig = ''
-      import ts_host
-      reverse_proxy localhost:19000
-    '';
-    virtualHosts."office.schwennesen.org".extraConfig = ''
-      import ts_host
-      reverse_proxy localhost:8000 {
-        header_up X-Forward-Proto https
-      }
-    '';
+    caddy = {
+      after = ["mjs-tailscale-up.service"];
+    };
   };
 
   programs.kdeconnect.enable = true;
@@ -86,56 +106,6 @@
   # android stuff for supernote
   programs.adb.enable = true;
   users.users.mjs.extraGroups = ["adbusers"];
-  services.udev.packages = [
-    pkgs.android-udev-rules
-  ];
-
-  hardware.keyboard.zsa.enable = true;
-
-  services.syncthing = {
-    enable = true;
-    user = "mjs";
-    configDir = "/home/mjs/.syncthing";
-    dataDir = "/home/mjs/.syncthing";
-
-    settings = {
-      options.globalAnnounceServer = ["https://discovery.schwennesen.org"];
-      options.urAccepted = 3;
-
-      devices = {
-        "sol" = {
-          id = "7AYNHZQ-VFBBFZP-MC327GI-UTDLN4K-KZOV2L6-DVI5Z6D-TORIX5C-IXDYEAP";
-        };
-        "terra" = {
-          id = "C276DRG-ZBCYDM7-JZEA3FC-5F76M2K-O6UU6XF-5TUI4EK-LG437FA-E6RIFQC";
-        };
-        "luna" = {
-          id = "V2BAQL2-R6RK74M-OLBQEY2-MVA2C7B-JX6XLK3-EOSFXLH-2VY4NXR-C5Z33QH";
-        };
-        "mercury" = {
-          id = "SVMWORW-JCZ26YN-7P77FJC-YYUNZ46-3PXZZQH-TMZGH5F-LD3TVJ4-XEVQMAE";
-        };
-        "enceladus" = {
-          id = "DVP6EYQ-22EPU7T-A7UYHCB-5H7SQKS-5Q32KE7-NCZPQAC-TAFXCWS-TDOOHAW";
-        };
-      };
-
-      folders = {
-        "org" = {
-          path = "/home/mjs/Documents";
-          devices = ["sol" "luna" "terra"];
-        };
-        "kdb" = {
-          path = "/home/mjs/kdb";
-          devices = ["sol" "luna" "mercury" "terra" "enceladus"];
-        };
-        "emulator" = {
-          path = "/home/mjs/workspace/emulation";
-          devices = ["sol" "luna" "terra" "mercury"];
-        };
-      };
-    };
-  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
