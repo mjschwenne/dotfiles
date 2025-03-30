@@ -22,8 +22,8 @@
   security.polkit.enable = true;
 
   sops.secrets = {
-    "ssh/terra/ssh/key".owner = "mjs";
-    "ssh/terra/sol/key".owner = "mjs";
+    "terra/ssh/key".owner = "mjs";
+    "terra/sol/key".owner = "mjs";
   };
 
   nixpkgs.config.allowBroken = true;

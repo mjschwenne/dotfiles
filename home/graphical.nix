@@ -143,7 +143,7 @@ in {
         user = "mjs";
         hostname = "192.168.0.206";
         identitiesOnly = true;
-        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/sol/key".path;
+        identityFile = osConfig.sops.secrets."${osConfig.networking.hostName}/sol/key".path;
       };
     };
   };

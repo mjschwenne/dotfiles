@@ -24,9 +24,9 @@
   networking.hostName = "venus";
 
   sops.secrets = {
-    "ssh/venus/ssh/key".owner = "mjs";
-    "ssh/venus/sol/key".owner = "mjs";
-    "ssh/venus/tailscale".owner = "mjs";
+    "venus/ssh/key".owner = "mjs";
+    "venus/sol/key".owner = "mjs";
+    "venus/tailscale".owner = "mjs";
   };
 
   nixpkgs.config.allowBroken = true;
@@ -39,7 +39,7 @@
   };
 
   # tailscale
-  services.tailscale.authKeyFile = config.sops.secrets."ssh/venus/tailscale".path;
+  services.tailscale.authKeyFile = config.sops.secrets."venus/tailscale".path;
 
   hardware.keyboard.zsa.enable = true;
 

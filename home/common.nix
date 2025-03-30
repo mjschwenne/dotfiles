@@ -15,13 +15,13 @@
         user = "git";
         hostname = "github.com";
         identitiesOnly = true;
-        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/ssh/key".path;
+        identityFile = osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path;
       };
       "git.doit.wisc.edu" = {
         user = "git";
         hostname = "git.doit.wisc.edu";
         identitiesOnly = true;
-        identityFile = osConfig.sops.secrets."ssh/${osConfig.networking.hostName}/ssh/key".path;
+        identityFile = osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path;
       };
     };
   };
