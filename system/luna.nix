@@ -1,6 +1,6 @@
 {
   pkgs,
-  lib,
+  config,
   ...
 }: {
   imports = [
@@ -25,8 +25,10 @@
   sops.secrets = {
     "luna/ssh/key".owner = "mjs";
     "luna/sol/key".owner = "mjs";
+    "luna/tailscale".owner = "mjs";
   };
 
+  services.tailscale.authKeyFile = config.sops.secrets."luna/tailscale".path;
   # Enable thermald, which should prevent overheating
   services.thermald.enable = true;
 

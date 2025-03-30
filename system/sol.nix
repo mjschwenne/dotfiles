@@ -32,6 +32,7 @@
   sops.secrets = {
     "sol/ssh/key".owner = "mjs";
     "sol/nix-serve/key".owner = "mjs";
+    "sol/tailscale".owner = "mjs";
   };
 
   services.nix-serve.secretKeyFile = config.sops.secrets."sol/nix-serve/key".path;
@@ -42,10 +43,10 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    syncthing-discovery
-  ];
-
+  services.tailscale = {
+    extraUpFlags = ["--ssh"];
+    authKeyFile = config.sops.secrets."sol/tailscale".path;
+  };
   services.foundryvtt = {
     enable = true;
     hostName = "schwennesen.org";

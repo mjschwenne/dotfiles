@@ -24,6 +24,7 @@
   sops.secrets = {
     "terra/ssh/key".owner = "mjs";
     "terra/sol/key".owner = "mjs";
+    "terra/tailscale".owner = "mjs";
   };
 
   nixpkgs.config.allowBroken = true;
@@ -66,6 +67,7 @@
         }
       ];
     };
+    tailscale.authKeyFile = config.sops.secrets."terra/tailscale".path;
   };
   # Variables needed to run sway
   environment.variables = {
