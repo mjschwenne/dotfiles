@@ -278,6 +278,7 @@
         {command = "systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP";}
         {command = "hash dbus-update-activation-environment 2>/dev/null && dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_CURRENT_DESKTOP=sway";}
         {command = "trayscale --hide-window";}
+        {command = "nextcloud --background";}
       ];
     };
     extraConfig = ''

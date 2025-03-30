@@ -45,51 +45,6 @@
 
   hardware.keyboard.zsa.enable = true;
 
-  services.syncthing = {
-    enable = true;
-    user = "mjs";
-    configDir = "/home/mjs/.syncthing";
-    dataDir = "/home/mjs/.syncthing";
-
-    settings = {
-      options.globalAnnounceServer = ["https://discovery.schwennesen.org"];
-      options.urAccepted = 3;
-
-      devices = {
-        "sol" = {
-          id = "7AYNHZQ-VFBBFZP-MC327GI-UTDLN4K-KZOV2L6-DVI5Z6D-TORIX5C-IXDYEAP";
-        };
-        "terra" = {
-          id = "C276DRG-ZBCYDM7-JZEA3FC-5F76M2K-O6UU6XF-5TUI4EK-LG437FA-E6RIFQC";
-        };
-        "luna" = {
-          id = "V2BAQL2-R6RK74M-OLBQEY2-MVA2C7B-JX6XLK3-EOSFXLH-2VY4NXR-C5Z33QH";
-        };
-        "mercury" = {
-          id = "SVMWORW-JCZ26YN-7P77FJC-YYUNZ46-3PXZZQH-TMZGH5F-LD3TVJ4-XEVQMAE";
-        };
-        "enceladus" = {
-          id = "DVP6EYQ-22EPU7T-A7UYHCB-5H7SQKS-5Q32KE7-NCZPQAC-TAFXCWS-TDOOHAW";
-        };
-      };
-
-      folders = {
-        "org" = {
-          path = "/home/mjs/Documents";
-          devices = ["sol" "luna" "terra"];
-        };
-        "kdb" = {
-          path = "/home/mjs/kdb";
-          devices = ["sol" "luna" "mercury" "terra" "enceladus"];
-        };
-        "emulator" = {
-          path = "/home/mjs/workspace/emulation";
-          devices = ["sol" "luna" "terra" "mercury"];
-        };
-      };
-    };
-  };
-
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It's perfectly fine and recommended to leave

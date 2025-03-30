@@ -47,7 +47,7 @@
   @tmt q    w    e    r    t               y    u    i    o    p    [    ]     \   end
   @ect a    s    d    f    g               h    j    k    l    ;    '          ret pgup
   lsft z    x    c    v    b               n    m    ,    .    /    rsft       up  pgdn
-  @arr @num lalt           spc                            @num @arr      left down rght
+  @num lmet lalt           spc                            @num @arr      left down rght
 )
 
 (deflayer numbers
