@@ -137,16 +137,16 @@
 in {
   imports = [./desktop ./applications];
 
-  programs.ssh = {
-    matchBlocks = {
-      "sol" = {
-        user = "mjs";
-        hostname = "192.168.0.206";
-        identitiesOnly = true;
-        identityFile = osConfig.sops.secrets."${osConfig.networking.hostName}/sol/key".path;
-      };
-    };
-  };
+  # programs.ssh = {
+  #   matchBlocks = {
+  #     "sol" = {
+  #       user = "mjs";
+  #       hostname = "192.168.0.206";
+  #       identitiesOnly = true;
+  #       identityFile = osConfig.sops.secrets."${osConfig.networking.hostName}/sol/key".path;
+  #     };
+  #   };
+  # };
 
   gtk = {
     enable = true;

@@ -14,11 +14,11 @@
 
   networking.hostName = "sol"; # define machine hostname
 
-  users.users.mjs.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAGIy0dwGXtG+kNO4OEG3Vv04X7SJHlAYkW7YjtIMnL9 mjs@mars"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE/wOZMUpYq41kO3SSblmEatV/ZScS1QJ0Ez3BkEk78W mjs@terra"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFv/OdgwHQEjIB3/8d8SVfxSP2EHR680ESP3bImiLW3x mjs@luna"
-  ];
+  # users.users.mjs.openssh.authorizedKeys.keys = [
+  #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAGIy0dwGXtG+kNO4OEG3Vv04X7SJHlAYkW7YjtIMnL9 mjs@mars"
+  #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE/wOZMUpYq41kO3SSblmEatV/ZScS1QJ0Ez3BkEk78W mjs@terra"
+  #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFv/OdgwHQEjIB3/8d8SVfxSP2EHR680ESP3bImiLW3x mjs@luna"
+  # ];
 
   nix.sshServe = {
     enable = true;
@@ -70,24 +70,24 @@
     };
   };
 
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [80 443 8443];
-  };
+  # networking.firewall = {
+  #   enable = true;
+  #   allowedTCPPorts = [80 443 8443];
+  # };
 
   # Enable the OpenSSH daemon.
-  services.openssh = {
-    enable = true;
-    openFirewall = true;
-    settings = {
-      PasswordAuthentication = false;
-      PermitRootLogin = "no";
-      X11Forwarding = false; # Since there is no X server over here...
-    };
-  };
+  # services.openssh = {
+  #   enable = true;
+  #   openFirewall = true;
+  #   settings = {
+  #     PasswordAuthentication = false;
+  #     PermitRootLogin = "no";
+  #     X11Forwarding = false; # Since there is no X server over here...
+  #   };
+  # };
 
   # Let other hosts find this computer on the network
-  services.avahi.enable = true;
+  # services.avahi.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
