@@ -24,6 +24,10 @@
           ui.enable = true;
         };
       };
+      extraLuaFiles = [
+        ./highlight-yank.lua
+        ./diagonstic-signs.lua
+      ];
       extraPlugins = let
         diagflow-nvim = pkgs.vimUtils.buildVimPlugin {
           pname = "diagflow.nvim";
@@ -36,10 +40,30 @@
           };
           dependencies = [pkgs.vimPlugins.harpoon];
         };
+        hmts-nvim = pkgs.vimUtils.buildVimPlugin {
+          pname = "hmts.nvim";
+          version = "2024-10-24";
+          src = pkgs.fetchFromGitHub {
+            owner = "calops";
+            repo = "hmts.nvim";
+            rev = "c7ff4c3ad96cd05664b18fb5bbbe2abbd7682dd2";
+            sha256 = "sha256-gJlM0diDmyvmW5l/QIpUe2bDTZg8XekLBcFOoxeUW4E=";
+          };
+        };
       in {
         diagflow = {
           package = diagflow-nvim;
-          setup = "require('diagflow').setup()";
+          setup = ''
+            require('diagflow').setup({
+              enable = true,
+              text_align = 'right',
+              placement = 'inline',
+              inline_padding_left = 3,
+            })
+          '';
+        };
+        hmts = {
+          package = hmts-nvim;
         };
       };
       filetree.neo-tree.enable = true;
@@ -51,7 +75,7 @@
       lsp = {
         enable = true;
         formatOnSave = true;
-        lightbulb.enable = true;
+        lightbulb.enable = false;
         lsplines.enable = false;
         lspkind.enable = true;
         lspsaga.enable = true;
@@ -162,7 +186,7 @@
         fidget-nvim.enable = true;
 
         # highlight-undo.enable = true;
-        indent-blankline.enable = true;
+        # indent-blankline.enable = true;
       };
     };
   };
