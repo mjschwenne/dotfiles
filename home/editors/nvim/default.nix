@@ -1,4 +1,8 @@
-{nvf, ...}: {
+{
+  pkgs,
+  nvf,
+  ...
+}: {
   imports = [nvf.homeManagerModules.default];
 
   programs.nvf = {
@@ -20,6 +24,24 @@
           ui.enable = true;
         };
       };
+      extraPlugins = let
+        diagflow-nvim = pkgs.vimUtils.buildVimPlugin {
+          pname = "diagflow.nvim";
+          version = "2025-04-25";
+          src = pkgs.fetchFromGitHub {
+            owner = "dgagn";
+            repo = "diagflow.nvim";
+            rev = "b13321b517ff64bf42eeac2214085d3c76d83a0d";
+            sha256 = "sha256-gJlM0diDmyvmW5l/QIpUe2bDTZg8XekLBcFOoxeUW4E=";
+          };
+          dependencies = [pkgs.vimPlugins.harpoon];
+        };
+      in {
+        diagflow = {
+          package = diagflow-nvim;
+          setup = "require('diagflow').setup()";
+        };
+      };
       filetree.neo-tree.enable = true;
       git = {
         enable = true;
@@ -30,7 +52,7 @@
         enable = true;
         formatOnSave = true;
         lightbulb.enable = true;
-        lsplines.enable = true;
+        lsplines.enable = false;
         lspkind.enable = true;
         lspsaga.enable = true;
         lspSignature.enable = true;
@@ -55,6 +77,7 @@
           crates.enable = true;
         };
         lua.enable = true;
+        yaml.enable = true;
       };
       notes.todo-comments.enable = true;
       notify.nvim-notify.enable = true;
@@ -101,6 +124,7 @@
       treesitter = {
         enable = true;
         context.enable = true;
+        grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [just];
       };
       ui = {
         borders.enable = true;
