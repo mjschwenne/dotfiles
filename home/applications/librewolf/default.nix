@@ -56,10 +56,10 @@
         force = true;
         engines = {
           # don't need these default ones
-          "Amazon.com".metaData.hidden = true;
-          "Bing".metaData.hidden = true;
-          "eBay".metaData.hidden = true;
-          "DuckDuckGo" = {
+          "amazondotcom-us".metaData.hidden = true;
+          "bing".metaData.hidden = true;
+          "ebay".metaData.hidden = true;
+          "ddg" = {
             urls = [
               {
                 template = "https://duckduckgo.com";
@@ -73,7 +73,7 @@
             ];
             definedAliases = [",d"];
           };
-          "Google" = {
+          "google" = {
             urls = [
               {
                 template = "https://google.com/search";
@@ -119,7 +119,7 @@
             ];
             definedAliases = ["np"];
           };
-          "YouTube" = {
+          "youtube" = {
             urls = [
               {
                 template = "https://www.youtube.com/results";
@@ -162,7 +162,7 @@
             definedAliases = ["gh"];
           };
         };
-        default = "DuckDuckGo";
+        default = "ddg";
       };
       id = 0;
       settings = {

@@ -24,6 +24,13 @@
           ui.enable = true;
         };
       };
+      diagnostics = {
+        enable = true;
+        config.signs.text = {
+          "vim.diagnostic.severity.ERROR" = "󰅚 ";
+          "vim.diagnostic.severity.WARN" = "󰀪 ";
+        };
+      };
       extraLuaFiles = [
         ./highlight-yank.lua
         ./diagonstic-signs.lua
@@ -76,7 +83,6 @@
         enable = true;
         formatOnSave = true;
         lightbulb.enable = false;
-        lsplines.enable = false;
         lspkind.enable = true;
         lspsaga.enable = true;
         lspSignature.enable = true;

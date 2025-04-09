@@ -1015,16 +1015,19 @@ reversion. This resizes the popup to match its contents."
   "n t"   '("TODO List" . org-todo-list)
   "n T"   '("Tag View" . org-tags-view))
 
-(custom-set-variables '(org-emphasis-alist
-                        (quote (("*" bold)
-                                ("/" italic)
-                                ("_" underline)
-                                ("=" org-verbatim verbatim)
-                                ("~" org-code verbatim)
-                                ("+"
-                                 (:strike-through t))
-                                ("!"
-                                 (:overline t))))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-emphasis-alist
+   '(("*" bold) ("/" italic) ("_" underline) ("=" org-verbatim verbatim)
+     ("~" org-code verbatim) ("+" (:strike-through t)) ("!" (:overline t))))
+ '(safe-local-variable-directories '("/home/mjs/workspace/pollux/"))
+ '(safe-local-variable-values
+   '((mjs/org-auto-tags--current-list quote ("great_basin"))
+     (mjs/org-auto-tags--current-list "great_basin")
+     (mjs/org-auto-tags--current-list "kb"))))
 
 (use-package org
   ;; For whatever reason, `org' gets upset if these aren't defined soon enough
