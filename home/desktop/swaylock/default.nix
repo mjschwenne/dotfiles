@@ -13,7 +13,7 @@
       bs-hl-color = "d08770";
 
       font = "JetBrainsMono Nerd Font";
-      font-size = 64;
+      font-size = 32;
       text-caps-lock-color = "ebcb8b";
       text-clear-color = "d8dee9";
       text-ver-color = "d8dee9";
