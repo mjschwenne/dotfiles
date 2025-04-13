@@ -188,6 +188,14 @@
               position = "1920 0";
             };
           };
+          "terra" = {
+            DP-4 = {
+              position = "1920 0";
+            };
+            DP-3 = {
+              position = "0 0";
+            };
+          };
           "venus" = {
             DP-1 = {
               scale = "1.6";
