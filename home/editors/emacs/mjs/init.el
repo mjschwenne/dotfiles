@@ -571,6 +571,7 @@
                            (window-width . fit-window-to-buffer-horizontally)
                            (window . root)
                            (dedicated . t))
+                          ("\\*compilation\\*" display-buffer-no-window)
                           ("\\*Embark Actions\\*" (display-buffer-at-bottom)
                            (window-height . 14))
                           ((or (major-mode . Info-mode)
@@ -1023,7 +1024,7 @@ reversion. This resizes the popup to match its contents."
  '(org-emphasis-alist
    '(("*" bold) ("/" italic) ("_" underline) ("=" org-verbatim verbatim)
      ("~" org-code verbatim) ("+" (:strike-through t)) ("!" (:overline t))))
- '(safe-local-variable-directories '("/home/mjs/workspace/pollux/"))
+ '(safe-local-variable-directories '("/home/mjs/workspace/pollux/" "/home/mjs/workspace/pollux/"))
  '(safe-local-variable-values
    '((mjs/org-auto-tags--current-list quote ("great_basin"))
      (mjs/org-auto-tags--current-list "great_basin")
@@ -1281,13 +1282,13 @@ reversion. This resizes the popup to match its contents."
              ":END:")
            :empty-lines 1)
           ("e" "Etera Session" entry
-           (file "ttrpg/games/etera/notes.org")
+           (file "freetime/ttrpg/games/etera/notes.org")
            "* Session %<%Y-%m-%d>\n\n%?"
            :empty-lines 1
            :jump-to-captured t
            :immediate-finish t)
           ("g" "Graves Session" entry
-           (file "ttrpg/games/graves-and-groves/sessions.org")
+           (file "freetime/ttrpg/games/graves-and-groves/sessions.org")
            "* Session %<%Y-%m-%d>\n\n%?"
            :empty-lines 1
            :prepend t
@@ -1308,14 +1309,14 @@ reversion. This resizes the popup to match its contents."
            ,(concat "* Notes (%a)\n"
                     "/Entered on/ %U\n\n%?"))
           ("o" "Obscured Realms Session" entry
-           (file "ttrpg/games/obscured-realms/sessions.org")
+           (file "freetime/ttrpg/games/obscured-realms/sessions.org")
            "* Session %<%Y-%m-%d>\n\n%?"
            :empty-lines 1
            :jump-to-captured t
            :immediate-finish t)))
   (set-face-foreground 'org-verbatim "#b48ead")
   ;; (set-face-attribute 'org-quote nil
-  ;;                     :background "#3b4252" 
+  ;;                     :background "#3b4252"
   ;;                     :extend t)
   (set-face-foreground 'org-table "#d8dee9")
 
@@ -2095,8 +2096,10 @@ used if TAG-LIST is empty."
            (TeX-engine 'luatex)
            (TeX-parse-self t)
            (TeX-auto-save t))
+  :init (require 'auctex)
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
+  (add-to-list 'TeX-command-list '("Make" "make" TeX-run-compile nil t))
   :general
   (:states 'insert :keymaps 'LaTeX-mode-map
            "C-S-c" #'citar-insert-citation)
@@ -2733,7 +2736,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                  hscroll-margin 0)))
+                                       hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
