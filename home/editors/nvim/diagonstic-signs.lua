@@ -1,16 +1,46 @@
 -- Set Diagnostic symbols
 local signs = {
-    { name = "DiagnosticSignError", text = "" },
-    { name = "DiagnosticSignWarn", text = "" },
-    { name = "DiagnosticSignHint", text = "" },
-    { name = "DiagnosticSignInfo", text = "" },
-    { name = "DapBreakpoint", text = "" },
-    { name = "DapBreakpointCondition", text = "" },
-    { name = "DapLopPoint", text = "" },
-    { name = "DapStopped", text = "" },
-    { name = "DapBreakpointRejected", text = "" },
+	{ name = "DiagnosticSignError", text = "" },
+	{ name = "DiagnosticSignWarn", text = "" },
+	{ name = "DiagnosticSignHint", text = "" },
+	{ name = "DiagnosticSignInfo", text = "" },
+	{ name = "DapBreakpoint", text = "" },
+	{ name = "DapBreakpointCondition", text = "" },
+	{ name = "DapLopPoint", text = "" },
+	{ name = "DapStopped", text = "" },
+	{ name = "DapBreakpointRejected", text = "" },
 }
 
-for _, sign in ipairs(signs) do
-    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
-end
+vim.diagnostic.config({
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "󰅚 ",
+			[vim.diagnostic.severity.WARN] = "󰀪 ",
+		},
+	},
+	float = {
+		border = "rounded",
+	},
+})
+
+vim.api.nvim_create_autocmd({ "CursorHold" }, {
+	pattern = "*",
+	callback = function()
+		for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+			if vim.api.nvim_win_get_config(winid).zindex then
+				return
+			end
+		end
+		vim.diagnostic.open_float({
+			scope = "cursor",
+			focusable = false,
+			close_events = {
+				"CursorMoved",
+				"CursorMovedI",
+				"BufHidden",
+				"InsertCharPre",
+				"WinLeave",
+			},
+		})
+	end,
+})

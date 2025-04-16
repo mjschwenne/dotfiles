@@ -1024,7 +1024,9 @@ reversion. This resizes the popup to match its contents."
  '(org-emphasis-alist
    '(("*" bold) ("/" italic) ("_" underline) ("=" org-verbatim verbatim)
      ("~" org-code verbatim) ("+" (:strike-through t)) ("!" (:overline t))))
- '(safe-local-variable-directories '("/home/mjs/workspace/pollux/" "/home/mjs/workspace/pollux/"))
+ '(safe-local-variable-directories '("/home/mjs/workspace/pollux/"
+                                     "/home/mjs/workspace/pollux-report/"
+                                     "/home/mjs/workspace/everparse/"))
  '(safe-local-variable-values
    '((mjs/org-auto-tags--current-list quote ("great_basin"))
      (mjs/org-auto-tags--current-list "great_basin")

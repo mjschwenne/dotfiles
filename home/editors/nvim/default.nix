@@ -24,29 +24,21 @@
           ui.enable = true;
         };
       };
-      diagnostics = {
-        enable = true;
-        config.signs.text = {
-          "vim.diagnostic.severity.ERROR" = "󰅚 ";
-          "vim.diagnostic.severity.WARN" = "󰀪 ";
-        };
-      };
+      # TODO get this to actually work
+      # diagnostics = {
+      #   enable = true;
+      #   config.signs = {
+      #     text = {
+      #       "vim.diagnostic.severity.ERROR" = "󰅚 ";
+      #       "vim.diagnostic.severity.WARN" = "󰀪 ";
+      #     };
+      #   };
+      # };
       extraLuaFiles = [
         ./highlight-yank.lua
         ./diagonstic-signs.lua
       ];
       extraPlugins = let
-        diagflow-nvim = pkgs.vimUtils.buildVimPlugin {
-          pname = "diagflow.nvim";
-          version = "2025-04-25";
-          src = pkgs.fetchFromGitHub {
-            owner = "dgagn";
-            repo = "diagflow.nvim";
-            rev = "b13321b517ff64bf42eeac2214085d3c76d83a0d";
-            sha256 = "sha256-gJlM0diDmyvmW5l/QIpUe2bDTZg8XekLBcFOoxeUW4E=";
-          };
-          dependencies = [pkgs.vimPlugins.harpoon];
-        };
         hmts-nvim = pkgs.vimUtils.buildVimPlugin {
           pname = "hmts.nvim";
           version = "2024-10-24";
@@ -58,17 +50,6 @@
           };
         };
       in {
-        diagflow = {
-          package = diagflow-nvim;
-          setup = ''
-            require('diagflow').setup({
-              enable = true,
-              text_align = 'right',
-              placement = 'inline',
-              inline_padding_left = 3,
-            })
-          '';
-        };
         hmts = {
           package = hmts-nvim;
         };
@@ -82,7 +63,6 @@
       lsp = {
         enable = true;
         formatOnSave = true;
-        lightbulb.enable = false;
         lspkind.enable = true;
         lspsaga.enable = true;
         lspSignature.enable = true;
@@ -108,6 +88,26 @@
         };
         lua.enable = true;
         yaml.enable = true;
+      };
+      maps = {
+        normal = {
+          "<C-h>" = {
+            action = "<C-w>h";
+            desc = "Move Focus Left";
+          };
+          "<C-j>" = {
+            action = "<C-w>j";
+            desc = "Move Focus Up";
+          };
+          "<C-k>" = {
+            action = "<C-w>k";
+            desc = "Move Focus Up";
+          };
+          "<C-l>" = {
+            action = "<C-w>l";
+            desc = "Move Focus Right";
+          };
+        };
       };
       notes.todo-comments.enable = true;
       notify.nvim-notify.enable = true;
@@ -181,11 +181,11 @@
         motion = {
           hop.enable = true;
           leap.enable = true;
-          precognition.enable = true;
+          precognition.enable = false;
         };
       };
       visuals = {
-        nvim-scrollbar.enable = true;
+        nvim-scrollbar.enable = false;
         nvim-web-devicons.enable = true;
         nvim-cursorline.enable = true;
         cinnamon-nvim.enable = true;
