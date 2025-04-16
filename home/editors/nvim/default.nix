@@ -24,7 +24,7 @@
           ui.enable = true;
         };
       };
-      # TODO get this to actually work
+      # FIXME: get this to actually work
       # diagnostics = {
       #   enable = true;
       #   config.signs = {

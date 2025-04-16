@@ -43,53 +43,8 @@
     inkscape
 
     # LaTeX
-    (texlive.combine {
-      inherit
-        (texlive)
-        scheme-medium
-        wrapfig
-        capt-of
-        sfmath
-        standalone
-        preprint
-        preview
-        paralist
-        nicematrix
-        pgfplots
-        cancel
-        fontawesome
-        tcolorbox
-        environ
-        tikzfill
-        tikzmark
-        enumitem
-        dashrule
-        ifmtarg
-        multirow
-        changepage
-        biblatex
-        lato
-        fontaxes
-        curve
-        silence
-        fontawesome5
-        relsize
-        comment
-        csquotes
-        xpatch
-        cochineal
-        xstring
-        cabin
-        inconsolata
-        upquote
-        fifo-stack
-        varwidth
-        tabto-ltx
-        totcount
-        ;
-    })
+    texliveFull
     ghostscript
-    biber
 
     # Graphical Utilities
     blueberry
