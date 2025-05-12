@@ -2084,6 +2084,7 @@ used if TAG-LIST is empty."
          (LaTeX-mode . TeX-PDF-mode)
          (LaTeX-mode . mjs/preview-scale-adjustment)
          (LaTeX-mode . auto-fill-mode)
+         (LaTeX-mode . (lambda () (apheleia-mode -1)))
          (after-save . (lambda ()
 		  				 (when (eq major-mode #'LaTeX-mode)
 						   (TeX-command-run-all nil)))))
@@ -2102,6 +2103,7 @@ used if TAG-LIST is empty."
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
   (add-to-list 'TeX-command-list '("Make" "make" TeX-run-compile nil t))
+  (require 'citar-latex)
   :general
   (:states 'insert :keymaps 'LaTeX-mode-map
            "C-S-c" #'citar-insert-citation)
@@ -2738,7 +2740,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                       hscroll-margin 0)))
+                                  hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
