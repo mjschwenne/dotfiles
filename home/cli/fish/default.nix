@@ -14,11 +14,9 @@
       icat = "kitty +kitten icat";
       m = "math";
       nix-shell = "nix-shell --run fish";
-      cs400-ssh = ''
-        gcloud compute ssh --zone "us-central1-a" "cs400-vm" --project "cs-400-398116"'';
-      cs400-auth = ''gcloud auth login'';
       ls = "eza";
-      ssh = "kitty +kitten ssh -i /run/secrets/${osConfig.networking.hostName}/ssh/key";
+      ssh = ''kitty +kitten ssh -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}'';
+      scp = ''scp -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}'';
     };
     functions = {
       mjs-git = ''

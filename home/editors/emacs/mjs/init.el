@@ -2622,7 +2622,7 @@ used if TAG-LIST is empty."
   :commands fstar-mode
   :general (mjs-local-leader-def :keymaps 'fstar-mode-map
              "n" '("Assert Next Command" . fstar-subp-advance-next)
-             "m" '("Undo Last Command" . fstar-subp-retract-one)
+             "m" '("Undo Last Command" . fstar-subp-retract-last)
              "." '("Assert to Line" . fstar-subp-advance-or-retract-to-point)
              "l" '("Assert to Line Lax" . fstar-subp-advance-or-retract-to-point-lax)
              "x" '("Kill Background Z3" . fstar-subp-kill-one-or-many)
