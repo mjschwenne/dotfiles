@@ -38,22 +38,6 @@
         ./highlight-yank.lua
         ./diagonstic-signs.lua
       ];
-      extraPlugins = let
-        hmts-nvim = pkgs.vimUtils.buildVimPlugin {
-          pname = "hmts.nvim";
-          version = "2024-10-24";
-          src = pkgs.fetchFromGitHub {
-            owner = "calops";
-            repo = "hmts.nvim";
-            rev = "c7ff4c3ad96cd05664b18fb5bbbe2abbd7682dd2";
-            sha256 = "sha256-gJlM0diDmyvmW5l/QIpUe2bDTZg8XekLBcFOoxeUW4E=";
-          };
-        };
-      in {
-        hmts = {
-          package = hmts-nvim;
-        };
-      };
       filetree.neo-tree.enable = true;
       git = {
         enable = true;
@@ -71,7 +55,6 @@
         trouble.enable = true;
       };
       languages = {
-        enableLSP = true;
         enableFormat = true;
         enableTreesitter = true;
         enableExtraDiagnostics = true;
