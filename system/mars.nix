@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  foundry,
   ...
 }: {
   imports = [
@@ -9,6 +10,7 @@
     ./common.nix
     ./graphical.nix
     ./applications/nextcloud
+    foundry.nixosModules.foundryvtt
   ];
 
   # Bootloader.
@@ -34,10 +36,10 @@
   };
 
   networking.hostName = "mars"; # Define your hostname.
-  networking.nameservers = ["127.0.0.1" "::1"];
+  # networking.nameservers = ["127.0.0.1" "::1"];
   services = {
     nextdns = {
-      enable = true;
+      enable = false;
       arguments = [
         "-config-file"
         ''${config.sops.secrets."nextdns/config".path}''
@@ -46,6 +48,13 @@
     tailscale = {
       extraUpFlags = ["--ssh"];
       authKeyFile = config.sops.secrets."mars/tailscale".path;
+    };
+    foundryvtt = {
+      enable = true;
+      hostName = "schwennesen.org";
+      package = foundry.packages.${pkgs.system}.foundryvtt_13;
+      proxySSL = true;
+      proxyPort = 443;
     };
     caddy = {
       enable = true;
@@ -71,16 +80,21 @@
             respond @blocked "Unauthorized" 403
         }
       '';
-      virtualHosts."cloud.schwennesen.org".extraConfig = ''
-        import ts_host
-        reverse_proxy localhost:19000
-      '';
-      virtualHosts."office.schwennesen.org".extraConfig = ''
-        import ts_host
-        reverse_proxy localhost:8000 {
-          header_up X-Forward-Proto https
-        }
-      '';
+      virtualHosts = {
+        "cloud.schwennesen.org".extraConfig = ''
+          import ts_host
+          reverse_proxy localhost:19000
+        '';
+        "foundry.schwennesen.org".extraConfig = ''
+          import ts_host
+          reverse_proxy localhost:30000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        '';
+      };
     };
     udev.packages = [
       pkgs.android-udev-rules
