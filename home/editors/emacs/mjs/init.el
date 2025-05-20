@@ -355,6 +355,10 @@
   :diminish "󰙸 "
   :hook prog-mode)
 
+(use-package rainbow-delimiters
+  :diminish rainbow-delimiters-mode
+  :hook prog-mode)
+
 (use-package hl-todo
   :custom (hl-todo-highlight-punctuation ":")
   (hl-todo-keyword-faces
@@ -2142,8 +2146,10 @@ used if TAG-LIST is empty."
          (cdlatex-tab . yas-expand)
          (cdlatex-tab . mjs/cdlatex-in-yas-field))
   :custom (texmathp-tex-commands '(("bmatrix" env-on)
-                                   ("pmatrix" env-on)))
+                                   ("pmatrix" env-on)
+                                   ("mathpar" env-on)))
   (cdlatex-env-alist '(("proof" "\\begin{proof}\n?\n\\end{proof}" nil)
+                       ("par" "\\begin{mathpar}\n?\n\\end{mathpar}" nil)
                        ("optp" "\\begin{array}{r@{\\quad}l}\n\\min & ? \ns.t. & \n\\end{array}" nil)))
   (cdlatex-insert-auto-labels-in-env-templates nil)
   :config (general-define-key :keymaps 'LaTeX-mode-map :states 'insert
@@ -2740,7 +2746,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                  hscroll-margin 0)))
+                                       hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override

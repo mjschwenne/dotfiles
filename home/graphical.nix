@@ -74,9 +74,6 @@
     distrobox
     graphviz
 
-    # Programming languages
-    coq
-
     # Wayland Utilities
     swww
     wev
