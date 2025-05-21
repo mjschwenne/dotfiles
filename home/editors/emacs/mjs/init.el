@@ -1195,7 +1195,11 @@ reversion. This resizes the popup to match its contents."
            (org-agenda-files (list (concat org-directory "agenda/")))
            (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)" "KILL(k)")))
            (org-agenda-custom-commands
-            '(("g" "Get Things Done"
+            '(("r" "Weekly Review"
+               ((agenda "" ((org-agenda-span 7)))
+                (tags "TODO=\"DONE\"&CLOSED>=\"<-1w>\""
+                      ((org-agenda-overriding-header "\nCompleted This Week\n")))))
+              ("g" "Get Things Done"
                ((agenda* ""
                          ((org-agenda-log-mode-items '(closed clock))
                           (org-deadline-warning-days 0)
