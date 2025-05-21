@@ -607,6 +607,7 @@ hence \"everywhere\"."
 ;;;###autoload
 (defun mjs/clean-org-cliplink ()
   (interactive)
+  (require 'org-cliplink)
   (org-cliplink-insert-transformed-title
    (org-cliplink-clipboard-content)     ;take the URL from the CLIPBOARD
    (lambda (url title)
@@ -621,7 +622,7 @@ hence \"everywhere\"."
               ((string= (url-host parsed-url) "en.wikipedia.org")
                (replace-regexp-in-string " - .*" "" title))
               ((string= (url-host parsed-url) "github.com")
-               (replace-regexp-in-string "^Github - " "" title))
+               (replace-regexp-in-string "^Github - \\([^:]+\\): .*" "\\1" title))
               ;; otherwise keep the original title
               (t title))))
        ;; forward the title to the default org-cliplink transformer
