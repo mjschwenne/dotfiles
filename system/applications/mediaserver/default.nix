@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: {
-  imports = [./networking];
+  imports = [./gui];
   # Setup the required secrets
   sops.secrets = {
     "homarr/env".owner = "mjs";

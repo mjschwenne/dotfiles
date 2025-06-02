@@ -140,6 +140,23 @@
                     vendor = 4098,
               },
             '';
+          # Copied from Terra to suppress error.
+          # Not planning on using wezterm on sol.
+          "sol" =
+            /*
+            lua
+            */
+            ''
+              webgpu_preferred_adapter = {
+                backend = "Vulkan",
+                device = 29822,
+                device_type = "DiscreteGpu",
+                driver = "radv",
+                driver_info = "Mesa 24.1.1",
+                name = "AMD Radeon RX 7800 XT (RADV NAVI32)",
+                vendor = 4098,
+              },
+            '';
         };
       in
         /*
