@@ -93,7 +93,12 @@
   # Power management
   services.upower.enable = true;
   # Tailscale VPN
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    # For use with Mullvad VPN exit node
+    useRoutingFeatures = "client";
+    extraSetFlags = ["--exit-node=us-det-wg-002.mullvad.ts.net"];
+  };
 
   environment.systemPackages = with pkgs; [
     # Languages
