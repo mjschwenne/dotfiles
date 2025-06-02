@@ -33,14 +33,6 @@
           }
         ];
       };
-      # "office.schwennesen.org" = {
-      #   listen = [
-      #     {
-      #       addr = "127.0.0.1";
-      #       port = 19001;
-      #     }
-      #   ];
-      # };
     };
 
     fail2ban = {
