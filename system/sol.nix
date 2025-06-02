@@ -38,6 +38,10 @@
     nix-serve.secretKeyFile = config.sops.secrets."sol/nix-serve/key".path;
     # Disable suspend when laptop lid is closed
     logind.lidSwitch = "ignore";
+    tailscale = {
+      authKeyFile = config.sops.secrets."sol/tailscale".path;
+      extraUpFlags = ["--ssh" "--exit-node-allow-lan-access"];
+    };
   };
 
   # Turn off screen after 60 seconds of inactivity

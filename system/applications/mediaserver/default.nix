@@ -62,6 +62,7 @@
         autoStart = true;
         ports = ["127.0.0.1:7575:7575"];
         environmentFiles = [config.sops.secrets."homarr/env".path];
+        extraOptions = ["--network=host"];
         volumes = [
           "/home/mjs/homarr/appdata:/appdata"
         ];
