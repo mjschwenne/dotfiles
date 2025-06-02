@@ -29,7 +29,7 @@
         "type:keyboard" = {
           "xkb_options" = "ctrl:nocaps";
         };
-        "1386:968:Wacom_Intuos_BT_M_Pen" = {
+        "1386:967:Wacom_Intuos_BT_M_Pen" = {
           "map_to_output" =
             if osConfig.networking.hostName == "terra"
             then "DP-4"
@@ -207,7 +207,8 @@
           };
         }
         ."${osConfig.networking.hostName}"
-        or {};
+        or {
+        };
       assigns = {
         "8" = [{app_id = "^(thunderbird)$";}];
         "9" = [{title = "^(Spotify Premium)$";}]; # I swear spotify changes this with every update

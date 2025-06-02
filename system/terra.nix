@@ -78,8 +78,6 @@
 
   programs.steam.enable = true;
 
-  hardware.keyboard.zsa.enable = true;
-
   # android stuff for supernote
   programs.adb.enable = true;
   users.users.mjs.extraGroups = ["adbusers"];
