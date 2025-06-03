@@ -7,7 +7,6 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
   nix = {
     channel.enable = false;
     registry.nixpkgs.flake = inputs.nixpkgs;
@@ -98,6 +97,16 @@
     # For use with Mullvad VPN exit node
     useRoutingFeatures = "client";
     extraSetFlags = ["--exit-node=us-det-wg-002.mullvad.ts.net"];
+  };
+
+  systemd.services.mjs-tailscale-up = {
+    enable = true;
+    after = ["tailscaled.service" "sys-subsystem-net-devices-tailscale0.device"];
+    wantedBy = ["multi-user.target"];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      timeout 60s ${pkgs.bash}/bin/bash -c "until ${pkgs.tailscale}/bin/tailscale status --peers=false; do sleep 1; done"
+    '';
   };
 
   environment.systemPackages = with pkgs; [

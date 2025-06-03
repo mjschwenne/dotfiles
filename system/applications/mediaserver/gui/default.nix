@@ -20,34 +20,24 @@
       desktopManager = {
         xterm.enable = false;
       };
-      displayManager = {
-        # sddm = {
-        #   enable = true;
-        # };
-        autoLogin = {
-          enable = true;
-          user = "mjs";
-        };
-        defaultSession = "none+i3";
-      };
       windowManager.i3.enable = true;
       xkb = {
         layout = "us";
         variant = "";
       };
     };
-    # greetd = {
-    #   enable = true;
-    #   settings = {
-    #     default_session = {
-    #       command = ''${pkgs.greetd.tuigreet}/bin/tuigreet --remember --time --cmd "startx"'';
-    #       user = "mjs";
-    #     };
-    #   };
-    # };
+
+    displayManager = {
+      autoLogin = {
+        enable = true;
+        user = "mjs";
+      };
+      defaultSession = "none+i3";
+    };
+
     autorandr = {
       enable = true;
-      profiles.default.config.default.scale = {
+      profiles.default.config.HDMI-1-A.scale = {
         y = 1;
         x = 1;
       };

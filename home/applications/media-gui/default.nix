@@ -9,7 +9,7 @@
 
   imports = [../terminals ./librewolf.nix];
 
-  home.packages = with pkgs; [dconf];
+  home.packages = with pkgs; [dconf bluez];
 
   xsession.windowManager.i3 = {
     enable = true;
@@ -36,9 +36,10 @@
           "XF86AudioMute" = "exec amixer -D pulse set Master 1+ toggle";
         };
       startup = [
-        {command = ''${pkgs.bash}/bin/bash -c "sleep 5; ${pkgs.librewolf}/bin/librewolf --kiosk --new-window https://home.schwennesen.org"'';}
         {command = "${pkgs.xorg.xset}/bin/xset s off";}
         {command = "${pkgs.xorg.xset}/bin/xset -dpms";}
+        {command = "${pkgs.xorg.xrandr}/bin/xrandr --output eDP-1 --off";}
+        {command = ''${pkgs.bash}/bin/bash -c "sleep 5; ${pkgs.librewolf}/bin/librewolf --kiosk --new-window https://home.schwennesen.org"'';}
       ];
     };
   };
@@ -75,5 +76,6 @@
 
   services = {
     kdeconnect.enable = true;
+    dunst.enable = true;
   };
 }

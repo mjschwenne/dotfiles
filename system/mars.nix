@@ -100,20 +100,7 @@
       pkgs.android-udev-rules
     ];
   };
-  systemd.services = {
-    mjs-tailscale-up = {
-      enable = true;
-      after = ["tailscaled.service" "sys-subsystem-net-devices-tailscale0.device"];
-      wantedBy = ["multi-user.target"];
-      serviceConfig.Type = "oneshot";
-      script = ''
-        timeout 60s ${pkgs.bash}/bin/bash -c "until ${pkgs.tailscale}/bin/tailscale status --peers=false; do sleep 1; done"
-      '';
-    };
-    caddy = {
-      after = ["mjs-tailscale-up.service"];
-    };
-  };
+  systemd.services.caddy.after = ["mjs-tailscale-up.service"];
 
   programs.kdeconnect.enable = true;
   # This value determines the NixOS release from which the default
