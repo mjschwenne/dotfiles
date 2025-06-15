@@ -28,6 +28,7 @@
   };
 
   nixpkgs.config.allowBroken = true;
+  hardware.keyboard.qmk.enable = true;
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
