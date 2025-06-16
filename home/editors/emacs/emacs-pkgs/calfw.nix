@@ -5,12 +5,12 @@
 }:
 trivialBuild rec {
   pname = "calw";
-  version = "main-27-01-2024";
+  version = "unstable-2025-05-02";
   src = fetchFromGitHub {
     owner = "haji-ali";
     repo = "emacs-calfw";
-    rev = "bc99afee611690f85f0cd0bd33300f3385ddd3d3";
-    hash = "sha256-0xMII1KJhTBgQ57tXJks0ZFYMXIanrOl9XyqVmu7a7Y=";
+    rev = "de99e8e848ee03811388f433f7eb0400976b791d";
+    sha256 = "1gdpym3jggx2lgrj4i6g2l9bzw33cl79jk3km62ykzpnrqlfpvjs";
   };
 
   propagatedUserEnvPkgs = [howm];

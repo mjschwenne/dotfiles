@@ -1158,6 +1158,7 @@ reversion. This resizes the popup to match its contents."
            (org-ellipsis " ▾")
            (tab-always-indent nil)
            (org-startup-with-inline-images t)
+           (org-startup-indented t)
            (org-image-actual-width 600)
            (org-startup-align-all-tables t)
            (org-startup-folded 'showall)
@@ -1269,7 +1270,6 @@ reversion. This resizes the popup to match its contents."
                                 (if (eq major-mode 'org-mode)
                                     (mjs/resize-org-latex-overlays)))))
 
-         (org-mode . org-indent-mode)
          (org-indent-mode .  (lambda () (diminish 'org-indent-mode))))
   :config
   (setq org-capture-templates
@@ -1462,6 +1462,11 @@ reversion. This resizes the popup to match its contents."
   :hook (org-mode . org-modern-mode)
   :config (set-face-attribute 'org-modern-done nil
                               :background "#4c566a" :foreground "#eceff4"))
+
+(use-package org-modern-indent
+  :ensure nil
+  :after org-modern
+  :hook (org-modern-mode . org-modern-indent-mode))
 
 (use-package org-pomodoro
   :after org
@@ -2754,7 +2759,7 @@ Won't forward the buffer to chained formatters if successful."
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
-    "t t" '("Terminal" vterm))
+    "t t" '("Terminal" . vterm))
   (:states 'insert :keymap 'vterm-mode-map
            "C-q" #'vterm-send-next-key)
   :custom ((vterm-kill-buffer-on-exit t)

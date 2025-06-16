@@ -47,22 +47,23 @@
     override = epkgs:
       epkgs
       // {
-        org-timeblock = pkgs.callPackage ./org-timeblock.nix {
+        org-timeblock = pkgs.callPackage ./emacs-pkgs/org-timeblock.nix {
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) trivialBuild org-ql persist;
         };
-        calfw-blocks = pkgs.callPackage ./calfw-blocks.nix {
+        calfw-blocks = pkgs.callPackage ./emacs-pkgs/calfw-blocks.nix {
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) trivialBuild calfw calfw-org;
         };
-        # org-auctex = pkgs.callPackage ./org-auctex.nix {
-        #   inherit (epkgs) trivialBuild auctex;
-        # };
+        org-modern-indent = pkgs.callPackage ./emacs-pkgs/org-modern-indent.nix {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) trivialBuild;
+        };
       };
 
     # Optionally provide extra packages not in the configuration file.
     extraEmacsPackages = epkgs: [
-      # epkgs.org-timeblock
+      epkgs.org-modern-indent
       epkgs.calfw-blocks
       epkgs.autothemer
       epkgs.vterm
