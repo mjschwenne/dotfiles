@@ -82,9 +82,7 @@
       extraConfig = let
         preferred_adapter = {
           "terra" =
-            /*
-            lua
-            */
+            # lua
             ''
               webgpu_preferred_adapter = {
                 backend = "Vulkan",
@@ -97,9 +95,7 @@
               },
             '';
           "mars" =
-            /*
-            lua
-            */
+            # lua
             ''
               webgpu_preferred_adapter = {
                 backend = "Vulkan",
@@ -112,9 +108,7 @@
               },
             '';
           "venus" =
-            /*
-            lua
-            */
+            # lua
             ''
               webgpu_preferred_adapter = {
                     backend = "Vulkan",
@@ -126,9 +120,7 @@
               },
             '';
           "luna" =
-            /*
-            lua
-            */
+            # lua
             ''
               webgpu_preferred_adapter = {
                     backend = "Vulkan",

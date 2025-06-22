@@ -4,7 +4,9 @@
     ./sway
     ./swayidle
     ./swaylock
-    ./swaync
+    # ./swaync
+    ./mako
+    ./niri
     ./waybar
     ./wlogout
   ];

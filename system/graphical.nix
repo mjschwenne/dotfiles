@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  niri,
+  ...
+}: {
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -27,6 +31,7 @@
 
     # Install window manager and greeter
     swayfx
+    niri.packages.${system}.default
     greetd.tuigreet
 
     # Misc Utils
@@ -42,7 +47,7 @@
     enable = true;
     settings = {
       default_session = {
-        command = ''${pkgs.greetd.tuigreet}/bin/tuigreet --remember --time --cmd "sway"'';
+        command = ''${pkgs.greetd.tuigreet}/bin/tuigreet --remember --time --cmd "niri-session"'';
         user = "mjs";
       };
     };

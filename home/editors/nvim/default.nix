@@ -10,6 +10,19 @@
     settings.vim = {
       viAlias = true;
       vimAlias = true;
+      extraPlugins = {
+        htms = {
+          package = pkgs.vimUtils.buildVimPlugin {
+            name = "htms.nvim";
+            src = pkgs.fetchFromGitHub {
+              owner = "calops";
+              repo = "htms.nvim";
+              rev = "a32cd413f7d0a69d7f3d279c631f20cb117c8d30";
+              hash = "sha256-j/RFJgCbaH+V2K20RrQbsz0bzpN8Z6YAKzZMABYg/OU=";
+            };
+          };
+        };
+      };
       autopairs.nvim-autopairs.enable = true;
       autocomplete.nvim-cmp.enable = true;
       binds = {
@@ -137,7 +150,7 @@
       treesitter = {
         enable = true;
         context.enable = true;
-        grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [just];
+        grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [just kdl];
       };
       ui = {
         borders.enable = true;

@@ -22,7 +22,7 @@
     # Master branch, for when packages haven't migrated to the unstable branch
     nixpkgs-master.url = "github:NixOS/nixpkgs";
     # Stable branch, for when packages need to be rolled back
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -41,9 +41,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # niri
+    niri = {
+      url = "github:YaLTeR/niri";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # waybar
     waybar = {
       url = "github:Alexays/Waybar";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    swww = {
+      url = "github:LGFae/swww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

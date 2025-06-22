@@ -3,6 +3,7 @@
   pkgs,
   pkgs-master,
   pkgs-stable,
+  swww,
   ...
 }: let
   packages = with pkgs; [
@@ -75,7 +76,7 @@
     graphviz
 
     # Wayland Utilities
-    swww
+    swww.packages.${system}.default
     wev
     wl-clipboard
     wlr-randr

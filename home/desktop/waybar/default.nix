@@ -6,8 +6,8 @@
 }: {
   programs.waybar = {
     enable = true;
-    # package = waybar.packages.${pkgs.system}.waybar;
-    package = pkgs.waybar;
+    package = waybar.packages.${pkgs.system}.waybar;
+    # package = pkgs.waybar;
     systemd.enable = false;
     settings = {
       bar = {
@@ -23,9 +23,11 @@
             "luna" = ["eDP-1" "HDMI-A-2"];
           }
           ."${osConfig.networking.hostName}"
-          or [];
-        modules-left = ["sway/workspaces" "sway/mode" "tray" "mpris"];
-        modules-center = ["sway/window"];
+          or [
+          ];
+        modules-left = ["niri/workspaces" "wlr/taskbar" "tray" "mpris"];
+        # modules-left = ["sway/workspaces" "sway/mode" "tray" "mpris"];
+        modules-center = ["niri/window"];
         modules-right = [
           "privacy"
           "clock"
@@ -36,6 +38,15 @@
           "battery"
           "idle_inhibitor"
         ];
+        "niri/workspaces" = {
+          all-outputs = false;
+          format = "{icon}";
+          format-icons = {
+            "active" = "";
+            "focused" = "";
+            "default" = "";
+          };
+        };
         "sway/workspaces" = {
           disable-scroll = true;
           all-outputs = true;
@@ -77,37 +88,17 @@
             "^-?=?+?(.*)" = "$1";
           };
         };
-        "hyprland/workspaces" = {
-          all-outputs = true;
-          format = "{icon}";
-          format-icons = {
-            "1" = "󰲡";
-            "2" = "󰲣";
-            "3" = "󰲥";
-            "4" = "󰲧";
-            "5" = "󰲩";
-            "6" = "󰲫";
-            "7" = "󰲭";
-            "8" = "󰲯";
-            "9" = "󰲱";
-            "10" = "󰿭";
-          };
-          persistent-workspaces = {
-            "1" = [];
-            "2" = [];
-            "3" = [];
-            "4" = [];
-            "5" = [];
-            "6" = [];
-            "7" = [];
-            "8" = [];
-            "9" = [];
-            "10" = [];
-          };
+        "niri/window" = {
+          format = "{title:.50}";
+          separate-outputs = true;
+          icon = true;
         };
-        "hyprland/window" = {
-          format = "{title}";
-          max-length = 50;
+        "wlr/taskbar" = {
+          format = "{icon}";
+          icon-size = 15;
+          tooltip-format = "{title}";
+          on-click = "activate";
+          on-click-right = "close";
         };
         "tray" = {
           icon-size = 15;
@@ -257,9 +248,7 @@
       nord14 = "#a3be8c";
       nord15 = "#b48ead";
     in
-      /*
-      css
-      */
+      # css
       ''
         * {
             color: ${nord4};
@@ -272,10 +261,6 @@
             background-color: transparent;
         }
 
-        window#waybar.solo {
-            background-color: alpha(${nord0}, 0.9);
-        }
-
         #workspaces {
             background-color: ${nord1};
             margin: 5px;
@@ -284,28 +269,21 @@
         }
 
         #workspaces button {
-            border-radius: 0px;
-            background-color: ${nord1};
-            color: ${nord12};
-            border-bottom: 3px solid ${nord12};
-            padding: 0px 10px;
+            padding: 0px 5px;
+            font-size: 20px;
+            color: ${nord14};
         }
 
-        #workspaces button.visible {
-            color: ${nord13};
-            border-bottom: 3px solid ${nord13};
+        #workspaces button.active {
+            color: ${nord14};
         }
 
-        #workspaces button.active,
         #workspaces button.focused {
             color: ${nord9};
-            border-bottom: 3px solid ${nord9};
         }
 
-        #workspaces button.persistent
-        {
-            color: ${nord4};
-            border-bottom: 3px solid ${nord1};
+        #workspaces button.empty {
+            color: ${nord11};
         }
 
         #tray {
@@ -320,6 +298,24 @@
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
+        }
+
+        #taskbar {
+            background-color: ${nord1};
+            border-radius: 15px;
+            padding: 0px 15px;
+            margin: 5px;
+        }
+
+        #taskbar button {
+            padding: 0px 5px;
+        }
+
+        #taskbar.empty {
+            background-color: transparent;
+            border-radius: 0px;
+            padding: 0px 0px;
+            margin: 0px;
         }
 
         #mpris {
