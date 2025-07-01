@@ -112,6 +112,7 @@ in {
     GTK_THEME = "Nordic";
     GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
     MOZ_ENABLE_DBUS = 1;
+    DISPLAY = ":0";
   };
 
   qt = {

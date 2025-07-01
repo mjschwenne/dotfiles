@@ -60,6 +60,7 @@
       lsp = {
         enable = true;
         formatOnSave = true;
+        lightbulb.enable = false;
         lspkind.enable = true;
         lspsaga.enable = true;
         lspSignature.enable = true;
@@ -77,7 +78,11 @@
         python.enable = true;
         markdown.enable = true;
         nix.enable = true;
-        ocaml.enable = true;
+        ocaml = {
+          enable = true;
+          format.package = pkgs.ocaml-ng.ocamlPackages_4_14.ocamlformat;
+          lsp.package = pkgs.ocaml-ng.ocamlPackages_4_14.ocaml-lsp;
+        };
         rust = {
           enable = true;
           crates.enable = true;
@@ -150,12 +155,20 @@
       treesitter = {
         enable = true;
         context.enable = true;
-        grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [just kdl];
+        grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [just kdl css];
       };
       ui = {
         borders.enable = true;
         noice.enable = true;
-        colorizer.enable = true;
+        colorizer = {
+          enable = true;
+          filetypes = {
+            "*" = {
+              RRGGBB = true;
+              RRGGBBAA = true;
+            };
+          };
+        };
         illuminate.enable = true;
         breadcrumbs = {
           enable = true;

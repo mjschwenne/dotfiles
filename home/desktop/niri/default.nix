@@ -449,6 +449,7 @@
 
             Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "${pkgs.kitty}/bin/kitty"; }
             Mod+A hotkey-overlay-title="Run an Application: rofi" { spawn "${pkgs.rofi-wayland}/bin/rofi" "-show" "drun"; }
+            Mod+Shift+A hotkey-overlay-title="Switch windows: rofi" { spawn "${pkgs.rofi-wayland}/bin/rofi" "-show" "window"; }
             Mod+Z hotkey-overlay-title="Lock the Screen: swaylock" { spawn "~/.config/niri/scripts/lock.fish"; }
             Mod+Control+Z { spawn "${pkgs.wlogout}/bin/wlogout" "-b" "5" "-T" "400" "-B" "400"; }
             Mod+B hotkey-overlay-title="Browser: librewolf" { spawn "${pkgs.librewolf}/bin/librewolf"; }

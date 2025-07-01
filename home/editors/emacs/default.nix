@@ -77,7 +77,10 @@ in {
     package = emacs;
   };
 
-  services.emacs.enable = true;
+  services.emacs = {
+    enable = true;
+    startWithUserSession = "graphical";
+  };
 
   home.file = {
     ".emacs.d" = {
