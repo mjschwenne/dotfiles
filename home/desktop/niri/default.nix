@@ -435,9 +435,10 @@
         }
 
         window-rule {
-              match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
-              open-floating true
-          }
+            match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
+            match app-id=r#"^thunderbird$"# title=r#"^Write"#
+            open-floating true
+        }
 
         // Example: enable rounded corners for all windows.
         // (This example rule is commented out with a "/-" in front.)

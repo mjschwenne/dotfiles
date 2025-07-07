@@ -162,7 +162,7 @@
         noice.enable = true;
         colorizer = {
           enable = true;
-          filetypes = {
+          setupOpts.filetypes = {
             "*" = {
               RRGGBB = true;
               RRGGBBAA = true;
