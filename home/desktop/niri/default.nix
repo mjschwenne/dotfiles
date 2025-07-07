@@ -357,6 +357,7 @@
         spawn-at-startup "${pkgs.nextcloud-client}/bin/nextcloud" "--background"
         spawn-at-startup "~/.config/niri/scripts/wallpaper.fish" "interval" "300"
         spawn-at-startup "${pkgs.niriswitcher}/bin/niriswitcher"
+        spawn-at-startup "${pkgs.xwayland-satellite}/bin/xwayland-satellite"
 
         // Uncomment this line to ask the clients to omit their client-side decorations if possible.
         // If the client will specifically ask for CSD, the request will be honored.
@@ -424,6 +425,19 @@
             match app-id=r#"^org\.keepassxc\.KeePassXC$"#
             block-out-from "screen-capture"
         }
+
+        window-rule {
+            match title=r#"^notificationtoast.*"#
+            open-focused false
+            default-floating-position x=0 y=0 relative-to="bottom-right"
+            geometry-corner-radius 10 0 0 0
+            clip-to-geometry true
+        }
+
+        window-rule {
+              match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
+              open-floating true
+          }
 
         // Example: enable rounded corners for all windows.
         // (This example rule is commented out with a "/-" in front.)
