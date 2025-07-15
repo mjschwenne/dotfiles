@@ -17,15 +17,13 @@
   ];
 
   xdg.configFile."proselint/config.json".text =
-    /*
-    json
-    */
+    # json
     ''
       {
         "checks": {
           "annotations.misc": false,
           "lexical_illusions.misc": false,
-          "typography.symbols.ellipsis": false
+          "typography.symbols": false
         }
       }
     '';

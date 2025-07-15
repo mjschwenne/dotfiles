@@ -152,6 +152,7 @@
     rename
     smartmontools
     killall
+    man-pages
 
     # Networking
     wget
