@@ -3,13 +3,13 @@
   spicetify-nix,
   ...
 }: let
-  spicePkgs = spicetify-nix.legacyPackages.${pkgs.system};
+  spicePkgs = spicetify-nix.legacyPackages.${pkgs.stdenv.system};
 in {
   imports = [spicetify-nix.homeManagerModules.default];
 
   programs.spicetify = {
     enable = true;
-    theme = spicePkgs.themes.comfy;
+    theme = spicePkgs.themes.sleek;
     colorScheme = "Nord";
     windowManagerPatch = true;
   };

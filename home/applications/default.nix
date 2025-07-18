@@ -1,5 +1,5 @@
 {...}: {
-  imports = [./discord ./librewolf ./spotify ./terminals ./zathura ./supernote ./nethack];
+  imports = [./discord ./librewolf ./spotify ./terminals ./zathura ./nethack];
 
   programs.mpv = {
     enable = true;

@@ -167,7 +167,6 @@
             default_prog = { "fish", "-l" },
             enable_wayland = true,
             check_for_updates = false,
-            -- show_update_window = false,
           }
         '';
     };

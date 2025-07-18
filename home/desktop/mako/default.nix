@@ -14,7 +14,7 @@
       border-radius = 10;
       max-icon-size = 64;
       margin = 20;
-      default-timeout = 1000;
+      default-timeout = 3000;
     };
   };
 

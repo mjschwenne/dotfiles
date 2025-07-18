@@ -1,6 +1,7 @@
 {
   pkgs,
   nvf,
+  lib,
   ...
 }: {
   imports = [nvf.homeManagerModules.default];
@@ -23,6 +24,51 @@
           };
         };
       };
+      autocmds = [
+        {
+          enable = true;
+          desc = "Highlight text as it is yanked";
+          event = ["TextYankPost"];
+          pattern = ["*"];
+          callback =
+            lib.generators.mkLuaInline # lua
+            
+            ''
+              function ()
+                  vim.highlight.on_yank({higroup="Visual", timeout=200})
+              end
+            '';
+        }
+        {
+          enable = true;
+          desc = "Show LSP diagnostics in float";
+          event = ["CursorHold"];
+          pattern = ["*"];
+          callback =
+            lib.generators.mkLuaInline # lua
+            
+            ''
+              function ()
+                  for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+                      if vim.api.nvim_win_get_config(winid).zindex then
+                        return
+                      end
+                  end
+                  vim.diagnostic.open_float({
+                      scope = "cursor",
+                      focusable = false,
+                      close_events = {
+                          "CursorMoved",
+                          "CursorMovedI",
+                          "BufHidden",
+                          "InsertCharPre",
+                          "WinLeave",
+                      },
+                  })
+              end
+            '';
+        }
+      ];
       autopairs.nvim-autopairs.enable = true;
       autocomplete.nvim-cmp.enable = true;
       binds = {
@@ -37,20 +83,21 @@
           ui.enable = true;
         };
       };
-      # FIXME: get this to actually work
-      # diagnostics = {
-      #   enable = true;
-      #   config.signs = {
-      #     text = {
-      #       "vim.diagnostic.severity.ERROR" = "󰅚 ";
-      #       "vim.diagnostic.severity.WARN" = "󰀪 ";
-      #     };
-      #   };
-      # };
-      extraLuaFiles = [
-        ./highlight-yank.lua
-        ./diagonstic-signs.lua
-      ];
+      diagnostics = {
+        enable = true;
+        config = {
+          signs.text =
+            lib.generators.mkLuaInline #lua
+            
+            ''
+              {
+                [vim.diagnostic.severity.ERROR] = "󰅚 ",
+                [vim.diagnostic.severity.WARN] = "󰀪 ",
+              }
+            '';
+          float.border = "rounded";
+        };
+      };
       filetree.neo-tree.enable = true;
       git = {
         enable = true;
@@ -60,9 +107,11 @@
       lsp = {
         enable = true;
         formatOnSave = true;
-        lightbulb.enable = false;
         lspkind.enable = true;
-        lspsaga.enable = true;
+        lspsaga = {
+          enable = true;
+          setupOpts.lightbulb.enable = false;
+        };
         lspSignature.enable = true;
         otter-nvim.enable = true;
         nvim-docs-view.enable = true;
