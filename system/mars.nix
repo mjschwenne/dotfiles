@@ -35,6 +35,7 @@
     "caddy/envfile".owner = "caddy";
   };
 
+  hardware.keyboard.qmk.enable = true;
   networking.hostName = "mars"; # Define your hostname.
   # networking.nameservers = ["127.0.0.1" "::1"];
   services = {
@@ -59,8 +60,8 @@
     caddy = {
       enable = true;
       package = pkgs.caddy.withPlugins {
-        plugins = ["github.com/caddy-dns/porkbun@v0.2.1"];
-        hash = "sha256-X8QbRc2ahW1B5niV8i3sbfpe1OPYoaQ4LwbfeaWvfjg=";
+        plugins = ["github.com/caddy-dns/porkbun@v0.3.1"];
+        hash = "sha256-YZ4Bq0hfOJpa0C2lKipEY4fqwzJbEFM7ci5ys9S3uAo=";
       };
       environmentFile = ''${config.sops.secrets."caddy/envfile".path}'';
       extraConfig = ''

@@ -1,5 +1,6 @@
 {
   config,
+  pkgs-stable,
   pkgs,
   ...
 }: {
@@ -131,7 +132,7 @@
     };
 
     rabbitmq.enable = true;
-    rabbitmq.package = pkgs.rabbitmq-server;
+    rabbitmq.package = pkgs-stable.rabbitmq-server;
   };
 
   programs.gnupg.agent = {

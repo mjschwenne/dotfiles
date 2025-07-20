@@ -96,7 +96,7 @@
     enable = true;
     # For use with Mullvad VPN exit node
     useRoutingFeatures = "client";
-    extraSetFlags = ["--exit-node=us-det-wg-002.mullvad.ts.net"];
+    extraUpFlags = ["--exit-node=us-det-wg-002.mullvad.ts.net"];
   };
 
   systemd.services.mjs-tailscale-up = {
