@@ -10,6 +10,7 @@
     ./common.nix
     ./graphical.nix
     ./applications/nextcloud
+    ./applications/immich
     foundry.nixosModules.foundryvtt
   ];
 
@@ -86,15 +87,19 @@
           import ts_host
           reverse_proxy localhost:19000
         '';
-        "foundry.schwennesen.org".extraConfig = ''
+        "photos.schwennesen.org".extraConfig = ''
           import ts_host
-          reverse_proxy localhost:30000 {
-            header_up Host {host}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-For {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-          }
+          reverse_proxy localhost:2283
         '';
+        # "foundry.schwennesen.org".extraConfig = ''
+        #   import ts_host
+        #   reverse_proxy localhost:30000 {
+        #     header_up Host {host}
+        #     header_up X-Real-IP {remote_host}
+        #     header_up X-Forwarded-For {remote_host}
+        #     header_up X-Forwarded-Proto {scheme}
+        #   }
+        # '';
       };
     };
     udev.packages = [
