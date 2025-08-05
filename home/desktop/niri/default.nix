@@ -50,8 +50,8 @@
           # kdl
           ''
             output "DP-3" {
-                mode "1920x1080"
-                scale 1
+                mode "3840x2160"
+                scale 1.6
                 transform "normal"
                 position x=0 y=0
                 background-color "#2e3440"
@@ -60,10 +60,10 @@
             }
 
             output "DP-4" {
-                mode "1920x1080"
-                scale 1
+                mode "3840x2160"
+                scale 1.6
                 transform "normal"
-                position x=1920 y=0
+                position x=2400 y=0
                 background-color "#2e3440"
                 backdrop-color "#434c5e"
             }
@@ -447,6 +447,7 @@
           match title="^KeePassXC - Browser Access Request$"
           match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
           match app-id=r#"^thunderbird$"# title=r#"^Write"#
+          match app-id=r#"^thunderbird$"# title=r#"^New Event"#
           open-floating true
       }
 
