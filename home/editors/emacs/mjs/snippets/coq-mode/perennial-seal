@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: sealed
+# uuid:
+# key: trigger-key
+# condition: t                     
+# --
+Definition ${1:name}_def := $2.
+Program Definition $1 := unseal (_:seal (@$1_def)).
+Obligation 1. by eexists. Qed.
+Definition $1_unseal : @$1 = _ := seal_eq _.

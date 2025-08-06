@@ -2135,10 +2135,13 @@ used if TAG-LIST is empty."
   :hook ((LaTeX-mode . yas-minor-mode)
          (dashboard-mode . yas-reload-all)
          (org-mode . yas-minor-mode)
+         (coq-mode . yas-minor-mode)
          (post-self-insert . mjs/yas-try-expanding-auto-snippets))
   :custom (yas-triggers-in-field t)
   (yas-snippets-dirs '((expand-file-name "snippets" user-emacs-directory)))
   (yas-verbosity 4)
+  :general (mjs-leader-def :keymap 'yas-keymap
+             "i s" '("Snippet" . yas-insert-snippet))
   :config (use-package warnings
             :ensure nil
             :config
