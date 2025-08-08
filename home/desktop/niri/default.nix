@@ -448,8 +448,15 @@
           match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
           match app-id=r#"^thunderbird$"# title=r#"^Write"#
           match app-id=r#"^thunderbird$"# title=r#"^New Event"#
-          match app-id=r#"^thunderbird$"# title=r#"(.*)Reminder$"#
           open-floating true
+      }
+
+      window-rule {
+          match app-id=r#"^thunderbird$"# title=r#"^Calendar Reminders$"#
+          open-floating true
+          min-height 400
+          max-height 400
+          max-width 400
       }
 
       // Example: enable rounded corners for all windows.
