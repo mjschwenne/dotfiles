@@ -47,7 +47,7 @@ Layout for full keyboard, I'm just adding home row mods so I don't need all of t
     sft_d (tap-hold-next-release 175 d lsft)
     ctl_f (tap-hold-next-release 175 f lctl)
 
-    ctl_j (tap-hold-next-release 175 j rctl)
+    ctl_j (tap-hold-next-release 175 (multi-tap 175 j j) rctl)
     sft_k (tap-hold-next-release 175 k rsft)
     alt_l (tap-hold-next-release 175 l lalt)
     met_; (tap-hold-next-release 175 ; rmet)

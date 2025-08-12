@@ -60,7 +60,7 @@
   };
 
   services.kmonad = {
-    enable = true;
+    enable = false;
     keyboards = {
       laptop = {
         device = "/dev/input/event0";
