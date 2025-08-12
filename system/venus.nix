@@ -58,6 +58,16 @@
     wantedBy = ["multi-user.target"];
     serviceConfig.Type = "simple";
   };
+
+  services.kmonad = {
+    enable = true;
+    keyboards = {
+      laptop = {
+        device = "/dev/input/event0";
+        config = builtins.readFile ./applications/kmonad/venus-laptop.kdb;
+      };
+    };
+  };
   security.pam.services = {
     greetd.fprintAuth = false;
     login.fprintAuth = true;

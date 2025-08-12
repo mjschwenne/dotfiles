@@ -1,0 +1,58 @@
+(defcfg
+    input (device-file "/dev/input/event0")
+    output (uinput-sink "Venus KMonad Output")
+    cmp-seq ralt 
+    cmp-seq-delay 5 
+    key-seq-delay 5 
+    fallthrough true 
+    allow-cmd false 
+    implicit-around around
+)
+
+
+#| --- Layer Template -----------------------------------------------------------------
+
+Layout for full keyboard, I'm just adding home row mods so I don't need all of this
+
+(defsrc
+  esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  home end  ins  del
+  grv  1    2    3    4    5    6    7    8    9    0    -     =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [     ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '          ret
+  lsft z    x    c    v    b    n    m    ,    .    /               rsft
+  lctl wkup lmet lalt           spc            ralt sys  rctl  pgdn up   pgup
+                                                               left down rght
+)
+
+(deflayer name
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _     _
+  _    _    _    _    _    _    _    _    _    _    _    _    _     _
+  _    _    _    _    _    _    _    _    _    _    _    _          _
+  _    _    _    _    _    _    _    _    _    _    _               _
+  _    _    _    _              _              _    _    _     _    _    _
+                                                               _    _    _
+)
+
+   --------------------------------------------------------------------------------- |#
+
+
+(defsrc
+    caps a    s    d    f    g    h    j    k    l    ;
+)
+
+(defalias
+    met_a (tap-hold-next-release 175 a lmet)
+    alt_s (tap-hold-next-release 175 s lalt)
+    sft_d (tap-hold-next-release 175 d lsft)
+    ctl_f (tap-hold-next-release 175 f lctl)
+
+    ctl_j (tap-hold-next-release 175 j rctl)
+    sft_k (tap-hold-next-release 175 k rsft)
+    alt_l (tap-hold-next-release 175 l lalt)
+    met_; (tap-hold-next-release 175 ; rmet)
+)
+
+(deflayer homerowmods
+    esc @met_a @alt_s @sft_d @ctl_f g h @ctl_j @sft_k @alt_l @met_;
+)
