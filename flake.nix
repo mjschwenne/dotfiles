@@ -108,49 +108,36 @@
     nvf,
     nixos-hardware,
     ...
-  } @ inputs: {
+  } @ inputs: let
+    system = "x86_64-linux";
+    specialArgs =
+      inputs
+      // {
+        pkgs-master = import inputs.nixpkgs-master {
+          inherit system;
+        };
+        pkgs-stable = import inputs.nixpkgs-stable {
+          inherit system;
+        };
+      };
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    extraSpecialArgs =
+      inputs
+      // {
+        pkgs-master = import inputs.nixpkgs-master {
+          inherit system;
+        };
+        pkgs-stable = import inputs.nixpkgs-stable {
+          inherit system;
+        };
+      };
+    niri_overlay = _: _: {niri = inputs.niri.packages.${system}.default.overrideAttrs (_: {doCheck = false;});};
+    overlays = [inputs.emacs-overlay.overlay niri_overlay];
+  in {
     nixosConfigurations = {
-      # By default, NixOS will try to refer the nixosConfiguration with its hostname.
-      # so the system named `nixos-test` will use this configuration.
-      # However, the configuration name can also be specified using `sudo nixos-rebuild switch --flake /path/to/flakes/directory#<name>`.
-      # The `nixpkgs.lib.nixosSystem` function is used to build this configuration, the following attribute set is its parameter.
-      # Run `sudo nixos-rebuild switch --flake .#nixos-test` in the flake's directory to deploy this configuration on any NixOS system
-      "terra" = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-
-        # The Nix module system can modularize configuration, improving the maintainability of configuration.
-        #
-        # Each parameter in the `modules` is a Nix Module, and there is a partial introduction to it in the nixpkgs manual:
-        #    <https://nixos.org/manual/nixpkgs/unstable/#module-system-introduction>
-        # It is said to be partial because the documentation is not complete, only some simple introductions
-        #    (such is the current state of Nix documentation...)
-        # A Nix Module can be an attribute set, or a function that returns an attribute set.
-        # If a Module is a function, this function can only have the following parameters:
-        #
-        #  lib:     the nixpkgs function library, which provides many useful functions for operating Nix expressions
-        #            https://nixos.org/manual/nixpkgs/stable/#id-1.4
-        #  config:  all config options of the current flake
-        #  options: all options defined in all NixOS Modules in the current flake
-        #  pkgs:   a collection of all packages defined in nixpkgs.
-        #           you can assume its default value is `nixpkgs.legacyPackages."${system}"` for now.
-        #           can be customed by `nixpkgs.pkgs` option
-        #  modulesPath: the default path of nixpkgs's builtin modules folder,
-        #               used to import some extra modules from nixpkgs.
-        #               this parameter is rarely used, you can ignore it for now.
-        #
-        # Only these parameters can be passed by default.
-        # If you need to pass other parameters, you must use `specialArgs` by uncomment the following line
-
-        specialArgs =
-          inputs
-          // {
-            pkgs-master = import inputs.nixpkgs-master {
-              inherit system;
-            };
-            pkgs-stable = import inputs.nixpkgs-stable {
-              inherit system;
-            };
-          };
+      "terra" = nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
         modules = [
           sops-nix.nixosModules.sops
           kmonad.nixosModules.default
@@ -159,38 +146,16 @@
           home-manager.nixosModules.home-manager
           {
             home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
+              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
               users.mjs = import ./home/terra.nix;
-              extraSpecialArgs =
-                inputs
-                // {
-                  pkgs-master = import inputs.nixpkgs-master {
-                    inherit system;
-                  };
-                  pkgs-stable = import inputs.nixpkgs-stable {
-                    inherit system;
-                  };
-                };
             };
-            nixpkgs.overlays = [inputs.emacs-overlay.overlay];
+            nixpkgs.overlays = overlays;
           }
         ];
       };
 
-      "venus" = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-
-        specialArgs =
-          inputs
-          // {
-            pkgs-master = import inputs.nixpkgs-master {
-              inherit system;
-            };
-            pkgs-stable = import inputs.nixpkgs-stable {
-              inherit system;
-            };
-          };
+      "venus" = nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
         modules = [
           sops-nix.nixosModules.sops
           kmonad.nixosModules.default
@@ -199,38 +164,16 @@
           home-manager.nixosModules.home-manager
           {
             home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
+              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
               users.mjs = import ./home/venus.nix;
-              extraSpecialArgs =
-                inputs
-                // {
-                  pkgs-master = import inputs.nixpkgs-master {
-                    inherit system;
-                  };
-                  pkgs-stable = import inputs.nixpkgs-stable {
-                    inherit system;
-                  };
-                };
             };
-            nixpkgs.overlays = [inputs.emacs-overlay.overlay];
+            nixpkgs.overlays = overlays;
           }
         ];
       };
 
-      "mars" = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-
-        specialArgs =
-          inputs
-          // {
-            pkgs-master = import inputs.nixpkgs-master {
-              inherit system;
-            };
-            pkgs-stable = import inputs.nixpkgs-stable {
-              inherit system;
-            };
-          };
+      "mars" = nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
         modules = [
           sops-nix.nixosModules.sops
           kmonad.nixosModules.default
@@ -239,38 +182,16 @@
           home-manager.nixosModules.home-manager
           {
             home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
+              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
               users.mjs = import ./home/mars.nix;
-              extraSpecialArgs =
-                inputs
-                // {
-                  pkgs-master = import inputs.nixpkgs-master {
-                    inherit system;
-                  };
-                  pkgs-stable = import inputs.nixpkgs-stable {
-                    inherit system;
-                  };
-                };
             };
-            nixpkgs.overlays = [inputs.emacs-overlay.overlay];
+            nixpkgs.overlays = overlays;
           }
         ];
       };
 
-      "luna" = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-
-        specialArgs =
-          inputs
-          // {
-            pkgs-master = import inputs.nixpkgs-master {
-              inherit system;
-            };
-            pkgs-stable = import inputs.nixpkgs-stable {
-              inherit system;
-            };
-          };
+      "luna" = nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
         modules = [
           nixos-hardware.nixosModules.microsoft-surface-pro-intel
           sops-nix.nixosModules.sops
@@ -280,35 +201,16 @@
           home-manager.nixosModules.home-manager
           {
             home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
+              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
               users.mjs = import ./home/luna.nix;
-              extraSpecialArgs =
-                inputs
-                // {
-                  pkgs-master = import inputs.nixpkgs-master {
-                    inherit system;
-                  };
-                };
             };
-            nixpkgs.overlays = [inputs.emacs-overlay.overlay];
+            nixpkgs.overlays = overlays;
           }
         ];
       };
 
-      "sol" = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-
-        specialArgs =
-          inputs
-          // {
-            pkgs-master = import inputs.nixpkgs-master {
-              inherit system;
-            };
-            pkgs-stable = import inputs.nixpkgs-stable {
-              inherit system;
-            };
-          };
+      "sol" = nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
         modules = [
           sops-nix.nixosModules.sops
           kmonad.nixosModules.default
@@ -317,23 +219,10 @@
           home-manager.nixosModules.home-manager
           {
             home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
+              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
               users.mjs = import ./home/sol.nix;
-              extraSpecialArgs =
-                inputs
-                // {
-                  pkgs-master = import inputs.nixpkgs-master {
-                    inherit system;
-                  };
-                  pkgs-stable = import inputs.nixpkgs-stable {
-                    inherit system;
-                  };
-                };
             };
-            nixpkgs.overlays = [
-              inputs.emacs-overlay.overlay
-            ];
+            nixpkgs.overlays = overlays;
           }
         ];
       };

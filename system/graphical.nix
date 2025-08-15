@@ -1,8 +1,4 @@
-{
-  pkgs,
-  niri,
-  ...
-}: {
+{pkgs, ...}: {
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -31,7 +27,7 @@
 
     # Install window manager and greeter
     swayfx
-    niri.packages.${system}.default
+    niri
     greetd.tuigreet
 
     # Misc Utils

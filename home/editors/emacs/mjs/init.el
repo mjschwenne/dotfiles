@@ -1364,7 +1364,10 @@ reversion. This resizes the popup to match its contents."
   (add-to-list 'org-latex-packages-alist '("" "mathpartir" t))
   (add-to-list 'org-latex-packages-alist '("" "nicematrix" t))
   (add-to-list 'org-latex-packages-alist '("" "amsthm" t))
-  (add-to-list 'org-latex-packages-alist '("" "cancel" t)))
+  (add-to-list 'org-latex-packages-alist '("" "cancel" t))
+
+  ;; consult-org is not being loaded by default
+  (require 'consult-org))
 
 
 (use-package org-habit

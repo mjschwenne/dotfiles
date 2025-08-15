@@ -1,14 +1,12 @@
 {
   pkgs,
-  lib,
   osConfig,
-  niri,
   waybar,
   swww,
   ...
 }: {
   home.packages = with pkgs; [
-    niri.packages."${system}".default
+    niri
     glib
     xwayland-satellite
   ];
