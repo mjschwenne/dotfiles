@@ -197,10 +197,6 @@
           lazygit.enable = true;
         };
       };
-      theme = {
-        enable = true;
-        name = "nord";
-      };
       treesitter = {
         enable = true;
         context.enable = true;

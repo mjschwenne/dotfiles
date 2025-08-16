@@ -7,6 +7,8 @@
       user-mail-address "matt@schwennesen.org")
 
 (require 'use-package)
+(require 'base16-stylix-theme)
+(setq base16-theme-256-color-source 'colors)
 
 (setq use-package-verbose t
 	  use-package-always-defer t
@@ -33,17 +35,6 @@
               use-dialog-box nil
               scroll-margin 8 hscroll-margin 8
               scroll-conservatively 101)
-
-(use-package doom-themes
-  :defer nil
-  :custom ((doom-themes-enable-bold t)
-           (doom-themes-enable-italic t))
-  :config
-  (load-theme 'doom-nord t))
-
-(set-frame-parameter nil 'alpha-background 90)
-
-(add-to-list 'default-frame-alist '(alpha-background . 90))
 
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path (expand-file-name "autoloads" user-emacs-directory))
@@ -362,18 +353,18 @@
 (use-package hl-todo
   :custom (hl-todo-highlight-punctuation ":")
   (hl-todo-keyword-faces
-   '(
-     ("DONE" . "#a3be8c")
-     ("OKAY" . "#88c0d0")
-     ("NEXT" . "#88c0d0")
-     ("NOTE" . "#88c0d0")
-     ("TODO" . "#ebcb8b")
-     ("HOLD" . "#ebcb8b")
-     ("HACK" . "#ebcb8b")
-     ("XXX*" . "#ebcb8b")
-     ("BUG" . "#bf616a")
-     ("FIXME". "#bf616a")
-     ("FAIL" . "#bf616a")
+   `(
+     ("DONE" . ,(plist-get base16-stylix-theme-colors :base0B))
+     ("OKAY" . ,(plist-get base16-stylix-theme-colors :base0D))
+     ("NEXT" . ,(plist-get base16-stylix-theme-colors :base0B))
+     ("NOTE" . ,(plist-get base16-stylix-theme-colors :base0D))
+     ("TODO" . ,(plist-get base16-stylix-theme-colors :base0A))
+     ("HOLD" . ,(plist-get base16-stylix-theme-colors :base0A))
+     ("HACK" . ,(plist-get base16-stylix-theme-colors :base0A))
+     ("XXX*" . ,(plist-get base16-stylix-theme-colors :base0A))
+     ("BUG" . ,(plist-get base16-stylix-theme-colors :base08))
+     ("FIXME". ,(plist-get base16-stylix-theme-colors :base08))
+     ("FAIL" . ,(plist-get base16-stylix-theme-colors :base08))
      ))
   :hook (prog-mode . hl-todo-mode))
 
@@ -408,15 +399,15 @@
       (concat
        (if read-only
            (propertize "󱙃 "
-                       'face '(:inherit mode-line-emphasis
-                                        :foreground "#ebcb8b"))
+                       'face `(:inherit mode-line-emphasis
+                                        :foreground ,(plist-get base16-stylix-theme-colors :base0A)))
          (if modifed
              (propertize "󰆓 "
-                         'face '(:inherit mode-line-emphasis
-                                          :foreground "#bf616a"))
+                         'face `(:inherit mode-line-emphasis
+                                          :foreground ,(plist-get base16-stylix-theme-colors :base08)))
            (propertize "󰆓 "
-                       'face '(:inherit mode-line-emphasis
-                                        :foreground "#a3be8c"))))
+                       'face `(:inherit mode-line-emphasis
+                                        :foreground ,(plist-get base16-stylix-theme-colors :base0C)))))
        (propertize (buffer-name) 'face 'mode-line-emphasis))))
   (telephone-line-defsegment* mjs/flycheck-status ()
     (if (bound-and-true-p flycheck-mode)
@@ -431,12 +422,12 @@
                (infos (number-to-string
                        (alist-get 'info flycheck-status 0))))
           (concat status
-                  (propertize " " 'face '(:foreground "#bf616a"))
-                  (propertize errors 'face '(:foreground "#bf616a"))
-                  (propertize "  " 'face '(:foreground "#ebcb8b"))
-                  (propertize warnings 'face '(:foreground "#ebcb8b"))
-                  (propertize "  " 'face '(:foreground "#a3be8c"))
-                  (propertize infos 'face '(:foreground "#a3be8c"))))
+                  (propertize " " 'face `(:foreground ,(plist-get base16-stylix-theme-colors :base08)))
+                  (propertize errors 'face `(:foreground ,(plist-get base16-stylix-theme-colors :base08)))
+                  (propertize "  " 'face `(:foreground ,(plist-get base16-stylix-theme-colors :base0A)))
+                  (propertize warnings 'face `(:foreground ,(plist-get base16-stylix-theme-colors :base0A)))
+                  (propertize "  " 'face `(:foreground ,(plist-get base16-stylix-theme-colors :base0C)))
+                  (propertize infos 'face `(:foreground ,(plist-get base16-stylix-theme-colors :base0C)))))
       ""))
   (telephone-line-defsegment* mjs/buffer-position ()
     (cond ((eq major-mode 'pdf-view-mode)
@@ -471,25 +462,6 @@
                    local-map ,(make-mode-line-mouse-map
                                'mouse-2 #'mode-line-widen)
                    face ,face)))
-  (set-face-foreground 'telephone-line-evil "#3b4252")
-  (set-face-background 'telephone-line-evil-normal "#5e81ac")
-  (set-face-background 'telephone-line-evil-insert "#a3be8c")
-  (set-face-foreground 'telephone-line-evil-insert "#3b4252")
-  (set-face-background 'telephone-line-evil-visual "#b48ead")
-  (set-face-foreground 'telephone-line-evil-visual "#3b4252")
-  (set-face-background 'telephone-line-evil-emacs "#bf616a")
-  (set-face-background 'telephone-line-evil-operator "#d08770")
-  (set-face-foreground 'telephone-line-evil-operator "#3b4252")
-  (set-face-background 'telephone-line-evil-motion "#8fbcbb")
-  (set-face-attribute 'telephone-line-accent-active nil
-                      :foreground "#d8dee9"
-                      :background "#434c5e")
-  (set-face-attribute 'telephone-line-accent-inactive nil
-                      :foreground "#d8dee9"
-                      :background "#4c566a")
-  (set-face-attribute 'mode-line nil
-                      :foreground "#d8dee9"
-                      :background "#3b4252")
   (telephone-line-mode 1))
 
 (use-package anzu
@@ -498,7 +470,7 @@
   :custom ((anzu-mode-lighter "")
            (anzu-cons-mode-line-p nil))
   :custom-face
-  (anzu-mode-line ((t  :foreground "#d8dee9"))))
+  (anzu-mode-line ((t  :foreground ,(plist-get base16-stylix-theme-colors :base05)))))
 
 (use-package evil-anzu
   :after evil
@@ -948,11 +920,6 @@ reversion. This resizes the popup to match its contents."
         (diff-hl--update))
       t))
   (advice-add 'diff-hl-update :override #'mjs/diff-hl-debounce-threads-a)
-  (defun mjs/diff-hl-only-tick-on-success-a (&rest _)
-    (unless (equal diff-hl--modified-tick (buffer-chars-modified-tick))
-      (when (diff-hl-update)
-        (setq diff-hl--modified-tick (buffer-chars-modified-tick)))))
-  (advice-add 'diff-hl-update-once :override #'mjs/diff-hl-only-tick-on-success-a)
   ;; HACK: This advice won't work in *all* cases since it's a C function and any call
   ;; from C doesn't trigger advice, but the thread issues are typically elisp calls.
   (defun mjs/diff-hl-kill-diff-hl-thread-a (&optional buf)
@@ -1324,11 +1291,6 @@ reversion. This resizes the popup to match its contents."
            :empty-lines 1
            :jump-to-captured t
            :immediate-finish t)))
-  (set-face-foreground 'org-verbatim "#b48ead")
-  ;; (set-face-attribute 'org-quote nil
-  ;;                     :background "#3b4252"
-  ;;                     :extend t)
-  (set-face-foreground 'org-table "#d8dee9")
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -1373,15 +1335,15 @@ reversion. This resizes the popup to match its contents."
 (use-package org-habit
   :ensure nil
   :config
-  (set-face-foreground 'org-habit-ready-face "#2e3440")
-  (set-face-background 'org-habit-ready-face "#a3be8c")
-  (set-face-background 'org-habit-ready-future-face "#a3be8c")
-  (set-face-background 'org-habit-clear-face "#5e81ac")
-  (set-face-background 'org-habit-clear-future-face "#5e81ac")
-  (set-face-background 'org-habit-alert-face "#ebcb8b")
-  (set-face-background 'org-habit-alert-future-face "#ebcb8b")
-  (set-face-background 'org-habit-overdue-face "#bf616a")
-  (set-face-background 'org-habit-overdue-future-face "#bf616a"))
+  (set-face-foreground 'org-habit-ready-face (plist-get base16-stylix-theme-colors :base01))
+  (set-face-background 'org-habit-ready-face (plist-get base16-stylix-theme-colors :base0B))
+  (set-face-background 'org-habit-ready-future-face (plist-get base16-stylix-theme-colors :base0B))
+  (set-face-background 'org-habit-clear-face (plist-get base16-stylix-theme-colors :base0D))
+  (set-face-background 'org-habit-clear-future-face (plist-get base16-stylix-theme-colors :base0D))
+  (set-face-background 'org-habit-alert-face (plist-get base16-stylix-theme-colors :base0A))
+  (set-face-background 'org-habit-alert-future-face (plist-get base16-stylix-theme-colors :base0A))
+  (set-face-background 'org-habit-overdue-face (plist-get base16-stylix-theme-colors :base08))
+  (set-face-background 'org-habit-overdue-future-face (plist-get base16-stylix-theme-colors :base08)))
 
 (use-package ob-rust
   :after org)
@@ -1464,7 +1426,8 @@ reversion. This resizes the popup to match its contents."
   :after org
   :hook (org-mode . org-modern-mode)
   :config (set-face-attribute 'org-modern-done nil
-                              :background "#4c566a" :foreground "#eceff4"))
+                              :background (plist-get base16-stylix-theme-colors :base02)
+                              :foreground (plist-get base16-stylix-theme-colors :base05)))
 
 (use-package org-modern-indent
   :ensure nil
@@ -1478,7 +1441,8 @@ reversion. This resizes the popup to match its contents."
            (org-pomodoro-long-break-format "󱁕 %s")
            (org-pomodoro-start-sound-p t)
            (org-pomodoro-audio-player "play"))
-  :custom-face (org-pomodoro-mode-line-break ((t (:foreground "#a3be8c"))))
+  :custom-face (org-pomodoro-mode-line-break ((t (:foreground
+                                                  ,(plist-get base16-stylix-theme-colors :base0B)))))
   :general (mjs-local-leader-def :keymaps 'org-mode-map
              "t p" '("Pomodoro" . org-pomodoro))
   (mjs-leader-def :keymaps 'override
@@ -2023,8 +1987,8 @@ used if TAG-LIST is empty."
                                          (t . (csl "ieee.csl")))))
   :general (mjs-local-leader-def :keymaps 'org-mode-map
              "C" '("Citation" . org-cite-insert))
-  :custom-face (org-cite ((t (:foreground "#a3be8c"))))
-  (org-cite-key ((t (:foreground "#a3be8c" :slant italic))))
+  :custom-face (org-cite ((t (:foreground ,(plist-get base16-stylix-theme-colors :base0B)))))
+  (org-cite-key ((t (:foreground ,(plist-get base16-stylix-theme-colors :base0B) :slant italic))))
   :config
   (require 'citar)
   (require 'citar-org))
@@ -2352,36 +2316,36 @@ used if TAG-LIST is empty."
                         (general-define-key :states '(normal motion) :keymaps 'local
                                             "q" #'kill-buffer-and-window)))
   :custom-face
-  (cfw:face-title ((t  :foreground "#ebcb8b"
+  (cfw:face-title ((t  :foreground ,(plist-get base16-stylix-theme-colors :base0A)
                        :weight bold
                        :height 2.0)))
-  (cfw:face-header ((t :foreground "#ebcb8b" :weight bold)))
-  (cfw:face-sunday ((t :foreground "#bf616a" :weight bold)))
-  (cfw:face-saturday ((t :foreground "#5e81ac"
+  (cfw:face-header ((t :foreground ,(plist-get base16-stylix-theme-colors :base0A) :weight bold)))
+  (cfw:face-sunday ((t :foreground ,(plist-get base16-stylix-theme-colors :base08) :weight bold)))
+  (cfw:face-saturday ((t :foreground ,(plist-get base16-stylix-theme-colors :base0D)
                          :weight bold)))
-  (cfw:face-holiday ((t :background "#2e3440" 
-                        :foreground "#bf616a"
+  (cfw:face-holiday ((t :background ,(plist-get base16-stylix-theme-colors :base00)
+                        :foreground ,(plist-get base16-stylix-theme-colors :base08)
                         :weight bold)))
-  (cfw:face-grid ((t :foreground "#d8dee9")))
-  (cfw:face-default-content ((t :foreground "#a3be8c")))
-  (cfw:face-periods ((t :foreground "#88c0d0")))
-  (cfw:face-day-title ((t :background "#3b4252")))
+  (cfw:face-grid ((t :foreground ,(plist-get base16-stylix-theme-colors :base05))))
+  (cfw:face-default-content ((t :foreground ,(plist-get base16-stylix-theme-colors :base0B))))
+  (cfw:face-periods ((t :foreground ,(plist-get base16-stylix-theme-colors :base0D))))
+  (cfw:face-day-title ((t :background ,(plist-get base16-stylix-theme-colors :base00))))
   (cfw:face-default-day ((t :weight bold :inherit cfw:face-day-title)))
-  (cfw:face-annotation ((t :foreground "#eceff4" 
+  (cfw:face-annotation ((t :foreground ,(plist-get base16-stylix-theme-colors :base07)
                            :inherit cfw:face-day-title)))
-  (cfw:face-disable ((t :foreground "#e5e9f0" 
+  (cfw:face-disable ((t :foreground ,(plist-get base16-stylix-theme-colors :base07)
                         :inherit cfw:face-day-title)))
-  (cfw:face-today-title ((t :foreground "#2e3440"
-                            :background "#a3be8c" 
+  (cfw:face-today-title ((t :foreground ,(plist-get base16-stylix-theme-colors :base00)
+                            :background ,(plist-get base16-stylix-theme-colors :base0B)
                             :weight bold)))
-  (cfw:face-today ((t :background: "#434c5e"
+  (cfw:face-today ((t :background: ,(plist-get base16-stylix-theme-colors :base02)
                       :weight bold)))
-  (cfw:face-select ((t :background "#4c566a")))
-  (cfw:face-toolbar ((t :foreground "#8fbcbb"
-                        :background "#8fbcbb")))
-  (cfw:face-toolbar-button-off ((t :foreground "#d8dee9" 
+  (cfw:face-select ((t :background ,(plist-get base16-stylix-theme-colors :base04))))
+  (cfw:face-toolbar ((t :foreground ,(plist-get base16-stylix-theme-colors :base0D)
+                        :background ,(plist-get base16-stylix-theme-colors :base0D))))
+  (cfw:face-toolbar-button-off ((t :foreground ,(plist-get base16-stylix-theme-colors :base03)
                                    :weight bold)))
-  (cfw:face-toolbar-button-on ((t :foreground "#e5e9f0"
+  (cfw:face-toolbar-button-on ((t :foreground ,(plist-get base16-stylix-theme-colors :base07)
                                   :weight bold)))
   :config
   (evil-set-initial-state 'cfw:calendar-mode 'normal))
@@ -2462,7 +2426,7 @@ used if TAG-LIST is empty."
   :commands coq-mode
   :hook (coq-mode . (lambda ()
                       (set-face-background 'proof-locked-face
-                                           "#3b4252")))
+                                           (plist-get base16-stylix-theme-colors :base02))))
   :custom (coq-smie-user-tokens
            '(("," . ":=")
              ("∗" . "->")
@@ -2684,7 +2648,8 @@ used if TAG-LIST is empty."
            "M-n" #'fstar-subp-advance-next
            "M-m" #'fstar-subp-retract-one
            "M-." #'fstar-subp-advance-or-retract-to-point)
-  :custom-face (fstar-subp-overlay-processed-face ((t (:background "#3b4252"))))
+  :custom-face (fstar-subp-overlay-processed-face ((t (:background
+                                                       ,(plist-get base16-stylix-theme-colors :base02)))))
   )
 
 (use-package protobuf-mode

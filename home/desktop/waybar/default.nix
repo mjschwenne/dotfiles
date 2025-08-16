@@ -1,5 +1,7 @@
 {
   osConfig,
+  config,
+  lib,
   pkgs,
   waybar,
   ...
@@ -7,7 +9,6 @@
   programs.waybar = {
     enable = true;
     package = waybar.packages.${pkgs.system}.waybar;
-    # package = pkgs.waybar;
     systemd.enable = false;
     settings = {
       bar = {
@@ -26,7 +27,6 @@
           or [
           ];
         modules-left = ["niri/workspaces" "wlr/taskbar" "tray" "mpris"];
-        # modules-left = ["sway/workspaces" "sway/mode" "tray" "mpris"];
         modules-center = ["niri/window"];
         modules-right = [
           "privacy"
@@ -45,47 +45,6 @@
             "active" = "";
             "focused" = "";
             "default" = "";
-          };
-        };
-        "sway/workspaces" = {
-          disable-scroll = true;
-          all-outputs = true;
-          format = "{icon}";
-          format-icons = {
-            "1" = "󰲡";
-            "2" = "󰲣";
-            "3" = "󰲥";
-            "4" = "󰲧";
-            "5" = "󰲩";
-            "6" = "󰲫";
-            "7" = "󰲭";
-            "8" = "󰲯";
-            "9" = "󰲱";
-            "10" = "󰿭";
-          };
-          persistent-workspaces = {
-            "1" = [];
-            "2" = [];
-            "3" = [];
-            "4" = [];
-            "5" = [];
-            "6" = [];
-            "7" = [];
-            "8" = [];
-            "9" = [];
-            "10" = [];
-          };
-        };
-        "sway/mode" = {
-          format = ''<span style="italic">{}</span>'';
-          max-length = 15;
-        };
-        "sway/window" = {
-          format = "{title}";
-          max-length = 50;
-          rewrite = {
-            # Trim out -=+ characters from shyfox
-            "^-?=?+?(.*)" = "$1";
           };
         };
         "niri/window" = {
@@ -129,11 +88,11 @@
             on-scroll = 1;
             on-click-right = "mode";
             format = {
-              months = "<span color='#cdd6f4'><b>{}</b></span>";
-              days = "<span color='#eba0ac'><b>{}</b></span>";
-              weeks = "<span color='#94e2d5'><b>W{}</b></span>";
-              weekdays = "<span color='#f9e2af'><b>{}</b></span>";
-              today = "<span color='#f38ba8'><b><u>{}</u></b></span>";
+              months = "<span color='${config.lib.stylix.colors.withHashtag.base0E}'><b>{}</b></span>";
+              days = "<span color='${config.lib.stylix.colors.withHashtag.base05}'><b>{}</b></span>";
+              weeks = "<span color='${config.lib.stylix.colors.withHashtag.base0D}'><b>W{}</b></span>";
+              weekdays = "<span color='${config.lib.stylix.colors.withHashtag.base08}'><b>{}</b></span>";
+              today = "<span color='${config.lib.stylix.colors.withHashtag.base09}'><b><u>{}</u></b></span>";
             };
           };
           actions = {
@@ -175,14 +134,14 @@
           interval = 5;
           format = "{icon} {usage}%";
           format-icons = [
-            "<span color='#a6e3a1'> </span>"
-            "<span color='#a6e3a1'> </span>"
-            "<span color='#f9e2af'> </span>"
-            "<span color='#f9e2af'> </span>"
-            "<span color='#fab387'> </span>"
-            "<span color='#fab387'> </span>"
-            "<span color='#f38ba8'> </span>"
-            "<span color='#f38ba8'> </span>"
+            "<span color='${config.lib.stylix.colors.withHashtag.base0C}'> </span>"
+            "<span color='${config.lib.stylix.colors.withHashtag.base0C}'> </span>"
+            "<span color='${config.lib.stylix.colors.withHashtag.base0A}'> </span>"
+            "<span color='${config.lib.stylix.colors.withHashtag.base0A}'> </span>"
+            "<span color='${config.lib.stylix.colors.withHashtag.base09}'> </span>"
+            "<span color='${config.lib.stylix.colors.withHashtag.base09}'> </span>"
+            "<span color='${config.lib.stylix.colors.withHashtag.base08}'> </span>"
+            "<span color='${config.lib.stylix.colors.withHashtag.base08}'> </span>"
           ];
           tooltip = true;
           tooltip-format = "{avg_frequency} GHz";
@@ -230,31 +189,14 @@
       };
     };
     # Style for all devices
-    style = let
-      nord0 = "#2e3440";
-      nord1 = "#3b4252";
-      nord2 = "#434c5e";
-      nord3 = "#4c566a";
-      nord4 = "#d8dee9";
-      nord5 = "#e5e9f0";
-      nord6 = "#eceff4";
-      nord7 = "#8fbcbb";
-      nord8 = "#88c0d0";
-      nord9 = "#81a1c1";
-      nord10 = "#5e81ac";
-      nord11 = "#bf616a";
-      nord12 = "#d08770";
-      nord13 = "#ebcb8b";
-      nord14 = "#a3be8c";
-      nord15 = "#b48ead";
-    in
+    style =
+      lib.mkAfter
       # css
       ''
         * {
-            color: ${nord4};
+            color: @base04;
             border: 0;
             padding: 0 0;
-            font-family: "JetBrains Mono Nerd Font";
         }
 
         window#waybar {
@@ -262,7 +204,7 @@
         }
 
         #workspaces {
-            background-color: ${nord1};
+            background-color: @base01;
             margin: 5px;
             border-radius: 15px;
             padding: 0px 15px;
@@ -271,37 +213,37 @@
         #workspaces button {
             padding: 0px 5px;
             font-size: 20px;
-            color: ${nord14};
+            color: @base0E;
         }
 
         #workspaces button.active {
-            color: ${nord14};
+            color: @base0E;
         }
 
         #workspaces button.focused {
-            color: ${nord9};
+            color: @base09;
         }
 
         #workspaces button.empty {
-            color: ${nord11};
+            color: @base0B;
         }
 
         #tray {
-            background-color: ${nord1};
+            background-color: @base01;
             border-radius: 15px 15px 15px 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mode {
-            background-color: ${nord1};
+            background-color: @base01;
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #taskbar {
-            background-color: ${nord1};
+            background-color: @base01;
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
@@ -319,19 +261,19 @@
         }
 
         #mpris {
-            background-color: ${nord1};
+            background-color: @base01;
             border-radius: 15px;
             padding: 0px 15px;
             margin: 5px;
         }
 
         #mpris.spotify {
-            color: ${nord14};
+            color: @base0B;
         }
 
         #window {
             margin: 5px;
-            background-color: ${nord1};
+            background-color: @base01;
             padding: 0px 15px;
             border-radius: 15px;
         }
@@ -341,73 +283,70 @@
         }
 
         .modules-right {
-            background-color: ${nord1};
+            background-color: @base01;
             margin: 5px;
             border-radius: 15px;
             padding: 0px 15px 0px 15px;
         }
 
-        @keyframes blink {
-            to {
-                background-color: #ffffff;
-                color: black;
-            }
-        }
-
         #privacy {
-            background-color: ${nord1};
+            background-color: @base01;
             padding: 0px 5px 0px 0px;
         }
 
         #clock {
-            background-color: ${nord1};
-            color: ${nord8};
+            background-color: @base01;
+            color: @base0D;
             padding: 0px 5px 0px 5px;
         }
 
         #memory {
-            background-color: ${nord1};
-            color: ${nord15};
+            background-color: @base01;
+            color: @base0E;
             padding: 0px 5px 0px 5px;
         }
 
         #cpu {
-            background-color: ${nord1};
+            background-color: @base01;
             padding: 0px 5px 0px 5px;
         }
 
         #network {
-            background-color: ${nord1};
-            color: ${nord7};
+            background-color: @base01;
+            color: @base0C;
             padding: 0px 5px 0px 5px;
         }
 
         #bluetooth {
-            background-color: ${nord1};
-            color: ${nord10};
+            background-color: @base01;
+            color: @base0D;
             padding: 0px 5px 0px 5px;
         }
 
         #battery {
-            background-color: ${nord1};
+            background-color: @base01;
             padding: 0px 5px 0px 5px;
         }
 
         #battery.warning {
-            background-color: ${nord13};
-            color: ${nord1};
+            background-color: @base09;
+            color: @base01;
         }
 
         #battery.critical {
-            background-color: ${nord11};
-            color: ${nord1};
+            background-color: @base08;
+            color: @base01;
         }
 
         #idle_inhibitor {
-            background-color: ${nord1};
-            color: ${nord11};
+            background-color: @base01;
+            color: @base09;
             padding: 0px 0px 0px 5px;
         }
       '';
+  };
+
+  stylix.targets.waybar = {
+    addCss = false;
   };
 }

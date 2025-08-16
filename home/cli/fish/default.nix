@@ -2,7 +2,6 @@
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
-      fish_config theme choose Nord
       zoxide init fish | source
     '';
     shellAliases = {

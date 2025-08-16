@@ -1,11 +1,49 @@
 {
   osConfig,
   pkgs,
+  stylix,
   ...
 }: {
+  imports = [
+    stylix.homeModules.stylix
+
+    ./cli
+    ./editors
+  ];
+
   home = {
     username = "mjs";
     homeDirectory = "/home/mjs";
+  };
+
+  stylix = {
+    enable = true;
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest.yaml";
+    polarity = "dark";
+    fonts = {
+      serif = {
+        package = pkgs.inriafonts;
+        name = "Inria Serif";
+      };
+      sansSerif = {
+        package = pkgs.inriafonts;
+        name = "Inria Sans";
+      };
+      monospace = {
+        package = pkgs.nerd-fonts.jetbrains-mono;
+        name = "JetBrainsMono Nerd Font Mono";
+      };
+      emoji = {
+        package = pkgs.noto-fonts-emoji;
+        name = "Noto Color Emoji";
+      };
+      sizes = {
+        applications = 12;
+        desktop = 12;
+        popups = 12;
+        terminal = 12;
+      };
+    };
   };
 
   programs.ssh = {
@@ -30,12 +68,6 @@
     target = ".ssh/config_source";
     onChange = ''cat .ssh/config_source > .ssh/config && chmod 400 .ssh/config'';
   };
-
-  imports = [
-    ./cli
-
-    ./editors
-  ];
 
   home.packages = with pkgs; [zoxide sox];
 

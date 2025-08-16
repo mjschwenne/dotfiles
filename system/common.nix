@@ -66,26 +66,6 @@
     age.keyFile = "/home/mjs/.config/sops/age/keys.txt";
   };
 
-  # Nord TTY
-  console.colors = [
-    "2E3440"
-    "3B4252"
-    "434C5E"
-    "4C566A"
-    "D8DEE9"
-    "E5E9F0"
-    "ECEFF4"
-    "8FBCBB"
-    "BF616A"
-    "D08770"
-    "EBCB8B"
-    "A3BE8C"
-    "88C0D0"
-    "81A1C1"
-    "B48EAD"
-    "5E81AC"
-  ];
-
   # Need to enable the user shell program
   programs.fish.enable = true;
 
@@ -117,23 +97,8 @@
     ltrace
     gdb
 
-    # Python
-    (python313.withPackages
-      (ps: with ps; [debugpy]))
-
-    # Rust
-    rustc
-    cargo
-
-    # Haskell
-    ghc
-    haskellPackages.ghci-dap
-    cabal-install
-    cabal2nix
-
     # Build Utilities
     gnumake
-    cmake
 
     # Version control
     git

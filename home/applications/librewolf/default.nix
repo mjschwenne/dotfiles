@@ -50,8 +50,6 @@
       };
     };
     profiles.default = {
-      # userChrome = builtins.readFile ./userChrome.css;
-      # userContent = builtins.readFile ./userChrome.css;
       search = {
         force = true;
         engines = {
@@ -234,4 +232,6 @@
       };
     };
   };
+
+  stylix.targets.librewolf.profileNames = ["default"];
 }

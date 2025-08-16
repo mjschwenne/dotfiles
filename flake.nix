@@ -35,12 +35,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # swayfx
-    swayfx = {
-      url = "github:WillPower3309/swayfx";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # niri
     niri = {
       url = "github:YaLTeR/niri";
@@ -93,6 +87,11 @@
       url = "github:kmonad/kmonad?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # `outputs` are all the build result of the flake.
@@ -105,8 +104,8 @@
     home-manager,
     kmonad,
     sops-nix,
-    nvf,
     nixos-hardware,
+    stylix,
     ...
   } @ inputs: let
     system = "x86_64-linux";
@@ -141,6 +140,7 @@
         modules = [
           sops-nix.nixosModules.sops
           kmonad.nixosModules.default
+          stylix.nixosModules.stylix
           ./system/terra.nix
 
           home-manager.nixosModules.home-manager
@@ -159,6 +159,7 @@
         modules = [
           sops-nix.nixosModules.sops
           kmonad.nixosModules.default
+          stylix.nixosModules.stylix
           ./system/venus.nix
 
           home-manager.nixosModules.home-manager
@@ -177,6 +178,7 @@
         modules = [
           sops-nix.nixosModules.sops
           kmonad.nixosModules.default
+          stylix.nixosModules.stylix
           ./system/mars.nix
 
           home-manager.nixosModules.home-manager
@@ -196,6 +198,7 @@
           nixos-hardware.nixosModules.microsoft-surface-pro-intel
           sops-nix.nixosModules.sops
           kmonad.nixosModules.default
+          stylix.nixosModules.stylix
           ./system/luna.nix
 
           home-manager.nixosModules.home-manager
@@ -214,6 +217,7 @@
         modules = [
           sops-nix.nixosModules.sops
           kmonad.nixosModules.default
+          stylix.nixosModules.stylix
           ./system/sol.nix
 
           home-manager.nixosModules.home-manager

@@ -31,7 +31,6 @@
     thunderbird
     protonmail-bridge
     protonmail-desktop
-    protonmail-bridge-gui
 
     # Document-based Applications
     xournalpp
@@ -81,8 +80,6 @@
     wl-clipboard
     wlr-randr
     kanshi
-    grim
-    slurp
     wayland-logout
   ];
   masterPkgs = with pkgs-master; [protonvpn-cli protonvpn-gui zotero];
@@ -90,39 +87,29 @@
 in {
   imports = [./desktop ./applications];
 
-  gtk = {
-    enable = true;
-    theme = {
-      name = "Nordic";
-      package = pkgs.nordic;
+  stylix = {
+    cursor = {
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Classic";
+      size = 32;
     };
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-nord;
+    icons = {
+      enable = true;
+      dark = "Papirus";
+      light = "Papirus";
+      package = pkgs.papirus-icon-theme;
     };
-    font = {name = "JetBrainsMono Nerd Font";};
-    gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
+    opacity = {
+      terminal = 0.9;
+      applications = 0.9;
+    };
   };
-  home.pointerCursor = {
-    name = "Nordzy-cursors";
-    gtk.enable = true;
-    package = pkgs.nordzy-cursor-theme;
-  };
+  gtk.gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
   home.sessionVariables = {
-    GTK_THEME = "Nordic";
     GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
     MOZ_ENABLE_DBUS = 1;
-    DISPLAY = ":0";
   };
 
-  qt = {
-    enable = true;
-    platformTheme.name = "kvantum";
-    style = {
-      name = "kvantum";
-      package = pkgs.libsForQt5.qtstyleplugin-kvantum;
-    };
-  };
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
 

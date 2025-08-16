@@ -1,15 +1,9 @@
 {
   config,
   pkgs,
-  builtins,
   ...
 } @ inputs: let
   emacs = pkgs.emacsWithPackagesFromUsePackage {
-    # Your Emacs config file. Org mode babel files are also
-    # supported.
-    # NB: Config files cannot contain unicode characters, since
-    #     they're being parsed in nix, which lacks unicode
-    #     support.
     config = ./mjs/init.el;
 
     # Whether to include your config as a default init file.
@@ -23,8 +17,7 @@
     #   };
     defaultInitFile = false;
 
-    # Package is optional, defaults to pkgs.emacs
-    package = pkgs.emacs-unstable-pgtk.override {};
+    package = pkgs.emacs-unstable-pgtk;
 
     # By default emacsWithPackagesFromUsePackage will only pull in
     # packages with `:ensure`, `:ensure t` or `:ensure <package name>`.
@@ -62,14 +55,16 @@
       };
 
     # Optionally provide extra packages not in the configuration file.
-    extraEmacsPackages = epkgs: [
-      epkgs.org-modern-indent
-      epkgs.calfw-blocks
-      epkgs.autothemer
-      epkgs.vterm
-      epkgs.treesit-grammars.with-all-grammars
-      epkgs.peg
-    ];
+    extraEmacsPackages = epkgs:
+      [
+        epkgs.org-modern-indent
+        epkgs.calfw-blocks
+        epkgs.autothemer
+        epkgs.vterm
+        epkgs.treesit-grammars.with-all-grammars
+        epkgs.peg
+      ]
+      ++ (config.programs.emacs.extraPackages epkgs);
   };
 in {
   programs.emacs = {

@@ -18,17 +18,11 @@
     variant = "";
   };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.sessionVariables.NIXOS_OZONE_WL = "1"; # enable wayland for electron apps
   environment.systemPackages = with pkgs; [
-    # SDDM theme
-    libsForQt5.qt5.qtgraphicaleffects
-
     # Install window manager and greeter
-    swayfx
     niri
-    greetd.tuigreet
+    tuigreet
 
     # Misc Utils
     libtool
