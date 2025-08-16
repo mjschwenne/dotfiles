@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   osConfig,
   waybar,
   swww,
@@ -23,15 +24,15 @@
       # css
       ''
         :root {
-          --bg-color: rgba(67, 76, 94, 1);
-          --label-color: rgb(216, 222, 233);
-          --alternate-label-color: rgb(236, 239, 244);
-          --dim-label-color: rgb(236, 239, 244);
-          --border-color: rgba(46, 52, 64, 0.95);
-          --highlight-color: rgba(76, 86, 106, 0.95);
-          --urgency-color: rgb(191, 97, 106);
-          --indicator-focus-color: rgba(94, 129, 172, 0.95);
-          --indicator-color: rgba(76, 86, 106, 0.95);
+          --bg-color: ${config.lib.stylix.colors.withHashtag.base01};
+          --label-color: ${config.lib.stylix.colors.withHashtag.base05};
+          --alternate-label-color: ${config.lib.stylix.colors.withHashtag.base06};
+          --dim-label-color: ${config.lib.stylix.colors.withHashtag.base06};
+          --border-color: ${config.lib.stylix.colors.withHashtag.base00};
+          --highlight-color: ${config.lib.stylix.colors.withHashtag.base02};
+          --urgency-color: ${config.lib.stylix.colors.withHashtag.base08};
+          --indicator-focus-color: ${config.lib.stylix.colors.withHashtag.base0C};
+          --indicator-color: ${config.lib.stylix.colors.withHashtag.base02};
         }
       '';
   };
@@ -52,8 +53,8 @@
                 scale 1.6
                 transform "normal"
                 position x=0 y=0
-                background-color "#2e3440"
-                backdrop-color "#434c5e"
+                background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
                 focus-at-startup
             }
 
@@ -62,30 +63,30 @@
                 scale 1.6
                 transform "normal"
                 position x=2400 y=0
-                background-color "#2e3440"
-                backdrop-color "#434c5e"
+                background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
             }
           '';
         "venus" =
           # kdl
           ''
-            output "DP-1" {
-                mode "3840x2160"
-                scale 1.6
-                transform "normal"
-                position x=0 y=0
-                background-color "#2e3440"
-                backdrop-color "#434c5e"
-                focus-at-startup
-            }
+             output "DP-1" {
+                 mode "3840x2160"
+                 scale 1.6
+                 transform "normal"
+                 position x=0 y=0
+                 background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                 backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+                 focus-at-startup
+             }
 
-            output "eDP-1" {
-                mode "1920x1200"
-                scale 1
-                transform "normal"
-                position x=2400 y=0
-                background-color "#2e3440"
-                backdrop-color "#434c5e"
+             output "eDP-1" {
+                 mode "1920x1200"
+                 scale 1
+                 transform "normal"
+                 position x=2400 y=0
+                 background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                 backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
             }
           '';
         "mars" =
@@ -96,8 +97,8 @@
                 scale 1.6
                 transform "normal"
                 position x=0 y=0
-                background-color "#2e3440"
-                backdrop-color "#434c5e"
+                background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
                 focus-at-startup
             }
 
@@ -106,8 +107,8 @@
                 scale 1
                 transform "normal"
                 position x=2400 y=0
-                background-color "#2e3440"
-                backdrop-color "#434c5e"
+                background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
             }
           '';
       }."${osConfig.networking.hostName}" or "";
@@ -138,15 +139,7 @@
           touchpad {
               // off
               tap
-              // dwt
-              // dwtp
-              // drag false
-              // drag-lock
               natural-scroll
-              // accel-speed 0.2
-              // accel-profile "flat"
-              // scroll-method "two-finger"
-              // disabled-on-external-mouse
           }
 
           mouse {
@@ -260,13 +253,13 @@
               // You can use any CSS linear-gradient tool on the web to set these up.
               // Changing the color space is also supported, check the wiki for more info.
               //
-              active-gradient from="#81a1c1" to="#5e81ac" angle=45
+              active-gradient from="${config.lib.stylix.colors.withHashtag.base0B}" to="${config.lib.stylix.colors.withHashtag.base0D}" angle=45
 
               // You can also color the gradient relative to the entire view
               // of the workspace, rather than relative to just the window itself.
               // To do that, set relative-to="workspace-view".
               //
-              inactive-gradient from="#8fbcbb" to="#88c0d0" angle=45
+              inactive-gradient from="${config.lib.stylix.colors.withHashtag.base0A}" to="${config.lib.stylix.colors.withHashtag.base0C}" angle=45
           }
 
           // You can also add a border. It's similar to the focus ring, but always visible.
@@ -350,12 +343,11 @@
       spawn-at-startup "${swww.packages.${pkgs.system}.default}/bin/swww-daemon"
       spawn-at-startup "${pkgs.networkmanagerapplet}/bin/nm-applet"
       spawn-at-startup "${pkgs.keepassxc}/bin/keepassxc"
-      // spawn-at-startup "${pkgs.protonmail-bridge}/bin/protonmail-bridge" "--noninteractive"
+      spawn-at-startup "${pkgs.protonmail-bridge}/bin/protonmail-bridge" "--noninteractive"
       spawn-at-startup "${pkgs.trayscale}/bin/trayscale" "--hide-window"
       spawn-at-startup "${pkgs.nextcloud-client}/bin/nextcloud" "--background"
       spawn-at-startup "~/.config/niri/scripts/wallpaper.fish" "interval" "300"
       spawn-at-startup "${pkgs.niriswitcher}/bin/niriswitcher"
-      spawn-at-startup "${pkgs.xwayland-satellite}/bin/xwayland-satellite"
 
       // Uncomment this line to ask the clients to omit their client-side decorations if possible.
       // If the client will specifically ask for CSD, the request will be honored.
@@ -368,6 +360,11 @@
       // A ~ at the front will be expanded to the home directory.
       // The path is formatted with strftime(3) to give you the screenshot date and time.
       screenshot-path "~/Pictures/screenshots/screenshot_%Y-%m-%d_%H-%M-%S.png"
+
+      cursor {
+          hide-when-typing
+          hide-after-inactive-ms 3000
+      }
 
       // You can also set this to null to disable saving screenshots to disk.
       // screenshot-path null

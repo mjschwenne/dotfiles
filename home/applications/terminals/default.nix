@@ -115,7 +115,7 @@
         ''
           local wezterm = require 'wezterm'
           return {
-            front_end = "OpenGL",
+            front_end = "WebGpu",
             ${preferred_adapter."${osConfig.networking.hostName}"}
             font_size = 11.0,
             hide_tab_bar_if_only_one_tab = true,
