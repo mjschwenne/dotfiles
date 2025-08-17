@@ -77,6 +77,8 @@
 
   networking.hostName = "terra"; # Define your hostname.
 
+  # Needed for nintendo pro controllers
+  hardware.steam-hardware.enable = true;
   programs.steam.enable = true;
 
   # android stuff for supernote
