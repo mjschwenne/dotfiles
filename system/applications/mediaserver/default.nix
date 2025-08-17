@@ -3,10 +3,8 @@
   pkgs,
   ...
 }: {
-  imports = [./gui];
   # Setup the required secrets
   sops.secrets = {
-    "homarr/env".owner = "mjs";
     "${config.networking.hostName}/caddy/envfile".owner = "caddy";
   };
 
@@ -18,7 +16,7 @@
       enable = true;
       package = pkgs.caddy.withPlugins {
         plugins = ["github.com/caddy-dns/porkbun@v0.3.1"];
-        hash = "sha256-sa+L2YoTM1ZfhfowoCZwmggrUsqw0NmGWRK45TevxFo=";
+        hash = "sha256-yJyTf2VFh0FKgzIIPxNAlSz0t/lm6dQmRl04823Mij4=";
       };
       environmentFile = config.sops.secrets."${config.networking.hostName}/caddy/envfile".path;
       extraConfig = ''
@@ -48,27 +46,34 @@
   };
   systemd.services.caddy.after = ["mjs-tailscale-up.service"];
 
+  services.xserver.enable = true;
+  services.xserver.desktopManager.kodi = {
+    enable = true;
+    package = pkgs.kodi.withPackages (kodiPkgs:
+      with kodiPkgs; [
+        inputstreamhelper
+        inputstream-adaptive
+        requests
+        joystick
+      ]);
+  };
+  services.displayManager.autoLogin.user = "kodi";
+  services.xserver.displayManager.lightdm.greeter.enable = false;
+
+  services.joycond.enable = true;
+
+  users.extraUsers.kodi = {
+    isNormalUser = true;
+    extraGroups = ["data" "video" "audio" "input"];
+  };
+
+  programs.kdeconnect.enable = true;
+
   # Extra packages
   environment.systemPackages = with pkgs; [
     jellyfin-web
     jellyfin-ffmpeg
   ];
-
-  virtualisation.oci-containers = {
-    backend = "podman";
-    containers = {
-      homarr = {
-        image = "ghcr.io/homarr-labs/homarr:latest";
-        autoStart = true;
-        ports = ["127.0.0.1:7575:7575"];
-        environmentFiles = [config.sops.secrets."homarr/env".path];
-        extraOptions = ["--network=host"];
-        volumes = [
-          "/home/mjs/homarr/appdata:/appdata"
-        ];
-      };
-    };
-  };
 
   # HARDWARE TRANSCODING
   nixpkgs.config.packageOverrides = pkgs: {
@@ -83,7 +88,6 @@
       libvdpau-va-gl
       intel-compute-runtime
       vpl-gpu-rt
-      intel-media-sdk
     ];
   };
 }
