@@ -102,6 +102,7 @@
   outputs = {
     nixpkgs,
     home-manager,
+    niri,
     kmonad,
     sops-nix,
     nixos-hardware,
@@ -131,8 +132,7 @@
           inherit system;
         };
       };
-    niri_overlay = _: _: {niri = inputs.niri.packages.${system}.default.overrideAttrs (_: {doCheck = false;});};
-    overlays = [inputs.emacs-overlay.overlay niri_overlay];
+    overlays = [inputs.emacs-overlay.overlay niri.overlays.default];
   in {
     nixosConfigurations = {
       "terra" = nixpkgs.lib.nixosSystem {
