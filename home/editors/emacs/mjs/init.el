@@ -2426,7 +2426,20 @@ used if TAG-LIST is empty."
   :commands coq-mode
   :hook (coq-mode . (lambda ()
                       (set-face-background 'proof-locked-face
-                                           (plist-get base16-stylix-theme-colors :base02))))
+                                           (plist-get base16-stylix-theme-colors :base02))
+                      (set-face-background 'proof-queue-face
+                                           (plist-get base16-stylix-theme-colors :base03))
+                      (set-face-background 'proof-warning-face
+                                           (plist-get base16-stylix-theme-colors :base0A))
+                      (set-face-foreground 'proof-tactics-name-face
+                                           (plist-get base16-stylix-theme-colors :base0C))
+                      (set-face-foreground 'proof-tacticals-name-face
+                                           (plist-get base16-stylix-theme-colors :base0B))
+                      (set-face-foreground 'coq-solve-tactics-face
+                                           (plist-get base16-stylix-theme-colors :base09))
+                      (set-face-background 'coq-cheat-face
+                                           (plist-get base16-stylix-theme-colors :base09))
+                      ))
   :custom (coq-smie-user-tokens
            '(("," . ":=")
              ("∗" . "->")
@@ -2726,7 +2739,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                       hscroll-margin 0)))
+                                  hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
