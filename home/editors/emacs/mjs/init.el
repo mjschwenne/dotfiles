@@ -2438,7 +2438,9 @@ used if TAG-LIST is empty."
                       (set-face-foreground 'coq-solve-tactics-face
                                            (plist-get base16-stylix-theme-colors :base09))
                       (set-face-background 'coq-cheat-face
-                                           (plist-get base16-stylix-theme-colors :base09))
+                                           (plist-get base16-stylix-theme-colors :base08))
+                      (set-face-foreground 'coq-cheat-face
+                                           (plist-get base16-stylix-theme-colors :base00))
                       ))
   :custom (coq-smie-user-tokens
            '(("," . ":=")
@@ -2739,7 +2741,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                  hscroll-margin 0)))
+                                       hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
