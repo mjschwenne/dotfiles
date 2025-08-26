@@ -73,7 +73,16 @@
       autopairs.nvim-autopairs.enable = true;
       autocomplete.nvim-cmp.enable = true;
       binds = {
-        whichKey.enable = true;
+        whichKey = {
+          enable = true;
+          register = {
+            "<leader>a" = "Artifical Intelligence";
+            "<leader>c" = "Conflicts";
+            "<leader>d" = "Debug";
+            "<leader>l" = "Language";
+            "<leader>t" = "Toggle";
+          };
+        };
         cheatsheet.enable = true;
       };
       comments.comment-nvim.enable = true;
@@ -142,6 +151,10 @@
       };
       maps = {
         normal = {
+          "<leader>ac" = {
+            desc = "Chat";
+            action = ":CodeCompanionChat<CR>";
+          };
           "<C-h>" = {
             action = "<C-w>h";
             desc = "Move Focus Left";
@@ -263,6 +276,7 @@
                       end
               }
             '';
+          display.action_palette.provider = "telescope";
           strategies = {
             chat.adapter = "mistral";
             inline.adapter = "mistral";
