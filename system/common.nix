@@ -64,6 +64,8 @@
     defaultSopsFormat = "yaml";
 
     age.keyFile = "/home/mjs/.config/sops/age/keys.txt";
+
+    secrets."ai/mistral/key".owner = "mjs";
   };
 
   # Need to enable the user shell program

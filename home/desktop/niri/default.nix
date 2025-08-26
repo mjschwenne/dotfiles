@@ -9,6 +9,7 @@
   home.packages = with pkgs; [
     niri
     glib
+    swayosd
     xwayland-satellite
   ];
 
@@ -348,6 +349,7 @@
       spawn-at-startup "${pkgs.nextcloud-client}/bin/nextcloud" "--background"
       spawn-at-startup "~/.config/niri/scripts/wallpaper.fish" "interval" "300"
       spawn-at-startup "${pkgs.niriswitcher}/bin/niriswitcher"
+      spawn-at-startup "${pkgs.swayosd}/bin/swayosd-server"
 
       // Uncomment this line to ask the clients to omit their client-side decorations if possible.
       // If the client will specifically ask for CSD, the request will be honored.
