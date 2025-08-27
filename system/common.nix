@@ -65,7 +65,12 @@
 
     age.keyFile = "/home/mjs/.config/sops/age/keys.txt";
 
-    secrets."ai/mistral/key".owner = "mjs";
+    secrets = {
+      "ai/mistral/key".owner = "mjs";
+      "calendar/work".owner = "mjs";
+      "calendar/taa".owner = "mjs";
+      "calendar/taa-com".owner = "mjs";
+    };
   };
 
   # Need to enable the user shell program

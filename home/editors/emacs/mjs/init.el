@@ -2276,21 +2276,19 @@ used if TAG-LIST is empty."
   :hook (ledger-mode . evil-ledger-mode))
 
 (use-package calfw
+  :commands (mjs/open-calendar)
   :custom (calendar-week-start-day 1)
   :general (mjs-leader-def
              "C"     '(nil :which-key "Calendar")
              "C a"   '("Open Agenda on Day" . cfw:org-open-agenda-day)
+             "C c"   '("Open Calendar" . mjs/open-calendar)
              "C d"   '("GOTO Date" . cfw:navi-goto-date-command)
              "C m"   '("First Day" . cfw:navi-goto-first-date-command)
              "C M"   '("Last Day" . cfw:navi-goto-last-date-command)
              "C q"   '("Quit Calendar" . cfw:org-clean-exit)
              "C r"   '("Rebuild Calendar" . cfw:refresh-calendar-buffer)
              "C v"   '(nil :which-key "Calender Views")
-             "C v m" '("Month" . (lambda ()
-                                   (interactive)
-                                   (cfw:open-calendar-buffer
-                                    :contents-sources (list (cfw:org-create-source))
-                                    :view 'month)))
+             "C v m" '("Month" . mjs/open-calendar)
              "C w"   '("Beginning of Week" . cfw:navi-goto-week-begin-command)
              "C W"   '("End of Week" . cfw:navi-goto-week-end-command))
   :hook (cfw:calendar-mode . (lambda ()
@@ -2348,12 +2346,27 @@ used if TAG-LIST is empty."
   (cfw:face-toolbar-button-on ((t :foreground ,(plist-get base16-stylix-theme-colors :base07)
                                   :weight bold)))
   :config
+  (require 'calfw-org)
+  (require 'calfw-ical)
+  (defun mjs/open-calendar ()
+    (interactive)
+    (cfw:open-calendar-buffer
+     :contents-sources
+     (list
+      (cfw:org-create-source "Green")
+      (cfw:ical-create-source "Work" (f-read-text "/run/secrets/calendar/work") "Orange")
+      (cfw:ical-create-source "TAA" (f-read-text "/run/secrets/calendar/taa") "Blue")
+      (cfw:ical-create-source "TAA Community" (f-read-text "/run/secrets/calendar/taa-com") "Blue"))
+     :view 'month))
   (evil-set-initial-state 'cfw:calendar-mode 'normal))
 
 (use-package calfw-org
   :after calfw
   :general (mjs-leader-def
              "C c"   '("Open Calendar" . cfw:open-org-calendar)))
+
+(use-package calfw-ical
+  :after calfw)
 
 (use-package calfw-blocks
   :ensure nil
@@ -2741,7 +2754,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                       hscroll-margin 0)))
+                                  hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
