@@ -1286,8 +1286,9 @@ reversion. This resizes the popup to match its contents."
            :jump-to-captured t
            :immediate-finish t)
           ("p" "Daily Log (PM)" entry
-           (file+olp+datetree ,(format-time-string "log/%Y/%m-%B-log.org"))
-           "* Review\n%?"
+           (file+olp+datetree ,(format-time-string "classes/log/%Y/%m-%B-log.org"))
+           ,(concat "* Review\n\n"
+                    "- [ ] Update completed tasks\n\n%?")
            :empty-lines 1
            :tree-type week
            :jump-to-captured t
