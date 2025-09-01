@@ -1276,6 +1276,22 @@ reversion. This resizes the popup to match its contents."
              ":NOTE: %?\n"
              ":END:")
            :empty-lines 1)
+          ("a" "Daily Log (AM)" entry
+           (file+olp+datetree ,(format-time-string "log/%Y/%m-%B-log.org"))
+           ,(concat "* Planning\n\n"
+                    "- [ ] Record Habits\n"
+                    "- [ ] %?\n")
+           :empty-lines 1
+           :tree-type week
+           :jump-to-captured t
+           :immediate-finish t)
+          ("p" "Daily Log (PM)" entry
+           (file+olp+datetree ,(format-time-string "log/%Y/%m-%B-log.org"))
+           "* Review\n%?"
+           :empty-lines 1
+           :tree-type week
+           :jump-to-captured t
+           :immediate-finish t)
           ("e" "Etera Session" entry
            (file "freetime/ttrpg/games/etera/notes.org")
            "* Session %<%Y-%m-%d>\n\n%?"

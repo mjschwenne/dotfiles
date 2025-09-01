@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   pkgs,
   nixpkgs,
@@ -20,6 +21,7 @@
   };
 
   security.polkit.enable = true;
+  security.lsm = lib.mkForce [];
 
   sops.secrets = {
     "terra/ssh/key".owner = "mjs";
