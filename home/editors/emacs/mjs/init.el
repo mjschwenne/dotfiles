@@ -1277,7 +1277,7 @@ reversion. This resizes the popup to match its contents."
              ":END:")
            :empty-lines 1)
           ("a" "Daily Log (AM)" entry
-           (file+olp+datetree ,(format-time-string "log/%Y/%m-%B-log.org"))
+           (file+olp+datetree ,(format-time-string "classes/log/%Y/%m-%B-log.org"))
            ,(concat "* Planning\n\n"
                     "- [ ] Record Habits\n"
                     "- [ ] %?\n")
