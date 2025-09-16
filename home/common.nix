@@ -48,6 +48,7 @@
 
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
     matchBlocks = {
       "github.com" = {
         user = "git";
@@ -60,6 +61,19 @@
         hostname = "git.doit.wisc.edu";
         identitiesOnly = true;
         identityFile = osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path;
+      };
+      # Default config, which is going away soon
+      "*" = {
+        forwardAgent = false;
+        addKeysToAgent = "no";
+        compression = false;
+        serverAliveInterval = 0;
+        serverAliveCountMax = 3;
+        hashKnownHosts = false;
+        userKnownHostsFile = "~/.ssh/known_hosts";
+        controlMaster = "no";
+        controlPath = "~/.ssh/master-%r@%n:%p";
+        controlPersist = "no";
       };
     };
   };

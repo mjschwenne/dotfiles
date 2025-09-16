@@ -3,7 +3,7 @@
 
   programs.spicetify = {
     enable = true;
-    windowManagerPatch = true;
+    windowManagerPatch = false;
   };
 
   xdg.desktopEntries = {

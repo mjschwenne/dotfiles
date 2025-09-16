@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi-wayland;
+    package = pkgs.rofi;
     extraConfig = {
       modi = "run,drun,window";
       show-icons = true;

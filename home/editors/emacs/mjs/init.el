@@ -2294,7 +2294,8 @@ used if TAG-LIST is empty."
   :diminish evil-markdown-mode
   :config (add-hook 'evil-markdown-mode-hook #'evil-normalize-keymaps))
 
-(use-package quarto-mode)
+(use-package quarto-mode
+  :mode ("\\.qmd\\'" . poly-quarto-mode))
 
 (use-package ready-player
   :config (ready-player-mode +1))

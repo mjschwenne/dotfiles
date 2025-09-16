@@ -35,12 +35,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # niri
-    niri = {
-      url = "github:YaLTeR/niri";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # waybar
     waybar = {
       url = "github:Alexays/Waybar";
@@ -80,6 +74,7 @@
 
     wezterm = {
       url = "github:wez/wezterm?dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Keyboard tool
@@ -102,7 +97,6 @@
   outputs = {
     nixpkgs,
     home-manager,
-    niri,
     kmonad,
     sops-nix,
     nixos-hardware,
@@ -132,7 +126,7 @@
           inherit system;
         };
       };
-    overlays = [inputs.emacs-overlay.overlay niri.overlays.default];
+    overlays = [inputs.emacs-overlay.overlay];
   in {
     nixosConfigurations = {
       "terra" = nixpkgs.lib.nixosSystem {
