@@ -2,7 +2,6 @@
   pkgs,
   nvf,
   lib,
-  osConfig,
   ...
 }: {
   imports = [nvf.homeManagerModules.default];
@@ -258,30 +257,6 @@
         nvim-cursorline.enable = true;
         cinnamon-nvim.enable = true;
         fidget-nvim.enable = true;
-      };
-      assistant.codecompanion-nvim = {
-        enable = true;
-        setupOpts = {
-          adapters =
-            lib.generators.mkLuaInline #lua
-            
-            ''
-              {
-                  mistral = function ()
-                      return require("codecompanion.adapters").extend("mistral", {
-                              env = {
-                                  api_key = "cmd: cat ${osConfig.sops.secrets."ai/mistral/key".path}",
-                              },
-                          })
-                      end
-              }
-            '';
-          display.action_palette.provider = "telescope";
-          strategies = {
-            chat.adapter = "mistral";
-            inline.adapter = "mistral";
-          };
-        };
       };
     };
   };
