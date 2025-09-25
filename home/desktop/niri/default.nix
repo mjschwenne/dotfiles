@@ -583,6 +583,8 @@
           Mod+Page_Up        { focus-workspace-up; }
           Mod+U              { focus-workspace-down; }
           Mod+I              { focus-workspace-up; }
+          Mod+M              { spawn "~/.config/niri/scripts/mirror.fish"; }
+          Mod+Shift+M        { spawn "pkill" "wl-mirror"; }
           Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
           Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
           Mod+Ctrl+U         { move-column-to-workspace-down; }
