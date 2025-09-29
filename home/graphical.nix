@@ -37,6 +37,7 @@
     poppler_utils
     nextcloud-client
     pdfcpu
+    pdfpc
 
     # Graphics Applications
     gimp
