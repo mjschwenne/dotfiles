@@ -43,9 +43,10 @@
     gimp
     inkscape
 
-    # LaTeX
+    # typesetting
     texliveFull
     ghostscript
+    typst
 
     # Graphical Utilities
     blueberry

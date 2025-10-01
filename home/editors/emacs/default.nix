@@ -52,6 +52,14 @@
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) trivialBuild;
         };
+        typst-ts-mode = pkgs.callPackage ./emacs-pkgs/typst-ts-mode.nix {
+          inherit (pkgs) fetchFromGitea;
+          inherit (epkgs) trivialBuild;
+        };
+        typst-preview = pkgs.callPackage ./emacs-pkgs/typst-preview.nix {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) trivialBuild websocket;
+        };
       };
 
     # Optionally provide extra packages not in the configuration file.
@@ -63,6 +71,7 @@
         epkgs.vterm
         epkgs.treesit-grammars.with-all-grammars
         epkgs.peg
+        epkgs.typst-preview
       ]
       ++ (config.programs.emacs.extraPackages epkgs);
   };

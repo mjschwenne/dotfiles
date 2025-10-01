@@ -2201,6 +2201,17 @@ used if TAG-LIST is empty."
                                         lazytab-position-cursor-and-edit
                                         nil t nil)))
 
+(use-package typst-ts-mode
+  :mode ("\\.typ\\'" . typst-ts-mode)
+  :custom
+  (typst-ts-mode-enable-raw-blocks-highlight t))
+
+(use-package websocket)
+(use-package typst-preview
+  :after typst
+  :ensure nil
+  :custom (typst-preview-browser "default"))
+
 ;; HACK: It's really funny if `edit-indirect' is an
 ;; indirect dependency of `markdown-mode'
 (use-package edit-indirect)

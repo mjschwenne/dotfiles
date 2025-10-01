@@ -9,6 +9,7 @@
     checkmake
     google-java-format
     deadnix
+    tinymist
     mypy
     black
     isort
