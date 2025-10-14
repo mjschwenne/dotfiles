@@ -135,7 +135,10 @@
         haskell.enable = true;
         python.enable = true;
         markdown.enable = true;
-        nix.enable = true;
+        nix = {
+          enable = true;
+          lsp.server = "nixd";
+        };
         ocaml = {
           enable = true;
           format.package = pkgs.ocaml-ng.ocamlPackages_4_14.ocamlformat;
@@ -143,7 +146,10 @@
         };
         rust = {
           enable = true;
-          crates.enable = true;
+          crates = {
+            enable = true;
+            codeActions = false;
+          };
         };
         lua.enable = true;
         yaml.enable = true;
