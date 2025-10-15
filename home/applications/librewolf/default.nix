@@ -50,6 +50,7 @@
       };
     };
     profiles.default = {
+      extensions.force = true;
       search = {
         force = true;
         engines = {
@@ -233,5 +234,9 @@
     };
   };
 
-  stylix.targets.librewolf.profileNames = ["default"];
+  stylix.targets.librewolf = {
+    enable = true;
+    profileNames = ["default"];
+    colorTheme.enable = true;
+  };
 }
