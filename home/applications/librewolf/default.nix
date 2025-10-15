@@ -24,6 +24,11 @@
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
           installation_mode = "force_installed";
         };
+
+        "FirefoxColor@mozilla.com" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/firefox-color/latest.xpi";
+          installation_mode = "force_installed";
+        };
       };
       DisableTelemetry = true;
       DisableFirefoxStudies = true;
