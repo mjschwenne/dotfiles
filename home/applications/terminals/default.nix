@@ -119,7 +119,7 @@
             ${preferred_adapter."${osConfig.networking.hostName}"}
             font_size = 11.0,
             hide_tab_bar_if_only_one_tab = true,
-            default_prog = { "fish", "-l" },
+            default_prog = { "nu", "-l" },
             enable_wayland = true,
             check_for_updates = false,
           }

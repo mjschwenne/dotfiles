@@ -2,6 +2,7 @@
   pkgs,
   nvf,
   lib,
+  stylix,
   ...
 }: {
   imports = [nvf.homeManagerModules.default];
@@ -219,7 +220,7 @@
       treesitter = {
         enable = true;
         context.enable = true;
-        grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [just kdl css];
+        grammars = pkgs.vimPlugins.nvim-treesitter.allGrammars;
       };
       ui = {
         borders.enable = true;
@@ -265,5 +266,10 @@
         fidget-nvim.enable = true;
       };
     };
+  };
+
+  stylix.targets.nvf = {
+    enable = true;
+    transparentBackground = true;
   };
 }

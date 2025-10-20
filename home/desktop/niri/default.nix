@@ -4,6 +4,7 @@
   osConfig,
   waybar,
   swww,
+  wezterm,
   ...
 }: {
   home.packages = with pkgs; [
@@ -479,7 +480,7 @@
           // shows a list of important hotkeys.
           Mod+Shift+Slash { show-hotkey-overlay; }
 
-          Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "${pkgs.kitty}/bin/kitty"; }
+          Mod+Return hotkey-overlay-title="Open a Terminal: wezterm" { spawn "${wezterm.packages.${pkgs.system}.default}/bin/wezterm"; }
           Mod+A hotkey-overlay-title="Run an Application: rofi" { spawn "${pkgs.rofi}/bin/rofi" "-show" "drun"; }
           Mod+Shift+A hotkey-overlay-title="Switch windows: rofi" { spawn "${pkgs.rofi}/bin/rofi" "-show" "window"; }
           Mod+Z hotkey-overlay-title="Lock the Screen: swaylock" { spawn "~/.config/niri/scripts/lock.fish"; }

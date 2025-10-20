@@ -8,9 +8,11 @@
     if osConfig.networking.hostName == "sol"
     then [
       ./fish
+      ./nushell
     ]
     else [
       ./fish
+      ./nushell
       ./starship
     ];
 
