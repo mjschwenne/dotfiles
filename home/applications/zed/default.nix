@@ -6,13 +6,11 @@
     userSettings = {
       auto_update = false;
       telemetry.metrics = false;
-      assistant = {
-        enabled = true;
-        version = "2";
+      agent = {
         default_open_ai_model = null;
         default_model = {
-          provider = "mistral";
-          model = "codestral-latest";
+          provider = "zed.dev";
+          model = "claude-sonnet-4-5";
         };
       };
       lsp = {
@@ -34,7 +32,7 @@
           };
         };
         env = {
-          TERM = "kitty";
+          TERM = "wezterm";
         };
         font_family = "JetBrainsMono Nerd Font";
         font_features = null;

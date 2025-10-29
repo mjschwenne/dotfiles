@@ -22,8 +22,9 @@
     '';
     shellAliases = {
       vi = "nvim";
+      ll = "ls -l";
       icat = "wezterm imgcat";
-      nix-shell = "nix-shell --run nu";
+      nix-dev = ''nix develop -c "nu"'';
       # ssh = ''kitty +kitten ssh -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}'';
       scp = ''scp -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}'';
     };
