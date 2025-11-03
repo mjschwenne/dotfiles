@@ -14,6 +14,9 @@
             fastfetch -c examples/8.jsonc
         }
       '';
+    environmentVariables = {
+      SHELL = "${pkgs.nushell}/bin/nu";
+    };
     extraConfig = ''
       source ~/.config/nushell/zoxide.nu
     '';
