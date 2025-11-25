@@ -3,7 +3,7 @@
   pkgs,
   pkgs-master,
   pkgs-stable,
-  swww,
+  awww,
   ...
 }: let
   packages = with pkgs; [
@@ -34,7 +34,7 @@
 
     # Document-based Applications
     xournalpp
-    poppler_utils
+    poppler-utils
     nextcloud-client
     pdfcpu
     pdfpc
@@ -77,14 +77,14 @@
     graphviz
 
     # Wayland Utilities
-    swww.packages.${system}.default
+    awww.packages.${stdenv.hostPlatform.system}.default
     wev
     wl-clipboard
     wlr-randr
     kanshi
     wayland-logout
   ];
-  masterPkgs = with pkgs-master; [protonvpn-cli protonvpn-gui zotero];
+  masterPkgs = with pkgs-master; [protonvpn-gui zotero];
   stablePkgs = with pkgs-stable; [];
 in {
   imports = [./desktop ./applications];

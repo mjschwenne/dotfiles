@@ -54,7 +54,7 @@
     foundryvtt = {
       enable = true;
       hostName = "schwennesen.org";
-      package = foundry.packages.${pkgs.system}.foundryvtt_13;
+      package = foundry.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_13;
       proxySSL = true;
       proxyPort = 443;
     };

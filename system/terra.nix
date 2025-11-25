@@ -87,7 +87,6 @@
   programs.adb.enable = true;
   users.users.mjs.extraGroups = ["adbusers"];
   services.udev.packages = [
-    pkgs.android-udev-rules
     pkgs.steam-devices-udev-rules
   ];
 
