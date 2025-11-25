@@ -3,8 +3,8 @@
   config,
   osConfig,
   waybar,
-  swww,
-  wezterm,
+  awww,
+  # wezterm,
   ...
 }: {
   home.packages = with pkgs; [
@@ -341,8 +341,8 @@
       // See the binds section below for more spawn examples.
 
       // This line starts waybar, a commonly used bar for Wayland compositors.
-      spawn-at-startup "${waybar.packages.${pkgs.system}.waybar}/bin/waybar"
-      spawn-at-startup "${swww.packages.${pkgs.system}.default}/bin/swww-daemon"
+      spawn-at-startup "${waybar.packages.${pkgs.stdenv.hostPlatform.system}.waybar}/bin/waybar"
+      spawn-at-startup "${awww.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/awww-daemon"
       spawn-at-startup "${pkgs.networkmanagerapplet}/bin/nm-applet"
       spawn-at-startup "${pkgs.keepassxc}/bin/keepassxc"
       spawn-at-startup "${pkgs.protonmail-bridge}/bin/protonmail-bridge" "--noninteractive"
@@ -442,6 +442,7 @@
       window-rule {
           match title="^(Open Files?)(.*)$"
           match app-id=r#"thunar"# title=r#"^(Rename)(.*)$"#
+          match app-id=r#"Thunar"# title=r#"^(Rename)(.*)$"#
           match app-id="^xdg-desktop-portal-gtk$"
           match title="^KeePassXC - Browser Access Request$"
           match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
@@ -480,7 +481,8 @@
           // shows a list of important hotkeys.
           Mod+Shift+Slash { show-hotkey-overlay; }
 
-          Mod+Return hotkey-overlay-title="Open a Terminal: wezterm" { spawn "${wezterm.packages.${pkgs.system}.default}/bin/wezterm"; }
+          // See https://github.com/wezterm/wezterm/issues/7383
+          Mod+Return hotkey-overlay-title="Open a Terminal: wezterm" { spawn "${pkgs.wezterm}/bin/wezterm"; }
           Mod+A hotkey-overlay-title="Run an Application: rofi" { spawn "${pkgs.rofi}/bin/rofi" "-show" "drun"; }
           Mod+Shift+A hotkey-overlay-title="Switch windows: rofi" { spawn "${pkgs.rofi}/bin/rofi" "-show" "window"; }
           Mod+Z hotkey-overlay-title="Lock the Screen: swaylock" { spawn "~/.config/niri/scripts/lock.fish"; }

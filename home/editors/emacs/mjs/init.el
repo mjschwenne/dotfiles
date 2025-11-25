@@ -1216,10 +1216,8 @@ reversion. This resizes the popup to match its contents."
              (variable-pitch-mode . ""))
   :hook ((org-mode . turn-on-org-cdlatex)
          (org-mode . (lambda () (setq mode-name " Org")))
-         (org-mode . variable-pitch-mode)
          (org-agenda-mode . (lambda () (setq mode-name "󰃮 Agenda")))
          (org-mode . auto-fill-mode)
-         (org-mode . (lambda () (set-fill-column 100)))
          (org-after-todo-state-change . log-todo-next-creation-date)
          (org-capture-mode . mjs/org-capture-update-header)
          (org-capture-mode . (lambda () (flycheck-mode -1)))
@@ -1242,20 +1240,6 @@ reversion. This resizes the popup to match its contents."
                                     (mjs/resize-org-latex-overlays)))))
 
          (org-indent-mode .  (lambda () (diminish 'org-indent-mode))))
-  :custom-face (variable-pitch ((t (:family "Inria Sans" :height 1.2))))
-  (org-block ((t (:inherit fixed-pitch :height 0.9))))
-  (org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
-  (org-document-info-keyword ((t (:inherit (shadow fixed-pitch) :height 0.9))))
-  (org-indent ((t (:inherit (org-hide fixed-pitch) :height 0.9))))
-  (org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch) :height 0.9))))
-  (org-property-value ((t (:inherit fixed-pitch :height 0.9))))
-  (org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch) :height 0.9))))
-  (org-table ((t (:inherit fixed-pitch :height 0.9))))
-  (org-tag ((t (:inherit (shadow fixed-pitch) :height 0.9))))
-  (org-modern-tag ((t (:inherit fixed-pitch :height 0.9))))
-  (org-modern-label ((t (:inherit fixed-pitch :height 0.9))))
-  (org-drawer ((t (:inherit fixed-pitch :height 0.9))))
-  (org-verbatim ((t (:inherit (shadow fixed-pitch) :height 0.9))))
   :config
   (setq org-capture-templates
         `(("c" "Class Lecture" plain
@@ -1460,6 +1444,9 @@ reversion. This resizes the popup to match its contents."
 (use-package org-modern
   :after org
   :hook (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda)
+  :custom ((org-modern-star nil)
+           (org-modern-hide-stars nil))
   :config (set-face-attribute 'org-modern-done nil
                               :background (plist-get base16-stylix-theme-colors :base02)
                               :foreground (plist-get base16-stylix-theme-colors :base05)))
@@ -2414,38 +2401,6 @@ used if TAG-LIST is empty."
 
 (use-package calfw-ical
   :after calfw)
-
-(use-package calfw-blocks
-  :ensure nil
-  :after calfw
-  :general (mjs-leader-def
-             "C v d" '("Day" . (lambda ()
-                                 (interactive)
-                                 (cfw:open-calendar-buffer
-                                  :contents-sources (list (cfw:org-create-source))
-                                  :view 'block-day)))
-             "C v D" '("3-Day" . (lambda ()
-                                   (interactive)
-                                   (cfw:open-calendar-buffer
-                                    :contents-sources (list (cfw:org-create-source))
-                                    :view 'block-3-day)))
-             "C v t" '("Two Weeks" . (lambda ()
-                                       (interactive)
-                                       (cfw:open-calendar-buffer
-                                        :contents-sources (list (cfw:org-create-source))
-                                        :view 'transpose-14-day)))
-             "C v w" '("Block Week" . (lambda ()
-                                        (interactive)
-                                        (cfw:open-calendar-buffer
-                                         :contents-sources (list (cfw:org-create-source))
-                                         :view 'block-week)))
-             "C v W" '("Week" . (lambda ()
-                                  (interactive)
-                                  (cfw:open-calendar-buffer
-                                   :contents-sources (list (cfw:org-create-source))
-                                   :view 'transpose-two-weeks))))
-  :custom ((calfw-blocks-earliest-visible-time (8 30))
-           (calfw-blocks-lines-per-hour 2)))
 
 (use-package direnv
   :defer nil

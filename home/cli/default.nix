@@ -24,9 +24,9 @@
 
     git = {
       enable = true;
-      userName = "Matt Schwennesen";
-      userEmail = "mjschwenne@gmail.com";
-      extraConfig = {
+      settings = {
+        user.name = "Matt Schwennesen";
+        user.email = "mjschwenne@gmail.com";
         diff.tool = "nvimdiff";
         merge.tool = "nvimdiff";
       };

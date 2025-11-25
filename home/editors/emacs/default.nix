@@ -44,10 +44,6 @@
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) trivialBuild org-ql persist;
         };
-        calfw-blocks = pkgs.callPackage ./emacs-pkgs/calfw-blocks.nix {
-          inherit (pkgs) fetchFromGitHub;
-          inherit (epkgs) trivialBuild calfw calfw-org;
-        };
         org-modern-indent = pkgs.callPackage ./emacs-pkgs/org-modern-indent.nix {
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) trivialBuild;
@@ -66,7 +62,6 @@
     extraEmacsPackages = epkgs:
       [
         epkgs.org-modern-indent
-        epkgs.calfw-blocks
         epkgs.autothemer
         epkgs.vterm
         epkgs.treesit-grammars.with-all-grammars
