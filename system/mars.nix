@@ -40,13 +40,6 @@
   networking.hostName = "mars"; # Define your hostname.
   # networking.nameservers = ["127.0.0.1" "::1"];
   services = {
-    nextdns = {
-      enable = false;
-      arguments = [
-        "-config-file"
-        ''${config.sops.secrets."nextdns/config".path}''
-      ];
-    };
     tailscale = {
       extraUpFlags = ["--ssh"];
       authKeyFile = config.sops.secrets."mars/tailscale".path;
@@ -62,7 +55,7 @@
       enable = true;
       package = pkgs.caddy.withPlugins {
         plugins = ["github.com/caddy-dns/porkbun@v0.3.1"];
-        hash = "sha256-yJyTf2VFh0FKgzIIPxNAlSz0t/lm6dQmRl04823Mij4=";
+        hash = "sha256-PUHu+KPywdJMuPLHPtQhUaw3Cv1pED5XQ1MOzlT/6h4=";
       };
       environmentFile = ''${config.sops.secrets."caddy/envfile".path}'';
       extraConfig = ''
