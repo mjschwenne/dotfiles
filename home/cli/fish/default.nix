@@ -10,11 +10,12 @@
       flatten = ''
         find */ -type f -exec sh -c 'file=''${1#./}; mv "$file" "$(basename $file)"' _ '{}' \; ; find */ -depth -type d -exec rmdir '{}' \;'';
       mjs-bulk-rename = ''find . -depth -exec fish -c 'mjs-rename "{}"' \;'';
-      icat = "kitty +kitten icat";
+      # icat = "kitty +kitten icat";
+      icat = "wezterm imgcat";
       m = "math";
       nix-shell = "nix-shell --run fish";
       ls = "eza";
-      ssh = ''kitty +kitten ssh -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}'';
+      # ssh = ''kitty +kitten ssh -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}'';
       scp = ''scp -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}'';
     };
     functions = {
