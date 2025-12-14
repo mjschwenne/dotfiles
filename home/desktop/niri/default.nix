@@ -443,6 +443,8 @@
           match title="^(Open Files?)(.*)$"
           match app-id=r#"thunar"# title=r#"^(Rename)(.*)$"#
           match app-id=r#"Thunar"# title=r#"^(Rename)(.*)$"#
+          match app-id=r#"thunar"# title=r#"^File Operation Progress$"#
+          match app-id=r#"Thunar"# title=r#"^File Operation Progress$"#
           match app-id="^xdg-desktop-portal-gtk$"
           match title="^KeePassXC - Browser Access Request$"
           match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
