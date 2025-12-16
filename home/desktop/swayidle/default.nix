@@ -2,12 +2,9 @@
   services.swayidle = {
     enable = true;
     systemdTarget = "graphical-session.target";
-    events = [
-      {
-        event = "before-sleep";
-        command = "swaylock";
-      }
-    ];
+    events = {
+      before-sleep = "swaylock";
+    };
     timeouts = [
       {
         timeout = 300;

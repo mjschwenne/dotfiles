@@ -37,8 +37,8 @@
     wezterm = {
       enable = true;
       # See https://github.com/wezterm/wezterm/issues/7383
-      # package = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      package = pkgs.wezterm;
+      package = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      # package = pkgs.wezterm;
       extraConfig = let
         preferred_adapter = {
           "terra" =

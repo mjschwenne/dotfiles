@@ -127,8 +127,10 @@
         nvim-docs-view.enable = true;
         trouble.enable = true;
       };
+      formatter.conform-nvim = {
+        enable = true;
+      };
       languages = {
-        enableFormat = true;
         enableTreesitter = true;
         enableExtraDiagnostics = true;
 
@@ -138,18 +140,15 @@
         markdown.enable = true;
         nix = {
           enable = true;
-          lsp.server = "nixd";
+          lsp.servers = ["nixd"];
         };
         ocaml = {
           enable = true;
-          format.package = pkgs.ocaml-ng.ocamlPackages_4_14.ocamlformat;
-          lsp.package = pkgs.ocaml-ng.ocamlPackages_4_14.ocaml-lsp;
         };
         rust = {
           enable = true;
-          crates = {
+          extensions.crates-nvim = {
             enable = true;
-            codeActions = false;
           };
         };
         lua.enable = true;
