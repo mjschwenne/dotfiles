@@ -56,7 +56,7 @@
 
     nextcloud = {
       enable = true;
-      package = pkgs.nextcloud31;
+      package = pkgs.nextcloud32;
       hostName = "cloud.schwennesen.org";
       webserver = "nginx";
 
@@ -112,13 +112,13 @@
         mail_smtpmode = "smtp";
         mail_smtphost = "127.0.0.1:1025";
         mail_smtpsecure = "";
-        mail_smtpstreamoptions = {
-          ssl = {
-            allow_self_signed = true;
-            verify_peer = false;
-            verify_peer_name = false;
-          };
-        };
+        # mail_smtpstreamoptions = {
+        #   ssl = {
+        #     allow_self_signed = true;
+        #     verify_peer = false;
+        #     verify_peer_name = false;
+        #   };
+        # };
         default_language = "en";
         default_locale = "en_US";
         default_timezone = "America/Chicago";

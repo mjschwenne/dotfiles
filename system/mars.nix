@@ -95,9 +95,6 @@
         # '';
       };
     };
-    udev.packages = [
-      pkgs.android-udev-rules
-    ];
   };
   systemd.services.caddy.after = ["mjs-tailscale-up.service"];
 
