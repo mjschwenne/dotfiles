@@ -23,7 +23,7 @@
 
   nixpkgs.config = {
     permittedInsecurePackages = [
-      "freeimage-unstable-2021-11-01"
+      # "freeimage-unstable-2021-11-01"
     ];
 
     # Allow unfree packages
@@ -161,6 +161,9 @@
     sops
     gnupg
     age
+
+    # nix 
+    nix-update
   ];
 
   # Text editor

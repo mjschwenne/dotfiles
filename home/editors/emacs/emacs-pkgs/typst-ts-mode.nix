@@ -9,7 +9,7 @@ trivialBuild {
     domain = "codeberg.org";
     owner = "meow_king";
     repo = "typst-ts-mode";
-    rev = "fa03e477dfc57ea498ef9a624b2ec7bf655dc25c";
-    hash = "sha256-fso39K3MvF41M5LUzsl++GkR9+yAiJed4mxjKBqkoGE=";
+    rev = "7c2ef0d5bd2b5a8727fe6d00938c47ba562e0c94";
+    hash = "sha256-D+QEfEYlxJICcdUCleWpe7+HxePLSSmV7zAwvyTL0+Q=";
   };
 }

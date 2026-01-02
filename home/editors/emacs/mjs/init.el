@@ -2190,14 +2190,66 @@ used if TAG-LIST is empty."
 
 (use-package typst-ts-mode
   :mode ("\\.typ\\'" . typst-ts-mode)
+  :init
+  (defun mjs/typst-ts-editing-auto-fill-function ()
+    "Auto Fill Function for `auto-fill-mode', allowing the prefix to be `nil'"
+    (if (>= (current-column) (current-fill-column))
+        (let* ((fill-prefix (typst-ts-editing-calculate-fill-prefix))
+               (adaptive-fill-mode (null fill-prefix)))
+          (do-auto-fill))))
+  :hook (typst-ts-mode . (lambda ()
+                           (progn
+                             (set
+                              (make-local-variable
+                               'normal-auto-fill-function)
+                              #'mjs/typst-ts-editing-auto-fill-function)
+                             (auto-fill-mode))))
   :custom
-  (typst-ts-mode-enable-raw-blocks-highlight t))
+  (typst-ts-mode-enable-raw-blocks-highlight t)
+  :general (mjs-local-leader-def :keymaps 'typst-ts-mode-map
+             "c" '("Compile" . typst-ts-compile)
+             "#" '("Renumber List" . typst-ts-editing-item-list-renumber)
+             "l" '("Insert Link" . typst-ts-mc-insert-link)
+             "i" '("Insert Symbol" . typst-ts-editing-symbol-picker)
+             "o" '("Open" . typst-ts-mc-open-at-point)
+             "O" '("Open PDF" . typst-ts-compile-and-preview)
+             "p" '(nil :which-key "Preview")
+             "p o" '("Open" . typst-preview-open-browser)
+             "p r" '("Restart" . typst-preview-restart)
+             "p c" '("Check Connection" . typst-preview-connected-p)
+             "p s" '("Start" . typst-preview-start)
+             "p j" '("Jump to Point" . typst-preview-send-position)
+             "s" '(nil :which-key "Search")
+             "s p" '("Package" . typst-ts-mc-search-package)
+             "s s" '("Symbol" . typst-ts-mc-search-typst-symbol)
+             "s h" '("Handwritten Symbol" . typst-ts-mc-recognize-typst-symbol)
+             "t" '(nil :which-key "Table")
+             "t h" '("Swap Cell Right" . typst-ts-editing-grid-cell-right)
+             "t l" '("Swap Cell Left" . typst-ts-editing-grid-cell-left)
+             "t k" '("Swap Cell Up" . typst-ts-editing-grid-cell-up)
+             "t j" '("Swap Cell Down" . typst-ts-editing-grid-cell-down)
+             "t J" '("Swap Row Down" . typst-ts-editing-grid-row-down)
+             "t K" '("Swap Row Up" . typst-ts-editing-grid-row-up)
+             "w" '("Watch" . typst-ts-watch-start)
+             "W" '("Watch mode" . typst-ts-watch-mode)
+             "x" '("Kill Watch" . typst-ts-watch-stop))
+  :config
+  (put 'tp--master-file 'safe-local-variable #'stringp)
+  (require 'typst-preview)
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 `((typst-ts-mode) . ,(eglot-alternatives
+                                       '("tinymist" "typst-lsp"))))))
 
 (use-package websocket)
 (use-package typst-preview
-  :after typst
   :ensure nil
-  :custom (typst-preview-browser "default"))
+  :diminish typst-preview-mode
+  :init
+  (setq typst-preview-open-browser-automatically t)
+  :custom
+  (typst-preview-partial-rendering t)
+  (typst-preview-browser "default"))
 
 ;; HACK: It's really funny if `edit-indirect' is an
 ;; indirect dependency of `markdown-mode'

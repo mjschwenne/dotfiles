@@ -2,7 +2,7 @@
   config,
   pkgs,
   ...
-} @ inputs: let
+} : let
   emacs = pkgs.emacsWithPackagesFromUsePackage {
     config = ./mjs/init.el;
 
