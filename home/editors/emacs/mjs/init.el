@@ -2018,6 +2018,8 @@ used if TAG-LIST is empty."
 (use-package citar
   :after oc
   :custom (citar-bibliography org-cite-global-bibliography)
+  :init
+  (put 'citar-bibliography 'safe-local-variable #'listp)
   :config
   (defvar citar-indicator-files-icon
     (citar-indicator-create
