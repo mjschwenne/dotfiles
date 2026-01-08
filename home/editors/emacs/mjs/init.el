@@ -1919,11 +1919,11 @@ used if TAG-LIST is empty."
                        :empty-lines 1) t)
   (add-to-list 'org-capture-templates
                `("R" "Manual Recipe" entry
-                 (file ,(concat org-directory "recipes.org"))
+                 (file ,(concat org-directory "personal/recipes.org"))
                  ,(concat "* %^{Recipe title: }\n"
                           "  :PROPERTIES:\n"
                           "  :source:\n"
-                          "  :export_hugo_bundle:"
+                          "  :export_hugo_bundle:\n"
                           "  :export_file_name: index"
                           "  :END:\n\n"
                           "** Ingredients\n\n"
