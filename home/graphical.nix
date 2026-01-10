@@ -1,11 +1,11 @@
 {
-  osConfig,
   pkgs,
   pkgs-master,
   pkgs-stable,
   awww,
   ...
-}: let
+}:
+let
   packages = with pkgs; [
     # Web browsers
     firefox
@@ -35,7 +35,6 @@
     # Document-based Applications
     xournalpp
     poppler-utils
-    nextcloud-client
     pdfcpu
     pdfpc
 
@@ -84,10 +83,17 @@
     kanshi
     wayland-logout
   ];
-  masterPkgs = with pkgs-master; [protonvpn-gui zotero];
-  stablePkgs = with pkgs-stable; [];
-in {
-  imports = [./desktop ./applications];
+  masterPkgs = with pkgs-master; [
+    protonvpn-gui
+    zotero
+  ];
+  stablePkgs = with pkgs-stable; [ ];
+in
+{
+  imports = [
+    ./desktop
+    ./applications
+  ];
 
   stylix = {
     cursor = {
@@ -106,9 +112,12 @@ in {
       applications = 0.9;
     };
   };
-  gtk.gtk3.extraConfig = {gtk-decoration-layout = "appmenu:none";};
+  gtk.gtk3.extraConfig = {
+    gtk-decoration-layout = "appmenu:none";
+  };
   home.sessionVariables = {
     GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
+    TERMINAL = "/etc/profiles/per-user/mjs/bin/wezterm";
     MOZ_ENABLE_DBUS = 1;
   };
 

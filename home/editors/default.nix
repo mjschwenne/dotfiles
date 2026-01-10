@@ -1,5 +1,9 @@
-{pkgs, ...}: {
-  imports = [./emacs ./nvim];
+{ pkgs, ... }:
+{
+  imports = [
+    ./emacs
+    ./nvim
+  ];
 
   # System-wide checkers and linters shared between nvim and emacs
   home.packages = with pkgs; [
@@ -9,6 +13,7 @@
     checkmake
     google-java-format
     deadnix
+    nixfmt
     tinymist
     mypy
     black
