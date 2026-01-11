@@ -171,7 +171,7 @@ in
           syncConfig:
           pkgs.writeShellScriptBin "syncnow-${syncConfig.name}" ''
             ${pkgs.rclone}/bin/rclone bisync "${syncConfig.localPath}" "${syncConfig.remote}" \
-              --check-access --resilient ${syncConfig.extraArgs} -v 
+              --check-access --resilient ${syncConfig.extraArgs} -v --filter-from ${filterFile} $@
             ${pkgs.libnotify}/bin/notify-send "Sync complete" "${syncConfig.name} synced successfully"
           ''
         ) cfg.syncDirs
