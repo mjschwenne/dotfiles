@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -52,7 +53,7 @@
       enableGnomeKeyring = true;
       gnupg.enable = true;
     };
-    swaylock = {};
+    swaylock = { };
   };
 
   programs.dconf.enable = true;
@@ -70,7 +71,7 @@
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
     ];
-    config.common.default = ["wlr"];
+    config.common.default = [ "wlr" ];
   };
 
   # File manager
@@ -78,7 +79,10 @@
   services.tumbler.enable = true;
   programs.thunar = {
     enable = true;
-    plugins = with pkgs.xfce; [thunar-archive-plugin thunar-volman];
+    plugins = with pkgs; [
+      thunar-archive-plugin
+      thunar-volman
+    ];
   };
 
   # Bluetooth

@@ -6,7 +6,8 @@
   awww,
   wezterm,
   ...
-}: {
+}:
+{
   home.packages = with pkgs; [
     niri
     glib
@@ -44,77 +45,79 @@
     recursive = true;
   };
 
-  xdg.configFile."niri/config.kdl".text = let
-    outputs =
-      {
-        "terra" =
-          # kdl
-          ''
-            output "DP-3" {
-                mode "3840x2160"
-                scale 1.6
-                transform "normal"
-                position x=0 y=0
-                background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-                focus-at-startup
-            }
+  xdg.configFile."niri/config.kdl".text =
+    let
+      outputs =
+        {
+          "terra" =
+            # kdl
+            ''
+              output "DP-3" {
+                  mode "3840x2160"
+                  scale 1.6
+                  transform "normal"
+                  position x=0 y=0
+                  background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                  backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+                  focus-at-startup
+              }
 
-            output "DP-4" {
-                mode "3840x2160"
-                scale 1.6
-                transform "normal"
-                position x=2400 y=0
-                background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-            }
-          '';
-        "venus" =
-          # kdl
-          ''
-             output "DP-1" {
-                 mode "3840x2160"
-                 scale 1.6
-                 transform "normal"
-                 position x=0 y=0
-                 background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                 backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-                 focus-at-startup
-             }
+              output "DP-4" {
+                  mode "3840x2160"
+                  scale 1.6
+                  transform "normal"
+                  position x=2400 y=0
+                  background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                  backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+              }
+            '';
+          "venus" =
+            # kdl
+            ''
+               output "DP-1" {
+                   mode "3840x2160"
+                   scale 1.6
+                   transform "normal"
+                   position x=0 y=0
+                   background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                   backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+                   focus-at-startup
+               }
 
-             output "eDP-1" {
-                 mode "1920x1200"
-                 scale 1
-                 transform "normal"
-                 position x=2400 y=0
-                 background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                 backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-            }
-          '';
-        "mars" =
-          # kdl
-          ''
-            output "DP-1" {
-                mode "3840x2160"
-                scale 1.6
-                transform "normal"
-                position x=0 y=0
-                background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-                focus-at-startup
-            }
+               output "eDP-1" {
+                   mode "1920x1200"
+                   scale 1
+                   transform "normal"
+                   position x=2400 y=0
+                   background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                   backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+              }
+            '';
+          "mars" =
+            # kdl
+            ''
+              output "DP-1" {
+                  mode "3840x2160"
+                  scale 1.6
+                  transform "normal"
+                  position x=0 y=0
+                  background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                  backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+                  focus-at-startup
+              }
 
-            output "eDP-1" {
-                mode "1920x1080"
-                scale 1
-                transform "normal"
-                position x=2400 y=0
-                background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-            }
-          '';
-      }."${osConfig.networking.hostName}" or "";
-  in
+              output "eDP-1" {
+                  mode "1920x1080"
+                  scale 1
+                  transform "normal"
+                  position x=2400 y=0
+                  background-color "${config.lib.stylix.colors.withHashtag.base00}"
+                  backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+              }
+            '';
+        }
+        ."${osConfig.networking.hostName}" or "";
+    in
     # kdl
     ''
       // This config is in the KDL format: https://kdl.dev
@@ -484,7 +487,9 @@
           Mod+Shift+Slash { show-hotkey-overlay; }
 
           // Mod+Return hotkey-overlay-title="Open a Terminal: wezterm" { spawn "${pkgs.wezterm}/bin/wezterm"; }
-          Mod+Return hotkey-overlay-title="Open a Terminal: wezterm" { spawn "${wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/wezterm"; }
+          Mod+Return hotkey-overlay-title="Open a Terminal: wezterm" { spawn "${
+            wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default
+          }/bin/wezterm"; }
           Mod+A hotkey-overlay-title="Run an Application: rofi" { spawn "${pkgs.rofi}/bin/rofi" "-show" "drun"; }
           Mod+Shift+A hotkey-overlay-title="Switch windows: rofi" { spawn "${pkgs.rofi}/bin/rofi" "-show" "window"; }
           Mod+Z hotkey-overlay-title="Lock the Screen: swaylock" { spawn "~/.config/niri/scripts/lock.fish"; }
@@ -495,7 +500,7 @@
           Mod+P hotkey-overlay-title="Password Manager" { spawn "${pkgs.keepassxc}/bin/keepassxc"; }
           Mod+Tab repeat=false { spawn "gdbus" "call" "--session" "--dest" "io.github.isaksamsten.Niriswitcher" "--object-path" "/io/github/isaksamsten/Niriswitcher" "--method" "io.github.isaksamsten.Niriswitcher.application" ; }
           Mod+Shift+Tab repeat=false { spawn "gdbus" "call" "--session" "--dest" "io.github.isaksamsten.Niriswitcher" "--object-path" "/io/github/isaksamsten/Niriswitcher" "--method" "io.github.isaksamsten.Niriswitcher.application" ; }
-          Mod+F1 hotkey-overlay-title="File Manager" { spawn "${pkgs.xfce.thunar}/bin/thunar"; }
+          Mod+F1 hotkey-overlay-title="File Manager" { spawn "${pkgs.thunar}/bin/thunar"; }
           Mod+F6 hotkey-overlay-title="Calculator" { spawn "${pkgs.qalculate-gtk}/bin/qalculate-gtk"; }
           Mod+F8 hotkey-overlay-title="Email" { spawn "${pkgs.thunderbird}/bin/thunderbird"; }
           // Needed to get the right, spiced, version from spicetify. Not sure how to reference that from nix

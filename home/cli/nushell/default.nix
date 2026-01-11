@@ -2,18 +2,15 @@
   osConfig,
   pkgs,
   ...
-}: {
+}:
+{
   programs.nushell = {
     enable = true;
-    configFile.text =
-      /*
-      nu
-      */
-      ''
-        if $nu.is-interactive {
-            fastfetch -c examples/8.jsonc
-        }
-      '';
+    configFile.text = /* nu */ ''
+      if $nu.is-interactive {
+          fastfetch -c examples/8.jsonc
+      }
+    '';
     environmentVariables = {
       SHELL = "${pkgs.nushell}/bin/nu";
     };
@@ -66,8 +63,8 @@
       polars
       query
       formats
-      highlight
-      desktop_notifications
+      # highlight
+      # desktop_notifications
     ];
   };
 }

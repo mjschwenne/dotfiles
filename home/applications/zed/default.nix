@@ -1,8 +1,15 @@
-{...}: {
+{ pkgs-master, ... }:
+{
   programs.zed-editor = {
     enable = true;
+    package = pkgs-master.zed-editor;
 
-    extensions = ["nix" "make" "fish"];
+    extensions = [
+      "nix"
+      "make"
+      "fish"
+      "java"
+    ];
     userSettings = {
       auto_update = false;
       telemetry.metrics = false;
@@ -27,7 +34,12 @@
         dock = "bottom";
         detect_venv = {
           on = {
-            directories = [".env" "env" ".venv" "venv"];
+            directories = [
+              ".env"
+              "env"
+              ".venv"
+              "venv"
+            ];
             activate_script = "default";
           };
         };
