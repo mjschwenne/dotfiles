@@ -3,21 +3,23 @@
   pkgs,
   foundry,
   ...
-}: {
+}:
+{
   imports = [
     # Include the results of the hardware scan.
     ./mars-hardware.nix
     ./common.nix
     ./graphical.nix
-    ./applications/nextcloud
+    # ./applications/nextcloud
     ./applications/immich
+    ./applications/copyparty
     foundry.nixosModules.foundryvtt
   ];
 
   # Bootloader.
   boot = {
-    extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
-    kernelModules = ["v4l2loopback"];
+    extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+    kernelModules = [ "v4l2loopback" ];
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
@@ -25,8 +27,8 @@
   security.polkit.enable = true;
 
   # Disable suspend when laptop lid is closed
-  services.logind.lidSwitch = "ignore";
-  boot.kernelParams = ["consoleblank=60"];
+  services.logind.settings.Login.HandleLidSwitch = "ignore";
+  boot.kernelParams = [ "consoleblank=60" ];
 
   sops.secrets = {
     "mars/ssh/key".owner = "mjs";
@@ -34,14 +36,14 @@
     "mars/tailscale".owner = "mjs";
     "nextdns/config".owner = "root";
     "caddy/envfile".owner = "caddy";
+    "copyparty/mjs".owner = "copyparty";
   };
 
   hardware.keyboard.qmk.enable = true;
   networking.hostName = "mars"; # Define your hostname.
-  # networking.nameservers = ["127.0.0.1" "::1"];
   services = {
     tailscale = {
-      extraUpFlags = ["--ssh"];
+      extraUpFlags = [ "--ssh" ];
       authKeyFile = config.sops.secrets."mars/tailscale".path;
     };
     foundryvtt = {
@@ -54,7 +56,7 @@
     caddy = {
       enable = true;
       package = pkgs.caddy.withPlugins {
-        plugins = ["github.com/caddy-dns/porkbun@v0.3.1"];
+        plugins = [ "github.com/caddy-dns/porkbun@v0.3.1" ];
         hash = "sha256-PUHu+KPywdJMuPLHPtQhUaw3Cv1pED5XQ1MOzlT/6h4=";
       };
       environmentFile = ''${config.sops.secrets."caddy/envfile".path}'';
@@ -65,38 +67,33 @@
             @blocked not remote_ip 100.64.0.0/10
 
             tls {
-                resolvers 1.1.1.1
                 dns porkbun {
                     api_key {env.PORKBUN_API_KEY}
                     api_secret_key {env.PORKBUN_API_PASSWORD}
                 }
+                propagation_delay -1s
             }
 
             respond @blocked "Unauthorized" 403
         }
       '';
       virtualHosts = {
-        "cloud.schwennesen.org".extraConfig = ''
-          import ts_host
-          reverse_proxy localhost:19000
-        '';
+        # "cloud.schwennesen.org".extraConfig = ''
+        #   import ts_host
+        #   reverse_proxy localhost:19000
+        # '';
         "photos.schwennesen.org".extraConfig = ''
           import ts_host
           reverse_proxy localhost:2283
         '';
-        # "foundry.schwennesen.org".extraConfig = ''
-        #   import ts_host
-        #   reverse_proxy localhost:30000 {
-        #     header_up Host {host}
-        #     header_up X-Real-IP {remote_host}
-        #     header_up X-Forwarded-For {remote_host}
-        #     header_up X-Forwarded-Proto {scheme}
-        #   }
-        # '';
+        "files.schwennesen.org".extraConfig = ''
+          import ts_host
+          reverse_proxy localhost:3923
+        '';
       };
     };
   };
-  systemd.services.caddy.after = ["mjs-tailscale-up.service"];
+  systemd.services.caddy.after = [ "mjs-tailscale-up.service" ];
 
   programs.kdeconnect.enable = true;
   # This value determines the NixOS release from which the default

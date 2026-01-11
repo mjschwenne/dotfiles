@@ -2,7 +2,10 @@
   description = "Matt's Personal NixOS Flake";
 
   nixConfig = {
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
 
     extra-substituters = [
       # Nix community's cache server
@@ -77,14 +80,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Keyboard tool
-    kmonad = {
-      url = "github:kmonad/kmonad?dir=nix";
+    stylix = {
+      url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix = {
-      url = "github:nix-community/stylix";
+    copyparty = {
+      url = "github:9001/copyparty";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -94,19 +96,19 @@
   # parameters in `outputs` are defined in `inputs` and can be referenced by their names.
   # However, `self` is an exception, This special parameter points to the `outputs` itself (self-reference)
   # The `@` syntax here is used to alias the attribute set of the inputs's parameter, making it convenient to use inside the function.
-  outputs = {
-    nixpkgs,
-    home-manager,
-    kmonad,
-    sops-nix,
-    nixos-hardware,
-    stylix,
-    ...
-  } @ inputs: let
-    system = "x86_64-linux";
-    specialArgs =
-      inputs
-      // {
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      sops-nix,
+      nixos-hardware,
+      stylix,
+      copyparty,
+      ...
+    }@inputs:
+    let
+      system = "x86_64-linux";
+      specialArgs = inputs // {
         pkgs-master = import inputs.nixpkgs-master {
           inherit system;
         };
@@ -114,11 +116,9 @@
           inherit system;
         };
       };
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs =
-      inputs
-      // {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      extraSpecialArgs = inputs // {
         pkgs-master = import inputs.nixpkgs-master {
           inherit system;
         };
@@ -126,104 +126,104 @@
           inherit system;
         };
       };
-    overlays = [inputs.emacs-overlay.overlay];
-  in {
-    nixosConfigurations = {
-      "terra" = nixpkgs.lib.nixosSystem {
-        inherit system specialArgs;
-        modules = [
-          sops-nix.nixosModules.sops
-          kmonad.nixosModules.default
-          stylix.nixosModules.stylix
-          ./system/terra.nix
+      overlays = [
+        inputs.emacs-overlay.overlay
+        copyparty.overlays.default
+      ];
+    in
+    {
+      nixosConfigurations = {
+        "terra" = nixpkgs.lib.nixosSystem {
+          inherit system specialArgs;
+          modules = [
+            sops-nix.nixosModules.sops
+            stylix.nixosModules.stylix
+            ./system/terra.nix
 
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
-              users.mjs = import ./home/terra.nix;
-            };
-            nixpkgs.overlays = overlays;
-          }
-        ];
-      };
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                users.mjs = import ./home/terra.nix;
+              };
+              nixpkgs.overlays = overlays;
+            }
+          ];
+        };
 
-      "venus" = nixpkgs.lib.nixosSystem {
-        inherit system specialArgs;
-        modules = [
-          sops-nix.nixosModules.sops
-          kmonad.nixosModules.default
-          stylix.nixosModules.stylix
-          ./system/venus.nix
+        "venus" = nixpkgs.lib.nixosSystem {
+          inherit system specialArgs;
+          modules = [
+            sops-nix.nixosModules.sops
+            stylix.nixosModules.stylix
+            ./system/venus.nix
 
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
-              users.mjs = import ./home/venus.nix;
-            };
-            nixpkgs.overlays = overlays;
-          }
-        ];
-      };
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                users.mjs = import ./home/venus.nix;
+              };
+              nixpkgs.overlays = overlays;
+            }
+          ];
+        };
 
-      "mars" = nixpkgs.lib.nixosSystem {
-        inherit system specialArgs;
-        modules = [
-          sops-nix.nixosModules.sops
-          kmonad.nixosModules.default
-          stylix.nixosModules.stylix
-          ./system/mars.nix
+        "mars" = nixpkgs.lib.nixosSystem {
+          inherit system specialArgs;
+          modules = [
+            sops-nix.nixosModules.sops
+            stylix.nixosModules.stylix
+            copyparty.nixosModules.default
+            ./system/mars.nix
 
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
-              users.mjs = import ./home/mars.nix;
-            };
-            nixpkgs.overlays = overlays;
-          }
-        ];
-      };
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                users.mjs = import ./home/mars.nix;
+              };
+              nixpkgs.overlays = overlays;
+            }
+          ];
+        };
 
-      "luna" = nixpkgs.lib.nixosSystem {
-        inherit system specialArgs;
-        modules = [
-          nixos-hardware.nixosModules.microsoft-surface-pro-intel
-          sops-nix.nixosModules.sops
-          kmonad.nixosModules.default
-          stylix.nixosModules.stylix
-          ./system/luna.nix
+        "luna" = nixpkgs.lib.nixosSystem {
+          inherit system specialArgs;
+          modules = [
+            nixos-hardware.nixosModules.microsoft-surface-pro-intel
+            sops-nix.nixosModules.sops
+            stylix.nixosModules.stylix
+            ./system/luna.nix
 
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
-              users.mjs = import ./home/luna.nix;
-            };
-            nixpkgs.overlays = overlays;
-          }
-        ];
-      };
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                users.mjs = import ./home/luna.nix;
+              };
+              nixpkgs.overlays = overlays;
+            }
+          ];
+        };
 
-      "sol" = nixpkgs.lib.nixosSystem {
-        inherit system specialArgs;
-        modules = [
-          sops-nix.nixosModules.sops
-          kmonad.nixosModules.default
-          stylix.nixosModules.stylix
-          ./system/sol.nix
+        "sol" = nixpkgs.lib.nixosSystem {
+          inherit system specialArgs;
+          modules = [
+            sops-nix.nixosModules.sops
+            stylix.nixosModules.stylix
+            ./system/sol.nix
 
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              inherit useGlobalPkgs useUserPackages extraSpecialArgs;
-              users.mjs = import ./home/sol.nix;
-            };
-            nixpkgs.overlays = overlays;
-          }
-        ];
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                users.mjs = import ./home/sol.nix;
+              };
+              nixpkgs.overlays = overlays;
+            }
+          ];
+        };
       };
     };
-  };
 }

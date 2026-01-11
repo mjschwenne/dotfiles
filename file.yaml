@@ -3,6 +3,8 @@ caddy:
 nextcloud:
     adminuser: ENC[AES256_GCM,data:0P59GL4=,iv:9Bid4ofapY4Lzt3Ucv8kypOXJWVXCCOETqtbQFwL9sk=,tag:1QL59sVy0ZPT++t9urqJQw==,type:str]
     adminpass: ENC[AES256_GCM,data:h/CDmfAC1dU3MJ0c6k7+OfkXE9g=,iv:txTxewgY7GYUi4VzpHSjZfYQHMDd+QxB+OOXUIE+ZQ8=,tag:TWopSnHyg7ATGlIXlqnXPA==,type:str]
+copyparty:
+    mjs: ENC[AES256_GCM,data:7IgCiw4Rm8+nB+uxQkQBXXxb5EA=,iv:feescvr6QDAz1mU9dX2y7troiyC4Zg13kw/mUQ1ejQA=,tag:gl5E1uMMykdX69EXZCDOWw==,type:str]
 nextdns:
     config: ENC[AES256_GCM,data:HceEtxlatr7JRra6wjKp,iv:AdP+zwbLEgRZKz1nKrK+EGenOKgHo1WlAZ+aHPVsxD0=,tag:K2sFBdN9ZIMD9GazcWtv1g==,type:str]
     proton: ENC[AES256_GCM,data:5O6ML+ofD6s145aQ9WJgjjJ8ATUKXVjlpZ3k8XROhTESg2G4rIl2wetDx8NtqtmQFFapDxQnQvn+vWiZz64L1R3+0gPfILkcB++WDjQu17sgyMYdGikf1HbKV98cosK2w0Yes54XReLIeRwbB2d4+D6KdTSk2+oaBDyaS8dcXV0S7eMfP9ftHUdwwwV3Po0/JQ9qQBr+FxKOgGOeDA==,iv:1hmre3KT4WxA23cen5y7UkHy23XJukQK0M8YreGYBwg=,tag:UDEdu+W9t6GYvgtQLoy45w==,type:str]
@@ -72,7 +74,7 @@ sops:
             MEJGaUpCUmJOZEJ4SENJQkZlZyt5L0kK3qt7lQJlO3Dz6zX139KIcPcgeaSDeUos
             a72Fy9MMegoFB40rP9W74LszWEwIw1iugqb+TTIzbYQft8qTcUkqmw==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-09-19T01:49:09Z"
-    mac: ENC[AES256_GCM,data:YX0TjWQmbjItDAzo3AFJ7tBI7NnGkc7xlL6+3lusHX+VvJ4lIwAzqILipmuwbcbxMpavmI217kcWUXb86mk7VNHhLtYz8vm7GD+aw7BfDcA3V6+rClfHlro/j5wUq+70d9aRPTEJhozYJZIwQ89XiIG1tyWykBZwhSqv2rKlkYY=,iv:AlRnEzvpG8r7gZ09UDpSdu1d1kSKIwu0kgN1meHVMIg=,tag:E8v1CqQPUOszYXE4HMma3Q==,type:str]
+    lastmodified: "2026-01-11T00:18:00Z"
+    mac: ENC[AES256_GCM,data:eMr913vDgO3UIleQ5FMSpdlVa9h3LMC2DEP/1+xyi0hCJ35nlB/zgZ2CN91WLrm7qk9SaSEy6o7im/jKHP3nQ4766usBm2FHijhMgkncOZ3dPxOxzRc3/cvpUS619/TcLR8tg2cTzXgoF+M5dvFTH8jwxiYiDtDLJEjCl66KodQ=,iv:0EKzlYhucqZtaIzSWSHSh8h2snNQghaDSDfWMxPNZyk=,tag:FrZ6nk/cSL1kDVW2iX1Hzw==,type:str]
     unencrypted_suffix: _unencrypted
-    version: 3.10.2
+    version: 3.11.0
