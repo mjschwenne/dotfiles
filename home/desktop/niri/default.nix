@@ -350,7 +350,6 @@
       spawn-at-startup "${pkgs.keepassxc}/bin/keepassxc"
       spawn-at-startup "${pkgs.protonmail-bridge}/bin/protonmail-bridge" "--noninteractive"
       spawn-at-startup "${pkgs.trayscale}/bin/trayscale" "--hide-window"
-      spawn-at-startup "${pkgs.nextcloud-client}/bin/nextcloud" "--background"
       spawn-at-startup "~/.config/niri/scripts/wallpaper.fish" "interval" "300"
       spawn-at-startup "${pkgs.niriswitcher}/bin/niriswitcher"
       spawn-at-startup "${pkgs.swayosd}/bin/swayosd-server"

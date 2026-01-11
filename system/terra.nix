@@ -4,7 +4,8 @@
   pkgs,
   nixpkgs,
   ...
-}: {
+}:
+{
   imports = [
     # Include the results of the hardware scan
     ./terra-hardware.nix
@@ -13,15 +14,15 @@
   ];
 
   boot = {
-    extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
-    kernelModules = ["v4l2loopback"];
+    extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+    kernelModules = [ "v4l2loopback" ];
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
   };
 
   security.polkit.enable = true;
-  security.lsm = lib.mkForce [];
+  security.lsm = lib.mkForce [ ];
 
   sops.secrets = {
     "terra/ssh/key".owner = "mjs";
@@ -50,9 +51,12 @@
             "node.description" = "All GPU Sinks";
             "combine.latency-compensate" = false;
             "combine.props" = {
-              "audio.position" = ["FL" "FR"];
+              "audio.position" = [
+                "FL"
+                "FR"
+              ];
             };
-            "stream.props" = {};
+            "stream.props" = { };
             "stream.rules" = [
               {
                 matches = [
@@ -62,7 +66,7 @@
                   }
                 ];
                 actions = {
-                  create-stream = {};
+                  create-stream = { };
                 };
               }
             ];
@@ -84,8 +88,8 @@
   programs.steam.enable = true;
 
   # android stuff for supernote
-  programs.adb.enable = true;
-  users.users.mjs.extraGroups = ["adbusers"];
+  environment.systemPackages = [ pkgs.android-tools ];
+  users.users.mjs.extraGroups = [ "adbusers" ];
   services.udev.packages = [
     pkgs.steam-devices-udev-rules
   ];
