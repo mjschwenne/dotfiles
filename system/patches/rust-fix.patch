@@ -1,0 +1,11 @@
+--- linux-6.15.9.orig/scripts/generate_rust_target.rs	2025-08-01 10:51:29.000000000 +0200
++++ linux-6.15.9/scripts/generate_rust_target.rs	2025-11-29 12:30:54.792372738 +0100
+@@ -225,7 +225,7 @@
+         ts.push("features", features);
+         ts.push("llvm-target", "x86_64-linux-gnu");
+         ts.push("supported-sanitizers", ["kcfi", "kernel-address"]);
+-        ts.push("target-pointer-width", "64");
++        ts.push("target-pointer-width", 64);
+     } else if cfg.has("X86_32") {
+         // This only works on UML, as i386 otherwise needs regparm support in rustc
+         if !cfg.has("UML") {

@@ -10,6 +10,14 @@
     ./graphical.nix
   ];
 
+  hardware.microsoft-surface.kernelVersion = "stable";
+  boot.kernelPatches = [
+    {
+      name = "rust-1.91-fix";
+      patch = ./patches/rust-fix.patch;
+    }
+  ];
+
   networking.hostName = "luna"; # Define your hostname.
 
   users.users.mjs.extraGroups = ["surface-control"];
