@@ -1901,8 +1901,8 @@ used if TAG-LIST is empty."
               :override #'mjs/org-roam-complete-everywhere))
 
 
-(use-package vulpea
-  :hook (org-roam-db-autosync-mode . vulpea-db-autosync-enable))
+;; (use-package vulpea
+;;   :hook (org-roam-db-autosync-mode . vulpea-db-autosync-mode))
 
 (use-package org-cliplink
   :commands mjs/clean-org-cliplink

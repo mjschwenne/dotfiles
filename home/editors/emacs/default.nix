@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-} : let
+}:
+let
   emacs = pkgs.emacsWithPackagesFromUsePackage {
     config = ./mjs/init.el;
 
@@ -37,7 +38,8 @@
     # which defaults `:tangle` to `yes`.
     alwaysTangle = true;
 
-    override = epkgs:
+    override =
+      epkgs:
       epkgs
       // {
         org-timeblock = pkgs.callPackage ./emacs-pkgs/org-timeblock.nix {
@@ -59,7 +61,8 @@
       };
 
     # Optionally provide extra packages not in the configuration file.
-    extraEmacsPackages = epkgs:
+    extraEmacsPackages =
+      epkgs:
       [
         epkgs.org-modern-indent
         epkgs.autothemer
@@ -70,7 +73,8 @@
       ]
       ++ (config.programs.emacs.extraPackages epkgs);
   };
-in {
+in
+{
   programs.emacs = {
     enable = true;
     package = emacs;
