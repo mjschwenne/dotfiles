@@ -1249,19 +1249,8 @@ reversion. This resizes the popup to match its contents."
                     "#+author: %(user-full-name)\n\n%?")
            :jump-to-captured t
            :immediate-finish t)
-          ("C" "New Contact" entry
-           (file+headline ,(concat org-directory "contacts.org") "Other")
-           ,(concat
-             "** %(org-contacts-template-name)\n"
-             ":PROPERTIES:\n"
-             ":ADDRESS: %^{Address?}\n"
-             ":BIRTHDAY: %^{yyyy-mm-dd}\n"
-             ":EMAIL: %(org-contacts-template-email)\n"
-             ":NOTE: %?\n"
-             ":END:")
-           :empty-lines 1)
           ("a" "Daily Log (AM)" entry
-           (file+olp+datetree ,(format-time-string "classes/log/%Y/%m-%B-log.org"))
+           (file+olp+datetree ,(format-time-string "projects/log/%Y/%m-%B-log.org"))
            ,(concat "* Planning\n\n"
                     "- [ ] Record Habits\n"
                     "- [ ] %?\n")
@@ -1270,21 +1259,28 @@ reversion. This resizes the popup to match its contents."
            :jump-to-captured t
            :immediate-finish t)
           ("p" "Daily Log (PM)" entry
-           (file+olp+datetree ,(format-time-string "classes/log/%Y/%m-%B-log.org"))
+           (file+olp+datetree ,(format-time-string "projects/log/%Y/%m-%B-log.org"))
            ,(concat "* Review\n\n"
                     "- [ ] Update completed tasks\n\n%?")
            :empty-lines 1
            :tree-type week
            :jump-to-captured t
            :immediate-finish t)
+          ("d" "Delian Tomb Session" entry
+           (file "ttrpg/games/delian-tomb/sessions.org")
+           "* Session %<%Y-%m-%d>\n\n%?"
+           :empty-lines 1
+           :prepend t
+           :jump-to-captured t
+           :immediate-finish t)
           ("e" "Etera Session" entry
-           (file "freetime/ttrpg/games/etera/notes.org")
+           (file "ttrpg/games/etera/notes.org")
            "* Session %<%Y-%m-%d>\n\n%?"
            :empty-lines 1
            :jump-to-captured t
            :immediate-finish t)
           ("g" "Graves Session" entry
-           (file "freetime/ttrpg/games/graves-and-groves/sessions.org")
+           (file "ttrpg/games/graves-and-groves/sessions.org")
            "* Session %<%Y-%m-%d>\n\n%?"
            :empty-lines 1
            :prepend t
@@ -1303,13 +1299,7 @@ reversion. This resizes the popup to match its contents."
           ("n" "Meeting Notes" entry
            (file "agenda/notes.org")
            ,(concat "* Notes (%a)\n"
-                    "/Entered on/ %U\n\n%?"))
-          ("o" "Obscured Realms Session" entry
-           (file "freetime/ttrpg/games/obscured-realms/sessions.org")
-           "* Session %<%Y-%m-%d>\n\n%?"
-           :empty-lines 1
-           :jump-to-captured t
-           :immediate-finish t)))
+                    "/Entered on/ %U\n\n%?"))))
 
   (org-babel-do-load-languages
    'org-babel-load-languages
