@@ -44,7 +44,7 @@
   hardware.keyboard.zsa.enable = true;
 
   # android stuff for supernote
-  programs.adb.enable = true;
+  environment.systemPackages = [ pkgs.android-tools ];
   users.users.mjs.extraGroups = ["adbusers"];
 
   # fingerprint reader

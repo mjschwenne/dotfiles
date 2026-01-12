@@ -30,7 +30,6 @@ let
     - *.cb2tex-auto/
     - .direnv/**
     - .envrc
-    - RCLONE_TEST
   '';
   workDirs = [
     {
