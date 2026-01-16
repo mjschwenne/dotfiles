@@ -36,49 +36,49 @@ let
       name = "agenda";
       localPath = "$HOME/Documents/agenda";
       remote = "copyparty:agenda";
-      interval = "15m";
-      mode = "timer";
+      calendar = "*:0/30";
+      mode = "realtime";
     }
     {
       name = "archive";
       localPath = "$HOME/Documents/archive";
       remote = "copyparty:archive";
-      interval = "12h";
+      calendar = "0/8:00";
       mode = "timer";
     }
     {
       name = "classes";
       localPath = "$HOME/Documents/classes";
       remote = "copyparty:classes";
-      interval = "30m";
+      calendar = "*:0/30";
       mode = "realtime";
     }
     {
       name = "kdb";
       localPath = "$HOME/kdb";
       remote = "copyparty:kdb";
-      interval = "4h";
+      calendar = "0/4:00";
       mode = "realtime";
     }
     {
       name = "projects";
       localPath = "$HOME/Documents/projects";
       remote = "copyparty:projects";
-      interval = "30m";
+      calendar = "*:0/30";
       mode = "timer";
     }
     {
       name = "supernote";
       localPath = "$HOME/Documents/supernote";
       remote = "copyparty:supernote";
-      interval = "1h";
+      calendar = "0/8:00";
       mode = "timer";
     }
     {
       name = "zotero";
       localPath = "$HOME/Zotero/storage";
       remote = "copyparty:zotero";
-      interval = "1h";
+      calendar = "0/1:00";
       mode = "timer";
     }
   ];
@@ -87,14 +87,14 @@ let
       name = "personal";
       localPath = "$HOME/Documents/personal";
       remote = "copyparty:personal";
-      interval = "6h";
+      calendar = "0/6:00";
       mode = "timer";
     }
     {
       name = "ttrpg";
       localPath = "$HOME/Documents/ttrpg";
       remote = "copyparty:ttrpg";
-      interval = "12h";
+      calendar = "0/12:00";
       mode = "timer";
     }
   ];

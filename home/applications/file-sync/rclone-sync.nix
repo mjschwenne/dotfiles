@@ -35,7 +35,7 @@ let
           acc
       ) 0 parts;
     in
-    builtins.toString totalSeconds;
+    toString totalSeconds;
 
   cfg = config.services.rclone-sync;
 
@@ -46,9 +46,28 @@ let
     pkgs.writeShellScript "rclone-sync-${syncConfig.name}" ''
       LOCAL_DIR="${syncConfig.localPath}"
       REMOTE="${syncConfig.remote}"
+      LOCKFILE="/tmp/rclone-sync-${syncConfig.name}.lock"
+
+      WAIT_COUNT=0 
+      while [ -f "$LOCKFILE" ] && [ $WAIT_COUNT -lt 30 ]; do 
+          sleep 1 
+          WAIT_COUNT=$((WAIT_COUNT + 1))
+      done
+
+      if [ -f "$LOCKFILE" ]; then 
+          echo "Another sync is in progress, skipping..." >&2 
+          exit 1 
+      fi 
+
+      # Create lock file to signal potential realtime watcher
+      touch "$LOCKFILE"
 
       ${pkgs.rclone}/bin/rclone bisync "$LOCAL_DIR" "$REMOTE" \
         --check-access --resilient --filter-from ${filterFile} ${syncConfig.extraArgs}
+
+      # Keep lock for a bit to ignore file change events from this sync 
+      sleep 5 
+      rm -r "$LOCKFILE"
     '';
 
   mkRealtimeSyncScript =
@@ -56,22 +75,38 @@ let
     pkgs.writeShellScript "rclone-watch-${syncConfig.name}" ''
       WATCH_DIR="${syncConfig.localPath}"
       REMOTE="${syncConfig.remote}"
+      LOCKFILE="/tmp/rclone-sync-${syncConfig.name}.lock" 
 
       do_sync() {
+        WAIT_COUNT=0 
+        while [ -f "$LOCKFILE" ] && [ $WAIT_COUNT -lt 30 ]; do 
+            sleep 1 
+            WAIT_COUNT=$((WAIT_COUNT + 1))
+        done
+
+        if [ -f "$LOCKFILE" ]; then 
+            echo "Another sync is in progress, skipping..." >&2 
+            exit 1 
+        fi 
+
+        # Create lock file
+        touch "$LOCKFILE"
+
         ${pkgs.rclone}/bin/rclone bisync "$WATCH_DIR" "$REMOTE" \
           --check-access --resilient \
           --filter-from ${filterFile} \
           ${syncConfig.extraArgs}
+
+        # Keep lock for a bit to ignore file change events from this sync 
+        sleep 5 
+        rm -r "$LOCKFILE"
       }
 
+      do_sync
+
       # Watch for local changes with timeout for server changes
-      while true; do
-        if ${pkgs.inotify-tools}/bin/inotifywait -r -t ${convertToSeconds syncConfig.interval} \
-             -e modify,create,delete,move "$WATCH_DIR" 2>/dev/null; then
-          # Local change detected, debounce
-          sleep ${toString syncConfig.debounceSeconds}
-        fi
-        # Sync on either local change or timeout (server check)
+      while ${pkgs.inotify-tools}/bin/inotifywait -r -e modify,create,delete,move "$WATCH_DIR" 2>/dev/null; do
+        sleep ${toString syncConfig.debounceSeconds}
         do_sync
       done
     '';
@@ -111,11 +146,18 @@ in
               description = "Sync mode: realtime (inotify) or timer (periodic)";
             };
 
-            interval = mkOption {
+            calendar = mkOption {
               type = types.str;
-              default = "1h";
-              description = "Sync interval for timer mode (systemd time format using single letter time units)";
-              example = "15m";
+              default = "hourly";
+              description = ''
+                Calendar specification for timer mode (systemd.time format).
+                Examples:
+                  "hourly" - every hour
+                  "*:0/15" - every 15 minutes
+                  "00:00" - daily at midnight
+                  "Mon,Wed,Fri 09:00" - specific days
+              '';
+              example = "*:0/30";
             };
 
             debounceSeconds = mkOption {
@@ -178,34 +220,45 @@ in
       ));
 
     # Create systemd services for each sync directory
-    systemd.user.services = listToAttrs (
-      map (
-        syncConfig:
-        nameValuePair "rclone-sync-${syncConfig.name}" {
-          Unit = {
-            Description = "Rclone sync for ${syncConfig.name}";
-            After = [ "network-online.target" ];
-          };
+    systemd.user.services =
+      # Oneshot services for each folder being synced
+      listToAttrs (
+        map (
+          syncConfig:
+          nameValuePair "rclone-sync-${syncConfig.name}" {
+            Unit = {
+              Description = "Rclone sync for ${syncConfig.name}";
+              After = [ "network-online.target" ];
+            };
 
-          Service =
-            if syncConfig.mode == "realtime" then
-              {
-                Type = "simple";
-                ExecStart = "${mkRealtimeSyncScript syncConfig}";
-                Restart = "always";
-                RestartSec = 10;
-              }
-            else
-              {
-                Type = "oneshot";
-                ExecStart = "${mkSyncScript syncConfig}";
-              };
-          Install = mkIf (syncConfig.mode == "realtime") {
-            WantedBy = [ "default.target" ];
-          };
-        }
-      ) cfg.syncDirs
-    );
+            Service = {
+              Type = "oneshot";
+              ExecStart = "${mkSyncScript syncConfig}";
+            };
+          }
+        ) cfg.syncDirs
+      )
+      # Long-running watcher for realtime folders
+      // listToAttrs (
+        map (
+          syncConfig:
+          nameValuePair "rclone-sync-${syncConfig.name}-watch" {
+            Unit = {
+              Description = "Rclone realtime sync for ${syncConfig.name}";
+              After = [ "network-online.target" ];
+            };
+
+            Service = {
+              Type = "simple";
+              ExecStart = "${mkRealtimeSyncScript syncConfig}";
+              Restart = "always";
+              RestartSec = 10;
+            };
+
+            Install.WantedBy = [ "default.target" ];
+          }
+        ) (filter (s: s.mode == "realtime") cfg.syncDirs)
+      );
 
     # Create systemd timers for timer-mode syncs
     systemd.user.timers = listToAttrs (
@@ -215,14 +268,15 @@ in
           Unit.Description = "Timer for rclone sync ${syncConfig.name}";
 
           Timer = {
-            OnBootSec = "5min";
-            OnUnitActiveSec = syncConfig.interval;
+            Unit = "rclone-sync-${syncConfig.name}.service";
+            OnCalendar = if syncConfig.mode == "realtime" then "*:0/5" else syncConfig.calendar;
             Persistent = true;
+            RandomizedDelaySec = "1min";
           };
 
           Install.WantedBy = [ "timers.target" ];
         }
-      ) (filter (s: s.mode == "timer") cfg.syncDirs)
+      ) cfg.syncDirs
     );
   };
 }
