@@ -1885,10 +1885,11 @@ used if TAG-LIST is empty."
                                mjs/org-context-plist)))
       (mjs/org-roam-templates-list :all)))
 
-  (advice-add #'org-roam-complete-link-at-point
-              :override #'mjs/org-roam-complete-link-at-point)
-  (advice-add #'org-roam-complete-everywhere
-              :override #'mjs/org-roam-complete-everywhere))
+  ;; (advice-add #'org-roam-complete-link-at-point
+  ;;             :override #'mjs/org-roam-complete-link-at-point)
+  ;; (advice-add #'org-roam-complete-everywhere
+  ;;             :override #'mjs/org-roam-complete-everywhere)
+  )
 
 
 ;; (use-package vulpea
