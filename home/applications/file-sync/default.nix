@@ -4,6 +4,7 @@ let
   enable = lib.lists.any (x: x == osConfig.networking.hostName) [
     "terra"
     "venus"
+    "luna"
   ];
   filterList = ''
     - *venv*/**
@@ -30,6 +31,8 @@ let
     - *.cb2tex-auto/
     - .direnv/**
     - .envrc
+    - .zotero-*
+    - *.{db,db-shm,db-wal}
   '';
   workDirs = [
     {
