@@ -2804,7 +2804,7 @@ Won't forward the buffer to chained formatters if successful."
   :commands (vterm-mode vterm vterm-other-window)
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                       hscroll-margin 0)))
+                                  hscroll-margin 0)))
   :hook (vterm-mode . (lambda () (hl-line-mode -1)))
   :general
   (mjs-leader-def :keymap 'override
@@ -2816,7 +2816,6 @@ Won't forward the buffer to chained formatters if successful."
 
 ;; Packages:
 ;; 
-;; projectile
 ;; dirvish + diredfl
 ;; quickrun
 ;; magit
@@ -2839,7 +2838,5 @@ Won't forward the buffer to chained formatters if successful."
 ;; snippets
 ;; electric
 ;; undo -> vundo, undo-fu-session, undo-fu
-;; pdf
-;; tree sitter
 
 ;; magit :: https://github.com/doomemacs/doomemacs/blob/2b4f762b1e6a366cfcd9ffb3e17f127c64df2657/modules/ui/vc-gutter/config.el#L130

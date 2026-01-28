@@ -1,10 +1,20 @@
-{spicetify-nix, ...}: {
-  imports = [spicetify-nix.homeManagerModules.default];
+{ spicetify-nix, pkgs, ... }:
+{
+  imports = [ spicetify-nix.homeManagerModules.default ];
 
-  programs.spicetify = {
-    enable = true;
-    windowManagerPatch = false;
-  };
+  programs.spicetify =
+    let
+      spicePkgs = spicetify-nix.legacyPackages.${pkgs.stdenv.system};
+    in
+    {
+      enable = true;
+      windowManagerPatch = false;
+      enabledExtensions = with spicePkgs.extensions; [
+        songStats
+        adblock
+        aiBandBlocker
+      ];
+    };
 
   xdg.desktopEntries = {
     spotify = {
@@ -12,7 +22,12 @@
       genericName = "Music Player";
       exec = "spotify %U";
       terminal = false;
-      categories = ["Audio" "Music" "Player" "AudioVideo"];
+      categories = [
+        "Audio"
+        "Music"
+        "Player"
+        "AudioVideo"
+      ];
       icon = "spotify-client";
     };
   };
