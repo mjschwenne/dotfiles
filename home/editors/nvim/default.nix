@@ -4,8 +4,9 @@
   lib,
   stylix,
   ...
-}: {
-  imports = [nvf.homeManagerModules.default];
+}:
+{
+  imports = [ nvf.homeManagerModules.default ];
 
   programs.nvf = {
     enable = true;
@@ -29,45 +30,45 @@
         {
           enable = true;
           desc = "Highlight text as it is yanked";
-          event = ["TextYankPost"];
-          pattern = ["*"];
+          event = [ "TextYankPost" ];
+          pattern = [ "*" ];
           callback =
             lib.generators.mkLuaInline # lua
-            
-            ''
-              function ()
-                  vim.highlight.on_yank({higroup="Visual", timeout=200})
-              end
-            '';
+
+              ''
+                function ()
+                    vim.highlight.on_yank({higroup="Visual", timeout=200})
+                end
+              '';
         }
         {
           enable = true;
           desc = "Show LSP diagnostics in float";
-          event = ["CursorHold"];
-          pattern = ["*"];
+          event = [ "CursorHold" ];
+          pattern = [ "*" ];
           callback =
             lib.generators.mkLuaInline # lua
-            
-            ''
-              function ()
-                  for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
-                      if vim.api.nvim_win_get_config(winid).zindex then
-                        return
-                      end
-                  end
-                  vim.diagnostic.open_float({
-                      scope = "cursor",
-                      focusable = false,
-                      close_events = {
-                          "CursorMoved",
-                          "CursorMovedI",
-                          "BufHidden",
-                          "InsertCharPre",
-                          "WinLeave",
-                      },
-                  })
-              end
-            '';
+
+              ''
+                function ()
+                    for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+                        if vim.api.nvim_win_get_config(winid).zindex then
+                          return
+                        end
+                    end
+                    vim.diagnostic.open_float({
+                        scope = "cursor",
+                        focusable = false,
+                        close_events = {
+                            "CursorMoved",
+                            "CursorMovedI",
+                            "BufHidden",
+                            "InsertCharPre",
+                            "WinLeave",
+                        },
+                    })
+                end
+              '';
         }
       ];
       autopairs.nvim-autopairs.enable = true;
@@ -97,14 +98,14 @@
         enable = true;
         config = {
           signs.text =
-            lib.generators.mkLuaInline #lua
-            
-            ''
-              {
-                [vim.diagnostic.severity.ERROR] = "󰅚 ",
-                [vim.diagnostic.severity.WARN] = "󰀪 ",
-              }
-            '';
+            lib.generators.mkLuaInline # lua
+
+              ''
+                {
+                  [vim.diagnostic.severity.ERROR] = "󰅚 ",
+                  [vim.diagnostic.severity.WARN] = "󰀪 ",
+                }
+              '';
           float.border = "rounded";
         };
       };
@@ -136,15 +137,19 @@
 
         go.enable = true;
         haskell.enable = true;
-        python.enable = true;
+        java = {
+          enable = true;
+          lsp.enable = true;
+        };
         markdown.enable = true;
         nix = {
           enable = true;
-          lsp.servers = ["nixd"];
+          lsp.servers = [ "nixd" ];
         };
         ocaml = {
           enable = true;
         };
+        python.enable = true;
         rust = {
           enable = true;
           extensions.crates-nvim = {
@@ -242,7 +247,10 @@
           enable = true;
           setupOpts.custom_colorcolumn = {
             nix = "110";
-            go = ["90" "130"];
+            go = [
+              "90"
+              "130"
+            ];
           };
         };
         fastaction.enable = true;

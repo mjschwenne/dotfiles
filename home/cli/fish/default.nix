@@ -1,4 +1,5 @@
-{osConfig, ...}: {
+{ osConfig, ... }:
+{
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
@@ -7,8 +8,7 @@
     shellAliases = {
       vi = "nvim";
       dup-files = "find . -type f -printf '%p -> %f\\n' | sort -k2 | uniq -f1 --all-repeated=separate";
-      flatten = ''
-        find */ -type f -exec sh -c 'file=''${1#./}; mv "$file" "$(basename $file)"' _ '{}' \; ; find */ -depth -type d -exec rmdir '{}' \;'';
+      flatten = ''find */ -type f -exec sh -c 'file=''${1#./}; mv "$file" "$(basename $file)"' _ '{}' \; ; find */ -depth -type d -exec rmdir '{}' \;'';
       mjs-bulk-rename = ''find . -depth -exec fish -c 'mjs-rename "{}"' \;'';
       # icat = "kitty +kitten icat";
       icat = "wezterm imgcat";
