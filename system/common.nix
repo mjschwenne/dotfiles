@@ -3,7 +3,8 @@
   pkgs,
   nixpkgs,
   ...
-} @ inputs: {
+}@inputs:
+{
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -11,8 +12,14 @@
     channel.enable = false;
     registry.nixpkgs.flake = inputs.nixpkgs;
     settings = {
-      experimental-features = ["nix-command" "flakes"];
-      trusted-users = ["root" "mjs"];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        "mjs"
+      ];
       trusted-public-keys = [
         "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
         "sol1:FnmeWYY2OGCZpx7+ZKBoOui6UrrUqASpap+FYHXMPsc="
@@ -55,7 +62,16 @@
   users.users.mjs = {
     isNormalUser = true;
     description = "Matt Schwennesen";
-    extraGroups = ["docker" "networkmanager" "wheel" "syncthing" "video" "input" "uinput" "audio"];
+    extraGroups = [
+      "docker"
+      "networkmanager"
+      "wheel"
+      "syncthing"
+      "video"
+      "input"
+      "uinput"
+      "audio"
+    ];
     shell = pkgs.fish;
   };
 
@@ -85,13 +101,16 @@
     enable = true;
     # For use with Mullvad VPN exit node
     useRoutingFeatures = "client";
-    extraUpFlags = ["--exit-node=us-den-wg-203.mullvad.ts.net"];
+    extraUpFlags = [ "--exit-node=us-den-wg-203.mullvad.ts.net" ];
   };
 
   systemd.services.mjs-tailscale-up = {
     enable = true;
-    after = ["tailscaled.service" "sys-subsystem-net-devices-tailscale0.device"];
-    wantedBy = ["multi-user.target"];
+    after = [
+      "tailscaled.service"
+      "sys-subsystem-net-devices-tailscale0.device"
+    ];
+    wantedBy = [ "multi-user.target" ];
     serviceConfig.Type = "oneshot";
     script = ''
       timeout 60s ${pkgs.bash}/bin/bash -c "until ${pkgs.tailscale}/bin/tailscale status --peers=false; do sleep 1; done"
@@ -150,19 +169,20 @@
     enchant
     hunspell
     hunspellDicts.en_US-large
-    (aspellWithDicts (dicts:
-      with dicts; [
+    (aspellWithDicts (
+      dicts: with dicts; [
         en
         en-computers
         en-science
-      ]))
+      ]
+    ))
 
     # Security
     sops
     gnupg
     age
 
-    # nix 
+    # nix
     nix-update
   ];
 

@@ -11,34 +11,8 @@
   home.packages = with pkgs; [
     niri
     glib
-    swayosd
     xwayland-satellite
   ];
-
-  programs.niriswitcher = {
-    enable = true;
-    settings = {
-      keys = {
-        modifier = "Super";
-      };
-      center_on_focus = true;
-    };
-    style =
-      # css
-      ''
-        :root {
-          --bg-color: ${config.lib.stylix.colors.withHashtag.base01};
-          --label-color: ${config.lib.stylix.colors.withHashtag.base05};
-          --alternate-label-color: ${config.lib.stylix.colors.withHashtag.base06};
-          --dim-label-color: ${config.lib.stylix.colors.withHashtag.base06};
-          --border-color: ${config.lib.stylix.colors.withHashtag.base00};
-          --highlight-color: ${config.lib.stylix.colors.withHashtag.base02};
-          --urgency-color: ${config.lib.stylix.colors.withHashtag.base08};
-          --indicator-focus-color: ${config.lib.stylix.colors.withHashtag.base0C};
-          --indicator-color: ${config.lib.stylix.colors.withHashtag.base02};
-        }
-      '';
-  };
 
   xdg.configFile."niri/scripts" = {
     source = ./scripts;
@@ -349,10 +323,7 @@
       spawn-at-startup "${pkgs.networkmanagerapplet}/bin/nm-applet"
       spawn-at-startup "${pkgs.keepassxc}/bin/keepassxc"
       spawn-at-startup "${pkgs.protonmail-bridge}/bin/protonmail-bridge" "--noninteractive"
-      spawn-at-startup "${pkgs.trayscale}/bin/trayscale" "--hide-window"
       spawn-at-startup "~/.config/niri/scripts/wallpaper.fish" "interval" "300"
-      spawn-at-startup "${pkgs.niriswitcher}/bin/niriswitcher"
-      spawn-at-startup "${pkgs.swayosd}/bin/swayosd-server"
 
       // Uncomment this line to ask the clients to omit their client-side decorations if possible.
       // If the client will specifically ask for CSD, the request will be honored.
@@ -374,15 +345,73 @@
       // You can also set this to null to disable saving screenshots to disk.
       // screenshot-path null
 
-      // Animation settings.
-      // The wiki explains how to configure individual animations:
-      // https://github.com/YaLTeR/niri/wiki/Configuration:-Animations
-      animations {
-          // Uncomment to turn off all animations.
-          // off
+      // Glitch Effect - Chromatic aberration with CRT scanlines
+      // Windows open/close with RGB channel splitting and scanline overlay
+      //
+      // Adjustable parameters:
+      // - split (0.04): RGB split intensity - higher = more separation
+      // - scanline (0.08): Scanline visibility - higher = more prominent
+      // - uv.y * 400.0: Scanline density - higher = more lines
 
-          // Slow down all animations by this factor. Values below 1 speed them up instead.
-          // slowdown 3.0
+      animations {
+          window-open {
+              duration-ms 400
+              curve "linear"
+              custom-shader r"
+                  vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+                      if (coords_geo.x < 0.0 || coords_geo.x > 1.0 || coords_geo.y < 0.0 || coords_geo.y > 1.0) return vec4(0.0);
+                      float progress = niri_clamped_progress;
+                      float glitch = 1.0 - progress;
+                      vec2 uv = coords_geo.xy;
+
+                      // RGB channel splitting - channels converge as window opens
+                      float split = glitch * 0.04;
+                      vec3 cr = niri_geo_to_tex * vec3(uv + vec2(split, 0.0), 1.0);
+                      vec3 cg = niri_geo_to_tex * vec3(uv, 1.0);
+                      vec3 cb = niri_geo_to_tex * vec3(uv - vec2(split, 0.0), 1.0);
+
+                      float r = texture2D(niri_tex, cr.st).r;
+                      float g = texture2D(niri_tex, cg.st).g;
+                      float b = texture2D(niri_tex, cb.st).b;
+                      float a = texture2D(niri_tex, cg.st).a;
+                      vec3 color = vec3(r, g, b);
+
+                      // CRT scanline effect
+                      float scanline = 1.0 - 0.08 + 0.08 * sin(uv.y * 400.0);
+
+                      return vec4(color * scanline, a * progress);
+                  }
+              "
+          }
+
+          window-close {
+              duration-ms 600
+              curve "linear"
+              custom-shader r"
+                  vec4 close_color(vec3 coords_geo, vec3 size_geo) {
+                      if (coords_geo.x < 0.0 || coords_geo.x > 1.0 || coords_geo.y < 0.0 || coords_geo.y > 1.0) return vec4(0.0);
+                      float progress = niri_clamped_progress;
+                      vec2 uv = coords_geo.xy;
+
+                      // RGB channel splitting - channels separate as window closes
+                      float split = progress * 0.04;
+                      vec3 cr = niri_geo_to_tex * vec3(uv + vec2(split, 0.0), 1.0);
+                      vec3 cg = niri_geo_to_tex * vec3(uv, 1.0);
+                      vec3 cb = niri_geo_to_tex * vec3(uv - vec2(split, 0.0), 1.0);
+
+                      float r = texture2D(niri_tex, cr.st).r;
+                      float g = texture2D(niri_tex, cg.st).g;
+                      float b = texture2D(niri_tex, cb.st).b;
+                      float a = texture2D(niri_tex, cg.st).a;
+                      vec3 color = vec3(r, g, b);
+
+                      // CRT scanline effect
+                      float scanline = 1.0 - 0.08 + 0.08 * sin(uv.y * 400.0);
+
+                      return vec4(color * scanline, a * (1.0 - progress));
+                  }
+              "
+          }
       }
 
       // Window rules let you adjust behavior for individual windows.
@@ -497,8 +526,6 @@
           Mod+Shift+B hotkey-overlay-title="Browser: firefox" { spawn "${pkgs.firefox}/bin/firefox"; }
           Mod+E { spawn "emacsclient" "-c"; }
           Mod+P hotkey-overlay-title="Password Manager" { spawn "${pkgs.keepassxc}/bin/keepassxc"; }
-          Mod+Tab repeat=false { spawn "gdbus" "call" "--session" "--dest" "io.github.isaksamsten.Niriswitcher" "--object-path" "/io/github/isaksamsten/Niriswitcher" "--method" "io.github.isaksamsten.Niriswitcher.application" ; }
-          Mod+Shift+Tab repeat=false { spawn "gdbus" "call" "--session" "--dest" "io.github.isaksamsten.Niriswitcher" "--object-path" "/io/github/isaksamsten/Niriswitcher" "--method" "io.github.isaksamsten.Niriswitcher.application" ; }
           Mod+F1 hotkey-overlay-title="File Manager" { spawn "${pkgs.thunar}/bin/thunar"; }
           Mod+F6 hotkey-overlay-title="Calculator" { spawn "${pkgs.qalculate-gtk}/bin/qalculate-gtk"; }
           Mod+F8 hotkey-overlay-title="Email" { spawn "${pkgs.thunderbird}/bin/thunderbird"; }
@@ -516,14 +543,15 @@
           XF86AudioNext                               { spawn "${pkgs.playerctl}/bin/playerctl" "next"; }
           XF86AudioPrev                               { spawn "${pkgs.playerctl}/bin/playerctl" "previous"; }
           XF86AudioStop        allow-when-locked=true { spawn "${pkgs.playerctl}/bin/playerctl" "stop"; }
-          XF86AudioRaiseVolume allow-when-locked=true { spawn "${pkgs.swayosd}/bin/swayosd-client" "--output-volume" "raise"; }
-          XF86AudioLowerVolume allow-when-locked=true { spawn "${pkgs.swayosd}/bin/swayosd-client" "--output-volume" "lower"; }
-          XF86AudioMute        allow-when-locked=true { spawn "${pkgs.swayosd}/bin/swayosd-client" "--output-volume" "mute-toggle"; }
-          XF86AudioMicMute     allow-when-locked=true { spawn "${pkgs.swayosd}/bin/swayosd-client" "--input-volume" "mute-toggle"; }
+
+          XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
+          XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
+          XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+          XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
 
           // Example brightness key mappings for brightnessctl.
-          XF86MonBrightnessUp   allow-when-locked=true { spawn "${pkgs.swayosd}/bin/swayosd-client" "--brightness" "raise"; }
-          XF86MonBrightnessDown allow-when-locked=true { spawn "${pkgs.swayosd}/bin/swayosd-client" "--brightness" "lower"; }
+          XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+          XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
 
           // Open/close the Overview: a zoomed-out view of workspaces and windows.
           // You can also move the mouse into the top-left hot corner,

@@ -1,7 +1,9 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./rofi
-    ./swayidle
+    # ./swayidle
+    ./stasis
     ./swaylock
     ./mako
     ./niri

@@ -3,7 +3,8 @@
   pkgs,
   stylix,
   ...
-}: {
+}:
+{
   imports = [
     stylix.homeModules.stylix
 
@@ -83,7 +84,11 @@
     onChange = ''cat .ssh/config_source > .ssh/config && chmod 400 .ssh/config'';
   };
 
-  home.packages = with pkgs; [zoxide sox rclone];
+  home.packages = with pkgs; [
+    zoxide
+    sox
+    rclone
+  ];
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

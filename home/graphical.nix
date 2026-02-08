@@ -22,7 +22,6 @@ let
     # Network Utilities
     remmina
     openconnect
-    trayscale
 
     # Password Manager
     keepassxc
