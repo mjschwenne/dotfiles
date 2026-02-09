@@ -2,7 +2,6 @@
   pkgs,
   nvf,
   lib,
-  stylix,
   ...
 }:
 {
@@ -136,6 +135,7 @@
         enableExtraDiagnostics = true;
 
         go.enable = true;
+        java.enable = true;
         haskell.enable = true;
         java = {
           enable = true;
@@ -161,10 +161,6 @@
       };
       maps = {
         normal = {
-          "<leader>ac" = {
-            desc = "Chat";
-            action = ":CodeCompanionChat<CR>";
-          };
           "<C-h>" = {
             action = "<C-w>h";
             desc = "Move Focus Left";
