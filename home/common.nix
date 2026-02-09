@@ -3,7 +3,8 @@
   pkgs,
   stylix,
   ...
-}: {
+}:
+{
   imports = [
     stylix.homeModules.stylix
 
@@ -56,6 +57,13 @@
         identitiesOnly = true;
         identityFile = osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path;
       };
+      "csl" = {
+        user = "schwennesen";
+        hostname = "best-linux.cs.wisc.edu";
+        controlMaster = "auto";
+        controlPath = "~/.ssh/persist_connections/%r@%h:%p";
+        controlPersist = "yes";
+      };
       "git.doit.wisc.edu" = {
         user = "git";
         hostname = "git.doit.wisc.edu";
@@ -83,7 +91,11 @@
     onChange = ''cat .ssh/config_source > .ssh/config && chmod 400 .ssh/config'';
   };
 
-  home.packages = with pkgs; [zoxide sox rclone];
+  home.packages = with pkgs; [
+    zoxide
+    sox
+    rclone
+  ];
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
