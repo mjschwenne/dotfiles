@@ -17,20 +17,27 @@ let
     escapeShellArgs
     getExe
     literalExpression
+    makeBinPath
     ;
 
   package = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
 
   cfg = config.services.stasis;
 
+  # IMPORTANT:
+  # systemd.user.services.<name>.path expects *packages* (derivations),
+  # NOT literal directories. Nix will append /bin automatically.
+  servicePathPkgs = with pkgs; [
+    bashInteractive
+    coreutils
+    systemd
+  ];
+
   # Directories to include in PATH for the systemd service.
   defaultServicePath = [
     "/run/current-system/sw/bin"
     "/etc/profiles/per-user/%u/bin"
     "/nix/var/nix/profiles/default/bin"
-    "${pkgs.bash}/bin"
-    "${pkgs.coreutils}/bin"
-    "${pkgs.systemd}/bin"
   ];
 in
 {
@@ -100,7 +107,7 @@ in
           ExecStart = "${getExe cfg.package} ${escapeShellArgs cfg.extraArgs}";
           Restart = "on-failure";
           Environment = [
-            "PATH=${lib.concatStringsSep ":" defaultServicePath}"
+            "PATH=${lib.concatStringsSep ":" defaultServicePath}:${makeBinPath servicePathPkgs}"
           ];
 
           # Only passes vars that exist in the systemd --user manager environment.
@@ -111,6 +118,8 @@ in
           ];
         }
       ];
+
+      # path = servicePathPkgs;
 
       Install = {
         WantedBy = [ cfg.target ];

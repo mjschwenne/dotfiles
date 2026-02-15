@@ -1,9 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, stasis, ... }:
 {
   home.packages = with pkgs; [
     pulseaudioFull
   ];
 
+  # imports = [ stasis.homeModules.default ];
   imports = [ ./stasis-module.nix ];
   services.stasis = {
     enable = true;
@@ -32,7 +33,6 @@
 
         lock_screen:
           timeout 300 # 5 minutes 
-          use_loginctl false
           command "${pkgs.swaylock}/bin/swaylock"
           resume-command "${pkgs.libnotify}/bin/notify-send 'Welcome back $env.USER'"
         end
