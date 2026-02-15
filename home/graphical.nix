@@ -61,7 +61,7 @@ let
 
     # Games
     cockatrice
-    melonDS
+    melonds
 
     # CLI Utilities
     pandoc
@@ -73,6 +73,8 @@ let
     python313Packages.gpustat
     distrobox
     graphviz
+    claude-code
+    claude-code-acp
 
     # Wayland Utilities
     awww.packages.${stdenv.hostPlatform.system}.default

@@ -259,7 +259,10 @@
       };
       visuals = {
         nvim-scrollbar.enable = false;
-        nvim-web-devicons.enable = true;
+        nvim-web-devicons = {
+          enable = true;
+          setupOpts = { };
+        };
         nvim-cursorline.enable = true;
         cinnamon-nvim.enable = true;
         fidget-nvim.enable = true;

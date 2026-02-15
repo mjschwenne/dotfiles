@@ -1,10 +1,10 @@
-{ pkgs, stasis, ... }:
+{ pkgs, ... }:
 {
   home.packages = with pkgs; [
     pulseaudioFull
   ];
 
-  imports = [ stasis.homeModules.default ];
+  imports = [ ./stasis-module.nix ];
   services.stasis = {
     enable = true;
     extraConfig = ''
@@ -12,7 +12,7 @@
       @description "Stasis configuration file"
 
       default:
-        # pre_suspend_command "swaylock"
+        pre_suspend_command "${pkgs.swaylock}/bin/swaylock"
         monitor_media true
         ignore_remote_media false
         respect_idle_inhibitors true
@@ -33,13 +33,13 @@
         lock_screen:
           timeout 300 # 5 minutes 
           use_loginctl false
-          command "swaylock"
-          resume-command "notify-send 'Welcome back $env.USER'"
+          command "${pkgs.swaylock}/bin/swaylock"
+          resume-command "${pkgs.libnotify}/bin/notify-send 'Welcome back $env.USER'"
         end
 
         suspend:
           timeout 600  # 10 minutes
-          command "systemctl suspend"
+          command "${pkgs.systemd}/bin/systemctl suspend"
         end
       end
     '';

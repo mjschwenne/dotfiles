@@ -318,7 +318,6 @@
       // See the binds section below for more spawn examples.
 
       // This line starts waybar, a commonly used bar for Wayland compositors.
-      spawn-at-startup "${waybar.packages.${pkgs.stdenv.hostPlatform.system}.waybar}/bin/waybar"
       spawn-at-startup "${awww.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/awww-daemon"
       spawn-at-startup "${pkgs.networkmanagerapplet}/bin/nm-applet"
       spawn-at-startup "${pkgs.keepassxc}/bin/keepassxc"
