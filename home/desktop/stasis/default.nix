@@ -38,7 +38,7 @@
         end
 
         suspend:
-          timeout 600  # 10 minutes
+          timeout 60  # 1 minute after locking
           command "${pkgs.systemd}/bin/systemctl suspend"
         end
       end

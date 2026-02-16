@@ -1,8 +1,8 @@
 {
   config,
   lib,
-  pkgs,
   stasis,
+  pkgs,
   ...
 }:
 
@@ -20,9 +20,8 @@ let
     makeBinPath
     ;
 
-  package = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
-
   cfg = config.services.stasis;
+  package = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
 
   # IMPORTANT:
   # systemd.user.services.<name>.path expects *packages* (derivations),
@@ -33,12 +32,13 @@ let
     systemd
   ];
 
-  # Directories to include in PATH for the systemd service.
-  defaultServicePath = [
+  # If you still want the "system profile" bins first, set PATH explicitly.
+  # This avoids the /bin/bin bug entirely.
+  explicitPath =
     "/run/current-system/sw/bin"
-    "/etc/profiles/per-user/%u/bin"
-    "/nix/var/nix/profiles/default/bin"
-  ];
+    + ":/etc/profiles/per-user/%u/bin"
+    + ":/nix/var/nix/profiles/default/bin"
+    + ":${makeBinPath servicePathPkgs}";
 in
 {
   options.services.stasis = {
@@ -91,34 +91,43 @@ in
         Description = "Stasis Wayland Idle Manager";
         PartOf = [ cfg.target ];
         After = [ cfg.target ];
-
-        # Restart the service when the config file changes (if HM manages it).
-        restartIfChanged = optional (
-          cfg.extraConfig != null
-        ) config.xdg.configFile."stasis/stasis.rune".source;
       };
 
+      # Home Manager supports restartTriggers too; it will still emit
+      # X-Restart-Triggers in the unit. If your systemd marks that "bad-setting",
+      # you should avoid it and instead rely on `home-manager switch` restart,
+      # or add an explicit ExecReload strategy in your app.
+      #
+      # For now: keep it OFF to avoid the bad-setting state.
+      # restartTriggers = optional (cfg.extraConfig != null)
+      #   config.xdg.configFile."stasis/stasis.rune".source;
+
       Service = lib.mkMerge [
-        (mkIf (cfg.environmentFile != null) {
-          EnvironmentFile = [ "-${cfg.environmentFile}" ];
-        })
         {
           Type = "simple";
           ExecStart = "${getExe cfg.package} ${escapeShellArgs cfg.extraArgs}";
           Restart = "on-failure";
+
+          Slice = "session.slice";
+
+          # Make PATH deterministic and avoid /bin/bin mistakes.
           Environment = [
-            "PATH=${lib.concatStringsSep ":" defaultServicePath}:${makeBinPath servicePathPkgs}"
+            "PATH=${explicitPath}"
           ];
 
-          # Only passes vars that exist in the systemd --user manager environment.
           PassEnvironment = [
             "NIRI_SOCKET"
             "WAYLAND_DISPLAY"
             "XDG_RUNTIME_DIR"
+            "DBUS_SESSION_BUS_ADDRESS"
           ];
         }
+        (mkIf (cfg.environmentFile != null) {
+          EnvironmentFile = [ "-${cfg.environmentFile}" ];
+        })
       ];
 
+      # IMPORTANT: This is packages, not dirs.
       # path = servicePathPkgs;
 
       Install = {
