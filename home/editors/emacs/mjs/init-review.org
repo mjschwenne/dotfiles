@@ -1,0 +1,243 @@
+#+title: Code Review: init.el
+#+author: Claude
+#+date: 2026-02-16
+
+* Summary
+
+This is a ~2,850-line, monolithic =init.el= built around Evil mode and
+=use-package=, with heavy emphasis on Org-mode (GTD workflow, Roam,
+citations, presentations), LaTeX/Typst authoring, and proof assistant
+support (Coq, F*). The configuration is managed via Nix/Stylix for
+theming (=base16-stylix-theme-colors=) and uses =general.el= for a
+Doom-style =SPC= leader key system.
+
+Overall this is a well-considered, power-user configuration. The issues
+below are roughly ordered by severity.
+
+* Strengths
+
+** Solid Evil + General.el Foundation
+The Evil ecosystem is set up thoroughly: =evil-collection=,
+=evil-surround=, =evil-snipe=, =evil-args=, =evil-escape=,
+=evil-goggles=, =evil-nerd-commenter=, and more. The =SPC= leader and
+=SPC m= local leader via =general.el= give a cohesive, discoverable
+keymap. Persistent visual-mode selection on shift (=mjs/evil-shift-right=,
+=mjs/evil-shift-left=) is a nice touch.
+
+** Modern Completion Stack
+Vertico + Orderless + Consult + Marginalia + Embark + Corfu + Cape is
+the current best-practice completion stack for Emacs. The Consult
+keybinding tree under =SPC s= is comprehensive without being
+overwhelming.
+
+** Deeply Customized Org-mode
+The GTD agenda (=TODO -> NEXT -> HOLD -> DONE/KILL=), capture templates,
+org-roam context system (=mjs/org-context-plist=,
+=mjs/org-roam-filter-context-fn=, =mjs/org-roam-templates-context-fn=),
+and citation pipeline (=citar= + =citar-org= + =citar-embark=) are all
+well thought out. The context-aware tag injection for Roam captures is
+a clever piece of engineering.
+
+** Thoughtful Diff-hl Configuration
+The =diff-hl= block (lines 835--931) includes custom fringe bitmaps,
+thread debouncing for async updates, cursor-preserving revert, and
+popup shrinking. This level of attention to a single package is
+impressive.
+
+** Good Modeline Design
+The =telephone-line= segments (buffer modification status with colored
+icons, flycheck counts, search match counts via =anzu=, popup status,
+PDF page info) are well-crafted and functional.
+
+** Forward-Thinking Language Support
+Typst (=typst-ts-mode= with preview), Coq (=proof-general= +
+=company-coq= with Unicode input), and F* (=fstar-mode=) alongside
+more common languages shows this config serves a formal methods /
+academic workflow well.
+
+** Nix-Managed Theming
+Using =base16-stylix-theme-colors= throughout for face customization
+means colors stay consistent and change automatically when the system
+theme changes. No hard-coded hex values.
+
+* Bugs
+
+** Typo: =cursor-in-non-selected-widows= (line 19)
+Should be =cursor-in-non-selected-windows=. This silently sets a
+nonexistent variable.
+
+** Typo: =default-director= (line 281)
+In the =f Y= "Yank Relative File Path" binding, =default-director=
+should be =default-directory=. This will signal a =void-variable= error
+at runtime.
+
+** Typo: =dashbaord-set-heading-icons= (line 513)
+Should be =dashboard-set-heading-icons=. The custom variable is never
+actually set.
+
+** Typo: =marcostep-expand= (line 939)
+In the =:commands= list for =macrostep=, =marcostep-expand= should be
+=macrostep-expand=. The autoload will be created for the wrong symbol.
+
+** Typo: =inferior-lisp-prgram= (line 2460)
+In the =sly= block, should be =inferior-lisp-program=.
+
+** Typo: =TeX-insert-marco= (line 2110)
+In the LaTeX local leader bindings, should be =TeX-insert-macro=.
+
+** Typo: =conditional-case= (line 899)
+In =mjs/diff-hl-kill-thread=, should be =condition-case=. This will
+error when trying to join a thread.
+
+** Typo: =diff-hl-show-stages-changes= (line 851)
+Likely should be =diff-hl-show-staged-changes=.
+
+** Wrong comparison: =(eq major-mode #'LaTeX-mode)= (line 2084)
+=#'LaTeX-mode= evaluates to the /function object/, not the symbol. This
+comparison will never be true. Should be =(eq major-mode 'LaTeX-mode)=
+or =(derived-mode-p 'LaTeX-mode)=.
+
+** Face spec syntax error: =:background:= (line 2419)
+#+begin_src emacs-lisp
+(cfw:face-today ((t :background: ,(plist-get ...))))
+#+end_src
+The extra colon on =:background:= makes it an invalid keyword. Should be
+=:background=.
+
+** Duplicate key =c r= in leader and local leader (lines 968--971, 1054--1057)
+="c r"= is bound first to =mjs/org-roam-capture= then immediately
+overwritten by =org-capture-refile= in the same =mjs-leader-def= form.
+The same issue exists in the org local leader. One of the bindings is
+dead.
+
+** Deprecated variable: =x-select-enable-clipboard= (line 29)
+Renamed to =select-enable-clipboard= in Emacs 25.1. Will still work but
+generates a byte-compile warning.
+
+* Style Issues
+
+** Mixed Indentation
+The file uses spaces for indentation in most places but tabs in several
+=mjs-leader-def= and =general-define-key= blocks (e.g., lines 13--17,
+572--578, 673--709). With =indent-tabs-mode= set to =nil= (line 27),
+the intent is spaces-only, so the tabs are inconsistent.
+
+** Anonymous Lambdas in Hooks
+Many hooks use inline =(lambda () ...)= forms, e.g.:
+#+begin_src emacs-lisp
+(org-mode . (lambda () (setq mode-name " Org")))
+(org-capture-mode . (lambda () (flycheck-mode -1)))
+#+end_src
+These are harder to debug (they show up as anonymous in
+=describe-variable=), impossible to remove with =remove-hook=, and
+risk being duplicated if the hook form is re-evaluated. Extracting
+them to named =defun= functions improves debuggability.
+
+** Commented-Out Code as Dead Weight
+Several blocks of commented-out code linger:
+- =evil-easymotion= (lines 137--140) with comments pushed to column 40
+- =vulpea= (lines 1895--1896)
+- Markdown fontification advice (lines 2312--2317)
+- Various =;; "q l"=, =;; "q r"= placeholder bindings (lines 231--238)
+- TODO wish-list at file end (lines 2818--2843)
+
+These should be removed or tracked in an issue tracker. The
+comment-column-aligned semicolons on the =evil-easymotion= block are
+particularly confusing.
+
+** Inconsistent =:keymap= vs =:keymaps= (lines 1925, 2125, 2811)
+=general.el= accepts both, but the file uses =:keymaps= everywhere
+except a few =ox-pandoc=, =yasnippet=, and =vterm= blocks that use
+=:keymap=. Pick one for consistency (=:keymaps= is the canonical form).
+
+** Inconsistent Quoting: ='= vs =#'=
+Function references alternate between ='evil-window-left= and
+=#'evil-window-left= with no discernible pattern. =#'= is preferred for
+functions (gives byte-compiler warnings on typos); ='= for symbols used
+as data. In =general.el= bindings, =#'= is idiomatic for command
+references.
+
+** Duplicate =:config= Blocks
+=popper= (lines 567 and 579) has two =:config= keywords. The second one
+works because =use-package= concatenates them, but it reads as if the
+second was an afterthought. Merge them.
+
+** =custom-set-variables= in init.el (lines 991--1005)
+The auto-generated =custom-set-variables= block should live in a
+separate =custom-file= (set via =custom-file= variable). Having it
+inline risks it being clobbered by Customize or duplicated.
+
+* Questionable / Redundant Packages
+
+** =company= Alongside =corfu= (line 760)
+=company= is declared, seemingly only for =company-dabbrev= and as a
+dependency of =company-coq=. Since =corfu= is the primary completion
+frontend, carrying =company= adds complexity. For Coq, =company-coq=
+genuinely requires it, so this is somewhat unavoidable, but the
+top-level =company= declaration could note this dependency.
+
+** =org-superstar= AND =org-modern= (lines 1434, 1488)
+Both packages style Org headings and bullets. =org-modern= has
+=org-modern-star= and =org-modern-hide-stars= set to =nil=, effectively
+disabling its heading styling in favor of =org-superstar=. The
+=org-indent--compute-prefixes= override in the =org-superstar= block
+(line 1495) further complicates this. Consider consolidating on one
+package.
+
+** =flycheck-popup-tip= (line 2767)
+This package is configured but never activated --- =sideline-flycheck= is
+the active error display mechanism. Either remove =flycheck-popup-tip=
+or document why it is kept around.
+
+** =global-ligature-mode -1= then per-mode hooks (line 339)
+=global-ligature-mode= is explicitly disabled, then =ligature-mode= is
+enabled via =prog-mode= and =text-mode= hooks. The global disable is
+a no-op since the mode isn't on by default. Removing it would reduce
+confusion.
+
+** =vimish-fold= (line 211)
+Declared with =:defer nil= but has no =:config= or =:hook=. It exists
+only as a dependency for =evil-vimish-fold=. If so, it doesn't need
+=:defer nil= --- =evil-vimish-fold= will pull it in via =:after=.
+
+* Minor Observations
+
+** =use-package-always-defer t= is set globally (line 14)
+This is fine, but several packages then use =:defer nil= to override
+it. This is a correct pattern but means new packages are deferred by
+default and may not load when expected. Just something to be aware of.
+
+** =evil-org= has both =:defer nil= and =:after org evil= (line 105)
+=:after= already implies deferral until =org= and =evil= are loaded.
+Adding =:defer nil= is contradictory. In practice =:after= wins, so
+=:defer nil= is dead code.
+
+** =org-table= uses =:demand nil= (line 2159)
+=:demand nil= is the default and has no effect. If the intent was to
+force-load, it should be =:demand t=.
+
+** The =mjs/org-roam-templates-context-fn= uses =dash.el= functions
+Functions like =-non-nil=, =-flatten-n=, and =s-join= require =dash=
+and =s= as dependencies. These aren't explicitly declared. If Nix
+manages them, that's fine, but it would be good to have a
+=(require 'dash)= or =use-package= declaration for documentation.
+
+** =restart-emacs= package (line 222)
+This package is mostly obsolete as of Emacs 29, which has
+=restart-emacs= built in.
+
+** Vertico =C-j= / =C-k= Bindings Are Swapped (lines 629--630)
+=C-k= is bound to =vertico-next= and =C-j= to =vertico-previous=. In
+Vim convention, =j= is down (next) and =k= is up (previous). Since
+=vertico-reverse-mode= is active, this is actually correct (the list is
+visually inverted), but it can confuse contributors or your future self.
+A comment explaining the reversal would help.
+
+* Conclusion
+
+The configuration is mature and clearly the product of significant
+iteration. The primary concerns are the accumulated typos (several of
+which will cause runtime errors), the overlapping =org-superstar= /
+=org-modern= setup, and the commented-out code that should be cleaned
+up. The completion stack, Evil integration, Org workflow, and
+diff-hl customization are all strong points.
