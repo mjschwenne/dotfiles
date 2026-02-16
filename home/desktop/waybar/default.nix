@@ -5,7 +5,8 @@
   pkgs,
   waybar,
   ...
-}: {
+}:
+{
   programs.waybar = {
     enable = true;
     package = waybar.packages.${pkgs.stdenv.hostPlatform.system}.waybar;
@@ -18,16 +19,33 @@
         margin = "0 0 0 0";
         output =
           {
-            "terra" = ["DP-3" "DP-4"];
-            "venus" = ["eDP-1" "DP-1"];
-            "mars" = ["eDP-1" "DP-1" "HDMI-A-1"];
-            "luna" = ["eDP-1" "HDMI-A-2"];
+            "terra" = [
+              "DP-3"
+              "DP-4"
+            ];
+            "venus" = [
+              "eDP-1"
+              "DP-1"
+            ];
+            "mars" = [
+              "eDP-1"
+              "DP-1"
+              "HDMI-A-1"
+            ];
+            "luna" = [
+              "eDP-1"
+              "HDMI-A-2"
+            ];
           }
-          ."${osConfig.networking.hostName}"
-          or [
+          ."${osConfig.networking.hostName}" or [
           ];
-        modules-left = ["niri/workspaces" "wlr/taskbar" "tray" "mpris"];
-        modules-center = ["niri/window"];
+        modules-left = [
+          "niri/workspaces"
+          "wlr/taskbar"
+          "tray"
+          "mpris"
+        ];
+        modules-center = [ "niri/window" ];
         modules-right = [
           "privacy"
           "clock"
@@ -177,7 +195,13 @@
             critical = 15;
           };
           format = "{icon}  {capacity}%";
-          format-icons = ["" "" "" "" ""];
+          format-icons = [
+            ""
+            ""
+            ""
+            ""
+            ""
+          ];
         };
         "idle_inhibitor" = {
           format = "{icon}";
@@ -191,159 +215,159 @@
     # Style for all devices
     style =
       lib.mkAfter
-      # css
-      ''
-        * {
-            color: @base04;
-            border: 0;
-            padding: 0 0;
-        }
+        # css
+        ''
+          * {
+              color: @base04;
+              border: 0;
+              padding: 0 0;
+          }
 
-        window#waybar {
-            background-color: transparent;
-        }
+          window#waybar {
+              background-color: transparent;
+          }
 
-        #workspaces {
-            background-color: @base01;
-            margin: 5px;
-            border-radius: 15px;
-            padding: 0px 15px;
-        }
+          #workspaces {
+              background-color: @base01;
+              margin: 5px;
+              border-radius: 15px;
+              padding: 0px 15px;
+          }
 
-        #workspaces button {
-            padding: 0px 5px;
-            font-size: 20px;
-            color: @base0E;
-        }
+          #workspaces button {
+              padding: 0px 5px;
+              font-size: 20px;
+              color: @base0E;
+          }
 
-        #workspaces button.active {
-            color: @base0E;
-        }
+          #workspaces button.active {
+              color: @base0E;
+          }
 
-        #workspaces button.focused {
-            color: @base09;
-        }
+          #workspaces button.focused {
+              color: @base09;
+          }
 
-        #workspaces button.empty {
-            color: @base0B;
-        }
+          #workspaces button.empty {
+              color: @base0B;
+          }
 
-        #tray {
-            background-color: @base01;
-            border-radius: 15px 15px 15px 15px;
-            padding: 0px 15px;
-            margin: 5px;
-        }
+          #tray {
+              background-color: @base01;
+              border-radius: 15px 15px 15px 15px;
+              padding: 0px 15px;
+              margin: 5px;
+          }
 
-        #mode {
-            background-color: @base01;
-            border-radius: 15px;
-            padding: 0px 15px;
-            margin: 5px;
-        }
+          #mode {
+              background-color: @base01;
+              border-radius: 15px;
+              padding: 0px 15px;
+              margin: 5px;
+          }
 
-        #taskbar {
-            background-color: @base01;
-            border-radius: 15px;
-            padding: 0px 15px;
-            margin: 5px;
-        }
+          #taskbar {
+              background-color: @base01;
+              border-radius: 15px;
+              padding: 0px 15px;
+              margin: 5px;
+          }
 
-        #taskbar button {
-            padding: 0px 5px;
-        }
+          #taskbar button {
+              padding: 0px 5px;
+          }
 
-        #taskbar.empty {
-            background-color: transparent;
-            border-radius: 0px;
-            padding: 0px 0px;
-            margin: 0px;
-        }
+          #taskbar.empty {
+              background-color: transparent;
+              border-radius: 0px;
+              padding: 0px 0px;
+              margin: 0px;
+          }
 
-        #mpris {
-            background-color: @base01;
-            border-radius: 15px;
-            padding: 0px 15px;
-            margin: 5px;
-        }
+          #mpris {
+              background-color: @base01;
+              border-radius: 15px;
+              padding: 0px 15px;
+              margin: 5px;
+          }
 
-        #mpris.spotify {
-            color: @base0B;
-        }
+          #mpris.spotify {
+              color: @base0B;
+          }
 
-        #window {
-            margin: 5px;
-            background-color: @base01;
-            padding: 0px 15px;
-            border-radius: 15px;
-        }
+          #window {
+              margin: 5px;
+              background-color: @base01;
+              padding: 0px 15px;
+              border-radius: 15px;
+          }
 
-        window#waybar.empty #window {
-        	background: rgba(46, 52, 64, 0.0);
-        }
+          window#waybar.empty #window {
+          	background: rgba(46, 52, 64, 0.0);
+          }
 
-        .modules-right {
-            background-color: @base01;
-            margin: 5px;
-            border-radius: 15px;
-            padding: 0px 15px 0px 15px;
-        }
+          .modules-right {
+              background-color: @base01;
+              margin: 5px;
+              border-radius: 15px;
+              padding: 0px 15px 0px 15px;
+          }
 
-        #privacy {
-            background-color: @base01;
-            padding: 0px 5px 0px 0px;
-        }
+          #privacy {
+              background-color: @base01;
+              padding: 0px 5px 0px 0px;
+          }
 
-        #clock {
-            background-color: @base01;
-            color: @base0D;
-            padding: 0px 5px 0px 5px;
-        }
+          #clock {
+              background-color: @base01;
+              color: @base0D;
+              padding: 0px 5px 0px 5px;
+          }
 
-        #memory {
-            background-color: @base01;
-            color: @base0E;
-            padding: 0px 5px 0px 5px;
-        }
+          #memory {
+              background-color: @base01;
+              color: @base0E;
+              padding: 0px 5px 0px 5px;
+          }
 
-        #cpu {
-            background-color: @base01;
-            padding: 0px 5px 0px 5px;
-        }
+          #cpu {
+              background-color: @base01;
+              padding: 0px 5px 0px 5px;
+          }
 
-        #network {
-            background-color: @base01;
-            color: @base0C;
-            padding: 0px 5px 0px 5px;
-        }
+          #network {
+              background-color: @base01;
+              color: @base0C;
+              padding: 0px 5px 0px 5px;
+          }
 
-        #bluetooth {
-            background-color: @base01;
-            color: @base0D;
-            padding: 0px 5px 0px 5px;
-        }
+          #bluetooth {
+              background-color: @base01;
+              color: @base0D;
+              padding: 0px 5px 0px 5px;
+          }
 
-        #battery {
-            background-color: @base01;
-            padding: 0px 5px 0px 5px;
-        }
+          #battery {
+              background-color: @base01;
+              padding: 0px 5px 0px 5px;
+          }
 
-        #battery.warning {
-            background-color: @base09;
-            color: @base01;
-        }
+          #battery.warning {
+              background-color: @base09;
+              color: @base01;
+          }
 
-        #battery.critical {
-            background-color: @base08;
-            color: @base01;
-        }
+          #battery.critical {
+              background-color: @base08;
+              color: @base01;
+          }
 
-        #idle_inhibitor {
-            background-color: @base01;
-            color: @base09;
-            padding: 0px 0px 0px 5px;
-        }
-      '';
+          #idle_inhibitor {
+              background-color: @base01;
+              color: @base09;
+              padding: 0px 0px 0px 5px;
+          }
+        '';
   };
 
   stylix.targets.waybar = {
