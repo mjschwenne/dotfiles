@@ -31,7 +31,7 @@
 ;;;###autoload
 (defun mjs/switch-buffer ()
   (interactive)
-  (consult-buffer '(consult--source-buffer)))
+  (consult-buffer '(consult-source-buffer)))
 
 ;;;###autoload
 (defun mjs/yank-buffer-path (&optional root)
