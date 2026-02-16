@@ -135,7 +135,6 @@
         enableExtraDiagnostics = true;
 
         go.enable = true;
-        java.enable = true;
         haskell.enable = true;
         java = {
           enable = true;
