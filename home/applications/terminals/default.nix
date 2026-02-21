@@ -35,11 +35,19 @@
       };
     };
 
+    ghostty = {
+      enable = true;
+      enableFishIntegration = true;
+      settings = {
+        cursor-style = "block";
+        cursor-style-blink = false;
+        shell-integration-features = "no-cursor";
+      };
+    };
+
     wezterm = {
       enable = true;
-      # See https://github.com/wezterm/wezterm/issues/7383
       package = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      # package = pkgs.wezterm;
       extraConfig =
         let
           preferred_adapter = {
