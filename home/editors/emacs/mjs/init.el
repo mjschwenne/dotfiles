@@ -11,12 +11,12 @@
 (setq base16-theme-256-color-source 'colors)
 
 (setq use-package-verbose t
-	  use-package-always-defer t
-	  use-package-always-ensure t
-	  use-package-compute-statistics t
-	  use-package-enable-imenu-support t)
+      use-package-always-defer t
+      use-package-always-ensure t
+      use-package-compute-statistics t
+      use-package-enable-imenu-support t)
 
-(setq-default cursor-in-non-selected-widows nil
+(setq-default cursor-in-non-selected-windows nil
               speedbar t
               load-prefer-new t
               make-backup-files nil
@@ -26,7 +26,7 @@
               tab-width 4
               indent-tabs-mode nil
               require-final-newline t
-              x-select-enable-clipboard t
+              select-enable-clipboard t
               fill-column 80
               initial-scratch-message nil
               inhibit-startup-screen t
@@ -82,15 +82,15 @@
   (evil-select-search-module 'evil-search-module 'evil-search)
 
   ;; Rebind `universal-argument` to 'C-M-u' since 'C-u' now scrolls the buffer
-  (global-set-key (kbd "C-M-u") 'universal-argument)
+  (global-set-key (kbd "C-M-u") #'universal-argument)
 
   ;; Use visual line movements by default
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  (evil-global-set-key 'motion "j" #'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" #'evil-previous-visual-line)
 
   ;; Shifting in visual mode keeps selection
-  (evil-global-set-key 'visual (kbd ">") 'mjs/evil-shift-right)
-  (evil-global-set-key 'visual (kbd "<") 'mjs/evil-shift-left)
+  (evil-global-set-key 'visual (kbd ">") #'mjs/evil-shift-right)
+  (evil-global-set-key 'visual (kbd "<") #'mjs/evil-shift-left)
 
   ;; Simplify window movements
   (general-define-key :states '(normal motion) :keymaps 'override
@@ -124,20 +124,19 @@
   :custom (evil-args-delimiters '(" ")) ; default value is '("," ";")
                                         ; may want to investigate major-mode dependent
                                         ; values
-  :general (:keymaps 'evil-inner-text-objects-map "a" 'evil-inner-arg)
-  (:keymaps 'evil-outer-text-objects-map "a" 'evil-outer-arg)
+  :general (:keymaps 'evil-inner-text-objects-map "a" #'evil-inner-arg)
+  (:keymaps 'evil-outer-text-objects-map "a" #'evil-outer-arg)
   (:states 'normal
-           "L" 'evil-forward-arg
-           "H" 'evil-backward-arg
-           "K" 'evil-jump-out-args)
+           "L" #'evil-forward-arg
+           "H" #'evil-backward-arg
+           "K" #'evil-jump-out-args)
   (:states 'motion
-           "L" 'evil-forward-arg
-           "H" 'evil-backward-arg))
+           "L" #'evil-forward-arg
+           "H" #'evil-backward-arg))
 
-                                        ; (use-package evil-easymotion
-                                        ;   :after evil
-                                        ;   :general (:states 'motion "SPC SPC" '(nil :which-key "Easy Motion")
-                                        ;                             "SPC SPC" evilem-map))
+(use-package evil-easymotion
+  :defer nil
+  :config (evilem-default-keybindings ";"))
 
 (use-package evil-surround
   :after evil
@@ -146,7 +145,7 @@
 (use-package evil-embrace
   :after evil-surround
   :config
-  (add-hook 'org-mode-hook 'embrace-org-mode-hook)
+  (add-hook 'org-mode-hook #'embrace-org-mode-hook)
   (evil-embrace-enable-evil-surround-integration))
 
 (use-package evil-escape
@@ -194,6 +193,7 @@
   :defer nil
   :diminish evil-snipe-local-mode
   :custom ((evil-snipe-smart-case t)
+           (evil-snipe-override-evil-repeat-keys nil)
            (evil-snipe-tab-increment t))
   :config
   (evil-snipe-mode +1)
@@ -219,24 +219,15 @@
   :diminish evil-vimish-fold-mode
   :custom (evil-vimish-fold-targets-mode '(prog-mode conf-mode text-mode)))
 
-(use-package restart-emacs
-  :commands restart-emacs)
-
 (mjs-leader-def :keymaps 'override
   "q" '(nil :which-key "Quit")
   "q d" '("Restart Emacs Server" . mjs/restart-server)
   "q f" '("Delete Frame" . save-buffers-kill-emacs)
   "q F" '("Clear Current Frame" . mjs/kill-all-buffers)
   "q K" '("Kill Emacs (and Daemon)" . save-buffers-kill-emacs)
-  ;; "q l" '("Restore Last Session" . )
-  ;; "q L" '("Restore Session from File" . )
   "q q" '("Quit Emacs" . save-buffers-kill-terminal)
   "q Q" '("Quit Emacs without Saving" . evil-quit-all-with-error-code)
-  ;; "q r" '("Restart & Restore Emacs" . )
-  "q r" '("Restart Emacs" . mjs/restart-emacs)
-  ;; "q s" '("Quick Save Current Session" . )
-  ;; "q S" '("Save Session to File" . )
-  )
+  "q r" '("Restart Emacs" . mjs/restart-emacs))
 
 (mjs-leader-def :keymaps 'override
   "b"   '(nil :which-key "Buffer")
@@ -278,7 +269,7 @@
   "f Y" '("Yank Relative File Path" . (lambda ()
                                         (interactive)
                                         (mjs/yank-buffer-path
-                                         default-director))))
+                                         default-directory))))
 
 (global-auto-revert-mode +1)
 (diminish 'auto-revert-mode)
@@ -510,7 +501,7 @@
   (dashboard-display-icons-p t)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-set-navigator t)
-  (dashbaord-set-heading-icons t)
+  (dashboard-set-heading-icons t)
   (dashboard-set-file-icons t)
   (dashboard-filter-agenda-entry #'mjs/dashboard-next-items)
   (dashboard-items '((recents . 5)
@@ -569,16 +560,16 @@
   (require 'popper-echo)
   (popper-echo-mode +1)
   (mjs-leader-def :keymaps 'override
-	"p" '(nil :which-key "Popup")
-	"p p" '("Toggle Popup" . popper-toggle)
-	"t"   '(nil :which-key "Toggle")
-	"t p" '("Toggle Popup" . popper-toggle)
-	"p c" '("Cycle Popups" . popper-cycle)
-	"p m" '("Make Popup" . popper-toggle-type)
-	"p k" '("Kill Popup" . popper-kill-latest-popup))
-  :config (defun mjs/escape-popups ()
-            (if (eq popper-popup-status 'popup)
-                (popper-toggle-latest)))
+    "p" '(nil :which-key "Popup")
+    "p p" '("Toggle Popup" . popper-toggle)
+    "t"   '(nil :which-key "Toggle")
+    "t p" '("Toggle Popup" . popper-toggle)
+    "p c" '("Cycle Popups" . popper-cycle)
+    "p m" '("Make Popup" . popper-toggle-type)
+    "p k" '("Kill Popup" . popper-kill-latest-popup))
+  (defun mjs/escape-popups ()
+    (if (eq popper-popup-status 'popup)
+        (popper-toggle-latest)))
   (advice-add #'evil-force-normal-state :after #'mjs/escape-popups))
 
 (use-package helpful
@@ -670,42 +661,42 @@
 (use-package consult
   :init (recentf-mode 1)
   :general (mjs-leader-def :keymaps 'override
-	         "s"     '(nil :which-key "Search")
-	         "s b"   '("Buffer" . consult-buffer)
-	         "s c"   '("Complex Command" . consult-complex-command)
-	         "s e"   '("Compile Error" . consult-compile-error)
-	         "s f"   '("Recent Files" . consult-recent-file)
-	         "s g"   '(nil :which-key "External Search")
-	         "s g g" '("Grep" . consult-grep)
-	         "s g r" '("Ripgrep" . consult-ripgrep)
-	         "s g f" '("Find" . consult-find)
-	         "s g l" '("Locate" . consult-locate)
-	         "s h"   '(nil :which-key "Help")
-	         "s h i" '("Emacs Info" . consult-info)
-	         "s h m" '("UNIX Manual" . consult-man)
-	         "s m"   '(nil :which-key "Modes")
-	         "s m m" '("Minor Modes" . consult-minor-mode-menu)
-	         "s m c" '("Mode Commands" . consult-mode-command)
-	         "s M"   '("Macro" . consult-kmacro)
-	         "s n"   '(nil :which-key "Navigation")
-	         "s n i" '("imenu" . consult-imenu)
-	         "s n I" '("Multi-imenu" . consult-imenu-multi)
-	         "s n l" '("Goto Line" . consult-goto-line)
-	         "s n m" '("Goto Mark" . consult-mark)
-	         "s n M" '("Goto Global Mark" . consult-global-mark)
-	         "s n o" '("Outline" . consult-outline)
-	         "s o"   '(nil :which-key "Org")
-	         "s o a" '("Agenda" . consult-org-agenda)
-	         "s o h" '("Heading" . consult-org-heading)
-	         "s r"   '("Registers" . consult-register)
-	         "s s"   '(nil :which-key "Search")
-	         "s s l" '("Line" . consult-line)
-	         "s s m" '("Multi-buffer line" . consult-line-multi)
-	         "s t"   '("Themes" . consult-theme)
-	         "s y"   '(nil :which-key "Yank")
-	         "s y k" '("Kill Ring" . consult-yank-from-kill-ring)
-	         "s y p" '("Pop" . consult-yank-pop)
-	         "s y r" '("Replace" . consult-yank-replace)
+             "s"     '(nil :which-key "Search")
+             "s b"   '("Buffer" . consult-buffer)
+             "s c"   '("Complex Command" . consult-complex-command)
+             "s e"   '("Compile Error" . consult-compile-error)
+             "s f"   '("Recent Files" . consult-recent-file)
+             "s g"   '(nil :which-key "External Search")
+             "s g g" '("Grep" . consult-grep)
+             "s g r" '("Ripgrep" . consult-ripgrep)
+             "s g f" '("Find" . consult-find)
+             "s g l" '("Locate" . consult-locate)
+             "s h"   '(nil :which-key "Help")
+             "s h i" '("Emacs Info" . consult-info)
+             "s h m" '("UNIX Manual" . consult-man)
+             "s m"   '(nil :which-key "Modes")
+             "s m m" '("Minor Modes" . consult-minor-mode-menu)
+             "s m c" '("Mode Commands" . consult-mode-command)
+             "s M"   '("Macro" . consult-kmacro)
+             "s n"   '(nil :which-key "Navigation")
+             "s n i" '("imenu" . consult-imenu)
+             "s n I" '("Multi-imenu" . consult-imenu-multi)
+             "s n l" '("Goto Line" . consult-goto-line)
+             "s n m" '("Goto Mark" . consult-mark)
+             "s n M" '("Goto Global Mark" . consult-global-mark)
+             "s n o" '("Outline" . consult-outline)
+             "s o"   '(nil :which-key "Org")
+             "s o a" '("Agenda" . consult-org-agenda)
+             "s o h" '("Heading" . consult-org-heading)
+             "s r"   '("Registers" . consult-register)
+             "s s"   '(nil :which-key "Search")
+             "s s l" '("Line" . consult-line)
+             "s s m" '("Multi-buffer line" . consult-line-multi)
+             "s t"   '("Themes" . consult-theme)
+             "s y"   '(nil :which-key "Yank")
+             "s y k" '("Kill Ring" . consult-yank-from-kill-ring)
+             "s y p" '("Pop" . consult-yank-pop)
+             "s y r" '("Replace" . consult-yank-replace)
              "c s" '("Search Symbols" . consult-eglot-symbols))
   :custom (register-preview-function #'consult-register-format)
   (register-preview-delay 0.5)
@@ -733,7 +724,6 @@
   (corfu-auto t)
   (corfu-quit-no-match t)
   (corfu-preselect 'prompt)
-  (cape-dict-file (expand-file-name "words.txt" user-emacs-directory))
   (ispell-alternate-dictionary (expand-file-name "words.txt" user-emacs-directory))
   :general (:keymaps 'corfu-map
                      "TAB" #'corfu-next
@@ -744,13 +734,20 @@
 (use-package cape
   :after corfu
   :defer nil
-  :hook (prog-mode . (lambda ()
-                       (add-to-list 'completion-at-point-functions #'cape-keyword)))
-  (text-mode . (lambda ()
-                 (add-to-list 'completion-at-point-functions #'cape-dict)
-                 (add-to-list 'completion-at-point-functions #'cape-dabbrev)))
-  (org-mode . (lambda ()
-                (add-to-list 'completion-at-point-functions #'cape-elisp-block)))
+  :init
+  (defun mjs/cape-add-keyword-capf-h ()
+    (add-to-list 'completion-at-point-functions #'cape-keyword))
+  (defun mjs/cape-add-text-capfs-h ()
+    (add-to-list 'completion-at-point-functions #'cape-dict)
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+  (defun mjs/cape-add-elisp-block-capf-h ()
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block))
+  :custom 
+  (cape-dict-file (expand-file-name "words.txt" user-emacs-directory))
+  :hook
+  (prog-mode . mjs/cape-add-keyword-capf-h)
+  (text-mode . mjs/cape-add-text-capfs-h)
+  (org-mode . mjs/cape-add-elisp-block-capf-h)
   :config (add-to-list 'completion-at-point-functions #'cape-file))
 
 (use-package cape-keyword
@@ -763,7 +760,10 @@
 
 (global-prettify-symbols-mode +1)
 
-(add-hook 'emacs-lisp-mode-hook (lambda () (setq mode-name "󰘧 Emacs Lisp")))
+(defun mjs/emacs-lisp-mode-set-name-h ()
+  "Set mode name in Emacs Lisp mode."
+  (setq mode-name "󰘧 Emacs Lisp"))
+(add-hook 'emacs-lisp-mode-hook  #'mjs/emacs-lisp-mode-set-name-h)
 (add-hook 'emacs-lisp-mode-hook #'electric-pair-mode)
 
 (defcustom mjs/indent-bars-inhibit-functions ()
@@ -782,6 +782,10 @@ If any function returns non-nil, the mode will not be activated."
           "Enable `indent-bars-mode' depending on `mjs/indent-bars-inhibit-functions'."
           (unless (run-hook-with-args-until-success 'mjs/indent-bars-inhibit-functions)
             (indent-bars-mode +1)))
+  (defun mjs/indent-bars-inhibit-in-org-indent-h ()
+    (bound-and-true-p org-indent-mode))
+  (defun mjs/indent-bars-inhibit-in-childframe-h ()
+    (frame-parameter nil 'parent-frame))
   :custom ((indent-bars-prefer-character nil)
            (indent-bars-starting-column 0)
            (indent-bars-width-frac 0.15)
@@ -792,10 +796,10 @@ If any function returns non-nil, the mode will not be activated."
   :config
   ;; Org's virtual indentation messes up indent-bars
   (add-hook 'mjs/indent-bars-inhibit-functions
-            (lambda () (bound-and-true-p org-indent-mode)))
+            #'mjs/indent-bars-inhibit-in-org-indent-h)
   ;; Don't display guides in childframe popups
   (add-hook 'mjs/indent-bars-inhibit-functions
-            (lambda () (frame-parameter nil 'parent-frame)))
+            #'mjs/indent-bars-inhibit-in-childframe-h)
   (defun mjs/indent-bars-prevent-passing-newline-a (fn col &rest args)
     "The way `indent-bars-display-on-blank-lines' functions, it places text
 properties with a display property containing a newline, which confuses
@@ -848,7 +852,7 @@ advice."
            (vc-git-diff-switches '("--histogram"))
            (diff-hl-flydiff-delay 0.5)
            (diff-hl-update-async t)
-           (diff-hl-show-stages-changes nil))
+           (diff-hl-show-staged-changes nil))
   :hook (diff-hl-mode . diff-hl-flydiff-mode)
   :hook (vc-dir-mode . turn-on-diff-hl-mode)
   :hook (dired-mode . mjs/diff-hl-enable-maybe-h)
@@ -896,9 +900,9 @@ reversion. This resizes the popup to match its contents."
       (when (thread-live-p th)
         (thread-signal th 'quit nil)
         (when block?
-          (conditional-case _
-                            (thread-join th)
-                            ((quit error) nil))))))
+          (condition-case _
+              (thread-join th)
+            ((quit error) nil))))))
   (defvar-local mjs/diff-hl-thread nil)
   (defun mjs/diff-hl-debounce-threads-a (&rest _)
     (unless (or inhibit-redisplay
@@ -936,7 +940,7 @@ reversion. This resizes the popup to match its contents."
           "l" '("Lispy" . lispy-mode)))
 
 (use-package macrostep
-  :commands marcostep-expand
+  :commands macrostep-expand
   :init (mjs-local-leader-def :states '(normal insert visual motion)
           :keymaps 'emacs-lisp-mode-map
           "e" '("Expand Macro" . macrostep-expand)))
@@ -965,7 +969,6 @@ reversion. This resizes the popup to match its contents."
   "A"     '("GTD Agenda" . (lambda () (interactive) (org-agenda nil "g")))
   "c"     '(nil :which-key "Capture")
   "c c"   '("Org Capture" . org-capture)
-  "c r"   '("Roam Capture" . mjs/org-roam-capture)
   "c f"   '("Finish Capture" . org-capture-finalize)
   "c k"   '("Abort Capture" . org-capture-kill)
   "c r"   '("Refile Capture" . org-capture-refile)
@@ -988,25 +991,43 @@ reversion. This resizes the popup to match its contents."
   "n t"   '("TODO List" . org-todo-list)
   "n T"   '("Tag View" . org-tags-view))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-emphasis-alist
-   '(("*" bold) ("/" italic) ("_" underline) ("=" org-verbatim verbatim)
-     ("~" org-code verbatim) ("+" (:strike-through t)) ("!" (:overline t))))
- '(safe-local-variable-directories '("/home/mjs/workspace/pollux/"
-                                     "/home/mjs/workspace/pollux-report/"
-                                     "/home/mjs/workspace/everparse/"))
- '(safe-local-variable-values
-   '((mjs/org-auto-tags--current-list quote ("great_basin"))
-     (mjs/org-auto-tags--current-list "great_basin")
-     (mjs/org-auto-tags--current-list "kb"))))
+(setq safe-local-variable-directories '("/home/mjs/workspace/pollux/"
+                                        "/home/mjs/workspace/pollux-report/"
+                                        "/home/mjs/workspace/everparse/")
+      safe-local-variable-values
+      '((mjs/org-auto-tags--current-list quote ("great_basin"))
+        (mjs/org-auto-tags--current-list "great_basin")
+        (mjs/org-auto-tags--current-list "kb")))
 
 (use-package org
   ;; For whatever reason, `org' gets upset if these aren't defined soon enough
   :init (setq org-directory "~/Documents/")
+  (defun mjs/org-mode-set-name-h ()
+    (setq mode-name " Org"))
+  (defun mjs/org-agenda-set-name-h ()
+    (setq mode-name "󰃮 Agenda"))
+  (defun mjs/org-capture-disable-flycheck-h ()
+    (flycheck-mode -1))
+  (defun mjs/org-capture-diminish-h ()
+    (require 'diminish)
+    (diminish 'org-capture-mode " 󰄀"))
+  (defun mjs/org-set-latex-preview-scale-h ()
+    "Automatically set the scale depending on the scale of the monitor.
+Is is so that on devices with global scaling turned up the fragments
+are rendered at the correct size and not huge."
+    (plist-put org-format-latex-options
+               :scale (if-let ((scale (alist-get 'scale-factor
+                                                 (car (display-monitor-attributes-list)))))
+                          (/ 1 scale)
+                        1.0)))
+  (defun mjs/org-resize-latex-on-text-scale-h ()
+    (if (and text-scale-mode
+             (eq major-mode 'org-mode))
+        (mjs/resize-org-latex-overlays)
+      (if (eq major-mode 'org-mode)
+          (mjs/resize-org-latex-overlays))))
+  (defun mjs/org-indent-diminish-h ()
+    (diminish 'org-indent-mode))
   :general (:states 'normal :keymaps 'org-mode-map "RET" #'mjs/org-dwim-at-point)
   (:states 'insert :keymaps 'org-mode-map "RET" #'mjs/org-return)
   ;; (:states 'normal :keymaps calendar-mode-map "RET" #'org-calendar-select)
@@ -1051,7 +1072,6 @@ reversion. This resizes the popup to match its contents."
     "B p"    '("Pervious Src Block" . org-babel-previous-src-block)
     "c"      '(nil :which-key "Capture")
     "c c"    '("Org Capture" . org-capture)
-    "c r"    '("Roam Capture" . mjs/org-roam-capture)
     "c f"    '("Finish Capture" . org-capture-finalize)
     "c k"    '("Abort Capture" . org-capture-kill)
     "c r"    '("Refile Capture" . org-capture-refile)
@@ -1068,6 +1088,7 @@ reversion. This resizes the popup to match its contents."
     "h k"    '("Mark KILL" . (lambda () (interactive) (org-todo "KILL")))
     "h l"    '("Demote Heading" . org-metaright)
     "h n"    '("Mark NEXT" . (lambda () (interactive) (org-todo "NEXT")))
+    "h p"    '("Set Property" . org-set-property)
     "h s"    '("Set Heading State" . org-todo)
     "h t"    '("Set Heading Tags" . org-set-tags-command)
     "h T"    '("Mark TODO" . (lambda () (interactive) (org-todo "TODO")))
@@ -1126,7 +1147,7 @@ reversion. This resizes the popup to match its contents."
            (org-ellipsis " ▾")
            (tab-always-indent nil)
            (org-startup-with-inline-images t)
-           (org-startup-indented t)
+           (org-startup-indented nil)
            (org-image-actual-width 600)
            (org-startup-align-all-tables t)
            (org-startup-folded 'showall)
@@ -1215,31 +1236,16 @@ reversion. This resizes the popup to match its contents."
              (auto-fill-function . "")
              (variable-pitch-mode . ""))
   :hook ((org-mode . turn-on-org-cdlatex)
-         (org-mode . (lambda () (setq mode-name " Org")))
-         (org-agenda-mode . (lambda () (setq mode-name "󰃮 Agenda")))
+         (org-mode . mjs/org-mode-set-name-h)
+         (org-agenda-mode . mjs/org-agenda-set-name-h)
          (org-mode . auto-fill-mode)
          (org-after-todo-state-change . log-todo-next-creation-date)
          (org-capture-mode . mjs/org-capture-update-header)
-         (org-capture-mode . (lambda () (flycheck-mode -1)))
-         (org-capture-mode . (lambda () (require 'diminish)
-                               (diminish 'org-capture-mode " 󰄀")))
-         ;; Automatically set the scale depending on the scale of the monitor. Is is so that on `luna'
-         ;; the fragments are rendered at the correct size and not huge.
-         (org-mode . (lambda ()
-                       (plist-put org-format-latex-options
-                                  :scale (if-let ((scale (alist-get 'scale-factor
-                                                                    (car (display-monitor-attributes-list)))))
-                                             (/ 1 scale)
-                                           1.0))))
-
-         (text-scale-mode . (lambda ()
-                              (if (and text-scale-mode
-                                       (eq major-mode 'org-mode))
-                                  (mjs/resize-org-latex-overlays)
-                                (if (eq major-mode 'org-mode)
-                                    (mjs/resize-org-latex-overlays)))))
-
-         (org-indent-mode .  (lambda () (diminish 'org-indent-mode))))
+         (org-capture-mode . mjs/org-capture-disable-flycheck-h)
+         (org-capture-mode . mjs/org-capture-diminish-h)
+         (org-mode . mjs/org-set-latex-preview-scale-h)
+         (text-scale-mode . mjs/org-resize-latex-on-text-scale-h)
+         (org-indent-mode .  mjs/org-indent-diminish-h))
   :config
   (setq org-capture-templates
         `(("c" "Class Lecture" plain
@@ -1397,31 +1403,36 @@ reversion. This resizes the popup to match its contents."
 
 (use-package org-fragtog
   :commands org-fragtog-mode
-  :hook (org-mode . (lambda ()
-                      (add-hook 'evil-insert-state-entry-hook
-                                (lambda ()
-                                  (when (eq major-mode 'org-mode)
-                                    (org-fragtog-mode +1))))
-                      (add-hook 'evil-insert-state-exit-hook
-                                (lambda ()
-                                  (when (eq major-mode 'org-mode)
-                                    (progn
-                                      (org-fragtog-mode -1)
-                                      (if (org-inside-LaTeX-fragment-p)
-                                          (org-latex-preview)))))))))
+  :init (defun mjs/org-fragtog-enable-on-insert-h ()
+          (when (eq major-mode 'org-mode)
+            (org-fragtog-mode +1)))
+  (defun mjs/org-fragtog-disable-on-insert-exit-h ()
+    (when (eq major-mode 'org-mode)
+      (progn
+        (org-fragtog-mode -1)
+        (if (org-inside-LaTeX-fragment-p)
+            (org-latex-preview)))))
+  (defun mjs/org-fragtog-setup-evil-hooks-h ()
+    (add-hook 'evil-insert-state-entry-hook
+              #'mjs/org-fragtog-enable-on-insert-h)
+    (add-hook 'evil-insert-state-exit-hookd
+              #'mjs/org-fragtog-disable-on-insert-exit-h))
+  :hook (org-mode . mjs/org-fragtog-setup-evil-hooks-h))
 
 (use-package org-appear
   :after org
   :defer nil
+  :init
+  (defun mjs/org-appear-setup-evil-hooks-h ()
+    (org-appear-mode t)
+    (add-hook 'evil-insert-state-entry-hook
+              #'org-appear-manual-start nil t)
+    (add-hook 'evil-insert-state-exit-hook
+              #'org-appear-manual-stop nil t))
   :custom (org-hide-emphasis-markers t)
   (org-appear-autolinks t)
   (org-appear-trigger 'manual)
-  :hook (org-mode . (lambda ()
-                      (org-appear-mode t)
-                      (add-hook 'evil-insert-state-entry-hook
-                                #'org-appear-manual-start nil t)
-                      (add-hook 'evil-insert-state-exit-hook
-                                #'org-appear-manual-stop nil t))))
+  :hook (org-mode . mjs/org-appear-setup-evil-hooks-h))
 
 (use-package olivetti
   :custom (olivetti-body-width 100)
@@ -1435,68 +1446,17 @@ reversion. This resizes the popup to match its contents."
   :after org
   :hook (org-mode . org-modern-mode)
   (org-agenda-finalize . org-modern-agenda)
-  :custom ((org-modern-star nil)
-           (org-modern-hide-stars nil))
-  :config (set-face-attribute 'org-modern-done nil
-                              :background (plist-get base16-stylix-theme-colors :base02)
-                              :foreground (plist-get base16-stylix-theme-colors :base05)))
-
-(use-package org-modern-indent
-  :ensure nil
-  :after org-modern
-  :hook (org-modern-mode . org-modern-indent-mode))
-
-(use-package org-pomodoro
-  :after org
-  :custom ((org-pomodoro-format " %s")
-           (org-pomodoro-short-break-format "󱁕 %s")
-           (org-pomodoro-long-break-format "󱁕 %s")
-           (org-pomodoro-start-sound-p t)
-           (org-pomodoro-audio-player "play"))
-  :custom-face (org-pomodoro-mode-line-break ((t (:foreground
-                                                  ,(plist-get base16-stylix-theme-colors :base0B)))))
-  :general (mjs-local-leader-def :keymaps 'org-mode-map
-             "t p" '("Pomodoro" . org-pomodoro))
-  (mjs-leader-def :keymaps 'override
-    "n p" '("Pomodoro" . org-pomodoro)))
-
-(use-package flycheck
-  :hook (emacs-startup . global-flycheck-mode)
-  :diminish flycheck-mode
-  :defer nil
-  :custom ((flycheck-global-modes t)
-           (flycheck-indication-mode 'right-fringe)
-           (flycheck-mode-line))
-  :config
-  (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
-    [16 48 112 240 112 48 16] nil nil 'center))
-
-(use-package flycheck-ledger
-  :after (flycheck ledger)
-  :hook (ledger-mode . (lambda () (require 'flycheck-ledger))))
-
-(use-package jinx
-  :diminish " 󰓆"
-  :hook (emacs-startup . global-jinx-mode)
-  :general (:states '(normal visual) :keymaps 'jinx-mode-map
-                    "z =" #'jinx-correct
-                    "Z =" #'jinx-languages)
-  (:keymaps 'evil-motion-state-map
-            "[ s" #'jinx-previous
-            "] s" #'jinx-next))
-
-(use-package org-superstar
-  :after org
-  :custom ((org-superstar-leading-bullet " ")
-           (org-hide-leading-stars nil)
-           (org-superstar-remove-leading-stars nil))
-  :hook (org-mode . org-superstar-mode)
+  (org-modern-mode . org-indent-mode)
+  :custom ((org-modern-star 'replace)
+           (org-modern-hide-stars " ")
+           (org-modern-replace-stars "◉○◈◇✳❀❆✦✧❖")
+           (org-hide-leading-stars nil))
   :config
   (defun mjs/org-indent-compute-prefixes ()
     "Compute prefix strings for regular text and headlines.
 
-This is taken from the `org-indent' source code, but I've changed
-the characters."
+  This is taken from the `org-indent' source code, but I've changed
+  the characters."
     (setq org-indent--heading-line-prefixes
           (make-vector org-indent--deepest-level nil))
     (setq org-indent--inlinetask-line-prefixes
@@ -1530,7 +1490,56 @@ the characters."
                             (and (> n 0)
                                  (char-to-string org-indent-boundary-char)))
                     nil 'face 'org-indent))))))
-  (advice-add 'org-indent--compute-prefixes :override #'mjs/org-indent-compute-prefixes))
+  (advice-add 'org-indent--compute-prefixes :override #'mjs/org-indent-compute-prefixes)
+  (set-face-attribute 'org-modern-done nil
+                      :background (plist-get base16-stylix-theme-colors :base02)
+                      :foreground (plist-get base16-stylix-theme-colors :base05)))
+
+(use-package org-modern-indent
+  :ensure nil
+  :after org-modern
+  :hook (org-modern-mode . org-modern-indent-mode))
+
+(use-package org-pomodoro
+  :after org
+  :custom ((org-pomodoro-format " %s")
+           (org-pomodoro-short-break-format "󱁕 %s")
+           (org-pomodoro-long-break-format "󱁕 %s")
+           (org-pomodoro-start-sound-p t)
+           (org-pomodoro-audio-player "play"))
+  :custom-face (org-pomodoro-mode-line-break ((t (:foreground
+                                                  ,(plist-get base16-stylix-theme-colors :base0B)))))
+  :general (mjs-local-leader-def :keymaps 'org-mode-map
+             "t p" '("Pomodoro" . org-pomodoro))
+  (mjs-leader-def :keymaps 'override
+    "n p" '("Pomodoro" . org-pomodoro)))
+
+(use-package flycheck
+  :hook (emacs-startup . global-flycheck-mode)
+  :diminish flycheck-mode
+  :defer nil
+  :custom ((flycheck-global-modes t)
+           (flycheck-indication-mode 'right-fringe)
+           (flycheck-mode-line))
+  :config
+  (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
+    [16 48 112 240 112 48 16] nil nil 'center))
+
+(use-package flycheck-ledger
+  :after (flycheck ledger)
+  :init (defun mjs/flycheck-ledger-load-h ()
+          (require 'flycheck-leader))
+  :hook (ledger-mode . mjs/flycheck-ledger-load-h))
+
+(use-package jinx
+  :diminish " 󰓆"
+  :hook (emacs-startup . global-jinx-mode)
+  :general (:states '(normal visual) :keymaps 'jinx-mode-map
+                    "z =" #'jinx-correct
+                    "Z =" #'jinx-languages)
+  (:keymaps 'evil-motion-state-map
+            "[ s" #'jinx-previous
+            "] s" #'jinx-next))
 
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
@@ -1542,40 +1551,45 @@ the characters."
   :custom ((pdf-view-display-size 'fit-page)
            (pdf-view-use-scaling t)
            (pdf-view-use-imagemagick nil))
-  :hook ((pdf-view-mode . (lambda () (setq buffer-read-only nil)
-                            (mjs-local-leader-def :keymaps 'pdf-view-mode-map
-                              "a"   '(nil :which-key "Annotations")
-                              "a a" '("Add Annotation" . pdf-annot-add-markup-annotation)
-                              "a d" '("Delete Annotation" . pdf-annot-delete)
-                              "a h" '("Add Highlight Annotation" . pdf-annot-add-highlight-markup-annotation)
-                              "a l" '("List Annotations" . pdf-annot-list-annotations)
-                              "a s" '("Add Squiggly Annotation" . pdf-annot-add-squiggly-markup-annotation)
-                              "a t" '("Add Text Annotation" . pdf-annot-add-text-annotation)
-                              "a u" '("Add Underline Annotation" . pdf-annot-add-underline-markup-annotation)
-                              "a -" '("Add Strike-through Annotation" . pdf-annot-add-strikeout-markup-annotation)
-                              "d" '("Toggle Dark Mode" . pdf-view-themed-minor-mode)
-                              "o" '("Outline" . pdf-outline)
-                              "p" '("Goto Page" . pdf-view-goto-page))
-                            (mjs-local-leader-def :keymaps 'pdf-annot-edit-contents-minor-mode-map
-                              "P"   '(nil :which-key "PDF Annotations")
-                              "P f" '("Finalize Annotation" . (lambda () (interactive) (pdf-annot-edit-contents-finalize t t)))
-                              "P k" '("Kill Annotation" . pdf-annot-edit-contents-abort)
-                              "P s" '("Save Annotation" . pdf-annot-edit-contents-commit))))
-         (pdf-view-mode . (lambda ()
-                            (set (make-local-variable 'evil-default-cursor) (list nil))
-                            (pdf-view-themed-minor-mode)))
-         (pdf-view-mode . (lambda ()
-                            ;; disable triggering visual mode on selection in PDFView buffers
-                            (add-hook 'evil-local-mode-hook
-                                      (lambda () (remove-hook
-                                                  'activate-mark-hook
-                                                  'evil-visual-activate-hook
-                                                  t))
-                                      nil t)
-                            ;; implement yank ourselves
-                            (evil-define-key 'normal pdf-view-mode-map
-                              "y" #'mjs/pdf-view-evil-yank-visual
-                              ))))
+  :init
+  (defun mjs/pdf-view-setup-leader-keys-h ()
+    "Set up leader key bindings for pdf-view-mode."
+    (setq buffer-read-only nil)
+    (mjs-local-leader-def :keymaps 'pdf-view-mode-map
+      "a"   '(nil :which-key "Annotations")
+      "a a" '("Add Annotation" . pdf-annot-add-markup-annotation)
+      "a d" '("Delete Annotation" . pdf-annot-delete)
+      "a h" '("Add Highlight Annotation" . pdf-annot-add-highlight-markup-annotation)
+      "a l" '("List Annotations" . pdf-annot-list-annotations)
+      "a s" '("Add Squiggly Annotation" . pdf-annot-add-squiggly-markup-annotation)
+      "a t" '("Add Text Annotation" . pdf-annot-add-text-annotation)
+      "a u" '("Add Underline Annotation" . pdf-annot-add-underline-markup-annotation)
+      "a -" '("Add Strike-through Annotation" . pdf-annot-add-strikeout-markup-annotation)
+      "d" '("Toggle Dark Mode" . pdf-view-themed-minor-mode)
+      "o" '("Outline" . pdf-outline)
+      "p" '("Goto Page" . pdf-view-goto-page))
+    (mjs-local-leader-def :keymaps 'pdf-annot-edit-contents-minor-mode-map
+      "P"   '(nil :which-key "PDF Annotations")
+      "P f" '("Finalize Annotation" . (lambda () (interactive) (pdf-annot-edit-contents-finalize t t)))
+      "P k" '("Kill Annotation" . pdf-annot-edit-contents-abort)
+      "P s" '("Save Annotation" . pdf-annot-edit-contents-commit)))
+  (defun mjs/pdf-view-setup-cursor-and-theme-h ()
+    "Set cursor and enable themed mode for pdf-view."
+    (set (make-local-variable 'evil-default-cursor) (list nil))
+    (pdf-view-themed-minor-mode))
+  (defun mjs/pdf-view-remove-visual-mark-h ()
+    "Remove `evil-visual-activate-hook' from `activate-mark-hook'."
+    (remove-hook 'activate-mark-hook 'evil-visual-activate-hook t))
+  (defun mjs/pdf-view-setup-evil-integration-h ()
+    "Set up evil integration for pdf-view buffers."
+    ;; disable triggering visual mode on selection in PDFView buffers
+    (add-hook 'evil-local-mode-hook #'mjs/pdf-view-remove-visual-mark-h nil t)
+    ;; implement yank ourselves
+    (evil-define-key 'normal pdf-view-mode-map
+      "y" #'mjs/pdf-view-evil-yank-visual))
+  :hook ((pdf-view-mode . mjs/pdf-view-setup-leader-keys-h)
+         (pdf-view-mode . mjs/pdf-view-setup-cursor-and-theme-h)
+         (pdf-view-mode . mjs/pdf-view-setup-evil-integration-h))
   :config
   (add-to-list 'evil-normal-state-modes 'pdf-view-mode)
   ;; Silence large file prompts for PDFs
@@ -1922,7 +1936,7 @@ used if TAG-LIST is empty."
                           "** Directions\n\n")) t))
 
 (use-package ox-pandoc
-  :general (mjs-local-leader-def :keymap 'org-mode-map
+  :general (mjs-local-leader-def :keymaps 'org-mode-map
              "e" '(nil :which-key "Export")
              "e e" '("Export Dispatcher" . org-export-dispatch)
              "e l" '(nil :which-key "LaTeX")
@@ -1976,14 +1990,17 @@ used if TAG-LIST is empty."
   (org-tree-slide-deactivate-message " ")
   (org-tree-slide-modeline-display nil)
   (org-tree-slide-heading-emphasis t)
+  :init
+  (defun mjs/org-tree-slide-play-h ()
+    "Increase text scale when starting a presentation."
+    (text-scale-set 4))
+  (defun mjs/org-tree-slide-stop-h ()
+    "Reset text scale when stopping a presentation."
+    (text-scale-set 1)
+    (text-scale-mode -1))
   :config (org-tree-slide-simple-profile)
-  (add-hook 'org-tree-slide-play-hook
-            (lambda ()
-              (text-scale-set 4)))
-  (add-hook 'org-tree-slide-stop-hook
-            (lambda ()
-              (text-scale-set 1)
-              (text-scale-mode -1))))
+  (add-hook 'org-tree-slide-play-hook #'mjs/org-tree-slide-play-h)
+  (add-hook 'org-tree-slide-stop-hook #'mjs/org-tree-slide-stop-h))
 
 (use-package org-timeblock
   :ensure nil
@@ -2073,16 +2090,25 @@ used if TAG-LIST is empty."
 (use-package latex
   :ensure auctex
   :mode ("\\.tex\\'" . LaTeX-mode)
-  :hook ((LaTeX-mode . (lambda () (setq mode-name " LaTeX")))
+  :init
+  (defun mjs/latex-mode-set-name-h ()
+    "Set LaTeX mode name for modeline."
+    (setq mode-name " LaTeX"))
+  (defun mjs/latex-disable-apheleia-h ()
+    "Disable `apheleia-mode' in LaTeX buffers."
+    (apheleia-mode -1))
+  (defun mjs/latex-compile-on-save-h ()
+    "Compile LaTeX document on save."
+    (when (derived-mode-p 'LaTeX-mode)
+      (TeX-command-run-all nil)))
+  :hook ((LaTeX-mode . mjs/latex-mode-set-name-h)
          (LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . TeX-fold-mode)
          (LaTeX-mode . TeX-PDF-mode)
          (LaTeX-mode . mjs/preview-scale-adjustment)
          (LaTeX-mode . auto-fill-mode)
-         (LaTeX-mode . (lambda () (apheleia-mode -1)))
-         (after-save . (lambda ()
-		  				 (when (eq major-mode #'LaTeX-mode)
-						   (TeX-command-run-all nil)))))
+         (LaTeX-mode . mjs/latex-disable-apheleia-h)
+         (after-save . mjs/latex-compile-on-save-h))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
            (TeX-command-default "LaTeX")
            (TeX-check-TeX nil)
@@ -2107,7 +2133,7 @@ used if TAG-LIST is empty."
     "C" '("Clean Document" . TeX-clean)
     "e" '("Insert Environment" . LaTeX-environment)
     "i" '("Indent Line" . LaTeX-indent-line)
-    "m" '("Insert Macro" . TeX-insert-marco)
+    "m" '("Insert Macro" . TeX-insert-macro)
     "s" '("Insert Section" . LaTeX-section)
     "t" '("Insert Citation" . citar-insert-citation)
     "v" '("View PDF" . TeX-view)))
@@ -2122,7 +2148,7 @@ used if TAG-LIST is empty."
   :custom (yas-triggers-in-field t)
   (yas-snippets-dirs '((expand-file-name "snippets" user-emacs-directory)))
   (yas-verbosity 4)
-  :general (mjs-leader-def :keymap 'yas-keymap
+  :general (mjs-leader-def :keymaps 'yas-keymap
              "i s" '("Snippet" . yas-insert-snippet))
   :config (use-package warnings
             :ensure nil
@@ -2191,13 +2217,12 @@ used if TAG-LIST is empty."
         (let* ((fill-prefix (typst-ts-editing-calculate-fill-prefix))
                (adaptive-fill-mode (null fill-prefix)))
           (do-auto-fill))))
-  :hook (typst-ts-mode . (lambda ()
-                           (progn
-                             (set
-                              (make-local-variable
-                               'normal-auto-fill-function)
-                              #'mjs/typst-ts-editing-auto-fill-function)
-                             (auto-fill-mode))))
+  (defun mjs/typst-ts-setup-auto-fill-h ()
+    "Set up auto-fill with typst-aware fill function."
+    (set (make-local-variable 'normal-auto-fill-function)
+         #'mjs/typst-ts-editing-auto-fill-function)
+    (auto-fill-mode))
+  :hook (typst-ts-mode . mjs/typst-ts-setup-auto-fill-h)
   :custom
   (typst-ts-mode-enable-raw-blocks-highlight t)
   :general (mjs-local-leader-def :keymaps 'typst-ts-mode-map
@@ -2250,7 +2275,7 @@ used if TAG-LIST is empty."
 (use-package edit-indirect)
 
 (use-package markdown-mode
-  :mode ("/README\\(?:\\.md\\)?\\'" . gfm-mode)
+  :mode ("\\.md\\'" . markdown-mode)
   :custom ((markdown-italic-underscore t)
            (markdown-asymmetric-header t)
            (markdown-gfm-additional-languages '("sh"))
@@ -2371,28 +2396,33 @@ used if TAG-LIST is empty."
              "C v m" '("Month" . mjs/open-calendar)
              "C w"   '("Beginning of Week" . cfw:navi-goto-week-begin-command)
              "C W"   '("End of Week" . cfw:navi-goto-week-end-command))
-  :hook (cfw:calendar-mode . (lambda ()
-                               (general-define-key :states '(normal motion) :keymaps 'local
-                                                   "TAB"    #'cfw:navi-next-item-command
-                                                   "S-TAB"  (lambda ()
-                                                              (interactive)
-                                                              (cfw:navi-next-item-command -1))
-                                                   "h"      (lambda ()
-                                                              (interactive)
-                                                              (cfw:navi-next-day-command -1))
-                                                   "j"      #'cfw:navi-next-week-command
-                                                   "M-j"    #'cfw:navi-next-month-command
-                                                   "k"      (lambda ()
-                                                              (interactive)
-                                                              (cfw:navi-next-week-command -1))
-                                                   "M-k"    (lambda ()
-                                                              (interactive)
-                                                              (cfw:navi-next-month-command -1))
-                                                   "l"      #'cfw:navi-next-day-command
-                                                   "RET"    #'cfw:show-details-command)))
-  (cfw:details-mode . (lambda ()
-                        (general-define-key :states '(normal motion) :keymaps 'local
-                                            "q" #'kill-buffer-and-window)))
+  :init
+  (defun mjs/calfw-calendar-setup-keys-h ()
+    "Set up evil keybindings for calfw calendar buffers."
+    (general-define-key :states '(normal motion) :keymaps 'local
+                        "TAB"    #'cfw:navi-next-item-command
+                        "S-TAB"  (lambda ()
+                                   (interactive)
+                                   (cfw:navi-next-item-command -1))
+                        "h"      (lambda ()
+                                   (interactive)
+                                   (cfw:navi-next-day-command -1))
+                        "j"      #'cfw:navi-next-week-command
+                        "M-j"    #'cfw:navi-next-month-command
+                        "k"      (lambda ()
+                                   (interactive)
+                                   (cfw:navi-next-week-command -1))
+                        "M-k"    (lambda ()
+                                   (interactive)
+                                   (cfw:navi-next-month-command -1))
+                        "l"      #'cfw:navi-next-day-command
+                        "RET"    #'cfw:show-details-command))
+  (defun mjs/calfw-details-setup-keys-h ()
+    "Set up evil keybindings for calfw details buffers."
+    (general-define-key :states '(normal motion) :keymaps 'local
+                        "q" #'kill-buffer-and-window))
+  :hook (cfw:calendar-mode . mjs/calfw-calendar-setup-keys-h)
+  (cfw:details-mode . mjs/calfw-details-setup-keys-h)
   :custom-face
   (cfw:face-title ((t  :foreground ,(plist-get base16-stylix-theme-colors :base0A)
                        :weight bold
@@ -2416,7 +2446,7 @@ used if TAG-LIST is empty."
   (cfw:face-today-title ((t :foreground ,(plist-get base16-stylix-theme-colors :base00)
                             :background ,(plist-get base16-stylix-theme-colors :base0B)
                             :weight bold)))
-  (cfw:face-today ((t :background: ,(plist-get base16-stylix-theme-colors :base02)
+  (cfw:face-today ((t :background ,(plist-get base16-stylix-theme-colors :base02)
                       :weight bold)))
   (cfw:face-select ((t :background ,(plist-get base16-stylix-theme-colors :base04))))
   (cfw:face-toolbar ((t :foreground ,(plist-get base16-stylix-theme-colors :base0D)
@@ -2457,7 +2487,7 @@ used if TAG-LIST is empty."
 
 (use-package sly
   :custom ((sly-symbol-completion-mode nil)
-           (inferior-lisp-prgram "sbcl"))
+           (inferior-lisp-program "sbcl"))
   :config (add-to-list 'sly-contribs 'sly-asdf 'append))
 
 (use-package sly-macrostep)
@@ -2473,11 +2503,14 @@ used if TAG-LIST is empty."
             '("--ghc-options=-ferror-spans -fshow-loaded-modules"))
            (haskell-process-type 'cabal-new-repl)
            (haskell-stylish-on-save 't))
+  :init
+  (defun mjs/haskell-diminish-modes-h ()
+    "Diminish haskell minor modes."
+    (diminish 'haskell-doc-mode)
+    (diminish 'haskell-indent-mode)
+    (diminish 'interactive-haskell-mode))
   :hook
-  (haskell-mode . (lambda ()
-                    (diminish 'haskell-doc-mode)
-                    (diminish 'haskell-indent-mode)
-                    (diminish 'interactive-haskell-mode)))
+  (haskell-mode . mjs/haskell-diminish-modes-h)
   (haskell-mode . turn-on-haskell-doc-mode)
   (haskell-mode . turn-on-haskell-indent)
   (haskell-mode . interactive-haskell-mode))
@@ -2485,24 +2518,26 @@ used if TAG-LIST is empty."
 (use-package proof-general
   :mode ("\\.v\\'" . coq-mode)
   :commands coq-mode
-  :hook (coq-mode . (lambda ()
-                      (set-face-background 'proof-locked-face
-                                           (plist-get base16-stylix-theme-colors :base02))
-                      (set-face-background 'proof-queue-face
-                                           (plist-get base16-stylix-theme-colors :base03))
-                      (set-face-background 'proof-warning-face
-                                           (plist-get base16-stylix-theme-colors :base0A))
-                      (set-face-foreground 'proof-tactics-name-face
-                                           (plist-get base16-stylix-theme-colors :base0C))
-                      (set-face-foreground 'proof-tacticals-name-face
-                                           (plist-get base16-stylix-theme-colors :base0B))
-                      (set-face-foreground 'coq-solve-tactics-face
-                                           (plist-get base16-stylix-theme-colors :base09))
-                      (set-face-background 'coq-cheat-face
-                                           (plist-get base16-stylix-theme-colors :base08))
-                      (set-face-foreground 'coq-cheat-face
-                                           (plist-get base16-stylix-theme-colors :base00))
-                      ))
+  :init
+  (defun mjs/coq-set-proof-faces-h ()
+    "Set proof-general and Coq face colors."
+    (set-face-background 'proof-locked-face
+                         (plist-get base16-stylix-theme-colors :base02))
+    (set-face-background 'proof-queue-face
+                         (plist-get base16-stylix-theme-colors :base03))
+    (set-face-background 'proof-warning-face
+                         (plist-get base16-stylix-theme-colors :base0A))
+    (set-face-foreground 'proof-tactics-name-face
+                         (plist-get base16-stylix-theme-colors :base0C))
+    (set-face-foreground 'proof-tacticals-name-face
+                         (plist-get base16-stylix-theme-colors :base0B))
+    (set-face-foreground 'coq-solve-tactics-face
+                         (plist-get base16-stylix-theme-colors :base09))
+    (set-face-background 'coq-cheat-face
+                         (plist-get base16-stylix-theme-colors :base08))
+    (set-face-foreground 'coq-cheat-face
+                         (plist-get base16-stylix-theme-colors :base00)))
+  :hook (coq-mode . mjs/coq-set-proof-faces-h)
   :custom ((coq-smie-user-tokens
             '(("," . ":=")
               ("∗" . "->")
@@ -2592,19 +2627,23 @@ used if TAG-LIST is empty."
            (buf (and win (window-buffer win))))
       (when buf
         (activate-input-method (buffer-local-value 'current-input-method buf)))))
+  :init
+  (defun mjs/coq-setup-math-input-h ()
+    "Set up math input method and prettify symbols for Coq."
+    (set-input-method "math")
+    (ligature-mode -1)
+    ;; Remove the :: symbol
+    (setq prettify-symbols-alist '())
+    (setq coq-prettify-symbols-alist '(("/\\" . 8743)
+                                       ("\\/" . 8744)
+                                       ("forall" . 8704)
+                                       ("fun" . 955)
+                                       ("exists" . 8707)
+                                       ("->" . 8594)
+                                       ("<-" . 8592)
+                                       ("=>" . 8658))))
   :config
-  (add-hook 'coq-mode-hook (lambda () (set-input-method "math")
-                             (ligature-mode -1)
-                             ;; Remove the :: symbol
-                             (setq prettify-symbols-alist '())
-                             (setq coq-prettify-symbols-alist '(("/\\" . 8743)
-                                                                ("\\/" . 8744)
-                                                                ("forall" . 8704)
-                                                                ("fun" . 955)
-                                                                ("exists" . 8707)
-                                                                ("->" . 8594)
-                                                                ("<-" . 8592)
-                                                                ("=>" . 8658)))))
+  (add-hook 'coq-mode-hook #'mjs/coq-setup-math-input-h)
   (add-hook 'minibuffer-setup-hook #'mjs/inherit-input-method)
   (quail-define-package "math" "UTF-8" "Ω" t)
   (quail-define-rules
@@ -2728,8 +2767,7 @@ used if TAG-LIST is empty."
            "M-m" #'fstar-subp-retract-one
            "M-." #'fstar-subp-advance-or-retract-to-point)
   :custom-face (fstar-subp-overlay-processed-face ((t (:background
-                                                       ,(plist-get base16-stylix-theme-colors :base02)))))
-  )
+                                                       ,(plist-get base16-stylix-theme-colors :base02))))))
 
 (use-package protobuf-mode
   :mode ("\\.proto\\'" . protobuf-mode))
@@ -2803,12 +2841,19 @@ Won't forward the buffer to chained formatters if successful."
 
 (use-package vterm
   :commands (vterm-mode vterm vterm-other-window)
+  :init
+  (defun mjs/vterm-set-local-vars-h ()
+    "Set vterm-specific local variables."
+    (setq confirm-kill-processes nil
+          hscroll-margin 0))
+  (defun mjs/vterm-disable-hl-line-h ()
+    "Disable `hl-line-mode' in vterm buffers."
+    (hl-line-mode -1))
   :hook (vterm-mode . hide-mode-line-mode)
-  :hook (vterm-mode . (lambda () (setq confirm-kill-processes nil
-                                       hscroll-margin 0)))
-  :hook (vterm-mode . (lambda () (hl-line-mode -1)))
+  :hook (vterm-mode . mjs/vterm-set-local-vars-h)
+  :hook (vterm-mode . mjs/vterm-disable-hl-line-h)
   :general
-  (mjs-leader-def :keymap 'override
+  (mjs-leader-def :keymaps 'override
     "t t" '("Terminal" . vterm))
   (:states 'insert :keymap 'vterm-mode-map
            "C-q" #'vterm-send-next-key)
