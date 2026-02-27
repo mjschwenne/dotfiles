@@ -4,6 +4,15 @@
   ...
 }@inputs:
 {
+
+  xdg.terminal-exec = {
+    enable = true;
+    settings = {
+      default = [
+        "ghostty.desktop"
+      ];
+    };
+  };
   programs = {
     foot = {
       enable = true;
@@ -23,7 +32,7 @@
     };
 
     kitty = {
-      enable = true;
+      enable = false;
       shellIntegration = {
         enableFishIntegration = true;
         mode = "no-cursor";

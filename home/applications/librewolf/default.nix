@@ -1,4 +1,7 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
+
+  home.packages = with pkgs; [ tridactyl-native ];
   programs.librewolf = {
     enable = true;
     policies = {
@@ -27,6 +30,16 @@
 
         "FirefoxColor@mozilla.com" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/firefox-color/latest.xpi";
+          installation_mode = "force_installed";
+        };
+
+        "tridactyl.vim@cmcaine.co.uk" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/tridactyl-vim/latest.xpi";
+          installation_mode = "force_installed";
+        };
+
+        "brotab_mediator@example.org" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/brotab/latest.xpi";
           installation_mode = "force_installed";
         };
       };
@@ -75,7 +88,7 @@
                 ];
               }
             ];
-            definedAliases = [",d"];
+            definedAliases = [ ",d" ];
           };
           "google" = {
             urls = [
@@ -89,7 +102,7 @@
                 ];
               }
             ];
-            definedAliases = [",g"];
+            definedAliases = [ ",g" ];
           };
           "Home Manager Options" = {
             urls = [
@@ -103,7 +116,7 @@
                 ];
               }
             ];
-            definedAliases = ["ho"];
+            definedAliases = [ "ho" ];
           };
           "Nix Packages" = {
             urls = [
@@ -121,7 +134,7 @@
                 ];
               }
             ];
-            definedAliases = ["np"];
+            definedAliases = [ "np" ];
           };
           "youtube" = {
             urls = [
@@ -135,7 +148,7 @@
                 ];
               }
             ];
-            definedAliases = ["y"];
+            definedAliases = [ "y" ];
           };
           "Wikipedia" = {
             urls = [
@@ -149,7 +162,7 @@
                 ];
               }
             ];
-            definedAliases = ["wik"];
+            definedAliases = [ "wik" ];
           };
           "GitHub" = {
             urls = [
@@ -163,7 +176,7 @@
                 ];
               }
             ];
-            definedAliases = ["gh"];
+            definedAliases = [ "gh" ];
           };
         };
         default = "ddg";
@@ -241,7 +254,7 @@
 
   stylix.targets.librewolf = {
     enable = true;
-    profileNames = ["default"];
+    profileNames = [ "default" ];
     colorTheme.enable = true;
   };
 }

@@ -3,7 +3,8 @@
   pkgs,
   nixpkgs,
   ...
-}: {
+}:
+{
   imports = [
     # Include the results of the hardware scan.
     ./venus-hardware.nix
@@ -12,8 +13,8 @@
   ];
 
   boot = {
-    extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
-    kernelModules = ["v4l2loopback"];
+    extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+    kernelModules = [ "v4l2loopback" ];
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
@@ -45,19 +46,19 @@
 
   # android stuff for supernote
   environment.systemPackages = [ pkgs.android-tools ];
-  users.users.mjs.extraGroups = ["adbusers"];
+  users.users.mjs.extraGroups = [ "adbusers" ];
 
   # fingerprint reader
   services.fprintd = {
     enable = true;
   };
   systemd.services.fprintd = {
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
     serviceConfig.Type = "simple";
   };
 
   services.kmonad = {
-    enable = false;
+    enable = true;
     keyboards = {
       laptop = {
         device = "/dev/input/event0";

@@ -1,44 +1,35 @@
 {
   config,
   lib,
-  stasis,
   pkgs,
+  stasis,
   ...
 }:
 
 let
   inherit (lib)
     mkIf
+    mkMerge
     mkEnableOption
     mkPackageOption
     mkOption
     types
-    optional
     escapeShellArgs
     getExe
     literalExpression
-    makeBinPath
     ;
 
+  package = stasis.packages.${pkgs.stdenv.hostPlatform.system}.default;
   cfg = config.services.stasis;
-  package = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
 
-  # IMPORTANT:
-  # systemd.user.services.<name>.path expects *packages* (derivations),
-  # NOT literal directories. Nix will append /bin automatically.
-  servicePathPkgs = with pkgs; [
+  # Base packages available in the service PATH.
+  # Include pulseaudio so `pactl` works under PipeWire Pulse.
+  baseServicePathPkgs = with pkgs; [
     bashInteractive
     coreutils
     systemd
+    pulseaudio
   ];
-
-  # If you still want the "system profile" bins first, set PATH explicitly.
-  # This avoids the /bin/bin bug entirely.
-  explicitPath =
-    "/run/current-system/sw/bin"
-    + ":/etc/profiles/per-user/%u/bin"
-    + ":/nix/var/nix/profiles/default/bin"
-    + ":${makeBinPath servicePathPkgs}";
 in
 {
   options.services.stasis = {
@@ -51,18 +42,26 @@ in
       default = null;
       description = ''
         The literal contents of the Stasis configuration file.
-
         If set, Home Manager will write this text to
         `~/.config/stasis/stasis.rune`.
       '';
       example = literalExpression ''
-        # (example omitted)
+        default:
+          lock_screen:
+            timeout 300
+            command "swaylock"
+          end
+          suspend:
+            timeout 600
+            command "systemctl suspend"
+          end
+        end
       '';
     };
 
     target = mkOption {
       type = types.nonEmptyStr;
-      default = config.wayland.systemd.target;
+      default = config.wayland.systemd.target or "graphical-session.target";
       description = "The systemd user target after which Stasis is started.";
     };
 
@@ -81,6 +80,16 @@ in
         Set to null to disable.
       '';
     };
+
+    extraPathPackages = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = literalExpression "with pkgs; [ playerctl ]";
+      description = ''
+        Extra packages added to the Stasis systemd user service PATH.
+        (`pulseaudio` is included by default so `pactl` is available.)
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -91,29 +100,15 @@ in
         Description = "Stasis Wayland Idle Manager";
         PartOf = [ cfg.target ];
         After = [ cfg.target ];
+        ConditionEnvironment = [ "WAYLAND_DISPLAY" ];
       };
 
-      # Home Manager supports restartTriggers too; it will still emit
-      # X-Restart-Triggers in the unit. If your systemd marks that "bad-setting",
-      # you should avoid it and instead rely on `home-manager switch` restart,
-      # or add an explicit ExecReload strategy in your app.
-      #
-      # For now: keep it OFF to avoid the bad-setting state.
-      # restartTriggers = optional (cfg.extraConfig != null)
-      #   config.xdg.configFile."stasis/stasis.rune".source;
-
-      Service = lib.mkMerge [
+      Service = mkMerge [
         {
           Type = "simple";
           ExecStart = "${getExe cfg.package} ${escapeShellArgs cfg.extraArgs}";
           Restart = "on-failure";
-
-          Slice = "session.slice";
-
-          # Make PATH deterministic and avoid /bin/bin mistakes.
-          Environment = [
-            "PATH=${explicitPath}"
-          ];
+          # Slice = "session.slice";
 
           PassEnvironment = [
             "NIRI_SOCKET"
@@ -121,14 +116,17 @@ in
             "XDG_RUNTIME_DIR"
             "DBUS_SESSION_BUS_ADDRESS"
           ];
+          Environment = [
+            "PATH=${lib.makeBinPath (baseServicePathPkgs ++ cfg.extraPathPackages)}"
+          ];
         }
         (mkIf (cfg.environmentFile != null) {
           EnvironmentFile = [ "-${cfg.environmentFile}" ];
         })
       ];
-
-      # IMPORTANT: This is packages, not dirs.
-      # path = servicePathPkgs;
+      # systemd will safely construct PATH from derivations.
+      # this produces a type error for home manager
+      # path = baseServicePathPkgs ++ cfg.extraPathPackages;
 
       Install = {
         WantedBy = [ cfg.target ];

@@ -118,7 +118,7 @@ in
   };
   home.sessionVariables = {
     GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
-    TERMINAL = "/etc/profiles/per-user/mjs/bin/wezterm";
+    TERMINAL = "/etc/profiles/per-user/mjs/bin/ghostty";
     MOZ_ENABLE_DBUS = 1;
   };
 

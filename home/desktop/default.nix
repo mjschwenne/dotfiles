@@ -2,7 +2,7 @@
 {
   imports = [
     ./rofi
-    # ./swayidle
+    ./vicinae
     ./stasis
     ./swaylock
     ./mako

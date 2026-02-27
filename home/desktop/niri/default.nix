@@ -2,9 +2,9 @@
   pkgs,
   config,
   osConfig,
-  waybar,
   awww,
-  wezterm,
+  vicinae,
+  stasis,
   ...
 }:
 {
@@ -21,6 +21,8 @@
 
   xdg.configFile."niri/config.kdl".text =
     let
+      vicinae-pkg = vicinae.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      stasis-pkg = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
       outputs =
         {
           "terra" =
@@ -265,7 +267,7 @@
           // You can enable drop shadows for windows.
           shadow {
               // Uncomment the next line to enable shadows.
-              // on
+              on
 
               // By default, the shadow draws only around its window, and not behind it.
               // Uncomment this setting to make the shadow draw behind its window.
@@ -352,67 +354,6 @@
       // - scanline (0.08): Scanline visibility - higher = more prominent
       // - uv.y * 400.0: Scanline density - higher = more lines
 
-      animations {
-          window-open {
-              duration-ms 400
-              curve "linear"
-              custom-shader r"
-                  vec4 open_color(vec3 coords_geo, vec3 size_geo) {
-                      if (coords_geo.x < 0.0 || coords_geo.x > 1.0 || coords_geo.y < 0.0 || coords_geo.y > 1.0) return vec4(0.0);
-                      float progress = niri_clamped_progress;
-                      float glitch = 1.0 - progress;
-                      vec2 uv = coords_geo.xy;
-
-                      // RGB channel splitting - channels converge as window opens
-                      float split = glitch * 0.04;
-                      vec3 cr = niri_geo_to_tex * vec3(uv + vec2(split, 0.0), 1.0);
-                      vec3 cg = niri_geo_to_tex * vec3(uv, 1.0);
-                      vec3 cb = niri_geo_to_tex * vec3(uv - vec2(split, 0.0), 1.0);
-
-                      float r = texture2D(niri_tex, cr.st).r;
-                      float g = texture2D(niri_tex, cg.st).g;
-                      float b = texture2D(niri_tex, cb.st).b;
-                      float a = texture2D(niri_tex, cg.st).a;
-                      vec3 color = vec3(r, g, b);
-
-                      // CRT scanline effect
-                      float scanline = 1.0 - 0.08 + 0.08 * sin(uv.y * 400.0);
-
-                      return vec4(color * scanline, a * progress);
-                  }
-              "
-          }
-
-          window-close {
-              duration-ms 600
-              curve "linear"
-              custom-shader r"
-                  vec4 close_color(vec3 coords_geo, vec3 size_geo) {
-                      if (coords_geo.x < 0.0 || coords_geo.x > 1.0 || coords_geo.y < 0.0 || coords_geo.y > 1.0) return vec4(0.0);
-                      float progress = niri_clamped_progress;
-                      vec2 uv = coords_geo.xy;
-
-                      // RGB channel splitting - channels separate as window closes
-                      float split = progress * 0.04;
-                      vec3 cr = niri_geo_to_tex * vec3(uv + vec2(split, 0.0), 1.0);
-                      vec3 cg = niri_geo_to_tex * vec3(uv, 1.0);
-                      vec3 cb = niri_geo_to_tex * vec3(uv - vec2(split, 0.0), 1.0);
-
-                      float r = texture2D(niri_tex, cr.st).r;
-                      float g = texture2D(niri_tex, cg.st).g;
-                      float b = texture2D(niri_tex, cb.st).b;
-                      float a = texture2D(niri_tex, cg.st).a;
-                      vec3 color = vec3(r, g, b);
-
-                      // CRT scanline effect
-                      float scanline = 1.0 - 0.08 + 0.08 * sin(uv.y * 400.0);
-
-                      return vec4(color * scanline, a * (1.0 - progress));
-                  }
-              "
-          }
-      }
-
       // Window rules let you adjust behavior for individual windows.
       // Find more information on the wiki:
       // https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
@@ -436,6 +377,7 @@
              match app-id=r#"^spotify$"#
              match app-id=r#"^vesktop$"#
              match app-id=r#"^thunderbird$"#
+             match app-id=r#"^org\.remmina\.Remmina"#
              open-maximized true
          }
 
@@ -514,16 +456,18 @@
           Mod+Shift+Slash { show-hotkey-overlay; }
 
           // Mod+Return hotkey-overlay-title="Open a Terminal: wezterm" { spawn "${pkgs.wezterm}/bin/wezterm"; }
-          Mod+Return hotkey-overlay-title="Open a Terminal: wezterm" { spawn "${
-            wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default
-          }/bin/wezterm"; }
-          Mod+A hotkey-overlay-title="Run an Application: rofi" { spawn "${pkgs.rofi}/bin/rofi" "-show" "drun"; }
-          Mod+Shift+A hotkey-overlay-title="Switch windows: rofi" { spawn "${pkgs.rofi}/bin/rofi" "-show" "window"; }
-          Mod+Z hotkey-overlay-title="Lock the Screen: swaylock" { spawn "~/.config/niri/scripts/lock.fish"; }
-          Mod+Control+Z { spawn "${pkgs.wlogout}/bin/wlogout" "-b" "5" "-T" "400" "-B" "400"; }
+          Mod+Return hotkey-overlay-title="Open a Terminal: ghostty" { spawn "${pkgs.ghostty}/bin/ghostty"; }
+          Mod+A hotkey-overlay-title="Run an Application: vicinae" { spawn "${vicinae-pkg}/bin/vicinae" "toggle"; }
+          Mod+Shift+A hotkey-overlay-title="Switch windows: vicinae" { spawn "${vicinae-pkg}/bin/vicinae" "deeplink" "vicinae://extensions/vicinae/wm/switch-windows"; }
+          Mod+Z hotkey-overlay-title="Lock the Screen: swaylock" { spawn "${stasis-pkg}/bin/stasis" "trigger" "suspend"; }
+          Mod+Control+Z { spawn "${vicinae-pkg}/bin/vicinae" "deeplink" "vicinae://extensions/vicinae/power"; }
           Mod+B hotkey-overlay-title="Browser: librewolf" { spawn "${pkgs.librewolf}/bin/librewolf"; }
           Mod+Shift+B hotkey-overlay-title="Browser: firefox" { spawn "${pkgs.firefox}/bin/firefox"; }
+          Mod+Alt+B { spawn "${vicinae-pkg}/bin/vicinae" "deeplink" "vicinae://extensions/brpaz/brotab/tabs-list"; }
           Mod+E { spawn "emacsclient" "-c"; }
+          Mod+S { spawn "${vicinae-pkg}/bin/vicinae" "deeplink" "vicinae://extensions/leiserfg/ssh/ssh"; }
+          Mod+Alt+W { spawn "${vicinae-pkg}/bin/vicinae" "deeplink" "vicinae://extensions/sovereign/awww-switcher/wpgrid"; }
+          Mod+Alt+D { spawn "${vicinae-pkg}/bin/vicinae" "deeplink" "vicinae://extensions/Gelei/bluetooth"; }
           Mod+P hotkey-overlay-title="Password Manager" { spawn "${pkgs.keepassxc}/bin/keepassxc"; }
           Mod+F1 hotkey-overlay-title="File Manager" { spawn "${pkgs.thunar}/bin/thunar"; }
           Mod+F6 hotkey-overlay-title="Calculator" { spawn "${pkgs.qalculate-gtk}/bin/qalculate-gtk"; }
