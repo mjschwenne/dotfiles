@@ -12,7 +12,7 @@
       @description "Stasis configuration file"
 
       default:
-        pre_suspend_command "${pkgs.swaylock}/bin/swaylock"
+        pre_suspend_command "${pkgs.swaylock}/bin/swaylock -f"
         monitor_media true
         ignore_remote_media false
         respect_idle_inhibitors true
