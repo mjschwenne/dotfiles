@@ -4,8 +4,7 @@
     pulseaudioFull
   ];
 
-  # imports = [ stasis.homeModules.default ];
-  imports = [ ./stasis-module.nix ];
+  imports = [ stasis.homeModules.default ];
   services.stasis = {
     enable = true;
     extraConfig = ''

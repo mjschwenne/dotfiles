@@ -4,7 +4,7 @@
     enable = true;
     settings = {
       image = "~/.config/swaylock/swaylock.png";
-      daemonize = true;
+      daemonize = false;
       indicator-radius = 150;
       indicator-thickness = 15;
       indicator-caps-lock = true;
