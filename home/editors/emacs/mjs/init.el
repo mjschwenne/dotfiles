@@ -1232,6 +1232,8 @@ are rendered at the correct size and not huge."
               ("lightning" "\\lightning" nil "&x21AF" "</" "</" "↯")
               ("qed" "\\qedsymbol" nil "&x25A1" "[]" "[]" "☐")))
            (org-confirm-babel-evaluate nil))
+  :custom-face
+  (org-level-4 ((t  :foreground ,(plist-get base16-stylix-theme-colors :base0B))))
   :diminish ((org-cdlatex-mode . " ")
              (auto-fill-function . "")
              (variable-pitch-mode . ""))

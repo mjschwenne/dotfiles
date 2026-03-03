@@ -3,7 +3,7 @@
   programs.swaylock = {
     enable = true;
     settings = {
-      image = "~/.config/swaylock/swaylock.png";
+      image = "~/.config/swaylock/swaylock.jpeg";
       daemonize = false;
       indicator-radius = 150;
       indicator-thickness = 15;
@@ -15,6 +15,6 @@
   };
 
   xdg.configFile = {
-    "swaylock/swaylock.png".source = ./swaylock.png;
+    "swaylock/swaylock.jpeg".source = ./swaylock.jpeg;
   };
 }

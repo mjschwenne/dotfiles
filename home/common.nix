@@ -19,7 +19,8 @@
 
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest.yaml";
+    # https://github.com/tinted-theming/schemes/tree/spec-0.11/base16
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-moon.yaml";
     polarity = "dark";
     fonts = {
       serif = {
@@ -95,6 +96,7 @@
     zoxide
     sox
     rclone
+    yazi
   ];
 
   # This value determines the home Manager release that your
