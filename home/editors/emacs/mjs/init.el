@@ -474,6 +474,11 @@
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
 (add-hook 'conf-mode-hook #'display-line-numbers-mode)
 
+(use-package prog-mode
+  :ensure nil
+  :custom-face
+  (font-lock-comment-face ((t  :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+
 (use-package vi-tilde-fringe
   :diminish vi-tilde-fringe-mode
   :hook (emacs-startup . global-vi-tilde-fringe-mode))
