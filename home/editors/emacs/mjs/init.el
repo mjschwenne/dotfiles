@@ -477,6 +477,7 @@
 (use-package prog-mode
   :ensure nil
   :custom-face
+  (font-lock-comment-delimiter-face ((t  :foreground ,(plist-get base16-stylix-theme-colors :base04))))
   (font-lock-comment-face ((t  :foreground ,(plist-get base16-stylix-theme-colors :base04)))))
 
 (use-package vi-tilde-fringe
