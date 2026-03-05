@@ -2530,9 +2530,9 @@ used if TAG-LIST is empty."
   (defun mjs/coq-set-proof-faces-h ()
     "Set proof-general and Coq face colors."
     (set-face-background 'proof-locked-face
-                         (plist-get base16-stylix-theme-colors :base02))
-    (set-face-background 'proof-queue-face
                          (plist-get base16-stylix-theme-colors :base03))
+    (set-face-background 'proof-queue-face
+                         (plist-get base16-stylix-theme-colors :base02))
     (set-face-background 'proof-warning-face
                          (plist-get base16-stylix-theme-colors :base0A))
     (set-face-foreground 'proof-tactics-name-face
