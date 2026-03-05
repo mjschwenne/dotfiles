@@ -8,10 +8,6 @@
 {
   imports = [ vicinae.homeManagerModules.default ];
 
-  home.packages = with pkgs; [
-    brotab
-  ];
-
   services.vicinae = {
     enable = true;
     systemd = {
@@ -31,17 +27,11 @@
             wallpaperPath = "/home/mjs/.dotfiles/home/desktop/wallpapers";
           };
         };
-        "@brpaz/vicinae-extension-brotab-0" = {
-          preferences = {
-            brotabPath = "${pkgs.brotab}/bin/brotab";
-          };
-        };
       };
     };
     extensions = with vicinae-extensions.packages.${pkgs.stdenv.hostPlatform.system}; [
       awww-switcher
       bluetooth
-      brotab
       niri
       nix
       power-profile
