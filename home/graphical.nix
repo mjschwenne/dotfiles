@@ -73,6 +73,7 @@ let
     python313Packages.gpustat
     distrobox
     graphviz
+    viu
     claude-code
     claude-code-acp
 
@@ -140,10 +141,6 @@ in
       "distrobox/distrobox.conf".text = ''
         container_additional_volumes="/nix/store:/nix/store:ro /etc/profiles/per-user/mjs:/etc/profiles/per-user/mjs:ro /etc/static/profiles/per-user/mjs:/etc/static/profiles/per-user/mjs:ro /run/secrets:/run/secrets:ro"
       '';
-      "Kvantum/Nord" = {
-        source = ./desktop/qt/Nord;
-        recursive = true;
-      };
     };
     mimeApps = {
       enable = true;

@@ -324,6 +324,7 @@
       spawn-at-startup "${pkgs.networkmanagerapplet}/bin/nm-applet"
       spawn-at-startup "${pkgs.keepassxc}/bin/keepassxc"
       spawn-at-startup "${pkgs.protonmail-bridge}/bin/protonmail-bridge" "--noninteractive"
+      spawn-at-startup "${pkgs.sunsetr}/bin/sunsetr"
       spawn-at-startup "~/.config/niri/scripts/wallpaper.fish" "interval" "300"
 
       // Uncomment this line to ask the clients to omit their client-side decorations if possible.

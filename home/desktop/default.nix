@@ -5,9 +5,10 @@
     ./vicinae
     ./stasis
     ./swaylock
+    ./sunsetr
     ./mako
     ./niri
-    ./waybar
-    ./wlogout
+    # ./waybar
+    # ./wlogout
   ];
 }

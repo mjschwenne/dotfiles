@@ -97,6 +97,7 @@
     sox
     rclone
     yazi
+    bat
   ];
 
   # This value determines the home Manager release that your
