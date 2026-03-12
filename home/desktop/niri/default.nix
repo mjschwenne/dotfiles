@@ -14,15 +14,91 @@
     xwayland-satellite
   ];
 
-  xdg.configFile."niri/scripts" = {
-    source = ./scripts;
-    recursive = true;
-  };
-
   xdg.configFile."niri/config.kdl".text =
     let
       vicinae-pkg = vicinae.packages.${pkgs.stdenv.hostPlatform.system}.default;
       stasis-pkg = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
+      mirror-script = pkgs.writeShellApplication {
+        name = "mirror";
+        runtimeInputs = [
+          pkgs.niri
+          pkgs.wl-mirror
+        ];
+        text = ''
+          get_display_names() {
+            local re='Output.*\(([^)]+)\)'
+            while IFS= read -r line; do
+              if [[ "$line" =~ $re ]]; then
+                echo "''${BASH_REMATCH[1]}"
+              fi
+            done < <(niri msg outputs)
+          }
+
+          get_external_display_name() {
+            while IFS= read -r name; do
+              if [[ "$name" != "eDP-1" ]]; then
+                echo "$name"
+                return
+              fi
+            done < <(get_display_names)
+          }
+
+          wl-mirror "eDP-1" 2>/dev/null &
+          sleep 0.1
+
+          wl_id=""
+          while IFS= read -r line; do
+            if [[ "$line" =~ Window\ ID\ ([0-9]+) ]]; then
+              wl_id="''${BASH_REMATCH[1]}"
+            fi
+            if [[ "$line" == *'at.yrlf.wl_mirror'* ]] && [[ -n "$wl_id" ]]; then
+              break
+            fi
+          done < <(niri msg windows)
+
+          external=$(get_external_display_name)
+          niri msg action move-window-to-monitor --id "$wl_id" "$external"
+          niri msg action fullscreen-window --id "$wl_id"
+          niri msg action focus-monitor eDP-1
+        '';
+      };
+      wallpaper-script = pkgs.writeShellApplication {
+        name = "wallpaper";
+        runtimeInputs = [
+          awww.packages.${pkgs.stdenv.hostPlatform.system}.default
+          pkgs.procps
+        ];
+        text = ''
+          transitions=(simple fade left right top bottom wipe wave grow center any outer)
+          wallpaper_dir="$HOME/.dotfiles/home/desktop/wallpapers"
+
+          random_choice() {
+            local arr=("$@")
+            echo "''${arr[RANDOM % ''${#arr[@]}]}"
+          }
+
+          set_wallpaper() {
+            awww img -t "$(random_choice "''${transitions[@]}")" "$(find "$wallpaper_dir" -maxdepth 1 -type f | shuf -n1)"
+          }
+
+          if ! pgrep -x awww-daemon >/dev/null; then
+            awww-daemon &
+            set_wallpaper
+          fi
+
+          case "''${1:-}" in
+            change)
+              set_wallpaper
+              ;;
+            interval)
+              while true; do
+                set_wallpaper
+                sleep "''${2:?Usage: wallpaper interval <seconds>}"
+              done
+              ;;
+          esac
+        '';
+      };
       outputs =
         {
           "terra" =
@@ -320,12 +396,11 @@
       // See the binds section below for more spawn examples.
 
       // This line starts waybar, a commonly used bar for Wayland compositors.
-      spawn-at-startup "${awww.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/awww-daemon"
       spawn-at-startup "${pkgs.networkmanagerapplet}/bin/nm-applet"
       spawn-at-startup "${pkgs.keepassxc}/bin/keepassxc"
       spawn-at-startup "${pkgs.protonmail-bridge}/bin/protonmail-bridge" "--noninteractive"
       spawn-at-startup "${pkgs.sunsetr}/bin/sunsetr"
-      spawn-at-startup "~/.config/niri/scripts/wallpaper.fish" "interval" "300"
+      spawn-at-startup "${wallpaper-script}/bin/wallpaper" "interval" "300"
 
       // Uncomment this line to ask the clients to omit their client-side decorations if possible.
       // If the client will specifically ask for CSD, the request will be honored.
@@ -564,7 +639,7 @@
           Mod+Page_Up        { focus-workspace-up; }
           Mod+U              { focus-workspace-down; }
           Mod+I              { focus-workspace-up; }
-          Mod+M              { spawn "~/.config/niri/scripts/mirror.fish"; }
+          Mod+M              { spawn "${mirror-script}/bin/mirror"; }
           Mod+Shift+M        { spawn "pkill" "wl-mirror"; }
           Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
           Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
