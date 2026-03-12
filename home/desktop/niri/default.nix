@@ -18,87 +18,13 @@
     let
       vicinae-pkg = vicinae.packages.${pkgs.stdenv.hostPlatform.system}.default;
       stasis-pkg = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
-      mirror-script = pkgs.writeShellApplication {
-        name = "mirror";
-        runtimeInputs = [
-          pkgs.niri
-          pkgs.wl-mirror
-        ];
-        text = ''
-          get_display_names() {
-            local re='Output.*\(([^)]+)\)'
-            while IFS= read -r line; do
-              if [[ "$line" =~ $re ]]; then
-                echo "''${BASH_REMATCH[1]}"
-              fi
-            done < <(niri msg outputs)
-          }
-
-          get_external_display_name() {
-            while IFS= read -r name; do
-              if [[ "$name" != "eDP-1" ]]; then
-                echo "$name"
-                return
-              fi
-            done < <(get_display_names)
-          }
-
-          wl-mirror "eDP-1" 2>/dev/null &
-          sleep 0.1
-
-          wl_id=""
-          while IFS= read -r line; do
-            if [[ "$line" =~ Window\ ID\ ([0-9]+) ]]; then
-              wl_id="''${BASH_REMATCH[1]}"
-            fi
-            if [[ "$line" == *'at.yrlf.wl_mirror'* ]] && [[ -n "$wl_id" ]]; then
-              break
-            fi
-          done < <(niri msg windows)
-
-          external=$(get_external_display_name)
-          niri msg action move-window-to-monitor --id "$wl_id" "$external"
-          niri msg action fullscreen-window --id "$wl_id"
-          niri msg action focus-monitor eDP-1
-        '';
+      mirror-script = import ./scripts/mirror.nix { inherit pkgs; };
+      wallpaper-script = import ./scripts/wallpaper.nix {
+        inherit pkgs;
+        awww = awww.packages.${pkgs.stdenv.hostPlatform.system}.default;
       };
-      wallpaper-script = pkgs.writeShellApplication {
-        name = "wallpaper";
-        runtimeInputs = [
-          awww.packages.${pkgs.stdenv.hostPlatform.system}.default
-          pkgs.procps
-        ];
-        text = ''
-          transitions=(simple fade left right top bottom wipe wave grow center any outer)
-          wallpaper_dir="$HOME/.dotfiles/home/desktop/wallpapers"
-
-          random_choice() {
-            local arr=("$@")
-            echo "''${arr[RANDOM % ''${#arr[@]}]}"
-          }
-
-          set_wallpaper() {
-            awww img -t "$(random_choice "''${transitions[@]}")" "$(find "$wallpaper_dir" -maxdepth 1 -type f | shuf -n1)"
-          }
-
-          if ! pgrep -x awww-daemon >/dev/null; then
-            awww-daemon &
-            set_wallpaper
-          fi
-
-          case "''${1:-}" in
-            change)
-              set_wallpaper
-              ;;
-            interval)
-              while true; do
-                set_wallpaper
-                sleep "''${2:?Usage: wallpaper interval <seconds>}"
-              done
-              ;;
-          esac
-        '';
-      };
+      volume-notify = import ./scripts/volume-notify.nix { inherit pkgs; };
+      brightness-notify = import ./scripts/brightness-notify.nix { inherit pkgs; };
       outputs =
         {
           "terra" =
@@ -563,14 +489,14 @@
           XF86AudioPrev                               { spawn "${pkgs.playerctl}/bin/playerctl" "previous"; }
           XF86AudioStop        allow-when-locked=true { spawn "${pkgs.playerctl}/bin/playerctl" "stop"; }
 
-          XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
-          XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
-          XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+          XF86AudioRaiseVolume allow-when-locked=true { spawn "${volume-notify}/bin/volume-notify" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+" "-l" "1.0"; }
+          XF86AudioLowerVolume allow-when-locked=true { spawn "${volume-notify}/bin/volume-notify" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
+          XF86AudioMute        allow-when-locked=true { spawn "${volume-notify}/bin/volume-notify" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
           XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
 
           // Example brightness key mappings for brightnessctl.
-          XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-          XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+          XF86MonBrightnessUp allow-when-locked=true { spawn "${brightness-notify}/bin/brightness-notify" "--class=backlight" "set" "+10%"; }
+          XF86MonBrightnessDown allow-when-locked=true { spawn "${brightness-notify}/bin/brightness-notify" "--class=backlight" "set" "10%-"; }
 
           // Open/close the Overview: a zoomed-out view of workspaces and windows.
           // You can also move the mouse into the top-left hot corner,
