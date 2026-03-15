@@ -62,11 +62,18 @@ let
       # Create lock file to signal potential realtime watcher
       touch "$LOCKFILE"
 
+      ERRFILE=$(mktemp)
       ${pkgs.rclone}/bin/rclone bisync "$LOCAL_DIR" "$REMOTE" \
-        --check-access --resilient --filter-from ${filterFile} ${syncConfig.extraArgs}
+        --check-access --resilient --filter-from ${filterFile} ${syncConfig.extraArgs} 2>"$ERRFILE"
+      SYNC_EXIT=$?
+      if [ $SYNC_EXIT -ne 0 ]; then
+        ${optionalString cfg.enableNotifications ''${pkgs.libnotify}/bin/notify-send -u critical "Sync failed" "${syncConfig.name}: $(tail -3 "$ERRFILE")"''}
+        cat "$ERRFILE" >&2
+      fi
+      rm -f "$ERRFILE"
 
-      # Keep lock for a bit to ignore file change events from this sync 
-      sleep 5 
+      # Keep lock for a bit to ignore file change events from this sync
+      sleep 5
       rm -r "$LOCKFILE"
     '';
 
@@ -92,13 +99,20 @@ let
         # Create lock file
         touch "$LOCKFILE"
 
+        ERRFILE=$(mktemp)
         ${pkgs.rclone}/bin/rclone bisync "$WATCH_DIR" "$REMOTE" \
           --check-access --resilient \
           --filter-from ${filterFile} \
-          ${syncConfig.extraArgs}
+          ${syncConfig.extraArgs} 2>"$ERRFILE"
+        SYNC_EXIT=$?
+        if [ $SYNC_EXIT -ne 0 ]; then
+          ${optionalString cfg.enableNotifications ''${pkgs.libnotify}/bin/notify-send -u critical "Sync failed" "${syncConfig.name}: $(tail -3 "$ERRFILE")"''}
+          cat "$ERRFILE" >&2
+        fi
+        rm -f "$ERRFILE"
 
-        # Keep lock for a bit to ignore file change events from this sync 
-        sleep 5 
+        # Keep lock for a bit to ignore file change events from this sync
+        sleep 5
         rm -r "$LOCKFILE"
       }
 
@@ -197,6 +211,12 @@ in
       default = true;
       description = "Enable manual sync commands.";
     };
+
+    enableNotifications = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable desktop notifications for sync events.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -213,8 +233,14 @@ in
           syncConfig:
           pkgs.writeShellScriptBin "syncnow-${syncConfig.name}" ''
             ${pkgs.rclone}/bin/rclone bisync "${syncConfig.localPath}" "${syncConfig.remote}" \
-              --check-access --resilient ${syncConfig.extraArgs} -v --filter-from ${filterFile} $@
-            ${pkgs.libnotify}/bin/notify-send "Sync complete" "${syncConfig.name} synced successfully"
+              --check-access --resilient ${syncConfig.extraArgs} -v --filter-from ${filterFile} "$@"
+            SYNC_EXIT=$?
+            if [ $SYNC_EXIT -ne 0 ]; then
+              ${optionalString cfg.enableNotifications ''${pkgs.libnotify}/bin/notify-send -u critical "Sync failed" "${syncConfig.name}"''}
+              exit $SYNC_EXIT
+            else
+              ${optionalString cfg.enableNotifications ''${pkgs.libnotify}/bin/notify-send "Sync complete" "${syncConfig.name} synced successfully"''}
+            fi
           ''
         ) cfg.syncDirs
       ));
