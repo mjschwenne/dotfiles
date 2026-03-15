@@ -12,6 +12,7 @@
     settings.vim = {
       viAlias = true;
       vimAlias = true;
+      theme.transparent = true;
       extraPlugins = {
         htms = {
           package = pkgs.vimUtils.buildVimPlugin {
@@ -23,6 +24,27 @@
               hash = "sha256-j/RFJgCbaH+V2K20RrQbsz0bzpN8Z6YAKzZMABYg/OU=";
             };
           };
+        };
+        transparent = {
+          package = pkgs.vimUtils.buildVimPlugin {
+            name = "transparent.nvim";
+            src = pkgs.fetchFromGitHub {
+              owner = "xiyaowong";
+              repo = "transparent.nvim";
+              rev = "8ac59883de84e9cd1850ea25cf087031c5ba7d54";
+              hash = "sha256-GlN7/+TmXld2UVPN2rDP7nKqbnswiezmGXn+uGK5I5c=";
+            };
+          };
+          setup = ''
+            require("transparent").setup({
+              extra_groups = {
+                "NormalFloat",
+                "GitGutterAdd",
+                "GitGutterChange",
+                "GitGutterDelete",
+                "GitGutterChangeDelete"
+               }
+            })'';
         };
       };
       autocmds = [

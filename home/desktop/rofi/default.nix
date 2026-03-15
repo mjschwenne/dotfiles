@@ -1,11 +1,12 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.rofi = {
     enable = true;
     package = pkgs.rofi;
     extraConfig = {
       modi = "run,drun,window";
       show-icons = true;
-      terminal = "kitty";
+      terminal = "ghostty";
       drun-display-format = "{icon} {name}";
       disable-history = false;
       hide-scrollbar = true;

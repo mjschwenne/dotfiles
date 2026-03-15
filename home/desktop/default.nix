@@ -1,14 +1,11 @@
 { ... }:
 {
   imports = [
-    ./rofi
-    ./vicinae
+    ./fuzzel
     ./stasis
     ./swaylock
     ./sunsetr
     ./mako
     ./niri
-    # ./waybar
-    # ./wlogout
   ];
 }
