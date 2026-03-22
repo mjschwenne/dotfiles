@@ -14,9 +14,10 @@ pkgs.writeShellApplication {
       exit 0
     fi
 
+    placeholder="$(date '+ %a %m-%d  󰥔 %R')"
     choice=$(echo "$windows" \
       | jq -rj '.[] | (.app_id | split(".") | last) as $name | "\($name): \(.title)\u0000icon\u001f\(.app_id)\n"' \
-      | fuzzel --dmenu --index --prompt "󰕰  ")
+      | fuzzel --dmenu --index --prompt "󰕰  " --placeholder "         $placeholder")
 
     if [[ -z "$choice" ]]; then
       exit 0

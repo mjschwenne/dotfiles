@@ -54,7 +54,7 @@ let
     meld
     qalculate-gtk
     eog
-    mate.engrampa
+    engrampa
     swappy
     wl-mirror
     wdisplays

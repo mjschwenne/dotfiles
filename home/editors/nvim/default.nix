@@ -55,7 +55,6 @@
           pattern = [ "*" ];
           callback =
             lib.generators.mkLuaInline # lua
-
               ''
                 function ()
                     vim.highlight.on_yank({higroup="Visual", timeout=200})
@@ -201,7 +200,10 @@
         };
       };
       notes.todo-comments.enable = true;
-      notify.nvim-notify.enable = true;
+      notify.nvim-notify = {
+        enable = true;
+        setupOpts.background_colour = "#000000";
+      };
       options = {
         autochdir = true;
         autoindent = true;

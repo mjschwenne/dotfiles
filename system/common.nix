@@ -4,6 +4,9 @@
   nixpkgs,
   ...
 }@inputs:
+let
+  mullvadExitNode = "us-den-wg-203.mullvad.ts.net";
+in
 {
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;

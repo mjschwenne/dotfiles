@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, config, ... }:
 {
   programs.fuzzel = {
     enable = true;
@@ -22,6 +22,10 @@
       border = {
         width = 3;
         radius = 5;
+      };
+
+      colors = {
+        placeholder = lib.mkForce "${config.lib.stylix.colors.base0D}ff";
       };
     };
   };
