@@ -23,12 +23,6 @@ pkgs.writeShellApplication {
     # Extract the decimal volume (e.g., "0.50") and convert to percentage
     pct=$(echo "$volume" | awk '{printf "%.0f", $2 * 100}')
 
-    # Build a progress bar
-    bar_length=17
-    filled=$(( pct * bar_length / 100 ))
-    empty=$(( bar_length - filled ))
-    bar=$(printf '%0.s█' $(seq 1 "$filled" 2>/dev/null) ; printf '%0.s░' $(seq 1 "$empty" 2>/dev/null))
-
     if $muted; then
         icon="notification-audio-volume-muted"
         summary="Volume: Muted ($pct%)"
@@ -50,6 +44,7 @@ pkgs.writeShellApplication {
         --app-name "volume" \
         --hint "string:x-canonical-private-synchronous:volume" \
         --icon "$icon" \
-        "$summary" "$bar"
+        --hint "int:value:$pct" \
+        "$summary"
   '';
 }

@@ -7,13 +7,14 @@ pkgs.writeShellApplication {
     pkgs.systemd
   ];
   text = ''
+    placeholder="$(date '+ %a %m-%d  󰥔 %R')"
     choice=$(printf "%s\n" \
       "󰌾  Lock" \
       "󰤄  Suspend" \
       "󰍃  Logout" \
       "󰜉  Reboot" \
       "󰐥  Shutdown" \
-      | fuzzel --dmenu --prompt "⏻  ")
+      | fuzzel --dmenu --prompt "⏻  " --placeholder "         $placeholder")
 
     case "$choice" in
       *Lock)     ${stasis-pkg}/bin/stasis trigger suspend ;;

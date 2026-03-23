@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   config,
   osConfig,
   awww,
@@ -28,6 +29,22 @@
       brightness-notify = import ./scripts/brightness-notify.nix { inherit pkgs; };
       window-switcher = import ./scripts/window-switcher.nix { inherit pkgs; };
       power-menu = import ./scripts/power-menu.nix { inherit pkgs stasis-pkg; };
+      mjs-fuzzel = import ./scripts/mjs-fuzzel.nix { inherit pkgs; };
+      tailscale-status = import ./scripts/tailscale-status.nix { inherit pkgs; };
+      stasis-pause-menu = import ./scripts/stasis-pause-menu.nix { inherit pkgs stasis-pkg; };
+      tailscale-toggle =
+        let
+          mullvadExitNode =
+            let
+              flags = osConfig.services.tailscale.extraUpFlags;
+              exitNodeFlags = builtins.filter (lib.hasPrefix "--exit-node=") flags;
+            in
+            lib.removePrefix "--exit-node=" (builtins.head exitNodeFlags);
+        in
+        import ./scripts/tailscale-toggle.nix {
+          inherit pkgs;
+          exitNode = mullvadExitNode;
+        };
       outputs =
         {
           "terra" =
@@ -384,7 +401,24 @@
              match app-id=r#"^thunderbird$"#
              match app-id=r#"^org\.remmina\.Remmina"#
              open-maximized true
-         }
+      }
+
+      window-rule {
+            match app-id="emacs"
+            background-effect {
+                blur true
+            }
+      }
+
+      // Enable blur behind the fuzzel launcher.
+      layer-rule {
+          match namespace="^launcher$"
+
+          background-effect {
+              blur true
+              xray false
+          }
+      }
 
       // Open the Firefox picture-in-picture player as floating by default.
       window-rule {
@@ -492,10 +526,11 @@
 
           // Mod+Return hotkey-overlay-title="Open a Terminal: wezterm" { spawn "${pkgs.wezterm}/bin/wezterm"; }
           Mod+Return hotkey-overlay-title="Open a Terminal: ghostty" { spawn "${pkgs.ghostty}/bin/ghostty"; }
-          Mod+A hotkey-overlay-title="Run an Application: fuzzel" { spawn "${pkgs.fuzzel}/bin/fuzzel"; }
+          Mod+A hotkey-overlay-title="Run an Application: fuzzel" { spawn "${mjs-fuzzel}/bin/mjs-fuzzel"; }
 
-          // POWER MANAGEMENT
+          // POWER / SLEEP MANAGEMENT
           Mod+Z hotkey-overlay-title="Lock the Screen" { spawn "${stasis-pkg}/bin/stasis" "trigger" "suspend"; }
+          Mod+S hotkey-overlay-title="Pause Idle Timers" { spawn "${stasis-pause-menu}/bin/stasis-pause-menu"; }
           // Powers off the monitors. To turn them back on, do any input like
           // moving the mouse or pressing any other key.
           Mod+Shift+Z hotkey-overlay-title="Power Off Monitors" { power-off-monitors; }
@@ -527,6 +562,8 @@
           Mod+Alt+E { quit; }
           Mod+Alt+M hotkey-overlay-title="Screen Mirror" { spawn "${mirror-script}/bin/mirror"; }
           Mod+Alt+Shift+M hotkey-overlay-title="Stop Screen Mirroring" { spawn "pkill" "wl-mirror"; }
+          Mod+Alt+T { spawn "${tailscale-status}/bin/tailscale-status"; }
+          Mod+Alt+Shift+T { spawn "${tailscale-toggle}/bin/tailscale-exit-toggle"; }
           // Applications such as remote-desktop clients and software KVM switches may
           // request that niri stops processing the keyboard shortcuts defined here
           // so they may, for example, forward the key presses as-is to a remote machine.

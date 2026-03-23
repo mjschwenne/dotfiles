@@ -75,6 +75,11 @@
       url = "github:NixOS/nixos-hardware/master";
     };
 
+    niri = {
+      url = "github:niri-wm/niri/wip/branch";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     wezterm = {
       url = "github:wez/wezterm?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -107,6 +112,7 @@
       home-manager,
       sops-nix,
       nixos-hardware,
+      niri,
       stylix,
       copyparty,
       ...
@@ -134,6 +140,7 @@
       overlays = [
         inputs.emacs-overlay.overlay
         copyparty.overlays.default
+        niri.overlays.default
       ];
     in
     {

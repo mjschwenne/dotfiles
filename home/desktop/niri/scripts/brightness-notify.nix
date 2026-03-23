@@ -14,12 +14,6 @@ pkgs.writeShellApplication {
     # Get current brightness percentage
     pct=$(brightnessctl --class=backlight info | grep -oP '\d+(?=%)')
 
-    # Build a progress bar
-    bar_length=17
-    filled=$(( pct * bar_length / 100 ))
-    empty=$(( bar_length - filled ))
-    bar=$(printf '%0.s█' $(seq 1 "$filled" 2>/dev/null) ; printf '%0.s░' $(seq 1 "$empty" 2>/dev/null))
-
     if (( pct == 0 )); then
         icon="display-brightness-off"
     elif (( pct <= 33 )); then
@@ -35,6 +29,7 @@ pkgs.writeShellApplication {
         --app-name "brightness" \
         --hint "string:x-canonical-private-synchronous:brightness" \
         --icon "$icon" \
-        "$summary" "$bar"
+        --hint "int:value:$pct" \
+        "$summary"
   '';
 }

@@ -51,6 +51,8 @@
         cursor-style = "block";
         cursor-style-blink = false;
         shell-integration-features = "no-cursor,ssh-env";
+        background-opacity-cells = true;
+        background-blur = true;
       };
     };
 
