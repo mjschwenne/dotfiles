@@ -45,6 +45,7 @@ let
     texliveFull
     ghostscript
     typst
+    hayagriva
 
     # Graphical Utilities
     blueman
