@@ -1266,19 +1266,34 @@ are rendered at the correct size and not huge."
           ("a" "Daily Log (AM)" entry
            (file+olp+datetree ,(format-time-string "projects/log/%Y/%m-%B-log.org"))
            ,(concat "* Planning\n\n"
-                    "- [ ] Record Habits\n"
-                    "- [ ] %?\n")
+                    "- [ ] Update Habits\n\n"
+                    "#+begin_src elisp :results drawer\n"
+                    "(mapconcat (lambda (hd) (org-element-interpret-data (org-element-put-property hd :level 5)))\n"
+                    "(org-ql-select (concat org-directory \"/agenda/projects.org\")\n"
+                    "'(or (todo \"NEXT\") (and (todo) (deadline :on today) (scheduled :on today)))\n"
+                    ":action 'element-with-markers) \"\")\n"
+                    "#+end_src\n")
            :empty-lines 1
            :tree-type week
            :jump-to-captured t
+           :prepare-finalize (org-babel-execute-buffer)
            :immediate-finish t)
           ("p" "Daily Log (PM)" entry
            (file+olp+datetree ,(format-time-string "projects/log/%Y/%m-%B-log.org"))
            ,(concat "* Review\n\n"
-                    "- [ ] Update completed tasks\n\n%?")
+                    "#+begin_src elisp :results drawer\n"
+                    "  (mapconcat (lambda (hd) (org-element-interpret-data (org-element-put-property hd :level 5)))\n"
+                    "             (org-ql-select (concat org-directory \"/agenda/projects.org\")\n"
+                    "               '(closed :on today)\n"
+                    "               :action 'element-with-markers) \"\")\n"
+                    "#+end_src\n\n"
+                    "** Reflection\n"
+                    "** Plan for Tomorrow\n"
+                    )
            :empty-lines 1
            :tree-type week
            :jump-to-captured t
+           :prepare-finalize (org-babel-execute-buffer)
            :immediate-finish t)
           ("d" "Delian Tomb Session" entry
            (file "ttrpg/games/delian-tomb/sessions.org")
@@ -1450,6 +1465,9 @@ are rendered at the correct size and not huge."
   (mjs-local-leader-def :keymaps 'org-mode-map
     "o" '("Toggle Olivetti" . olivetti-mode)))
 
+(use-package org-ql
+  :commands org-ql-select)
+
 (use-package org-modern
   :after org
   :hook (org-mode . org-modern-mode)
@@ -1528,7 +1546,9 @@ are rendered at the correct size and not huge."
   :defer nil
   :custom ((flycheck-global-modes t)
            (flycheck-indication-mode 'right-fringe)
-           (flycheck-mode-line))
+           (flycheck-mode-line)
+           (flycheck-disabled-checkers '(org-lint)))
+                                        ; FIXME: After https://github.com/flycheck/flycheck/pull/2165
   :config
   (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
     [16 48 112 240 112 48 16] nil nil 'center))
