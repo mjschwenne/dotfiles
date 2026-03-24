@@ -1270,7 +1270,7 @@ are rendered at the correct size and not huge."
                     "#+begin_src elisp :results drawer\n"
                     "(mapconcat (lambda (hd) (org-element-interpret-data (org-element-put-property hd :level 5)))\n"
                     "(org-ql-select (concat org-directory \"/agenda/projects.org\")\n"
-                    "'(or (todo \"NEXT\") (and (todo) (deadline :on today) (scheduled :on today)))\n"
+                    "'(or (todo \"NEXT\") (and (todo) (or (deadline :on today) (scheduled :on today))))\n"
                     ":action 'element-with-markers) \"\")\n"
                     "#+end_src\n")
            :empty-lines 1
