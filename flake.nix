@@ -85,6 +85,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -141,6 +146,7 @@
         inputs.emacs-overlay.overlay
         copyparty.overlays.default
         niri.overlays.default
+        inputs.ghostty.overlays.default
       ];
     in
     {

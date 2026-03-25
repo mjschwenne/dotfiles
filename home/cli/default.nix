@@ -2,24 +2,28 @@
   pkgs,
   osConfig,
   ...
-}: {
+}:
+{
   imports =
     # Don't configure starship on sol
-    if osConfig.networking.hostName == "sol"
-    then [
-      ./fish
-      ./nushell
-    ]
-    else [
-      ./fish
-      ./nushell
-      ./starship
-    ];
+    if osConfig.networking.hostName == "sol" then
+      [
+        ./fish
+        ./nushell
+      ]
+    else
+      [
+        ./fish
+        ./nushell
+        ./starship
+      ];
 
   programs = {
     bash = {
       enable = true;
-      shellAliases = {vi = "nvim";};
+      shellAliases = {
+        vi = "nvim";
+      };
     };
 
     git = {
@@ -30,6 +34,7 @@
         diff.tool = "nvimdiff";
         merge.tool = "nvimdiff";
       };
+      signing.format = "openpgp";
     };
 
     direnv = {

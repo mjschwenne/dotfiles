@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   pkgs-master,
   pkgs-stable,
@@ -85,10 +86,11 @@ let
     wlr-randr
     kanshi
     wayland-logout
+
+    zotero
   ];
   masterPkgs = with pkgs-master; [
-    protonvpn-gui
-    zotero
+    proton-vpn
   ];
   stablePkgs = with pkgs-stable; [ ];
 in
@@ -117,8 +119,11 @@ in
       popups = 0.9;
     };
   };
-  gtk.gtk3.extraConfig = {
-    gtk-decoration-layout = "appmenu:none";
+  gtk = {
+    gtk3.extraConfig = {
+      gtk-decoration-layout = "appmenu:none";
+    };
+    gtk4.theme = config.gtk.theme;
   };
   home.sessionVariables = {
     GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";

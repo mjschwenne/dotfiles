@@ -24,6 +24,9 @@
           letter-spacing = 0;
           pad = "5x5 center";
         };
+        colors-dark = {
+          blur = "on";
+        };
         scrollback = {
           lines = 10000;
         };
@@ -53,6 +56,8 @@
         shell-integration-features = "no-cursor,ssh-env";
         background-opacity-cells = true;
         background-blur = true;
+        window-decoration = "auto";
+        auto-update = "off";
       };
     };
 
