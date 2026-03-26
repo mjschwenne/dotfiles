@@ -93,6 +93,7 @@ If on a:
 - table-cell: clear it and go into insert mode. If this is a formula cell,
   recaluclate it instead.
 - babel-call: execute the source block
+- dynamic-block: update the block
 - statistics-cookie: update it.
 - src block: execute it
 - latex fragment: toggle it.
@@ -181,6 +182,9 @@ If on a:
 
         (`babel-call
          (org-babel-lob-execute-maybe))
+
+        (`dynamic-block
+         (org-update-dblock))
 
         (`statistics-cookie
          (save-excursion (org-update-statistics-cookies arg)))

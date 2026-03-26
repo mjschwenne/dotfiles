@@ -1190,7 +1190,7 @@ are rendered at the correct size and not huge."
            (org-treat-insert-todo-heading-as-state-change t)
            (org-agenda-hide-tags-regexp ".")
            (org-agenda-files (list (concat org-directory "agenda/")))
-           (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)" "KILL(k)")))
+           (org-todo-keywords '((sequence "NEXT(n)" "TODO(t)" "HOLD(h)" "|" "DONE(d)" "KILL(k)")))
            (org-agenda-custom-commands
             '(("r" "Weekly Review"
                ((agenda "" ((org-agenda-span 7)))
@@ -1268,34 +1268,24 @@ are rendered at the correct size and not huge."
            (file+olp+datetree ,(format-time-string "projects/log/%Y/%m-%B-log.org"))
            ,(concat "* Planning\n\n"
                     "- [ ] Update Habits\n\n"
-                    "#+begin_src elisp :results drawer\n"
-                    "(mapconcat (lambda (hd) (org-element-interpret-data (org-element-put-property hd :level 5)))\n"
-                    "(org-ql-select (concat org-directory \"/agenda/projects.org\")\n"
-                    "'(or (todo \"NEXT\") (and (todo) (or (deadline :on today) (scheduled :on today))))\n"
-                    ":action 'element-with-markers) \"\")\n"
-                    "#+end_src\n")
+                    "#+BEGIN: mjs-org-ql :query \"mjs-today:on=%<%Y-%m-%d>\" :columns (todo (priority \"P\") deadline heading) :sort (todo deadline priority) :ts-format \"\%Y-\%m-\%d\" :from org-agenda-files\n"
+                    "#+END:\n\n"
+                    "** Plan for Today\n\n%?")
            :empty-lines 1
            :tree-type week
            :jump-to-captured t
-           :prepare-finalize (org-babel-execute-buffer)
-           :immediate-finish t)
+           :hook (org-update-all-dblocks))
           ("p" "Daily Log (PM)" entry
            (file+olp+datetree ,(format-time-string "projects/log/%Y/%m-%B-log.org"))
            ,(concat "* Review\n\n"
-                    "#+begin_src elisp :results drawer\n"
-                    "  (mapconcat (lambda (hd) (org-element-interpret-data (org-element-put-property hd :level 5)))\n"
-                    "             (org-ql-select (concat org-directory \"/agenda/projects.org\")\n"
-                    "               '(closed :on today)\n"
-                    "               :action 'element-with-markers) \"\")\n"
-                    "#+end_src\n\n"
-                    "** Reflection\n"
-                    "** Plan for Tomorrow\n"
-                    )
+                    "#+BEGIN: mjs-org-ql :query \"mjs-done:on=%<%Y-%m-%d>\" :columns (todo (priority \"P\") deadline heading) :sort (deadline priority) :ts-format \"\%Y-\%m-\%d\" :from org-agenda-files\n"
+                    "#+END:\n\n"
+                    "** Reflection\n\n%?\n\n"
+                    "** Plan for Tomorrow")
            :empty-lines 1
            :tree-type week
            :jump-to-captured t
-           :prepare-finalize (org-babel-execute-buffer)
-           :immediate-finish t)
+           :hook (org-update-all-dblocks))
           ("d" "Delian Tomb Session" entry
            (file "ttrpg/games/delian-tomb/sessions.org")
            "* Session %<%Y-%m-%d>\n\n%?"
@@ -1467,7 +1457,151 @@ are rendered at the correct size and not huge."
     "o" '("Toggle Olivetti" . olivetti-mode)))
 
 (use-package org-ql
-  :commands org-ql-select)
+  :commands org-ql-select org-ql-query org-ql-defpred org-dblock-write:mjs-org-ql
+  :config
+  (cl-defun org-dblock-write:mjs-org-ql (params)
+    "Insert content for org-ql dynamic block at point according to PARAMS.
+Valid parameters include:
+ :from      The scope to consider for the Org QL query. This can
+            be one of the following:
+            `buffer'              the current buffer
+            `org-agenda-files'    all agenda files
+            `org-directory'       all org files
+            `(\"path\" ...)'      list of buffer names or file paths
+            `all'                 all agenda files, and org-mode buffers
+
+  :query    An Org QL query expression in either sexp or string
+            form.
+
+  :columns  A list of columns, including `heading', `todo',
+            `property',`priority',`deadline',`scheduled',`closed'.
+            Each column may also be specified as a list with the
+            second element being a header string.  For example,
+            to abbreviate the priority column: (priority \"P\").
+            For certain columns, like `property', arguments may
+            be passed by specifying the column type itself as a
+            list.  For example, to display a column showing the
+            values of a property named \"milestone\", with the
+            header being abbreviated to \"M\":
+
+              ((property \"milestone\") \"M\").
+
+  :sort     One or a list of Org QL sorting methods
+            (see `org-ql-select').
+
+  :take     Optionally take a number of results from the front (a
+            positive number) or the end (a negative number) of
+            the results.
+
+  :ts-format  Optional format string used to format
+              timestamp-based columns.
+
+For example, an org-ql dynamic block header could look like:
+
+  #+BEGIN: org-ql :query (todo \"UNDERWAY\") :columns (priority todo heading) :sort (priority date) :ts-format \"%Y-%m-%d %H:%M\""
+    (-let* (((&plist :from :query :columns :sort :ts-format :take) params)
+            (query (cl-etypecase query
+                     (string (org-ql--query-string-to-sexp query))
+                     (list  ;; SAFETY: Query is in sexp form: ask for confirmation, because it could contain arbitrary code.
+                      (org-ql--ask-unsafe-query query)
+                      query)))
+            (columns (or columns '(heading todo (priority "P"))))
+            (from (cond ((and (listp from) (seq-every-p #'stringp from)) from)
+                        ((string-equal from "org-agenda-files") (org-agenda-files))
+                        ((or (not from) (string-equal from "buffer")) (current-buffer))
+                        ((string-equal from "org-directory") (org-ql-search-directories-files))
+                        (t (user-error "Unknown from '%s'" from))))
+            ;; MAYBE: Custom column functions.
+            (format-fns
+             ;; NOTE: Backquoting this alist prevents the lambdas from seeing
+             ;; the variable `ts-format', so we use `list' and `cons'.
+             (list (cons 'todo (lambda (element)
+                                 (org-element-property :todo-keyword element)))
+                   (cons 'heading (lambda (element)
+                                    (cond
+                                     ((and org-id-link-to-org-use-id
+                                           (org-element-property :ID element))
+                                      (org-make-link-string (format "id:%s" (org-element-property :ID element))
+                                                            (org-element-property :raw-value element)))
+                                     ((org-element-property :file element)
+                                      (org-make-link-string (format "file:%s::*%s"
+                                                                    (org-element-property :file element)
+                                                                    (org-element-property :raw-value element))
+                                                            (org-element-property :raw-value element)))
+                                     (t (org-make-link-string (org-element-property :raw-value element)
+                                                              (org-link-display-format
+                                                               (org-element-property :raw-value element)))))
+                                    ))
+                   (cons 'priority (lambda (element)
+                                     (--when-let (org-element-property :priority element)
+                                       (char-to-string it))))
+                   (cons 'deadline (lambda (element)
+                                     (--when-let (org-element-property :deadline element)
+                                       (ts-format ts-format (ts-parse-org-element it)))))
+                   (cons 'scheduled (lambda (element)
+                                      (--when-let (org-element-property :scheduled element)
+                                        (ts-format ts-format (ts-parse-org-element it)))))
+                   (cons 'closed (lambda (element)
+                                   (--when-let (org-element-property :closed element)
+                                     (ts-format ts-format (ts-parse-org-element it)))))
+                   (cons 'property (lambda (element property)
+                                     (org-element-property (intern (concat ":" (upcase property))) element)))))
+            (elements (org-ql-query :from from
+                                    :where query
+                                    :select '(org-element-put-property (org-element-headline-parser (line-end-position)) :file (buffer-file-name))
+                                    :order-by sort)))
+      (when take
+        (setf elements (cl-etypecase take
+                         ((and integer (satisfies cl-minusp)) (-take-last (abs take) elements))
+                         (integer (-take take elements)))))
+      (cl-labels ((format-element
+                    (element) (string-join (cl-loop for column in columns
+                                                    collect (or (pcase-exhaustive column
+                                                                  ((pred symbolp)
+                                                                   (funcall (alist-get column format-fns) element))
+                                                                  (`((,column . ,args) ,_header)
+                                                                   (apply (alist-get column format-fns) element args))
+                                                                  (`(,column ,_header)
+                                                                   (funcall (alist-get column format-fns) element)))
+                                                                ""))
+                                           " | ")))
+        ;; Table header
+        (insert "| " (string-join (--map (pcase it
+                                           ((pred symbolp) (capitalize (symbol-name it)))
+                                           (`(,_ ,name) name))
+                                         columns)
+                                  " | ")
+                " |" "\n")
+        (insert "|- \n")  ; Separator hline
+        (dolist (element elements)
+          (insert "| " (format-element element) " |" "\n"))
+        (delete-char -1)
+        (org-table-align))))
+
+  (org-ql-defpred mjs-today (&key from to _on)
+    "Search for NEXT items or todo tasks with timestamps on `DATE'"
+    ;; They seem to expect an already normalized query, so I've copied the
+    ;; normalization for closed to apply it manually
+    :normalizers ((`(,predicate-names . ,rest)
+                   (org-ql--normalize-from-to-on
+                     `(mjs-today :from ,from :to ,to))))
+    :body (or (todo "NEXT")
+              (and (todo)
+                   (or
+                    (deadline :from from :to to
+                              :regexp org-ql-regexp-deadline
+                              :with-time nil)
+                    (scheduled :from from :to to
+                               :regexp org-ql-regexp-scheduled
+                               :with-time nil)))))
+
+  (org-ql-defpred mjs-done (&key from to _on)
+    "Search for items closed on `DATE'"
+    :normalizers ((`(,predicate-names . ,rest)
+                   (org-ql--normalize-from-to-on
+                     `(closed :from ,from :to ,to))))
+    :preambles ((`(,predicate-names . ,_)
+                 (list :regexp org-closed-time-regexp :query query)))))
 
 (use-package org-superstar
   :after org
