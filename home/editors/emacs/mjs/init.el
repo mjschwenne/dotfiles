@@ -1153,7 +1153,8 @@ are rendered at the correct size and not huge."
            (org-ellipsis " ▾")
            (tab-always-indent nil)
            (org-startup-with-inline-images t)
-           (org-startup-indented nil)
+           (org-indent-mode-turns-on-hiding-stars nil)
+           (org-startup-indented t)
            (org-image-actual-width 600)
            (org-startup-align-all-tables t)
            (org-startup-folded 'showall)
@@ -1468,21 +1469,20 @@ are rendered at the correct size and not huge."
 (use-package org-ql
   :commands org-ql-select)
 
-(use-package org-modern
+(use-package org-superstar
   :after org
-  :hook (org-mode . org-modern-mode)
-  (org-agenda-finalize . org-modern-agenda)
-  (org-modern-mode . org-indent-mode)
-  :custom ((org-modern-star 'replace)
-           (org-modern-hide-stars " ")
-           (org-modern-replace-stars "◉○◈◇✳❀❆✦✧❖")
-           (org-hide-leading-stars nil))
+  :custom ((org-superstar-leading-bullet " ")
+           (org-superstar-headline-bullets-list
+            '(58014 987202 987204 987206 987203 987207 62172 985297 985294 983761 985295))
+           (org-superstar-remove-leading-stars nil)
+           (org-superstar-prettify-item-bullets nil))
+  :hook (org-mode . org-superstar-mode)
   :config
   (defun mjs/org-indent-compute-prefixes ()
     "Compute prefix strings for regular text and headlines.
 
-  This is taken from the `org-indent' source code, but I've changed
-  the characters."
+This is taken from the `org-indent' source code, but I've changed
+the characters."
     (setq org-indent--heading-line-prefixes
           (make-vector org-indent--deepest-level nil))
     (setq org-indent--inlinetask-line-prefixes
@@ -1495,7 +1495,6 @@ are rendered at the correct size and not huge."
                              (* (1- org-indent-indentation-per-level)
                                 (1- n)))))
           ;; Headlines line prefixes.
-          ;; (let ((heading-prefix (make-string indentation ?·)))
           (let ((heading-prefix (make-string indentation 32)))
             (aset org-indent--heading-line-prefixes
                   n
@@ -1516,7 +1515,15 @@ are rendered at the correct size and not huge."
                             (and (> n 0)
                                  (char-to-string org-indent-boundary-char)))
                     nil 'face 'org-indent))))))
-  (advice-add 'org-indent--compute-prefixes :override #'mjs/org-indent-compute-prefixes)
+  (advice-add 'org-indent--compute-prefixes :override #'mjs/org-indent-compute-prefixes))
+
+(use-package org-modern
+  :after org
+  :hook (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda)
+  :custom ((org-modern-star nil)
+           (org-modern-hide-stars nil))
+  :config
   (set-face-attribute 'org-modern-done nil
                       :background (plist-get base16-stylix-theme-colors :base02)
                       :foreground (plist-get base16-stylix-theme-colors :base05)))
