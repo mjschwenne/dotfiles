@@ -8,7 +8,7 @@
 }:
 {
   programs.waybar = {
-    enable = true;
+    enable = false;
     package = waybar.packages.${pkgs.stdenv.hostPlatform.system}.waybar;
     systemd.enable = false;
     settings = {

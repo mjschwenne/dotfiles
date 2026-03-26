@@ -50,6 +50,7 @@
     ghostty = {
       enable = true;
       enableFishIntegration = true;
+      systemd.enable = true;
       settings = {
         cursor-style = "block";
         cursor-style-blink = false;
@@ -58,11 +59,14 @@
         background-blur = true;
         window-decoration = "auto";
         auto-update = "off";
+        notify-on-command-finish = "unfocused";
+        notify-on-command-finish-action = "no-bell,notify";
+        notify-on-command-finish-after = "60s";
       };
     };
 
     wezterm = {
-      enable = true;
+      enable = false;
       package = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
       extraConfig =
         let
