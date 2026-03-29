@@ -1190,7 +1190,7 @@ are rendered at the correct size and not huge."
            (org-treat-insert-todo-heading-as-state-change t)
            (org-agenda-hide-tags-regexp ".")
            (org-agenda-files (list (concat org-directory "agenda/")))
-           (org-todo-keywords '((sequence "NEXT(n)" "TODO(t)" "HOLD(h)" "|" "DONE(d)" "KILL(k)")))
+           (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)" "KILL(k)")))
            (org-agenda-custom-commands
             '(("r" "Weekly Review"
                ((agenda "" ((org-agenda-span 7)))
@@ -1579,29 +1579,29 @@ For example, an org-ql dynamic block header could look like:
         (org-table-align))))
 
   (org-ql-defpred mjs-today (&key from to _on)
-    "Search for NEXT items or todo tasks with timestamps on `DATE'"
-    ;; They seem to expect an already normalized query, so I've copied the
-    ;; normalization for closed to apply it manually
-    :normalizers ((`(,predicate-names . ,rest)
-                   (org-ql--normalize-from-to-on
-                     `(mjs-today :from ,from :to ,to))))
-    :body (or (todo "NEXT")
-              (and (todo)
-                   (or
-                    (deadline :from from :to to
-                              :regexp org-ql-regexp-deadline
-                              :with-time nil)
-                    (scheduled :from from :to to
-                               :regexp org-ql-regexp-scheduled
-                               :with-time nil)))))
+                  "Search for NEXT items or todo tasks with timestamps on `DATE'"
+                  ;; They seem to expect an already normalized query, so I've copied the
+                  ;; normalization for closed to apply it manually
+                  :normalizers ((`(,predicate-names . ,rest)
+                                 (org-ql--normalize-from-to-on
+                                  `(mjs-today :from ,from :to ,to))))
+                  :body (or (todo "NEXT")
+                            (and (todo)
+                                 (or
+                                  (deadline :from from :to to
+                                            :regexp org-ql-regexp-deadline
+                                            :with-time nil)
+                                  (scheduled :from from :to to
+                                             :regexp org-ql-regexp-scheduled
+                                             :with-time nil)))))
 
   (org-ql-defpred mjs-done (&key from to _on)
-    "Search for items closed on `DATE'"
-    :normalizers ((`(,predicate-names . ,rest)
-                   (org-ql--normalize-from-to-on
-                     `(closed :from ,from :to ,to))))
-    :preambles ((`(,predicate-names . ,_)
-                 (list :regexp org-closed-time-regexp :query query)))))
+                  "Search for items closed on `DATE'"
+                  :normalizers ((`(,predicate-names . ,rest)
+                                 (org-ql--normalize-from-to-on
+                                  `(closed :from ,from :to ,to))))
+                  :preambles ((`(,predicate-names . ,_)
+                               (list :regexp org-closed-time-regexp :query query)))))
 
 (use-package org-superstar
   :after org
@@ -3029,29 +3029,13 @@ Won't forward the buffer to chained formatters if successful."
   :custom ((vterm-kill-buffer-on-exit t)
            (vterm-max-scrollback 5000)))
 
+(use-package magit
+  :hook (magit-post-refresh . diff-hl-magit-post-refresh))
+
 ;; Packages:
 ;; 
 ;; dirvish + diredfl
-;; quickrun
-;; magit
-;; makefile-executor
 
 ;; evil-tex
-;; adaptive-wrap
-;; latex-preview-pane
-;; company-auctex
-;; company-reftex
-;; company-math
 
-;; fish-mode
-;; company-shell?
-
-;; Modules:
-;;
-;; file templates
-;; fold
-;; snippets
-;; electric
 ;; undo -> vundo, undo-fu-session, undo-fu
-
-;; magit :: https://github.com/doomemacs/doomemacs/blob/2b4f762b1e6a366cfcd9ffb3e17f127c64df2657/modules/ui/vc-gutter/config.el#L130
