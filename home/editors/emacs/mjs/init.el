@@ -68,6 +68,8 @@
     :which-key "Local Leader")
   (general-unbind :states '(insert motion visual) :keymaps 'global "M-SPC"))
 
+(use-package undo-fu)
+
 (use-package evil
   :defer nil
   :diminish evil-mode
@@ -75,7 +77,7 @@
            (evil-want-integration t)
            (evil-cross-lines t)
            (evil-echo-state nil)
-           (evil-undo-system 'undo-redo)
+           (evil-undo-system 'undo-fu)
            (evil-want-C-u-scroll t))
   :config
   ;; Make evil search similar to vim
@@ -3030,12 +3032,11 @@ Won't forward the buffer to chained formatters if successful."
            (vterm-max-scrollback 5000)))
 
 (use-package magit
+  :commands magit-status
+  :general 
+  (mjs-leader-def :keymaps 'override
+    "g" '("Git" . magit-status))
   :hook (magit-post-refresh . diff-hl-magit-post-refresh))
 
-;; Packages:
-;; 
-;; dirvish + diredfl
-
-;; evil-tex
-
-;; undo -> vundo, undo-fu-session, undo-fu
+(provide 'init)
+;;; init.el ends here
