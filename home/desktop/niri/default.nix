@@ -50,7 +50,7 @@
           "terra" =
             # kdl
             ''
-              output "DP-3" {
+              output "DP-1" {
                   mode "3840x2160"
                   scale 1.6
                   transform "normal"
@@ -60,7 +60,7 @@
                   focus-at-startup
               }
 
-              output "DP-4" {
+              output "DP-2" {
                   mode "3840x2160"
                   scale 1.6
                   transform "normal"
