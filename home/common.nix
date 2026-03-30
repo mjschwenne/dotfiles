@@ -98,6 +98,8 @@
     rclone
     yazi
     bat
+    fd
+    fswatch
   ];
 
   # This value determines the home Manager release that your

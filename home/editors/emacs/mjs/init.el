@@ -7,8 +7,6 @@
       user-mail-address "matt@schwennesen.org")
 
 (require 'use-package)
-(require 'base16-stylix-theme)
-(setq base16-theme-256-color-source 'colors)
 
 (setq use-package-verbose t
       use-package-always-defer t
@@ -68,7 +66,8 @@
     :which-key "Local Leader")
   (general-unbind :states '(insert motion visual) :keymaps 'global "M-SPC"))
 
-(use-package undo-fu)
+(use-package undo-fu
+  :commands undo-fu-only-undo undo-fu-only-redo)
 
 (use-package evil
   :defer nil
@@ -290,6 +289,9 @@
 (set-frame-parameter (selected-frame) 'font "JetBrainsMono Nerd Font-12")
 (add-to-list 'default-frame-alist
              '(font . "JetBrainsMono Nerd Font-12"))
+
+(use-package hide-mode-line
+  :commands hide-mode-line-mode)
 
 (use-package ligature
   :config
@@ -1160,7 +1162,7 @@ are rendered at the correct size and not huge."
            (org-image-actual-width 600)
            (org-startup-align-all-tables t)
            (org-startup-folded 'showall)
-           (org-startup-with-latex-preview t)
+           (org-startup-with-latex-preview nil)
            (org-preview-latex-default-process 'dvisvgm)
            (org-tag-persistent-alist
             '((:startgroup)
@@ -1359,8 +1361,9 @@ are rendered at the correct size and not huge."
   (add-to-list 'org-latex-packages-alist '("" "amsthm" t))
   (add-to-list 'org-latex-packages-alist '("" "cancel" t))
 
-  ;; consult-org is not being loaded by default
-  (require 'consult-org))
+  ;; Load packages not being loaded by default
+  (require 'consult-org)
+  (require 'vulpea))
 
 
 (use-package org-habit
@@ -1411,11 +1414,6 @@ are rendered at the correct size and not huge."
 (use-package eros
   :after org
   :hook (org-mode . eros-mode))
-
-(use-package org-contacts
-  :after org
-  :custom (org-contacts-files
-           (list (concat org-directory "contacts.org"))))
 
 (use-package org-fragtog
   :commands org-fragtog-mode
@@ -1581,29 +1579,29 @@ For example, an org-ql dynamic block header could look like:
         (org-table-align))))
 
   (org-ql-defpred mjs-today (&key from to _on)
-                  "Search for NEXT items or todo tasks with timestamps on `DATE'"
-                  ;; They seem to expect an already normalized query, so I've copied the
-                  ;; normalization for closed to apply it manually
-                  :normalizers ((`(,predicate-names . ,rest)
-                                 (org-ql--normalize-from-to-on
-                                  `(mjs-today :from ,from :to ,to))))
-                  :body (or (todo "NEXT")
-                            (and (todo)
-                                 (or
-                                  (deadline :from from :to to
-                                            :regexp org-ql-regexp-deadline
-                                            :with-time nil)
-                                  (scheduled :from from :to to
-                                             :regexp org-ql-regexp-scheduled
-                                             :with-time nil)))))
+    "Search for NEXT items or todo tasks with timestamps on `DATE'"
+    ;; They seem to expect an already normalized query, so I've copied the
+    ;; normalization for closed to apply it manually
+    :normalizers ((`(,predicate-names . ,rest)
+                   (org-ql--normalize-from-to-on
+                     `(mjs-today :from ,from :to ,to))))
+    :body (or (todo "NEXT")
+              (and (todo)
+                   (or
+                    (deadline :from from :to to
+                              :regexp org-ql-regexp-deadline
+                              :with-time nil)
+                    (scheduled :from from :to to
+                               :regexp org-ql-regexp-scheduled
+                               :with-time nil)))))
 
   (org-ql-defpred mjs-done (&key from to _on)
-                  "Search for items closed on `DATE'"
-                  :normalizers ((`(,predicate-names . ,rest)
-                                 (org-ql--normalize-from-to-on
-                                  `(closed :from ,from :to ,to))))
-                  :preambles ((`(,predicate-names . ,_)
-                               (list :regexp org-closed-time-regexp :query query)))))
+    "Search for items closed on `DATE'"
+    :normalizers ((`(,predicate-names . ,rest)
+                   (org-ql--normalize-from-to-on
+                     `(closed :from ,from :to ,to))))
+    :preambles ((`(,predicate-names . ,_)
+                 (list :regexp org-closed-time-regexp :query query)))))
 
 (use-package org-superstar
   :after org
@@ -1839,272 +1837,94 @@ With a prefix ARG, remove start location."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
-
-(use-package org-roam
-  :custom (org-roam-directory (file-truename org-directory))
-  (org-roam-completion-everywhere t)
-  (org-roam-node-display-template
-   (concat "${title:*} "
-           (propertize "${all-tags:60}" 'face 'org-tag)))
-
-  :general (mjs-leader-def :keymaps 'override
-             "n r"   '(nil :which-key "Roam")
-             "n r a" '("Add Alias" . org-roam-alias-add)
-             "n r A" '("Remove Alias" . org-roam-alias-remove)
-             "n r b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
-             "n r f" '("Find Node" . (lambda () (interactive)
-                                       (mjs/org-roam-find-node nil "^")))
-             "n r F" '("Find Ref" . org-roam-ref-find)
-             "n r g" '("Graph" . org-roam-graph)
-             "n r i" '("Insert Link" . mjs/org-roam-node-insert)
-             "n r c" '("Roam Capture" . mjs/org-roam-capture)
-             "n r s" '("Roam Sync" . org-roam-db-sync)
-             "n r S" '("Strip Roam Links" . mjs/strip-org-roam-links)
-             "n r d" '("Daily" . org-roam-dailies-capture-today)
-             "n r r" '("Random Node" . org-roam-node-random)
-             "n r t" '("Add Tags" . org-roam-tag-add)
-             "n r T" '("Remove Tags" . org-roam-tag-remove)
-             "i U"   '("Update Roam IDs" . org-roam-update-org-id-locations))
+(use-package vulpea
+  :custom
+  (vulpea-db-sync-directories (let (dirs)
+                                (dolist (dir
+                                         '("agenda/" "classes/" "journal/"
+                                           "personal/" "projects/" "ttrpg/games/")
+                                         dirs)
+                                  (setq dirs (cons (concat org-directory dir) dirs)))))
+  (vulpea-db-parse-method 'temp-buffer)
+  (vulpea-db-sync-scan-on-enable 'async)
+  (vulpea-db-exclude-archived t)
+  :diminish vulpea-title-change-detection-mode
+  :general
+  (mjs-leader-def :keymaps 'override
+    "n v" '(nil :which-key "Vulpea")
+    "n v a" '("Add Alias" . vulpea-buffer-alias-add)
+    "n v A" '("Remove Alias" . vulpea-buffer-alias-remove)
+    "n v c" '("Change title" . vulpea-propagate-title-change)
+    "n v b" '("Toggle Vulpea Buffer" . vulpea-ui-sidebar-toggle)
+    "n v f" '("Find Node" . vulpea-find)
+    "n v F" '("Find Ref" . vulpea-find-backlink)
+    "n v i" '("Insert Link" . vulpea-insert)
+    "n v j" '("Journal" . vulpea-journal)
+    "n v s" '("Sync DB" . vulpea-db-sync-full-scan)
+    "n v t" '("Add tag" . vulpea-buffer-tags-add)
+    "n v T" '("Remove tag" . vulpea-buffer-tags-remove))
   (mjs-local-leader-def :keymaps 'org-mode-map
-    "m"   '(nil :which-key "Roam")
-    "m a" '("Add Alias" . org-roam-alias-add)
-    "m A" '("Remove Alias" . org-roam-alias-remove)
-    "m b" '("Toggle Roam Buffer" . org-roam-buffer-toggle)
-    "m f" '("Find Node" . (lambda () (interactive) (mjs/org-roam-find-node nil "^")))
-    "m F" '("Find Ref" . org-roam-ref-find)
-    "m g" '("Graph" . org-roam-graph)
-    "m i" '("Insert Link" . mjs/org-roam-node-insert)
-    "m s" '("Roam Sync" . org-roam-db-sync)
-    "m S" '("Strip Roam Links" . mjs/strip-org-roam-links)
-    "m d" '("Daily" . org-roam-dailies-capture-today)
-    "m r" '("Random Node" . org-roam-node-random)
-    "m t" '("Add Tags" . org-roam-tag-add)
-    "m T" '("Remove Tags" . org-roam-tag-remove))
+    "m" '(nil :which-key "Vulpea")
+    "m a" '("Add Alias" . vulpea-buffer-alias-add)
+    "m A" '("Remove Alias" . vulpea-buffer-alias-remove)
+    "m c" '("Change title" . vulpea-propagate-title-change)
+    "m b" '("Toggle Vulpea Buffer" . vulpea-ui-sidebar-toggle)
+    "m f" '("Find Node" . vulpea-find)
+    "m F" '("Find Ref" . vulpea-find-backlink)
+    "m i" '("Insert Link" . vulpea-insert)
+    "m j" '("Journal" . vulpea-journal)
+    "m s" '("Sync DB" . vulpea-db-sync-full-scan)
+    "m t" '("Add tag" . vulpea-buffer-tags-add)
+    "m T" '("Remove tag" . vulpea-buffer-tags-remove))
   (:states 'insert :keymaps 'org-mode-map
-           "C-f" #'mjs/org-roam-node-insert
+           "C-f" #'vulpea-insert
            "C-S-f" #'org-insert-link)
-  :hook (org-mode . org-roam-db-autosync-mode)
-  ;; Taken from https://github.com/org-roam/org-roam/pull/2219/files
-  :config (defconst mjs/org-roam-bracket-completion-re
-            "\\[\\(?:\\[id:\\([^z-a]*?\\)]\\)?\\[\\([^z-a]+?\\)]]"
-            "Regex for completion within link brackets.
+  :hook (org-mode . vulpea-title-change-detection-mode)
+  :config
+  (vulpea-db-autosync-mode +1)
+  (require 'vulpea-ui)
+  (require 'consult-vulpea)
+  (require 'vulpea-journal))
 
-Matches both empty links (i.e. \"[[|]]\") and existing \"id:\"
-links (e.x. \"[[id:01234][|]]\").")
-
-  (setq safe-local-variable-values '((mjs/org-auto-tags--current-list . ("great_basin"))
-                                     (mjs/org-auto-tags--current-list . ("kb"))))
-
-  (cl-defmethod org-roam-node-all-tags ((node org-roam-node))
-    (mapconcat (lambda (tag) (concat "#" tag))
-               (delete-dups
-                (flatten-list
-                 (mapcar #'mjs/all-parent-tags
-                         (org-roam-node-tags node))))
-               " "))
-
-  (defvar mjs/org-context-plist
-    (list
-     :none
-     (list :name "none"
-           :tags (list))
-     :knowledge-base
-     (list :name "knowledge-base"
-           :tags '("kb"))
-     :ttrpg
-     (list :name "ttrpg"
-           :tags '("ttrpg"))
-     :great-basin
-     (list :name "great-basin"
-           :tags '("great_basin"))
-     :madttrpg
-     (list :name "madttrpg"
-           :tags '("madttrpg")))
-    "A list of tags groups defining common writing contexts")
-
-  (defvar mjs/org-roam-capture-templates-plist
-    (list
-     :knowledge-base
-     `(("k" "Knowledge Base" plain "%?"
-        :target (file+head "knowledge-base/%<%Y%m%d%H%M%S>-${slug}.org"
-                           ,(concat "#+filetags: ${auto-tags}\n"
-                                    "#+author: %(user-full-name)\n"
-                                    "#+title: ${title}\n"))
-        :unnarrowed t))
-     :great-basin
-     `(("g" "Great Basin")
-       ("gc" "Great Basin Character" plain
-        ,(format "%s%%[%s%s]"
-                 (concat "#+filetags: :great_basin:character:\n"
-                         "#+title: ${title}\n\n")
-                 org-roam-directory
-                 "/ttrpg/games/great-basin/characters/template.org")
-        :target (file "ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
-        :unnarrowed t)
-       ("ge" "Great Basin Event" plain
-        ,(format "%s%%[%s%s]"
-                 (concat "#+filetags: :great_basin:event:\n"
-                         "#+title: ${title}\n")
-                 org-roam-directory
-                 "/ttrpg/games/great-basin/events/template.org")
-        :target (file "ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
-        :unnarrowed t)
-       ("gl" "Great Basin Location" plain
-        ,(format "%s%%[%s%s]"
-                 (concat "#+filetags: :great_basin:location:\n"
-                         "#+title: ${title}\n")
-                 org-roam-directory
-                 "/ttrpg/games/great-basin/locations/template.org")
-        :target (file "ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
-        :unnarrowed t)
-       ("go" "Great Basin Object" plain
-        ,(format "%s%%[%s%s]"
-                 (concat "#+filetags: :great_basin:object:\n"
-                         "#+title: ${title}\n")
-                 org-roam-directory
-                 "/ttrpg/games/great-basin/%<%Y%m%d%H%M%S>-${slug}.org")
-        :target (file "ttrpg/games/great-basin/objects/template.org")
-        :unnarrowed t)
-       ("gr" "Great Basin Session Record" plain
-        ,(format "%%[%s%s]"
-                 org-roam-directory
-                 "/ttrpg/games/great-basin/sessions/template.org")
-        :target (file "ttrpg/games/great-basin/sessions/great-basin-%<%Y-%m-%d>.org")
-        :unnarrowed t)
-       ("gR" "Great Basin Public Session Record" plain
-        ,(format "%%[%s%s]"
-                 org-roam-directory
-                 "/ttrpg/games/great-basin/public/session-recaps/template.org")
-        :target (file "ttrpg/games/great-basin/public/session-recaps/great-basin-%<%Y-%m-%d>.org")
-        :unnarrowed t)
-       ("gs" "Great Basin Stat Block" plain
-        ,(format "%s%%[%s%s]"
-                 (concat "#+filetags: :great_basin:stat:\n"
-                         "#+title: ${title}\n")
-                 org-roam-directory
-                 "/ttrpg/games/great-basin/stat-blocks/template.org")
-        :target (file "ttrpg/games/great-basin/stat-blocks/%<%Y%m%d%H%M%S>-${slug}.org")
-        :unnarrowed t))
-     :ttrpg
-     `(("c" "5E Character Sheet" plain
-        ,(format "%s%%[%s%s]"
-                 (concat "#+filetags: :ttrpg:stat:\n"
-                         "#+title: ${title}\n")
-                 org-roam-directory
-                 "/ttrpg/systems/dungeons-and-dragons-5e/character.org")
-        :target (file "ttrpg/games/%<%Y%m%d%H%M%S>-${slug}.org")
-        :unnarrowed t)
-       ("e" "Etera Session" entry "%?"
-        :target (file+datetree "ttrpg/games/etera/notes.org" 'day)
-        :unnarrowed t
-        :immediate-finish t
-        :jump-to-captured t)
-       ))
-    "Templates for use with `org-roam-capture'.")
-
-  (defvar mjs/org-auto-tags--current-list
-    (list)
-    "The list of tags to automatically apply to an org capture")
-
-  (cl-defun mjs/org-context-list-completing-read (&key (context-plist mjs/org-context-plist))
-    "Create a list of contexts from the CONTEXT-PLIST for completing read.
-
-The form should be '((\"none\" 1) (\"knowledge-base\" 3) ...)."
-    (-non-nil (seq-map-indexed
-               (lambda (context index)
-                 (when (cl-oddp index)
-                   (list (plist-get context :name) index)))
-               context-plist)))
-
-  (cl-defun org-roam-node-auto-tags (node &key (tag-list mjs/org-auto-tags--current-list))
-    "Inject the TAG-LIST into the {auto-tags} region of captured NODE."
-    (if (and tag-list (> (length tag-list) 0))
-        (concat ":" (s-join ":" tag-list) ":")
-      ""))
-
-  (cl-defun mjs/org-roam-filter-context-fn (node &key
-                                                 (tag-list mjs/org-auto-tags--current-list))
-    "Determine if TAG-LIST is a subset of NODE's tags."
-    ;; gnus-subsetp is a more "permissive" version of subsetp. It doesn't
-    ;; consider order. And looks at strings as equal if their values are the
-    ;; same.
-    (gnus-subsetp tag-list
-                  (delete-dups
-                   (flatten-list
-                    (mapcar #'mjs/all-parent-tags
-                            (org-roam-node-tags node))))))
-
-  (cl-defun mjs/org-roam-templates-list
-      (context &key (template-plist mjs/org-roam-capture-templates-plist))
-    "List of `org-roam' capture templates based on the given CONTEXT.
-
-Searches the TEMPLATE-PLIST for the templates.
-
-Note, the `:all' or `:none' contexts assumes we use the whole list"
-    (if (or (eq context :all) (eq context :none))
-        (-non-nil
-         (seq-map-indexed
-          (lambda (temp index)
-            (when (cl-oddp index)
-              temp))
-          template-plist))
-      (plist-get template-plist context)))
-
-  (cl-defun mjs/org-roam-templates-context-fn
-      (&key (tag-list mjs/org-auto-tags--current-list))
-    "Returns a set of templates based on TAG-LIST.
-
-Returns templates for all contexts defined in `mjs/org-context-plist' whose tags
-are a subset of TAG-LIST, with the exception of the `:none' context which is only
-used if TAG-LIST is empty."
-    (if (and tag-list (> (length tag-list) 0))
-        (-flatten-n 1
-                    (-non-nil (seq-map-indexed
-                               (lambda (context index)
-                                 (when (and (cl-oddp index)
-                                            (not (string= (plist-get context :name) "none"))
-                                            (gnus-subsetp (plist-get context :tags)
-                                                          mjs/org-auto-tags--current-list))
-                                   (mjs/org-roam-templates-list
-                                    (intern-soft (concat ":" (plist-get context :name))))))
-                               mjs/org-context-plist)))
-      (mjs/org-roam-templates-list :all)))
-
-  ;; (advice-add #'org-roam-complete-link-at-point
-  ;;             :override #'mjs/org-roam-complete-link-at-point)
-  ;; (advice-add #'org-roam-complete-everywhere
-  ;;             :override #'mjs/org-roam-complete-everywhere)
-  )
-
-
-;; (use-package vulpea
-;;   :hook (org-roam-db-autosync-mode . vulpea-db-autosync-mode))
+(use-package vui)
+(use-package vulpea-ui
+  :after vulpea
+  ;; :hook (org-mode . vulpea-ui-sidebar-open)
+  :hook (vulpea-ui-sidebar-mode . hide-mode-line-mode)
+  :custom-face (shadow ((t (:foreground ,(plist-get base16-stylix-theme-colors :base04)))))
+  :custom
+  (vulpea-ui-sidebar-size 0.25)
+  (vulpea-ui-outline-max-depth 3))
+(use-package vulpea-journal
+  :custom
+  (vulpea-journal-default-template
+   `(:file-name "journal/%Y-%m-%d.org"
+                :title "%Y-%m-%d %A"
+                :tags ("journal")
+                :head "#+created: %<[%Y-%m-%d]>"
+                :body
+                ,(concat
+                  "* Planning\n\n"
+                  "- [ ] Update Habits\n\n"
+                  "#+BEGIN: mjs-org-ql :query \"mjs-today:on=%<%Y-%m-%d>\" :columns (todo (priority \"P\") deadline heading) :sort (todo deadline priority) :ts-format \"\%Y-\%m-\%d\" :from org-agenda-files\n"
+                  "#+END:\n\n"
+                  "** Plan for Today\n\n%?"
+                  "* Review\n\n"
+                  "#+BEGIN: mjs-org-ql :query \"mjs-done:on=%<%Y-%m-%d>\" :columns (todo (priority \"P\") deadline heading) :sort (deadline priority) :ts-format \"\%Y-\%m-\%d\" :from org-agenda-files\n"
+                  "#+END:\n\n"
+                  "** Reflection\n\n\n"
+                  "** Plan for Tomorrow")))
+  (vulpea-journal-ui-calendar-week-start 1)
+  :config (vulpea-journal-setup))
+(use-package consult-vulpea
+  :diminish consult-vulpea-mode
+  :config (consult-vulpea-mode +1))
 
 (use-package org-cliplink
   :commands mjs/clean-org-cliplink
   :general (mjs-local-leader-def :keymaps 'org-mode-map
              "l c" '("Paste URL" . mjs/clean-org-cliplink)
              "l C" '("Paste Raw URL" . org-cliplink)))
-
-(use-package org-chef
-  :after org
-  :init (add-to-list 'org-capture-templates
-                     `("r" "Recipe" entry
-                       (file ,(concat org-directory "recipes.org"))
-                       "%(org-chef-get-recipe-from-url)"
-                       :empty-lines 1) t)
-  (add-to-list 'org-capture-templates
-               `("R" "Manual Recipe" entry
-                 (file ,(concat org-directory "personal/recipes.org"))
-                 ,(concat "* %^{Recipe title: }\n"
-                          "  :PROPERTIES:\n"
-                          "  :source:\n"
-                          "  :export_hugo_bundle:\n"
-                          "  :export_file_name: index"
-                          "  :END:\n\n"
-                          "** Ingredients\n\n"
-                          "   %?\n\n"
-                          "** Directions\n\n")) t))
 
 (use-package ox-pandoc
   :general (mjs-local-leader-def :keymaps 'org-mode-map
@@ -3006,9 +2826,6 @@ Won't forward the buffer to chained formatters if successful."
           ;; try the next chained formatter(s)
           (ignore (funcall callback)))))
   (add-to-list 'apheleia-formatters '(lsp . mjs/format-with-eglot)))
-
-(use-package hide-mode-line
-  :commands hide-mode-line-mode)
 
 (use-package vterm
   :commands (vterm-mode vterm vterm-other-window)
