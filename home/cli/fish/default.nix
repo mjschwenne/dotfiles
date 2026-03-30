@@ -14,6 +14,7 @@
       m = "math";
       nix-shell = "nix-shell --run fish";
       ls = "eza";
+      cat = "bat";
       scp = "scp -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}";
     };
     functions = {

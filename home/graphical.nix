@@ -77,7 +77,6 @@ let
     graphviz
     viu
     claude-code
-    claude-code-acp
 
     # Wayland Utilities
     awww.packages.${stdenv.hostPlatform.system}.default
