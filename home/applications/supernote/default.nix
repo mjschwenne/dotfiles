@@ -1,5 +1,6 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = [
-    (pkgs.callPackage ./supernote.nix {})
+    (pkgs.callPackage ./supernote.nix { })
   ];
 }
