@@ -1,4 +1,4 @@
-{ pkgs-master, ... }:
+{ pkgs-master, pkgs, ... }:
 {
   programs.zed-editor = {
     enable = true;
@@ -9,15 +9,25 @@
       "make"
       "fish"
       "java"
+      "proto"
+      "toml"
+      "justfile"
+      "ocaml"
+      "haskell"
     ];
     userSettings = {
       auto_update = false;
       telemetry.metrics = false;
       agent = {
         default_open_ai_model = null;
-        default_model = {
-          provider = "zed.dev";
-          model = "claude-sonnet-4-5";
+        default_model = null;
+      };
+      agent_server = {
+        claude-acp = {
+          type = "registry";
+          env = {
+            CLUADE_CODE_EXECUTABLE = "${pkgs.claude-code}/bin/claude";
+          };
         };
       };
       lsp = {
@@ -44,7 +54,7 @@
           };
         };
         env = {
-          TERM = "wezterm";
+          TERM = "ghostty";
         };
         font_family = "JetBrainsMono Nerd Font";
         font_features = null;
@@ -61,7 +71,7 @@
       vim_mode = true;
       load_direnv = "shell_hook";
       base_keymap = "VSCode";
-      show_whitespaces = "all";
+      show_whitespaces = "trailing";
     };
   };
 

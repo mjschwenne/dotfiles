@@ -7,7 +7,6 @@
     ./spotify
     ./supernote
     ./terminals
-    ./zed
     ./zathura
     ./nethack
   ];

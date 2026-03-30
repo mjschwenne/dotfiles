@@ -3,6 +3,7 @@
   imports = [
     ./emacs
     ./nvim
+    ./zed
   ];
 
   # System-wide checkers and linters shared between nvim and emacs
