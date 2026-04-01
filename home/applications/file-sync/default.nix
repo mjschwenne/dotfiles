@@ -57,6 +57,13 @@ let
       mode = "realtime";
     }
     {
+      name = "journal";
+      localPath = "$HOME/Documents/journal";
+      remote = "copyparty:journal";
+      calendar = "*:0/30";
+      mode = "realtime";
+    }
+    {
       name = "kdb";
       localPath = "$HOME/kdb";
       remote = "copyparty:kdb";

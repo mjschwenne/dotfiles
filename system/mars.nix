@@ -13,6 +13,7 @@
     # ./applications/nextcloud
     ./applications/immich
     ./applications/copyparty
+    ./applications/journal-gen
     foundry.nixosModules.foundryvtt
   ];
 
@@ -41,6 +42,19 @@
 
   hardware.keyboard.qmk.enable = true;
   networking.hostName = "mars"; # Define your hostname.
+  services.journal-gen = {
+    enable = true;
+    orgDir = "/var/lib/copyparty/data/journal";
+    outputDir = "/var/lib/copyparty/data/supernote/style";
+    calendar = "06:00";
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/copyparty/data/journal 0775 copyparty copyparty -"
+  ];
+
+  users.users.mjs.extraGroups = [ "copyparty" ];
+
   services = {
     tailscale = {
       extraUpFlags = [ "--ssh" ];
@@ -59,7 +73,7 @@
         plugins = [ "github.com/caddy-dns/porkbun@v0.3.1" ];
         hash = "sha256-R1ZqQ8drcBQIH7cLq9kEvdg9Ze3bKkT8IAFavldVeC0=";
       };
-      environmentFile = ''${config.sops.secrets."caddy/envfile".path}'';
+      environmentFile = "${config.sops.secrets."caddy/envfile".path}";
       extraConfig = ''
         (ts_host) {
             bind {env.TAILNET_IP}
