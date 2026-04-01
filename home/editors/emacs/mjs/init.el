@@ -8,10 +8,10 @@
 
 (require 'use-package)
 
-(setq use-package-verbose t
+(setq use-package-verbose nil
       use-package-always-defer t
       use-package-always-ensure t
-      use-package-compute-statistics t
+      use-package-compute-statistics nil
       use-package-enable-imenu-support t)
 
 (setq-default cursor-in-non-selected-windows nil
@@ -36,18 +36,23 @@
 
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path (expand-file-name "autoloads" user-emacs-directory))
-(loaddefs-generate
- (expand-file-name "autoloads" user-emacs-directory)
- (expand-file-name "autoloads/auto.el" user-emacs-directory))
-(require 'auto)
+(let ((autoloads-dir (expand-file-name "autoloads" user-emacs-directory))
+      (autoloads-file (expand-file-name "autoloads/auto.el" user-emacs-directory)))
+  (when (or (not (file-exists-p autoloads-file))
+            (cl-some (lambda (f)
+                       (and (string-suffix-p ".el" f)
+                            (not (string= (file-name-nondirectory f) "auto.el"))
+                            (file-newer-than-file-p f autoloads-file)))
+                     (directory-files autoloads-dir t)))
+    (loaddefs-generate autoloads-dir autoloads-file))
+  (require 'auto))
 
 (use-package diminish
   :commands diminish)
 
 (use-package which-key
   :diminish which-key-mode
-  :defer nil
-  :config (which-key-mode 1))
+  :hook (emacs-startup . which-key-mode))
 
 (use-package general
   :defer nil
@@ -118,7 +123,10 @@
   :defer nil
   :diminish evil-collection-unimpaired-mode
   :custom (evil-collection-setup-minibuffer t)
-  :config (evil-collection-init))
+  :config
+  ;; Only init modes used frequently
+  (evil-collection-init
+   '(dashboard magit vterm minibuffer corfu vertico pdf)))
 
 (use-package evil-args
   :after evil
@@ -136,8 +144,9 @@
            "H" #'evil-backward-arg))
 
 (use-package evil-easymotion
-  :defer nil
-  :config (evilem-default-keybindings ";"))
+  :commands evilem-default-keybindings
+  :init (with-eval-after-load 'evil
+          (evilem-default-keybindings ";")))
 
 (use-package evil-surround
   :after evil
@@ -148,13 +157,6 @@
   :config
   (add-hook 'org-mode-hook #'embrace-org-mode-hook)
   (evil-embrace-enable-evil-surround-integration))
-
-(use-package evil-escape
-  :after evil
-  :defer nil
-  :diminish evil-escape-mode
-  :custom (evil-escape-key-sequence "jk")
-  :config (evil-escape-mode))
 
 (use-package evil-exchange
   :after evil
@@ -211,7 +213,6 @@
 
 (use-package vimish-fold
   :after evil
-  :defer nil
   :diminish vimish-fold-mode)
 
 (use-package evil-vimish-fold
@@ -282,13 +283,11 @@
   "i r" '("Evil Registers" . evil-show-registers)
   "i e" '("Emoji" . emojify-insert-emoji))
 
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-
 (set-frame-parameter (selected-frame) 'font "JetBrainsMono Nerd Font-12")
 (add-to-list 'default-frame-alist
              '(font . "JetBrainsMono Nerd Font-12"))
+(set-frame-parameter nil 'alpha-background 90) 
+(add-to-list 'default-frame-alist '(alpha-background . 90))
 
 (use-package hide-mode-line
   :commands hide-mode-line-mode)
@@ -329,9 +328,6 @@
      "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
      "?=" "?." "??" ";;" "/*" "/>" "//" "__" "~~" "(*" "*)"
      "\\\\" "://"))
-  ;; Enables ligature checks globally in all buffers. You can also do it
-  ;; per mode with `ligature-mode'.
-  (global-ligature-mode -1)
   :hook (prog-mode . ligature-mode)
   (text-mode . ligature-mode))
 
@@ -363,6 +359,18 @@
      ("FAIL" . ,(plist-get base16-stylix-theme-colors :base08))
      ))
   :hook (prog-mode . hl-todo-mode))
+
+(use-package anzu
+  :after evil
+  :defer nil
+  :hook (emacs-startup . global-anzu-mode)
+  :custom ((anzu-mode-lighter "")
+           (anzu-cons-mode-line-p nil))
+  :custom-face
+  (anzu-mode-line ((t  :foreground ,(plist-get base16-stylix-theme-colors :base05))))
+  :config (require 'evil-anzu))
+
+(use-package evil-anzu)
 
 (use-package telephone-line
   :defer nil
@@ -460,18 +468,6 @@
                    face ,face)))
   (telephone-line-mode 1))
 
-(use-package anzu
-  :after evil
-  :hook (emacs-startup . global-anzu-mode)
-  :custom ((anzu-mode-lighter "")
-           (anzu-cons-mode-line-p nil))
-  :custom-face
-  (anzu-mode-line ((t  :foreground ,(plist-get base16-stylix-theme-colors :base05)))))
-
-(use-package evil-anzu
-  :after evil
-  :defer nil)
-
 (setq display-line-numbers-type 'relative
       display-line-numbers-current-absolute t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -490,22 +486,45 @@
 
 (use-package nerd-icons)
 
-(use-package dashboard
+(use-package projectile
   :defer nil
-  :config (defun mjs/dashboard-next-items ()
-            (unless (and (org-entry-is-todo-p)
-                         (not (org-entry-is-done-p))
-                         (not (org-in-archived-heading-p))
-                         (string= (org-get-todo-state) "NEXT"))
-              (point)))
+  :diminish projectile-mode
+  :custom
+  ;; Use Emacs' built-in completing-read so vertico handles the UI
+  (projectile-completion-system 'default)
+  (projectile-sort-order 'recentf)
+  (projectile-switch-project-action #'projectile-find-file)
+  :general
+  (mjs-leader-def :keymaps 'override
+    "P"   '(nil :which-key "Project")
+    "P F" '("Find File (Other)" . projectile-find-file-other-window)
+    "P s" '("Search (rg)"       . projectile-ripgrep)
+    "P g" '("Grep"              . projectile-grep)
+    "P k" '("Kill Buffers"      . projectile-kill-buffers)
+    "P i" '("Invalidate Cache"  . projectile-invalidate-cache)
+    "P c" '("Compile"           . projectile-compile-project)
+    "P t" '("Test"              . projectile-test-project))
+  :config (projectile-mode +1) (require 'consult-projectile))
+
+(use-package consult-projectile
+  :after (consult projectile)
+  :general
+  (mjs-leader-def :keymaps 'override
+    ;; Override select projectile commands with richer consult variants
+    "P p" '("Switch Project"    . consult-projectile-switch-project)
+    "P f" '("Find File"         . consult-projectile-find-file)
+    "P b" '("Switch Buffer"     . consult-projectile-switch-to-buffer)
+    "P d" '("Find Dir"          . consult-projectile-find-dir)
+    "P r" '("Recent Files"      . consult-projectile-recentf)))
+
+(use-package dashboard
+  :commands (dashboard-open)
+  ;; :hook (emacs-startup . dashboard-open)
+  :defer nil
+  :config
   (dashboard-setup-startup-hook)
   (mjs-leader-def :keymaps 'override
     "D" '("Open Dashboard" . dashboard-open))
-  :commands (dashboard-jump-to-agenda dashboard-jump-to-recents)
-  :general
-  (:keymaps 'dashboard-mode-map :states 'normal
-            "a" #'dashboard-jump-to-agenda
-            "r" #'dashboard-jump-to-recents)
   :custom
   (dashboard-startup-banner (expand-file-name "logo.webp" user-emacs-directory))
   (dashboard-display-icons-p t)
@@ -513,11 +532,12 @@
   (dashboard-set-navigator t)
   (dashboard-set-heading-icons t)
   (dashboard-set-file-icons t)
+  (dashboard-projects-backend 'projectile)
+  (dashboard-projects-backend-switch-function consult-projectile-switch-project)
   (dashboard-filter-agenda-entry #'mjs/dashboard-next-items)
-  (dashboard-items '((recents . 5)
-                     (agenda . 10)))
-  (dashboard-item-names '(("Recent Files:" . "Recently Opened:")
-                          ("Agenda for the coming week:" . "NEXT Items:")))
+  (dashboard-items '((recents . 10)
+                     (projects . 5)))
+  (dashboard-item-names '(("Recent Files:" . "Recently Opened:")))
   (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs"))
   (initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
 
@@ -669,7 +689,7 @@
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package consult
-  :init (recentf-mode 1)
+  :hook (emacs-startup . recentf-mode)
   :general (mjs-leader-def :keymaps 'override
              "s"     '(nil :which-key "Search")
              "s b"   '("Buffer" . consult-buffer)
@@ -851,7 +871,7 @@ advice."
   :commands diff-hl-flydiff-mode)
 
 (use-package diff-hl
-  :defer nil
+  :hook (emacs-startup . global-diff-hl-mode)
   :commands diff-hl-stage-current-hunk diff-hl-revert-hunk diff-hl-next-hunk diff-hl-previous-hunk
   :custom-face (diff-hl-insert ((t (:background "unspecified"))))
   (diff-hl-delete ((t (:background "unspecified"))))
@@ -1331,14 +1351,14 @@ are rendered at the correct size and not huge."
 
   (advice-add #'org-return :after #'mjs/org-fix-newline-and-indent)
 
-  (add-to-list 'org-latex-packages-alist '("" "sfmath" t))
-  (add-to-list 'org-latex-packages-alist '("margin=1in" "geometry" t))
-  (add-to-list 'org-latex-packages-alist '("" "parskip" t))
-  (add-to-list 'org-latex-packages-alist '("" "mathpartir" t))
-  (add-to-list 'org-latex-packages-alist '("" "nicematrix" t))
-  (add-to-list 'org-latex-packages-alist '("" "amsthm" t))
-  (add-to-list 'org-latex-packages-alist '("" "cancel" t))
-
+  (setq org-latex-packages-alist
+        '(("" "sfmath" t)
+          ("margin=1in" "geometry" t)
+          ("" "parskip" t)
+          ("" "mathpartir" t)
+          ("" "nicematrix" t)
+          ("" "amsthm" t)
+          ("" "cancel" t)))
   ;; Load packages not being loaded by default
   (require 'consult-org)
   (require 'vulpea))
@@ -1557,136 +1577,136 @@ For example, an org-ql dynamic block header could look like:
         (org-table-align))))
 
   (org-ql-defpred property-regex (property &optional value &key inherit)
-    "Return non-nil if current entry has PROPERTY, and optionally a VALUE.
+                  "Return non-nil if current entry has PROPERTY, and optionally a VALUE.
     If INHERIT is nil, only match entries with PROPERTY set on the
     entry; if t, also match entries with inheritance.  If INHERIT is
     not specified, use the Boolean value of
     `org-use-property-inheritance', which see (i.e. it is only
     interpreted as nil or non-nil)."
-    :normalizers ((`(,predicate-names)
-                   ;; HACK: This clause protects against the case in
-                   ;; which the arguments are nil, which would cause an
-                   ;; error in `rx-to-string' in other clauses.  This
-                   ;; can happen with `org-ql-completing-read',
-                   ;; e.g. when the input is "property:" while the user
-                   ;; is typing.
-                   ;; FIXME: Instead of this being moot, make this
-                   ;; predicate test for whether an entry has local
-                   ;; properties when no arguments are given.
-                   (list 'property-regex ""))
-                  (`(,predicate-names ,property)
-                   ;; Convert keyword property arguments to strings.  Non-sexp
-                   ;; queries result in keyword property arguments (because to do
-                   ;; otherwise would require ugly special-casing in the parsing).
-                   (when (keywordp property)
-                     (setf property (substring (symbol-name property) 1)))
-                   (list 'property-regex property))
-                  (`(,predicate-names ,property . ,rest)
-                   (pcase rest
-                     (`(,value)
-                      ;; Convert keyword property arguments to strings.  Non-sexp
-                      ;; queries result in keyword property arguments (because to do
-                      ;; otherwise would require ugly special-casing in the parsing).
-                      (when (keywordp property)
-                        (setf property (substring (symbol-name property) 1)))
-                      (list 'property-regex property value))
-                     ((and `(,value . ,plist)
-                           (guard (not (keywordp value))))
-                      ;; Convert keyword property arguments to strings.  Non-sexp
-                      ;; queries result in keyword property arguments (because to do
-                      ;; otherwise would require ugly special-casing in the parsing).
-                      (when (keywordp property)
-                        (setf property (substring (symbol-name property) 1)))
-                      (list 'property-regex property value
-                            :inherit (cond ((plist-member plist :inherit) (plist-get plist :inherit))
-                                           ((listp org-use-property-inheritance) ''selective)
-                                           (t org-use-property-inheritance))))
-                     ((and plist (guard (keywordp (car rest))))
-                      ;; Convert keyword property arguments to strings.  Non-sexp
-                      ;; queries result in keyword property arguments (because to do
-                      ;; otherwise would require ugly special-casing in the parsing).
-                      (when (keywordp property)
-                        (setf property (substring (symbol-name property) 1)))
-                      (list 'property-regex property nil
-                            :inherit (cond ((plist-member plist :inherit) (plist-get plist :inherit))
-                                           ((listp org-use-property-inheritance) ''selective)
-                                           (t org-use-property-inheritance)))))))
-    ;; MAYBE: Should case folding be disabled for properties?  What about values?
-    ;; MAYBE: Support (property) without args.
+                  :normalizers ((`(,predicate-names)
+                                 ;; HACK: This clause protects against the case in
+                                 ;; which the arguments are nil, which would cause an
+                                 ;; error in `rx-to-string' in other clauses.  This
+                                 ;; can happen with `org-ql-completing-read',
+                                 ;; e.g. when the input is "property:" while the user
+                                 ;; is typing.
+                                 ;; FIXME: Instead of this being moot, make this
+                                 ;; predicate test for whether an entry has local
+                                 ;; properties when no arguments are given.
+                                 (list 'property-regex ""))
+                                (`(,predicate-names ,property)
+                                 ;; Convert keyword property arguments to strings.  Non-sexp
+                                 ;; queries result in keyword property arguments (because to do
+                                 ;; otherwise would require ugly special-casing in the parsing).
+                                 (when (keywordp property)
+                                   (setf property (substring (symbol-name property) 1)))
+                                 (list 'property-regex property))
+                                (`(,predicate-names ,property . ,rest)
+                                 (pcase rest
+                                   (`(,value)
+                                    ;; Convert keyword property arguments to strings.  Non-sexp
+                                    ;; queries result in keyword property arguments (because to do
+                                    ;; otherwise would require ugly special-casing in the parsing).
+                                    (when (keywordp property)
+                                      (setf property (substring (symbol-name property) 1)))
+                                    (list 'property-regex property value))
+                                   ((and `(,value . ,plist)
+                                         (guard (not (keywordp value))))
+                                    ;; Convert keyword property arguments to strings.  Non-sexp
+                                    ;; queries result in keyword property arguments (because to do
+                                    ;; otherwise would require ugly special-casing in the parsing).
+                                    (when (keywordp property)
+                                      (setf property (substring (symbol-name property) 1)))
+                                    (list 'property-regex property value
+                                          :inherit (cond ((plist-member plist :inherit) (plist-get plist :inherit))
+                                                         ((listp org-use-property-inheritance) ''selective)
+                                                         (t org-use-property-inheritance))))
+                                   ((and plist (guard (keywordp (car rest))))
+                                    ;; Convert keyword property arguments to strings.  Non-sexp
+                                    ;; queries result in keyword property arguments (because to do
+                                    ;; otherwise would require ugly special-casing in the parsing).
+                                    (when (keywordp property)
+                                      (setf property (substring (symbol-name property) 1)))
+                                    (list 'property-regex property nil
+                                          :inherit (cond ((plist-member plist :inherit) (plist-get plist :inherit))
+                                                         ((listp org-use-property-inheritance) ''selective)
+                                                         (t org-use-property-inheritance)))))))
+                  ;; MAYBE: Should case folding be disabled for properties?  What about values?
+                  ;; MAYBE: Support (property) without args.
 
-    ;; NOTE: When inheritance is enabled, the preamble can't be used,
-    ;; which will make the search slower.
-    :preambles (((and `(,predicate-names ,property ,value)
-                      (guard (atom value)))
-                 ;; We do NOT return nil, because the predicate still needs to be tested,
-                 ;; because the regexp could match a string not inside a property drawer.
-                 ;; Use (regexp ,value) so the value is treated as a regexp, not a literal string.
-                 (list :regexp (rx-to-string `(seq bol (0+ space) ":" ,property ":"
-                                                   (1+ space) (regexp ,value)))
-                       :query query))
-                ((and `(,predicate-names ,property ,value . ,plist)
-                      (guard (keywordp (car plist))))
-                 ;; WE do NOT return nil, because the predicate still needs to be tested,
-                 ;; because the regexp could match a string not inside a property drawer.
-                 ;; NOTE: The preamble only matches if there appears to be a value.
-                 ;; A line like ":ID: " without any other text does not match.
-                 (list :regexp (unless (plist-get plist :inherit)
-                                 (rx-to-string `(seq bol (0+ space) ":" ,property ":" (1+ space)
-                                                     (minimal-match (1+ not-newline)) eol)))
-                       :query query)))
-    :body
-    (pcase property
-      ('nil (user-error "Property matcher requires a PROPERTY argument"))
-      (_ (pcase value
-           ('nil
-            ;; Check that PROPERTY exists
-            (org-ql--value-at
-             (point) (lambda ()
-                       (org-entry-get (point) property inherit))))
-           (_
-            ;; Check that PROPERTY has VALUE (as a regexp).
-            (let ((actual (org-ql--value-at
+                  ;; NOTE: When inheritance is enabled, the preamble can't be used,
+                  ;; which will make the search slower.
+                  :preambles (((and `(,predicate-names ,property ,value)
+                                    (guard (atom value)))
+                               ;; We do NOT return nil, because the predicate still needs to be tested,
+                               ;; because the regexp could match a string not inside a property drawer.
+                               ;; Use (regexp ,value) so the value is treated as a regexp, not a literal string.
+                               (list :regexp (rx-to-string `(seq bol (0+ space) ":" ,property ":"
+                                                                 (1+ space) (regexp ,value)))
+                                     :query query))
+                              ((and `(,predicate-names ,property ,value . ,plist)
+                                    (guard (keywordp (car plist))))
+                               ;; WE do NOT return nil, because the predicate still needs to be tested,
+                               ;; because the regexp could match a string not inside a property drawer.
+                               ;; NOTE: The preamble only matches if there appears to be a value.
+                               ;; A line like ":ID: " without any other text does not match.
+                               (list :regexp (unless (plist-get plist :inherit)
+                                               (rx-to-string `(seq bol (0+ space) ":" ,property ":" (1+ space)
+                                                                   (minimal-match (1+ not-newline)) eol)))
+                                     :query query)))
+                  :body
+                  (pcase property
+                    ('nil (user-error "Property matcher requires a PROPERTY argument"))
+                    (_ (pcase value
+                         ('nil
+                          ;; Check that PROPERTY exists
+                          (org-ql--value-at
                            (point) (lambda ()
-                                     (org-entry-get (point) property inherit)))))
-              (and actual (string-match value actual))))))))
+                                     (org-entry-get (point) property inherit))))
+                         (_
+                          ;; Check that PROPERTY has VALUE (as a regexp).
+                          (let ((actual (org-ql--value-at
+                                         (point) (lambda ()
+                                                   (org-entry-get (point) property inherit)))))
+                            (and actual (string-match value actual))))))))
 
   (org-ql-defpred mjs-today (&key from to _on)
-    "Search for NEXT items or todo tasks with timestamps on `DATE'"
-    ;; They seem to expect an already normalized query, so I've copied the
-    ;; normalization for closed to apply it manually
-    :normalizers ((`(,predicate-names . ,rest)
-                   (org-ql--normalize-from-to-on
-                     `(mjs-today :from ,from :to ,to))))
-    :preambles ((`(,predicate-names . ,_)
-                 (list :regexp (rx-to-string (or "NEXT" (regexp org-ql-regexp-planning)))
-                       :query query)))
-    :body (or (todo "NEXT")
-              (and (not habit)
-                   (todo)
-                   (or
-                    (deadline :from from :to to
-                              :regexp org-ql-regexp-deadline
-                              :with-time nil)
-                    (scheduled :from from :to to
-                               :regexp org-ql-regexp-scheduled
-                               :with-time nil)))))
+                  "Search for NEXT items or todo tasks with timestamps on `DATE'"
+                  ;; They seem to expect an already normalized query, so I've copied the
+                  ;; normalization for closed to apply it manually
+                  :normalizers ((`(,predicate-names . ,rest)
+                                 (org-ql--normalize-from-to-on
+                                  `(mjs-today :from ,from :to ,to))))
+                  :preambles ((`(,predicate-names . ,_)
+                               (list :regexp (rx-to-string (or "NEXT" (regexp org-ql-regexp-planning)))
+                                     :query query)))
+                  :body (or (todo "NEXT")
+                            (and (not habit)
+                                 (todo)
+                                 (or
+                                  (deadline :from from :to to
+                                            :regexp org-ql-regexp-deadline
+                                            :with-time nil)
+                                  (scheduled :from from :to to
+                                             :regexp org-ql-regexp-scheduled
+                                             :with-time nil)))))
 
   (org-ql-defpred mjs-done (&key from to _on)
-    "Search for items closed or repeated on `DATE'.
+                  "Search for items closed or repeated on `DATE'.
 Only use this with `on' argument!"
-    :normalizers ((`(,predicate-names . ,rest)
-                   (org-ql--normalize-from-to-on
-                     `(and (not (habit))
-                           (or (closed :from ,from :to ,to)
-                               (property-regex
-                                "LAST_REPEAT"
-                                ,(rx-to-string `(seq "[" ,on (* (not "]")) "]"))))))))
-    :preambles ((`(,predicate-names . ,_)
-                 (list :regexp (rx-to-string
-                                `(or
-                                  (regexp ,org-closed-time-regexp)
-                                  (seq bol (0+ space) ":LAST_REPEAT:")))
-                       :query query)))))
+                  :normalizers ((`(,predicate-names . ,rest)
+                                 (org-ql--normalize-from-to-on
+                                  `(and (not (habit))
+                                        (or (closed :from ,from :to ,to)
+                                            (property-regex
+                                             "LAST_REPEAT"
+                                             ,(rx-to-string `(seq "[" ,on (* (not "]")) "]"))))))))
+                  :preambles ((`(,predicate-names . ,_)
+                               (list :regexp (rx-to-string
+                                              `(or
+                                                (regexp ,org-closed-time-regexp)
+                                                (seq bol (0+ space) ":LAST_REPEAT:")))
+                                     :query query)))))
 
 (use-package org-superstar
   :after org
@@ -1696,7 +1716,7 @@ Only use this with `on' argument!"
            (org-superstar-remove-leading-stars nil)
            (org-superstar-prettify-item-bullets nil))
   :hook (org-mode . org-superstar-mode)
-  :config
+  :init
   (defun mjs/org-indent-compute-prefixes ()
     "Compute prefix strings for regular text and headlines.
 
@@ -1769,7 +1789,6 @@ the characters."
 (use-package flycheck
   :hook (emacs-startup . global-flycheck-mode)
   :diminish flycheck-mode
-  :defer nil
   :custom ((flycheck-global-modes t)
            (flycheck-indication-mode 'right-fringe)
            (flycheck-mode-line)
@@ -2054,8 +2073,6 @@ With a prefix ARG, remove start location."
               :after #'mjs/hugo-blowfish-thumbnail)
   (advice-add #'org-hugo--export-file-to-md
               :after #'mjs/hugo-blowfish-thumbnail))
-
-(use-package ox-json)
 
 (use-package org-tree-slide
   :commands org-tree-slide-mode
@@ -2445,9 +2462,6 @@ With a prefix ARG, remove start location."
 (use-package quarto-mode
   :mode ("\\.qmd\\'" . poly-quarto-mode))
 
-(use-package ready-player
-  :config (ready-player-mode +1))
-
 (use-package ledger-mode
   :mode ("\\.ldg\\'" . ledger-mode)
   :custom (ledger-clear-whole-transactions 1)
@@ -2459,119 +2473,12 @@ With a prefix ARG, remove start location."
   :diminish evil-ledger-mode
   :hook (ledger-mode . evil-ledger-mode))
 
-(use-package calfw
-  :commands (mjs/open-calendar)
-  :custom (calendar-week-start-day 1)
-  :general (mjs-leader-def
-             "C"     '(nil :which-key "Calendar")
-             "C a"   '("Open Agenda on Day" . cfw:org-open-agenda-day)
-             "C c"   '("Open Calendar" . mjs/open-calendar)
-             "C d"   '("GOTO Date" . cfw:navi-goto-date-command)
-             "C m"   '("First Day" . cfw:navi-goto-first-date-command)
-             "C M"   '("Last Day" . cfw:navi-goto-last-date-command)
-             "C q"   '("Quit Calendar" . cfw:org-clean-exit)
-             "C r"   '("Rebuild Calendar" . cfw:refresh-calendar-buffer)
-             "C v"   '(nil :which-key "Calender Views")
-             "C v m" '("Month" . mjs/open-calendar)
-             "C w"   '("Beginning of Week" . cfw:navi-goto-week-begin-command)
-             "C W"   '("End of Week" . cfw:navi-goto-week-end-command))
-  :init
-  (defun mjs/calfw-calendar-setup-keys-h ()
-    "Set up evil keybindings for calfw calendar buffers."
-    (general-define-key :states '(normal motion) :keymaps 'local
-                        "TAB"    #'cfw:navi-next-item-command
-                        "S-TAB"  (lambda ()
-                                   (interactive)
-                                   (cfw:navi-next-item-command -1))
-                        "h"      (lambda ()
-                                   (interactive)
-                                   (cfw:navi-next-day-command -1))
-                        "j"      #'cfw:navi-next-week-command
-                        "M-j"    #'cfw:navi-next-month-command
-                        "k"      (lambda ()
-                                   (interactive)
-                                   (cfw:navi-next-week-command -1))
-                        "M-k"    (lambda ()
-                                   (interactive)
-                                   (cfw:navi-next-month-command -1))
-                        "l"      #'cfw:navi-next-day-command
-                        "RET"    #'cfw:show-details-command))
-  (defun mjs/calfw-details-setup-keys-h ()
-    "Set up evil keybindings for calfw details buffers."
-    (general-define-key :states '(normal motion) :keymaps 'local
-                        "q" #'kill-buffer-and-window))
-  :hook (cfw:calendar-mode . mjs/calfw-calendar-setup-keys-h)
-  (cfw:details-mode . mjs/calfw-details-setup-keys-h)
-  :custom-face
-  (cfw:face-title ((t  :foreground ,(plist-get base16-stylix-theme-colors :base0A)
-                       :weight bold
-                       :height 2.0)))
-  (cfw:face-header ((t :foreground ,(plist-get base16-stylix-theme-colors :base0A) :weight bold)))
-  (cfw:face-sunday ((t :foreground ,(plist-get base16-stylix-theme-colors :base08) :weight bold)))
-  (cfw:face-saturday ((t :foreground ,(plist-get base16-stylix-theme-colors :base0D)
-                         :weight bold)))
-  (cfw:face-holiday ((t :background ,(plist-get base16-stylix-theme-colors :base00)
-                        :foreground ,(plist-get base16-stylix-theme-colors :base08)
-                        :weight bold)))
-  (cfw:face-grid ((t :foreground ,(plist-get base16-stylix-theme-colors :base05))))
-  (cfw:face-default-content ((t :foreground ,(plist-get base16-stylix-theme-colors :base0B))))
-  (cfw:face-periods ((t :foreground ,(plist-get base16-stylix-theme-colors :base0D))))
-  (cfw:face-day-title ((t :background ,(plist-get base16-stylix-theme-colors :base00))))
-  (cfw:face-default-day ((t :weight bold :inherit cfw:face-day-title)))
-  (cfw:face-annotation ((t :foreground ,(plist-get base16-stylix-theme-colors :base07)
-                           :inherit cfw:face-day-title)))
-  (cfw:face-disable ((t :foreground ,(plist-get base16-stylix-theme-colors :base07)
-                        :inherit cfw:face-day-title)))
-  (cfw:face-today-title ((t :foreground ,(plist-get base16-stylix-theme-colors :base00)
-                            :background ,(plist-get base16-stylix-theme-colors :base0B)
-                            :weight bold)))
-  (cfw:face-today ((t :background ,(plist-get base16-stylix-theme-colors :base02)
-                      :weight bold)))
-  (cfw:face-select ((t :background ,(plist-get base16-stylix-theme-colors :base04))))
-  (cfw:face-toolbar ((t :foreground ,(plist-get base16-stylix-theme-colors :base0D)
-                        :background ,(plist-get base16-stylix-theme-colors :base0D))))
-  (cfw:face-toolbar-button-off ((t :foreground ,(plist-get base16-stylix-theme-colors :base03)
-                                   :weight bold)))
-  (cfw:face-toolbar-button-on ((t :foreground ,(plist-get base16-stylix-theme-colors :base07)
-                                  :weight bold)))
-  :config
-  (require 'calfw-org)
-  (require 'calfw-ical)
-  (defun mjs/open-calendar ()
-    (interactive)
-    (cfw:open-calendar-buffer
-     :contents-sources
-     (list
-      (cfw:org-create-source "Green")
-      (cfw:ical-create-source "Work" (f-read-text "/run/secrets/calendar/work") "Orange")
-      (cfw:ical-create-source "TAA" (f-read-text "/run/secrets/calendar/taa") "Blue")
-      (cfw:ical-create-source "TAA Community" (f-read-text "/run/secrets/calendar/taa-com") "Blue"))
-     :view 'month))
-  (evil-set-initial-state 'cfw:calendar-mode 'normal))
-
-(use-package calfw-org
-  :after calfw
-  :general (mjs-leader-def
-             "C c"   '("Open Calendar" . cfw:open-org-calendar)))
-
-(use-package calfw-ical
-  :after calfw)
-
 (use-package direnv
   :defer nil
   :general (mjs-leader-def :keymaps 'override
              "d" '("Direnv Allow" . direnv-allow))
   :config 
   (direnv-mode))
-
-(use-package sly
-  :custom ((sly-symbol-completion-mode nil)
-           (inferior-lisp-program "sbcl"))
-  :config (add-to-list 'sly-contribs 'sly-asdf 'append))
-
-(use-package sly-macrostep)
-
-(use-package sly-asdf)
 
 (use-package haskell-mode
   ;; These aren't working and I have no idea why...
@@ -2648,6 +2555,7 @@ With a prefix ARG, remove start location."
              "g e" '("Command End" . proof-goto-command-end)
              "g l" '("Locked" . proof-goto-end-of-locked)
              "g s" '("Command Start" . proof-goto-command-start)
+             "g o" '("Jump Outline" . consult-outline)
              "i" '(nil :which-key "Information")
              "i b" '("About" . coq-About)
              "i B" '("About with All" . coq-About-with-all)
@@ -2679,8 +2587,9 @@ With a prefix ARG, remove start location."
              "l p" '("Proof State" . proof-prf)
              "." '("Assert to Line" . proof-goto-point)
              "L" '("Retract to Line" . proof-retract-until-point-interactive)
-             "n" '("Assert Next Command" . proof-assert-next-command-interactive)
              "m" '("Undo Last Command" . proof-undo-last-successful-command)
+             "n" '("Assert Next Command" . proof-assert-next-command-interactive)
+             "o" '("Jump Outline" . consult-outline)
              "p" '(nil :which-key "Proof")
              "p i" '("Interrupt" . proof-interrupt-process)
              "p p" '("Process Buffer" . proof-process-buffer)
@@ -2938,10 +2847,17 @@ Won't forward the buffer to chained formatters if successful."
 
 (use-package magit
   :commands magit-status
-  :general 
+  :general
   (mjs-leader-def :keymaps 'override
     "g" '("Git" . magit-status))
   :hook (magit-post-refresh . diff-hl-magit-post-refresh))
+
+;; Restore garbage collection and file name handler after init
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 16 1024 1024)  ; 16MB — tune to taste
+                  gc-cons-percentage 0.1
+                  file-name-handler-alist mjs/--file-name-handler-alist)))
 
 (provide 'init)
 ;;; init.el ends here
