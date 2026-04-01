@@ -40,7 +40,7 @@ let
 
       mkdir -p "${cfg.outputDir}"
       typst compile \
-        --root ${journalSrc} \
+        --root / \
         --input "data=$TMP_JSON" \
         ${journalSrc}/journal.typ \
         "${cfg.outputDir}/daily-journal.pdf"
@@ -77,7 +77,7 @@ in
 
     user = lib.mkOption {
       type = lib.types.str;
-      default = "mjs";
+      default = "copyparty";
       description = "Unix user to run the service as.";
     };
   };

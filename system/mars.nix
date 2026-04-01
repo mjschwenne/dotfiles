@@ -46,14 +46,8 @@
     enable = true;
     orgDir = "/var/lib/copyparty/data/journal";
     outputDir = "/var/lib/copyparty/data/supernote/style";
-    calendar = "06:00";
+    calendar = "20:30";
   };
-
-  systemd.tmpfiles.rules = [
-    "d /var/lib/copyparty/data/journal 0775 copyparty copyparty -"
-  ];
-
-  users.users.mjs.extraGroups = [ "copyparty" ];
 
   services = {
     tailscale = {
