@@ -40,7 +40,7 @@ let
 
       mkdir -p "${cfg.outputDir}"
       typst compile \
-        --root ${journalSrc} \
+        --root / \
         --input "data=$TMP_JSON" \
         ${journalSrc}/journal.typ \
         "${cfg.outputDir}/daily-journal.pdf"
