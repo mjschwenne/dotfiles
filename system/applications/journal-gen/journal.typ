@@ -22,7 +22,7 @@
 #show heading: it => {
   stack(
     spacing: 1mm,
-    text(size: 9pt, weight: "bold", upper(it.body)),
+    text(size: 12pt, weight: "bold", upper(it.body)),
     line(length: 100%, stroke: 0.5pt),
   )
   v(2mm)
@@ -40,7 +40,7 @@
 #let ruled-lines(n) = {
   v(3mm)
   for i in range(n) {
-    line(length: 100%, stroke: 0.3pt + luma(170))
+    line(length: 100%, stroke: 0.3pt)
     if i < n - 1 { v(7.2mm) }
   }
 }
