@@ -77,6 +77,42 @@ let
       rm -r "$LOCKFILE"
     '';
 
+  mkManualSyncScript =
+    syncConfig:
+    pkgs.writeShellScriptBin "syncnow-${syncConfig.name}" ''
+      ${pkgs.rclone}/bin/rclone bisync "${syncConfig.localPath}" "${syncConfig.remote}" \
+        --check-access --resilient ${syncConfig.extraArgs} -v --filter-from ${filterFile} "$@"
+      SYNC_EXIT=$?
+      if [ $SYNC_EXIT -ne 0 ]; then
+        ${optionalString cfg.enableNotifications ''${pkgs.libnotify}/bin/notify-send -u critical "Sync failed" "${syncConfig.name}"''}
+        exit $SYNC_EXIT
+      else
+        ${optionalString cfg.enableNotifications ''${pkgs.libnotify}/bin/notify-send "Sync complete" "${syncConfig.name} synced successfully"''}
+      fi
+    '';
+
+  mkFuzzelScript =
+    manualSyncScripts: syncDirs:
+    pkgs.writeShellApplication {
+      name = "rclone-fuzzel";
+      runtimeInputs = [ pkgs.fuzzel ] ++ manualSyncScripts;
+      text = ''
+        placeholder="$(date '+ %a %m-%d  󰥔 %R')"
+        choice=$(printf "%s\n" \
+          ${concatMapStringsSep " \\\n          " (s: "\"󰑓  ${s.name}\"") syncDirs} \
+          "󰑓  sync-all" \
+          | fuzzel --dmenu --prompt "󰑓  " --placeholder "         $placeholder")
+
+        case "$choice" in
+          ${concatMapStringsSep "\n      " (s: "*\"${s.name}\") syncnow-${s.name} ;;") syncDirs}
+          *"sync-all")
+            ${concatMapStringsSep "\n        " (s: "syncnow-${s.name} &") syncDirs}
+            wait
+            ;;
+        esac
+      '';
+    };
+
   mkRealtimeSyncScript =
     syncConfig:
     pkgs.writeShellScript "rclone-watch-${syncConfig.name}" ''
@@ -219,7 +255,12 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable (
+    let
+      manualSyncScripts = map mkManualSyncScript cfg.syncDirs;
+      fuzzelScript = mkFuzzelScript manualSyncScripts cfg.syncDirs;
+    in
+    {
     home.packages =
       with pkgs;
       [
@@ -227,23 +268,7 @@ in
         inotify-tools
         libnotify
       ]
-      # Create simple package for syncing each directory manually
-      ++ (optionals cfg.enableManualSync (
-        map (
-          syncConfig:
-          pkgs.writeShellScriptBin "syncnow-${syncConfig.name}" ''
-            ${pkgs.rclone}/bin/rclone bisync "${syncConfig.localPath}" "${syncConfig.remote}" \
-              --check-access --resilient ${syncConfig.extraArgs} -v --filter-from ${filterFile} "$@"
-            SYNC_EXIT=$?
-            if [ $SYNC_EXIT -ne 0 ]; then
-              ${optionalString cfg.enableNotifications ''${pkgs.libnotify}/bin/notify-send -u critical "Sync failed" "${syncConfig.name}"''}
-              exit $SYNC_EXIT
-            else
-              ${optionalString cfg.enableNotifications ''${pkgs.libnotify}/bin/notify-send "Sync complete" "${syncConfig.name} synced successfully"''}
-            fi
-          ''
-        ) cfg.syncDirs
-      ));
+      ++ (optionals cfg.enableManualSync (manualSyncScripts ++ [ fuzzelScript ]));
 
     # Create systemd services for each sync directory
     systemd.user.services =
@@ -304,5 +329,5 @@ in
         }
       ) cfg.syncDirs
     );
-  };
+  });
 }

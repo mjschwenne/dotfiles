@@ -531,6 +531,7 @@
           // POWER / SLEEP MANAGEMENT
           Mod+Z hotkey-overlay-title="Lock the Screen" { spawn "${stasis-pkg}/bin/stasis" "trigger" "suspend"; }
           Mod+S hotkey-overlay-title="Pause Idle Timers" { spawn "${stasis-pause-menu}/bin/stasis-pause-menu"; }
+          Mod+Shift+S hotkey-overlay-title="File sync" { spawn "rclone-fuzzel"; }
           // Powers off the monitors. To turn them back on, do any input like
           // moving the mouse or pressing any other key.
           Mod+Shift+Z hotkey-overlay-title="Power Off Monitors" { power-off-monitors; }
@@ -539,7 +540,7 @@
           // LAUNCH APPLICATIONS
           Mod+B hotkey-overlay-title="Browser: librewolf" { spawn "${pkgs.librewolf}/bin/librewolf"; }
           Mod+Shift+B hotkey-overlay-title="Browser: firefox" { spawn "${pkgs.firefox}/bin/firefox"; }
-          Mod+E hotkey-overlay-title="Emacs" { spawn "emacsclient" "-c"; }
+          Mod+E hotkey-overlay-title="Emacs" { spawn "emacs"; }
           Mod+P hotkey-overlay-title="Password Manager" { spawn "${pkgs.keepassxc}/bin/keepassxc"; }
           // Other then my top four, use Control as an application prefix.
           // Unfortunately, this can't be an exclusive prefix
