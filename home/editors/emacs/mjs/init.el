@@ -1217,30 +1217,105 @@ are rendered at the correct size and not huge."
            (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)" "KILL(k)")))
            (org-agenda-custom-commands
             '(("r" "Weekly Review"
-               ((agenda "" ((org-agenda-span 7)))
-                (tags "TODO=\"DONE\"&CLOSED>=\"<-1w>\""
-                      ((org-agenda-overriding-header "\nCompleted This Week\n")))))
-              ("g" "Get Things Done"
+               tags "TODO=\"DONE\"&CLOSED>=\"<-1w>\""
+               ((org-agenda-overriding-header "\nCompleted This Week\n")
+                (org-super-agenda-groups '((:auto-category t)))))
+              ("p" "Personal"
                ((agenda* ""
                          ((org-agenda-log-mode-items '(closed clock))
                           (org-deadline-warning-days 0)
                           (org-agenda-span 1)))
-                (tags-todo "DEADLINE<=\"<+14d>\""
-                           ((org-agenda-entry-types '(:deadline))
-                            (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'deadline)] ")
-                            (org-agenda-skip-function
-                             '(org-agenda-skip-entry-if 'notregexp "\\*+ \\(NEXT\\|TODO\\)"))
-                            (org-agenda-overriding-header "\nDeadlines\n")))
-                (tags "SCHEDULED<=\"<today>\"-TODO=\"DONE\"-TODO=\"KILLED\"-STYLE=\"habit\""
-                      ((org-agenda-overriding-header "\nScheduled\n")
-                       (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'scheduled)] ")))
-                (tags "STYLE=\"habit\"" ((org-agenda-overriding-header "\nHabits\n")))
-                (todo "NEXT"
-                      ((org-agenda-prefix-format " %i %-12:c [%e] ")
-                       (org-agenda-overriding-header "\nTasks\n")))
-                (tags-todo "inbox"
-                           ((org-agenda-prefix-format " %?-12t% s")
-                            (org-agenda-overriding-header "\nInbox\n")))
+                (agenda ""
+                        ((org-agenda-span 1)
+                         (org-agenda-overriding-header "\nToday")
+                         (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'deadline)] ")
+                         (org-deadline-warning-days 7)
+                         (org-super-agenda-groups
+                          '((:discard (:category ("PLX" "GRC" "TA" "SACM" "RES")))
+                            (:name "Today"
+                                   :scheduled today
+                                   :deadline today
+                                   :todo "NEXT"
+                                   :discard (:habit t))
+                            (:name "Overdue"
+                                   :deadline past)
+                            (:name "Deadlines"
+                                   :deadline future)
+                            (:discard (:anything t))
+                            ))))
+                (alltodo "" ((org-agenda-overriding-header "\nTasks")
+                             (org-agenda-prefix-format " %?-12t% s")
+                             (org-super-agenda-groups
+                              '((:name "Habits"
+                                       :habit t)
+                                (:discard (:category ("PLX" "GRC" "TA" "SACM" "RES")))
+                                (:discard (:and (:not (:tag "children") :tag "hide")))
+                                (:name "Holding"
+                                       :todo "HOLD"
+                                       :order 5)
+                                (:name "Inbox"
+                                       :tag "inbox")
+                                (:name "Reading"
+                                       :tag "read"
+                                       :order 3)
+                                (:auto-category t
+                                                :order 2)
+                                ))))
+                (tags "CLOSED>=\"<today>\""
+                      ((org-agenda-overriding-header "\nCompleted today\n")))))
+              ("w" "Work"
+               ((agenda* ""
+                         ((org-agenda-log-mode-items '(closed clock))
+                          (org-deadline-warning-days 0)
+                          (org-agenda-span 1)))
+                (agenda ""
+                        ((org-agenda-span 1)
+                         (org-agenda-overriding-header "\nToday")
+                         (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'deadline)] ")
+                         (org-deadline-warning-days 7)
+                         (org-super-agenda-groups
+                          '((:discard (:category ("DOT" "EMACS" "TTRPG" "Web" "TASKS" "PER")))
+                            (:name "Today"
+                                   :scheduled today
+                                   :deadline today
+                                   :todo "NEXT"
+                                   :discard (:habit t))
+                            (:name "Overdue"
+                                   :deadline past)
+                            (:name "Deadlines"
+                                   :deadline future)
+                            (:discard (:anything t))
+                            ))))
+                (alltodo "" ((org-agenda-overriding-header "\nTasks")
+                             (org-agenda-prefix-format " %?-12t% s")
+                             (org-super-agenda-groups
+                              '((:name "Habits"
+                                       :habit t)
+                                (:discard (:category ("DOT" "EMACS" "TTRPG" "Web" "TASKS" "PER")))
+                                (:discard (:and (:not (:tag "children") :tag "hide")))
+                                (:name "Holding"
+                                       :todo "HOLD"
+                                       :order 5)
+                                (:name "Inbox"
+                                       :tag "inbox")
+                                (:name "Reading"
+                                       :tag "read"
+                                       :order 2)
+                                (:name "Pollux"
+                                       :and (:category "PLX" :todo ("TODO" "NEXT"))
+                                       :order 1)
+                                (:name "TA"
+                                       :category "TA"
+                                       :order 3)
+                                (:name "SACM"
+                                       :category "SACM"
+                                       :order 3)
+                                (:name "Grackle"
+                                       :and (:category "GRC" :todo ("TODO" "NEXT"))
+                                       :order 4)
+                                (:auto-category t
+                                                :order 100)
+                                ))))
                 (tags "CLOSED>=\"<today>\""
                       ((org-agenda-overriding-header "\nCompleted today\n")))))))
            (org-refile-targets '((org-agenda-files
@@ -1290,19 +1365,6 @@ are rendered at the correct size and not huge."
            :immediate-finish t)
           ("d" "Delian Tomb Session" entry
            (file "ttrpg/games/delian-tomb/sessions.org")
-           "* Session %<%Y-%m-%d>\n\n%?"
-           :empty-lines 1
-           :prepend t
-           :jump-to-captured t
-           :immediate-finish t)
-          ("e" "Etera Session" entry
-           (file "ttrpg/games/etera/notes.org")
-           "* Session %<%Y-%m-%d>\n\n%?"
-           :empty-lines 1
-           :jump-to-captured t
-           :immediate-finish t)
-          ("g" "Graves Session" entry
-           (file "ttrpg/games/graves-and-groves/sessions.org")
            "* Session %<%Y-%m-%d>\n\n%?"
            :empty-lines 1
            :prepend t
@@ -1453,6 +1515,11 @@ are rendered at the correct size and not huge."
   :init (diminish 'visual-line-mode)
   (mjs-local-leader-def :keymaps 'org-mode-map
     "o" '("Toggle Olivetti" . olivetti-mode)))
+
+(use-package org-super-agenda
+  :custom (org-tags-exclude-from-inheritance '("children"))
+  :config (setq org-super-agenda-header-map nil)
+  :hook (emacs-startup org-super-agenda-mode))
 
 (use-package org-ql
   :commands org-ql-select org-ql-query org-ql-defpred org-dblock-write:mjs-org-ql
