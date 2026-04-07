@@ -4,6 +4,7 @@
     ./emacs
     ./nvim
     ./zed
+    ./vscodium
   ];
 
   # System-wide checkers and linters shared between nvim and emacs
