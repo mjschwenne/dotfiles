@@ -1745,7 +1745,7 @@ For example, an org-ql dynamic block header could look like:
                    (org-ql--normalize-from-to-on
                      `(mjs-today :from ,from :to ,to))))
     :preambles ((`(,predicate-names . ,_)
-                 (list :regexp (rx-to-string (or "NEXT" (regexp org-ql-regexp-planning)))
+                 (list :regexp (rx-to-string `(or "NEXT" (regexp ,org-ql-regexp-planning)))
                        :query query)))
     :body (or (todo "NEXT")
               (and (not (habit))
