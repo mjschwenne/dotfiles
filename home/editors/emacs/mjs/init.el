@@ -123,10 +123,36 @@
   :defer nil
   :diminish evil-collection-unimpaired-mode
   :custom (evil-collection-setup-minibuffer t)
-  :config
   ;; Only init modes used frequently
-  (evil-collection-init
-   '(dashboard magit vterm minibuffer corfu vertico pdf)))
+  (evil-collection-mode-list
+   '(calendar
+     compile
+     corfu
+     dashboard
+     diff-hl
+     diff-mode
+     difftastic
+     dired
+     eglot
+     eldoc
+     elisp-mode
+     embark
+     helpful
+     (magit magit-submodule)
+     magit-repos
+     magit-section
+     magit-todos
+     markdown-mode
+     message
+     minibuffer
+     org
+     org-present
+     (pdf pdf-view)
+     vertico
+     vterm
+     which-key))
+  :config
+  (evil-collection-init))
 
 (use-package evil-args
   :after evil
