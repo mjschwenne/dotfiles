@@ -24,6 +24,7 @@
     # Install window manager and greeter
     niri
     tuigreet
+    nautilus
 
     # Misc Utils
     libtool
@@ -67,23 +68,29 @@
 
   xdg.portal = {
     enable = true;
-    wlr.enable = true;
     extraPortals = [
+      pkgs.xdg-desktop-portal-gnome
       pkgs.xdg-desktop-portal-gtk
     ];
-    config.common.default = [ "wlr" ];
+    config.common.default = [ "gnome" ];
   };
 
   # File manager
   services.gvfs.enable = true;
-  services.tumbler.enable = true;
-  programs.thunar = {
+  services.gnome.sushi.enable = true;
+  programs.niri.useNautilus = true;
+  programs.nautilus-open-any-terminal = {
     enable = true;
-    plugins = with pkgs; [
-      thunar-archive-plugin
-      thunar-volman
-    ];
+    terminal = "ghostty";
   };
+  # services.tumbler.enable = true;
+  # programs.thunar = {
+  #   enable = true;
+  #   plugins = with pkgs; [
+  #     thunar-archive-plugin
+  #     thunar-volman
+  #   ];
+  # };
 
   # Bluetooth
   hardware.enableRedistributableFirmware = true;

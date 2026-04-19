@@ -152,7 +152,7 @@
         enable = true;
       };
       languages = {
-        enableTreesitter = true;
+        enableTreesitter = false;
         enableExtraDiagnostics = true;
 
         go.enable = true;
@@ -239,11 +239,6 @@
           enable = true;
           lazygit.enable = true;
         };
-      };
-      treesitter = {
-        enable = true;
-        context.enable = true;
-        grammars = pkgs.vimPlugins.nvim-treesitter.allGrammars;
       };
       ui = {
         borders.enable = true;

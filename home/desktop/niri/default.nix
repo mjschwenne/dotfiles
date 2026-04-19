@@ -50,7 +50,7 @@
           "terra" =
             # kdl
             ''
-              output "DP-1" {
+              output "DP-3" {
                   mode "3840x2160"
                   scale 1.6
                   transform "normal"
@@ -60,7 +60,7 @@
                   focus-at-startup
               }
 
-              output "DP-2" {
+              output "DP-4" {
                   mode "3840x2160"
                   scale 1.6
                   transform "normal"
@@ -394,6 +394,24 @@
           match app-id=r#"^org\.wezfurlong\.wezterm$"#
           default-column-width { proportion 0.5; }
       }
+      // Blur the background behind pop-up menus in Nautilus.
+      window-rule {
+          match app-id="Nautilus"
+
+          popups {
+              // Matches the default libadwaita pop-up corner radius.
+              geometry-corner-radius 15
+
+              // Note: it'll look better to set background opacity
+              // through your GTK theme CSS and not here.
+              // This is just an example that makes it look obvious.
+              opacity 0.5
+
+              background-effect {
+                  blur true
+              }
+          }
+      }
 
       window-rule {
              match app-id=r#"^spotify$"#
@@ -452,10 +470,10 @@
 
       window-rule {
           match title="^(Open Files?)(.*)$"
-          match app-id=r#"thunar"# title=r#"^(Rename)(.*)$"#
-          match app-id=r#"Thunar"# title=r#"^(Rename)(.*)$"#
-          match app-id=r#"thunar"# title=r#"^File Operation Progress$"#
-          match app-id=r#"Thunar"# title=r#"^File Operation Progress$"#
+          // match app-id=r#"thunar"# title=r#"^(Rename)(.*)$"#
+          // match app-id=r#"Thunar"# title=r#"^(Rename)(.*)$"#
+          // match app-id=r#"thunar"# title=r#"^File Operation Progress$"#
+          // match app-id=r#"Thunar"# title=r#"^File Operation Progress$"#
           match app-id="^xdg-desktop-portal-gtk$"
           match title="^KeePassXC - Browser Access Request$"
           match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
@@ -545,7 +563,7 @@
           // Other then my top four, use Control as an application prefix.
           // Unfortunately, this can't be an exclusive prefix
           Mod+Ctrl+F hotkey-overlay-title="File Manager" { spawn "${pkgs.ghostty}/bin/ghostty" "-e" "${pkgs.yazi}/bin/yazi"; }
-          Mod+Shift+Ctrl+F hotkey-overlay-title="File Manager (GUI)" { spawn "${pkgs.thunar}/bin/thunar"; }
+          Mod+Shift+Ctrl+F hotkey-overlay-title="File Manager (GUI)" { spawn "${pkgs.nautilus}/bin/nautilus"; }
           Mod+Ctrl+C hotkey-overlay-title="Calculator" { spawn "${pkgs.qalculate-gtk}/bin/qalculate-gtk"; }
           Mod+Ctrl+E hotkey-overlay-title="Email" { spawn "${pkgs.thunderbird}/bin/thunderbird"; }
           // Needed to get the right, spiced, version from spicetify. Not sure how to reference that from nix

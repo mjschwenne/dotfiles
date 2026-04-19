@@ -14,6 +14,7 @@
       "justfile"
       "ocaml"
       "haskell"
+      "typst"
     ];
     userSettings = {
       auto_update = false;
@@ -34,6 +35,12 @@
         nix = {
           binary = {
             path_lookup = true;
+          };
+        };
+        tinymist = {
+          settings = {
+            exportPdf = "onSave";
+            outputPath = "$root/$name";
           };
         };
       };
