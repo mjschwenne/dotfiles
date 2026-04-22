@@ -22,6 +22,9 @@
     isort
     shfmt
     stylua
+
+    # Testing a new editor
+    steelix
   ];
 
   xdg.configFile."proselint/config.json".text =

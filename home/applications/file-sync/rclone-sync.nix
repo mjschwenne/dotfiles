@@ -44,6 +44,7 @@ let
   mkSyncScript =
     syncConfig:
     pkgs.writeShellScript "rclone-sync-${syncConfig.name}" ''
+      export PATH="${pkgs.coreutils}/bin:$PATH"
       LOCAL_DIR="${syncConfig.localPath}"
       REMOTE="${syncConfig.remote}"
       LOCKFILE="/tmp/rclone-sync-${syncConfig.name}.lock"
@@ -116,6 +117,7 @@ let
   mkRealtimeSyncScript =
     syncConfig:
     pkgs.writeShellScript "rclone-watch-${syncConfig.name}" ''
+      export PATH="${pkgs.coreutils}/bin:$PATH"
       WATCH_DIR="${syncConfig.localPath}"
       REMOTE="${syncConfig.remote}"
       LOCKFILE="/tmp/rclone-sync-${syncConfig.name}.lock" 

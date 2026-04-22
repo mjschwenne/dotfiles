@@ -423,6 +423,7 @@
 
       window-rule {
             match app-id="emacs"
+            match app-id="org.pwmt.zathura"
             background-effect {
                 blur true
             }
