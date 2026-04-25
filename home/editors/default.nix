@@ -5,11 +5,13 @@
     ./nvim
     ./zed
     ./vscodium
+    ./helix
   ];
 
   # System-wide checkers and linters shared between nvim and emacs
   home.packages = with pkgs; [
     alejandra
+    nixd
     proselint
     statix
     checkmake
@@ -22,9 +24,6 @@
     isort
     shfmt
     stylua
-
-    # Testing a new editor
-    steelix
   ];
 
   xdg.configFile."proselint/config.json".text =
