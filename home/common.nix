@@ -63,7 +63,7 @@
         hostname = "best-linux.cs.wisc.edu";
         controlMaster = "auto";
         controlPath = "~/.ssh/persist_connections/%r@%h:%p";
-        controlPersist = "yes";
+        controlPersist = "10m";
       };
       "git.doit.wisc.edu" = {
         user = "git";
