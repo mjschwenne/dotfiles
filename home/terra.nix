@@ -22,6 +22,7 @@
     # Graphics
     # blender-hip
     krita
+    kdePackages.kdenlive
 
     keymapp
 

@@ -42,15 +42,14 @@ Layout for full keyboard, I'm just adding home row mods so I don't need all of t
 )
 
 (defalias
-    met_a (tap-hold-next-release 175 a lmet)
-    alt_s (tap-hold-next-release 175 s lalt)
-    sft_d (tap-hold-next-release 175 d lsft)
-    ctl_f (tap-hold-next-release 175 f lctl)
-
-    ctl_j (tap-hold-next-release 175 j rctl)
-    sft_k (tap-hold-next-release 175 k rsft)
-    alt_l (tap-hold-next-release 175 l lalt)
-    met_; (tap-hold-next-release 175 ; rmet)
+    met_a (tap-hold-next-release 100 a lmet)
+    alt_s (tap-hold-next-release 100 s lalt)
+    sft_d (tap-hold-next-release 100 d lsft)
+    ctl_f (tap-hold-next-release 100 f lctl)
+    ctl_j (tap-hold-next-release 100 j rctl)
+    sft_k (tap-hold-next-release 100 k rsft)
+    alt_l (tap-hold-next-release 100 l lalt)
+    met_; (tap-hold-next-release 100 ; rmet)
 )
 
 (deflayer homerowmods
