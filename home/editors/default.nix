@@ -24,6 +24,7 @@
     isort
     shfmt
     stylua
+    yaml-language-server
   ];
 
   xdg.configFile."proselint/config.json".text =
