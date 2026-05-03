@@ -17,20 +17,6 @@
         };
       };
     };
-    # languages = {
-    #   laguage-server.tinymist = {
-    #     command = "${pkgs.tinymist}/bin/tinymist";
-    #     config = {
-    #       exportPdf = "onSave";
-    #       preview.background.enabled = true;
-    #       preview.background.args = [
-    #         "--data-plane-host=127.0.0.1:0"
-    #         "--invert-colors=never"
-    #         "--open"
-    #       ];
-    #     };
-    #   };
-    # };
   };
 
   xdg.configFile."helix/languages.toml".text = ''
@@ -41,5 +27,8 @@
     config.preview.background.args = [
        "--data-plane-host=127.0.0.1:0", "--invert-colors=never", "--open"
     ]
+    config.lint.enabled = true
+    config.formatterProseWrap = true
+    config.formatterPrintWidth = 80
   '';
 }

@@ -25,6 +25,7 @@
     shfmt
     stylua
     yaml-language-server
+    typstyle
   ];
 
   xdg.configFile."proselint/config.json".text =
