@@ -12,6 +12,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  boot.kernelParams = [ "usbcore.autosuspend=2" ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/5336d383-4f12-4fa3-8c58-ed5a414e7c32";

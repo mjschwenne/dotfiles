@@ -774,7 +774,7 @@
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package corfu
-  :hook (emacs-startup . global-corfu-mode)
+  :init (global-corfu-mode)
   :custom (corfu-cycle t)
   (completion-cycle-threshold 3)
   (corfu-auto t)
@@ -1670,136 +1670,136 @@ For example, an org-ql dynamic block header could look like:
         (org-table-align))))
 
   (org-ql-defpred property-regex (property &optional value &key inherit)
-    "Return non-nil if current entry has PROPERTY, and optionally a VALUE.
+                  "Return non-nil if current entry has PROPERTY, and optionally a VALUE.
     If INHERIT is nil, only match entries with PROPERTY set on the
     entry; if t, also match entries with inheritance.  If INHERIT is
     not specified, use the Boolean value of
     `org-use-property-inheritance', which see (i.e. it is only
     interpreted as nil or non-nil)."
-    :normalizers ((`(,predicate-names)
-                   ;; HACK: This clause protects against the case in
-                   ;; which the arguments are nil, which would cause an
-                   ;; error in `rx-to-string' in other clauses.  This
-                   ;; can happen with `org-ql-completing-read',
-                   ;; e.g. when the input is "property:" while the user
-                   ;; is typing.
-                   ;; FIXME: Instead of this being moot, make this
-                   ;; predicate test for whether an entry has local
-                   ;; properties when no arguments are given.
-                   (list 'property-regex ""))
-                  (`(,predicate-names ,property)
-                   ;; Convert keyword property arguments to strings.  Non-sexp
-                   ;; queries result in keyword property arguments (because to do
-                   ;; otherwise would require ugly special-casing in the parsing).
-                   (when (keywordp property)
-                     (setf property (substring (symbol-name property) 1)))
-                   (list 'property-regex property))
-                  (`(,predicate-names ,property . ,rest)
-                   (pcase rest
-                     (`(,value)
-                      ;; Convert keyword property arguments to strings.  Non-sexp
-                      ;; queries result in keyword property arguments (because to do
-                      ;; otherwise would require ugly special-casing in the parsing).
-                      (when (keywordp property)
-                        (setf property (substring (symbol-name property) 1)))
-                      (list 'property-regex property value))
-                     ((and `(,value . ,plist)
-                           (guard (not (keywordp value))))
-                      ;; Convert keyword property arguments to strings.  Non-sexp
-                      ;; queries result in keyword property arguments (because to do
-                      ;; otherwise would require ugly special-casing in the parsing).
-                      (when (keywordp property)
-                        (setf property (substring (symbol-name property) 1)))
-                      (list 'property-regex property value
-                            :inherit (cond ((plist-member plist :inherit) (plist-get plist :inherit))
-                                           ((listp org-use-property-inheritance) ''selective)
-                                           (t org-use-property-inheritance))))
-                     ((and plist (guard (keywordp (car rest))))
-                      ;; Convert keyword property arguments to strings.  Non-sexp
-                      ;; queries result in keyword property arguments (because to do
-                      ;; otherwise would require ugly special-casing in the parsing).
-                      (when (keywordp property)
-                        (setf property (substring (symbol-name property) 1)))
-                      (list 'property-regex property nil
-                            :inherit (cond ((plist-member plist :inherit) (plist-get plist :inherit))
-                                           ((listp org-use-property-inheritance) ''selective)
-                                           (t org-use-property-inheritance)))))))
-    ;; MAYBE: Should case folding be disabled for properties?  What about values?
-    ;; MAYBE: Support (property) without args.
+                  :normalizers ((`(,predicate-names)
+                                 ;; HACK: This clause protects against the case in
+                                 ;; which the arguments are nil, which would cause an
+                                 ;; error in `rx-to-string' in other clauses.  This
+                                 ;; can happen with `org-ql-completing-read',
+                                 ;; e.g. when the input is "property:" while the user
+                                 ;; is typing.
+                                 ;; FIXME: Instead of this being moot, make this
+                                 ;; predicate test for whether an entry has local
+                                 ;; properties when no arguments are given.
+                                 (list 'property-regex ""))
+                                (`(,predicate-names ,property)
+                                 ;; Convert keyword property arguments to strings.  Non-sexp
+                                 ;; queries result in keyword property arguments (because to do
+                                 ;; otherwise would require ugly special-casing in the parsing).
+                                 (when (keywordp property)
+                                   (setf property (substring (symbol-name property) 1)))
+                                 (list 'property-regex property))
+                                (`(,predicate-names ,property . ,rest)
+                                 (pcase rest
+                                   (`(,value)
+                                    ;; Convert keyword property arguments to strings.  Non-sexp
+                                    ;; queries result in keyword property arguments (because to do
+                                    ;; otherwise would require ugly special-casing in the parsing).
+                                    (when (keywordp property)
+                                      (setf property (substring (symbol-name property) 1)))
+                                    (list 'property-regex property value))
+                                   ((and `(,value . ,plist)
+                                         (guard (not (keywordp value))))
+                                    ;; Convert keyword property arguments to strings.  Non-sexp
+                                    ;; queries result in keyword property arguments (because to do
+                                    ;; otherwise would require ugly special-casing in the parsing).
+                                    (when (keywordp property)
+                                      (setf property (substring (symbol-name property) 1)))
+                                    (list 'property-regex property value
+                                          :inherit (cond ((plist-member plist :inherit) (plist-get plist :inherit))
+                                                         ((listp org-use-property-inheritance) ''selective)
+                                                         (t org-use-property-inheritance))))
+                                   ((and plist (guard (keywordp (car rest))))
+                                    ;; Convert keyword property arguments to strings.  Non-sexp
+                                    ;; queries result in keyword property arguments (because to do
+                                    ;; otherwise would require ugly special-casing in the parsing).
+                                    (when (keywordp property)
+                                      (setf property (substring (symbol-name property) 1)))
+                                    (list 'property-regex property nil
+                                          :inherit (cond ((plist-member plist :inherit) (plist-get plist :inherit))
+                                                         ((listp org-use-property-inheritance) ''selective)
+                                                         (t org-use-property-inheritance)))))))
+                  ;; MAYBE: Should case folding be disabled for properties?  What about values?
+                  ;; MAYBE: Support (property) without args.
 
-    ;; NOTE: When inheritance is enabled, the preamble can't be used,
-    ;; which will make the search slower.
-    :preambles (((and `(,predicate-names ,property ,value)
-                      (guard (atom value)))
-                 ;; We do NOT return nil, because the predicate still needs to be tested,
-                 ;; because the regexp could match a string not inside a property drawer.
-                 ;; Use (regexp ,value) so the value is treated as a regexp, not a literal string.
-                 (list :regexp (rx-to-string `(seq bol (0+ space) ":" ,property ":"
-                                                   (1+ space) (regexp ,value)))
-                       :query query))
-                ((and `(,predicate-names ,property ,value . ,plist)
-                      (guard (keywordp (car plist))))
-                 ;; WE do NOT return nil, because the predicate still needs to be tested,
-                 ;; because the regexp could match a string not inside a property drawer.
-                 ;; NOTE: The preamble only matches if there appears to be a value.
-                 ;; A line like ":ID: " without any other text does not match.
-                 (list :regexp (unless (plist-get plist :inherit)
-                                 (rx-to-string `(seq bol (0+ space) ":" ,property ":" (1+ space)
-                                                     (minimal-match (1+ not-newline)) eol)))
-                       :query query)))
-    :body
-    (pcase property
-      ('nil (user-error "Property matcher requires a PROPERTY argument"))
-      (_ (pcase value
-           ('nil
-            ;; Check that PROPERTY exists
-            (org-ql--value-at
-             (point) (lambda ()
-                       (org-entry-get (point) property inherit))))
-           (_
-            ;; Check that PROPERTY has VALUE (as a regexp).
-            (let ((actual (org-ql--value-at
+                  ;; NOTE: When inheritance is enabled, the preamble can't be used,
+                  ;; which will make the search slower.
+                  :preambles (((and `(,predicate-names ,property ,value)
+                                    (guard (atom value)))
+                               ;; We do NOT return nil, because the predicate still needs to be tested,
+                               ;; because the regexp could match a string not inside a property drawer.
+                               ;; Use (regexp ,value) so the value is treated as a regexp, not a literal string.
+                               (list :regexp (rx-to-string `(seq bol (0+ space) ":" ,property ":"
+                                                                 (1+ space) (regexp ,value)))
+                                     :query query))
+                              ((and `(,predicate-names ,property ,value . ,plist)
+                                    (guard (keywordp (car plist))))
+                               ;; WE do NOT return nil, because the predicate still needs to be tested,
+                               ;; because the regexp could match a string not inside a property drawer.
+                               ;; NOTE: The preamble only matches if there appears to be a value.
+                               ;; A line like ":ID: " without any other text does not match.
+                               (list :regexp (unless (plist-get plist :inherit)
+                                               (rx-to-string `(seq bol (0+ space) ":" ,property ":" (1+ space)
+                                                                   (minimal-match (1+ not-newline)) eol)))
+                                     :query query)))
+                  :body
+                  (pcase property
+                    ('nil (user-error "Property matcher requires a PROPERTY argument"))
+                    (_ (pcase value
+                         ('nil
+                          ;; Check that PROPERTY exists
+                          (org-ql--value-at
                            (point) (lambda ()
-                                     (org-entry-get (point) property inherit)))))
-              (and actual (string-match value actual))))))))
+                                     (org-entry-get (point) property inherit))))
+                         (_
+                          ;; Check that PROPERTY has VALUE (as a regexp).
+                          (let ((actual (org-ql--value-at
+                                         (point) (lambda ()
+                                                   (org-entry-get (point) property inherit)))))
+                            (and actual (string-match value actual))))))))
 
   (org-ql-defpred mjs-today (&key from to _on)
-    "Search for NEXT items or todo tasks with timestamps on `DATE'"
-    ;; They seem to expect an already normalized query, so I've copied the
-    ;; normalization for closed to apply it manually
-    :normalizers ((`(,predicate-names . ,rest)
-                   (org-ql--normalize-from-to-on
-                     `(mjs-today :from ,from :to ,to))))
-    :preambles ((`(,predicate-names . ,_)
-                 (list :regexp (rx-to-string `(or "NEXT" (regexp ,org-ql-regexp-planning)))
-                       :query query)))
-    :body (or (todo "NEXT")
-              (and (not (habit))
-                   (todo)
-                   (or
-                    (deadline :from from :to to
-                              :regexp org-ql-regexp-deadline
-                              :with-time nil)
-                    (scheduled :from from :to to
-                               :regexp org-ql-regexp-scheduled
-                               :with-time nil)))))
+                  "Search for NEXT items or todo tasks with timestamps on `DATE'"
+                  ;; They seem to expect an already normalized query, so I've copied the
+                  ;; normalization for closed to apply it manually
+                  :normalizers ((`(,predicate-names . ,rest)
+                                 (org-ql--normalize-from-to-on
+                                  `(mjs-today :from ,from :to ,to))))
+                  :preambles ((`(,predicate-names . ,_)
+                               (list :regexp (rx-to-string `(or "NEXT" (regexp ,org-ql-regexp-planning)))
+                                     :query query)))
+                  :body (or (todo "NEXT")
+                            (and (not (habit))
+                                 (todo)
+                                 (or
+                                  (deadline :from from :to to
+                                            :regexp org-ql-regexp-deadline
+                                            :with-time nil)
+                                  (scheduled :from from :to to
+                                             :regexp org-ql-regexp-scheduled
+                                             :with-time nil)))))
 
   (org-ql-defpred mjs-done (&key from to _on)
-    "Search for items closed or repeated on `DATE'.
+                  "Search for items closed or repeated on `DATE'.
 Only use this with `on' argument!"
-    :normalizers ((`(,predicate-names . ,rest)
-                   (org-ql--normalize-from-to-on
-                     `(and (not (habit))
-                           (or (closed :from ,from :to ,to)
-                               (property-regex
-                                "LAST_REPEAT"
-                                ,(rx-to-string `(seq "[" ,on (* (not "]")) "]"))))))))
-    :preambles ((`(,predicate-names . ,_)
-                 (list :regexp (rx-to-string
-                                `(or
-                                  (regexp ,org-closed-time-regexp)
-                                  (seq bol (0+ space) ":LAST_REPEAT:")))
-                       :query query)))))
+                  :normalizers ((`(,predicate-names . ,rest)
+                                 (org-ql--normalize-from-to-on
+                                  `(and (not (habit))
+                                        (or (closed :from ,from :to ,to)
+                                            (property-regex
+                                             "LAST_REPEAT"
+                                             ,(rx-to-string `(seq "[" ,on (* (not "]")) "]"))))))))
+                  :preambles ((`(,predicate-names . ,_)
+                               (list :regexp (rx-to-string
+                                              `(or
+                                                (regexp ,org-closed-time-regexp)
+                                                (seq bol (0+ space) ":LAST_REPEAT:")))
+                                     :query query)))))
 
 (use-package org-superstar
   :after org

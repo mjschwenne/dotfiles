@@ -88,7 +88,9 @@
   programs.steam.enable = true;
 
   # android stuff for supernote
-  environment.systemPackages = [ pkgs.android-tools ];
+  environment.systemPackages = [
+    pkgs.android-tools
+  ];
   users.users.mjs.extraGroups = [ "adbusers" ];
   services.udev.packages = [
     pkgs.steam-devices-udev-rules
@@ -98,6 +100,8 @@
     xserver = {
       wacom.enable = true;
     };
+
+    fwupd.enable = true;
 
     kmonad = {
       enable = true;
