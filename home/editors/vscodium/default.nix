@@ -15,6 +15,7 @@
         tamasfe.even-better-toml
       ];
       userSettings = {
+        "editor.lineNumbers" = "relative";
         "vim.easymotion" = true;
         "vim.useSystemClipboard" = true;
         "vim.hlsearch" = true;

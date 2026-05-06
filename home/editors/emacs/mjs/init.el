@@ -774,7 +774,8 @@
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package corfu
-  :init (global-corfu-mode)
+  :defer nil
+  :config (global-corfu-mode)
   :custom (corfu-cycle t)
   (completion-cycle-threshold 3)
   (corfu-auto t)

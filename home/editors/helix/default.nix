@@ -5,6 +5,7 @@
     package = pkgs.steelix;
     settings = {
       editor = {
+        auto-format = true;
         line-number = "relative";
         cursorline = true;
         trim-trailing-whitespace = true;
@@ -30,5 +31,23 @@
     config.lint.enabled = true
     config.formatterProseWrap = true
     config.formatterPrintWidth = 80
+
+    [language-server.codebook]
+    command = "codebook-lsp"
+    args = ["serve"]
+
+    [language-server.harper-ls]
+    command = "harper-ls"
+    args = ["--stdio"]
+
+    [[language]]
+    name = "nix"
+    auto-format = true
+
+    [[language]]
+    name = "typst"
+    language-servers = ["tinymist", "codebook", "harper-ls"]
+    auto-format = true
+    soft-wrap = { enable = true }
   '';
 }

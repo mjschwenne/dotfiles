@@ -10,22 +10,40 @@
 
   # System-wide checkers and linters shared between nvim and emacs
   home.packages = with pkgs; [
-    alejandra
+    # nix
     nixd
-    proselint
-    statix
-    checkmake
-    google-java-format
-    deadnix
     nixfmt
+
+    # prose
+    proselint
+    harper
+    codebook
+
+    # make
+    checkmake
+
+    # java
+    google-java-format
+
+    # python
+    ty
+    ruff
+    python3Packages.python-lsp-server
+
+    # typst
     tinymist
-    mypy
-    black
-    isort
-    shfmt
-    stylua
-    yaml-language-server
     typstyle
+
+    # shell
+    shfmt
+    bash-language-server
+    fish-lsp
+
+    # markdown
+    marksman
+
+    # yaml
+    yaml-language-server
   ];
 
   xdg.configFile."proselint/config.json".text =
