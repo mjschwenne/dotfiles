@@ -57,6 +57,7 @@
     foundryvtt = {
       enable = true;
       hostName = "schwennesen.org";
+      # TODO: Update foundry to v14 after Delian Tomb
       package = foundry.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_13;
       proxySSL = true;
       proxyPort = 443;
@@ -65,7 +66,7 @@
       enable = true;
       package = pkgs.caddy.withPlugins {
         plugins = [ "github.com/caddy-dns/porkbun@v0.3.1" ];
-        hash = "sha256-cM9ez2i9ZADbXSI7KNZlBCe1F1vpX5fH++qKILaHguA=";
+        hash = "sha256-pt4jyNcfacZKxzRH7zW7l2/+YfmVKWxGD4JTyWpvD1E=";
       };
       environmentFile = "${config.sops.secrets."caddy/envfile".path}";
       extraConfig = ''
