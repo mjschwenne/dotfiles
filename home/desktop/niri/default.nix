@@ -742,8 +742,8 @@
           XF86AudioNext                                { spawn "${pkgs.playerctl}/bin/playerctl" "next"; }
           XF86AudioPrev                                { spawn "${pkgs.playerctl}/bin/playerctl" "previous"; }
           XF86AudioStop         allow-when-locked=true { spawn "${pkgs.playerctl}/bin/playerctl" "stop"; }
-          XF86AudioRaiseVolume  allow-when-locked=true { spawn "${volume-notify}/bin/volume-notify" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+" "-l" "1.0"; }
-          XF86AudioLowerVolume  allow-when-locked=true { spawn "${volume-notify}/bin/volume-notify" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
+          XF86AudioRaiseVolume  allow-when-locked=true { spawn "${volume-notify}/bin/volume-notify" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05+" "-l" "1.0"; }
+          XF86AudioLowerVolume  allow-when-locked=true { spawn "${volume-notify}/bin/volume-notify" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05-"; }
           XF86AudioMute         allow-when-locked=true { spawn "${volume-notify}/bin/volume-notify" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
           XF86AudioMicMute      allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
           XF86MonBrightnessUp   allow-when-locked=true { spawn "${brightness-notify}/bin/brightness-notify" "--class=backlight" "set" "+10%"; }
