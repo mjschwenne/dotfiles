@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.username = "mjs";
   home.homeDirectory = "/home/mjs";
 
@@ -10,5 +11,6 @@
 
   home.packages = with pkgs; [
     keymapp
+    obs-studio
   ];
 }
