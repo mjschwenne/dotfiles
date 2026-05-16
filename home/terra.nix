@@ -28,5 +28,6 @@
 
     # Networking
     qbittorrent
+    deluge
   ];
 }

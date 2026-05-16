@@ -432,6 +432,7 @@
       // Enable blur behind the fuzzel launcher.
       layer-rule {
           match namespace="^launcher$"
+          match namespace="^notifications$"
 
           background-effect {
               blur true

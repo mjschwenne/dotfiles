@@ -7,28 +7,45 @@
       ExtensionSettings = {
         "*".installation_mode = "blocked";
 
+        # Simple Login
         "addon@simplelogin" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/simplelogin/latest.xpi";
           installation_mode = "force_installed";
         };
 
+        # KeePassXC
         "keepassxc-browser@keepassxc.org" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
           installation_mode = "force_installed";
         };
 
+        # Zotero Connector
         "zotero@chnm.gmu.edu" = {
           install_url = "https://www.zotero.org/download/connector/dl?browser=firefox&version=5.0.181";
           installation_mode = "force_installed";
         };
 
+        # uBlock Origin
         "uBlock0@raymondhill.net" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
           installation_mode = "force_installed";
         };
 
+        # Firefox color
         "FirefoxColor@mozilla.com" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/firefox-color/latest.xpi";
+          installation_mode = "force_installed";
+        };
+
+        # Sponsorblock
+        "sponsorBlocker@ajay.app" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponserblock/latest.xpi";
+          installation_mode = "force_installed";
+        };
+
+        # NoScript
+        "{73a6fe31-595d-460b-a920-fcc0f8843232}" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/noscript/latest.xpi";
           installation_mode = "force_installed";
         };
       };
@@ -189,6 +206,7 @@
         "browser.toolbars.bookmarks.visibility" = "never"; # hide bookmarks toolbar
         "browser.aboutConfig.showWarning" = false; # disable warning about about:config
         "media.videocontrols.picture-in-picture.video-toggle.enabled" = true; # disable picture in picture button
+        "sidebar.verticalTabs" = true;
 
         # Privacy
         # "browser.discovery.enabled" = false; # disable discovery

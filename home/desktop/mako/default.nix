@@ -9,9 +9,9 @@
       icons = true;
       icon-path = "/etc/profiles/per-user/mjs/share/icons/Papirus/";
       actions = true;
-      border-radius = 10;
+      border-radius = 4;
       max-icon-size = 64;
-      margin = 20;
+      margin = 2;
       default-timeout = 3000;
     };
   };
