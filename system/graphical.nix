@@ -33,6 +33,8 @@
   fonts.fontconfig.enable = true;
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
+    noto-fonts
+    fira-math
   ];
 
   services.greetd = {
