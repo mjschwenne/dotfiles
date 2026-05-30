@@ -104,7 +104,7 @@
     fwupd.enable = true;
 
     kmonad = {
-      enable = true;
+      enable = false;
       keyboards = {
         kinesisFreestyleEdge = {
           device = "/dev/input/by-id/usb-Kinesis_Freestyle_Edge_RGB_Keyboard_264575131106-if01-event-kbd";
