@@ -481,6 +481,7 @@
           match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
           match app-id=r#"^thunderbird$"# title=r#"^Write"#
           match app-id=r#"^thunderbird$"# title=r#"^New Event"#
+          match app-id=r#"^Zotero$"# title=r#"^Progress"#
           open-floating true
       }
 

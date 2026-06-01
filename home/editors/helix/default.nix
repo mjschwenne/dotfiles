@@ -20,7 +20,7 @@
     };
   };
 
-  xdg.configFile."helix/languages.toml".text = ''
+  xdg.configFile."helix/languages.toml".text = /* toml */ ''
     [language-server.tinymist]
     command = "${pkgs.tinymist}/bin/tinymist"
     config.exportPdf = "onSave"
@@ -48,6 +48,10 @@
     name = "typst"
     language-servers = ["tinymist", "codebook", "harper-ls"]
     auto-format = true
+    soft-wrap = { enable = true }
+
+    [[language]]
+    name = "markdown"
     soft-wrap = { enable = true }
   '';
 }
