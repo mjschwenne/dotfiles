@@ -25,6 +25,7 @@
     kdePackages.kdenlive
 
     keymapp
+    cook-cli
 
     # Networking
     qbittorrent
