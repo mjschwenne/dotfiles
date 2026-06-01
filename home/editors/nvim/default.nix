@@ -14,17 +14,6 @@
       vimAlias = true;
       theme.transparent = true;
       extraPlugins = {
-        htms = {
-          package = pkgs.vimUtils.buildVimPlugin {
-            name = "htms.nvim";
-            src = pkgs.fetchFromGitHub {
-              owner = "calops";
-              repo = "htms.nvim";
-              rev = "a32cd413f7d0a69d7f3d279c631f20cb117c8d30";
-              hash = "sha256-j/RFJgCbaH+V2K20RrQbsz0bzpN8Z6YAKzZMABYg/OU=";
-            };
-          };
-        };
         transparent = {
           package = pkgs.vimUtils.buildVimPlugin {
             name = "transparent.nvim";
@@ -151,8 +140,9 @@
       formatter.conform-nvim = {
         enable = true;
       };
+      treesitter.grammars = pkgs.vimPlugins.nvim-treesitter.allGrammars;
       languages = {
-        enableTreesitter = false;
+        enableTreesitter = true;
         enableExtraDiagnostics = true;
 
         go.enable = true;
