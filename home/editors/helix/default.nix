@@ -34,9 +34,12 @@ in
     ''
       [language-server.tinymist]
       command = "${pkgs.tinymist}/bin/tinymist"
-      config.exportPdf = "onSave"
-      config.preview.background.enabled = true
+      config.exportPdf = "never" # "onSave"
+      config.preview.background.enabled = false # true
       config.preview.background.args = [
+         "--data-plane-host=127.0.0.1:0", "--invert-colors=never", "--open"
+      ]
+      config.preview.browsing.args = [
          "--data-plane-host=127.0.0.1:0", "--invert-colors=never", "--open"
       ]
       config.lint.enabled = true
