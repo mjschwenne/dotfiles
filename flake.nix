@@ -56,9 +56,8 @@
     };
 
     # Nvim configuration
-    nvf = {
-      url = "github:notashelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs";
+    nixvim = {
+      url = "github:nix-community/nixvim";
     };
 
     spicetify-nix = {
