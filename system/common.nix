@@ -149,6 +149,7 @@ in
     smartmontools
     killall
     man-pages
+    vim
 
     # Networking
     wget

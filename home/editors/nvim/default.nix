@@ -11,7 +11,7 @@
     enable = true;
     settings.vim = {
       viAlias = true;
-      vimAlias = true;
+      vimAlias = false;
       theme.transparent = true;
       extraPlugins = {
         transparent = {
@@ -24,7 +24,7 @@
               hash = "sha256-GlN7/+TmXld2UVPN2rDP7nKqbnswiezmGXn+uGK5I5c=";
             };
           };
-          setup = ''
+          setup = /* lua */ ''
             require("transparent").setup({
               extra_groups = {
                 "NormalFloat",
