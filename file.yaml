@@ -1,5 +1,6 @@
 caddy:
     envfile: ENC[AES256_GCM,data:Tu2BOvQIjySsHsjJjKSTEoTfwjJksNupXIw50ataG0BHPOBQXRAL3vzqVHST9KJ+41GPCuxj+ShyQXBQ30gVNCv43dcbg02NHB3qXtgV6ry1WmmBh7g48jvvq3nfv8x2NAXLt6aHTapRibyf88y+DkYtuLzMItcJYRkLb6xfqMDbETI/Va9X3ggayjf1RaMuB+86LgdwswkTkfjrkItUaEFeVwUHe0gvQ55BfKJXHaeWkXpPdgTrfnCXwMXUhD5Iwu87NQqGNA==,iv:nfH9nV48WRgytZl3qyx5VAzyI0rRSqW68igJ96DUJVY=,tag:ZFabu2GDSLaoQ6aJxWkAWw==,type:str]
+vimgolf: ENC[AES256_GCM,data:8AWOVrDQEYZ4AfETHjVP7qWFzWIpTL8+KuStXbttkeU=,iv:Q3LH0HqCkhxinXpuurXy2899wa142q2xhO+sFLaj5yY=,tag:wdxRNs6XZyeEqMCQPWGjsg==,type:str]
 nextcloud:
     adminuser: ENC[AES256_GCM,data:0P59GL4=,iv:9Bid4ofapY4Lzt3Ucv8kypOXJWVXCCOETqtbQFwL9sk=,tag:1QL59sVy0ZPT++t9urqJQw==,type:str]
     adminpass: ENC[AES256_GCM,data:h/CDmfAC1dU3MJ0c6k7+OfkXE9g=,iv:txTxewgY7GYUi4VzpHSjZfYQHMDd+QxB+OOXUIE+ZQ8=,tag:TWopSnHyg7ATGlIXlqnXPA==,type:str]
@@ -74,7 +75,7 @@ sops:
             a72Fy9MMegoFB40rP9W74LszWEwIw1iugqb+TTIzbYQft8qTcUkqmw==
             -----END AGE ENCRYPTED FILE-----
           recipient: age15tkdrdup86rr6yuv06pcn8n0czty2mqhsa3zlchwy5tgud53feas9s9a03
-    lastmodified: "2026-06-10T15:15:26Z"
-    mac: ENC[AES256_GCM,data:TrGxs5ZLFblk9MtiNX9/RtnxWJAwYNkA7orA557llTL1A9r4X/YkHCXmVzUkwS1hqVWXGQRCmlZmn+yv7EkFhHDZHDAmAMTRZHiDTA96R6LPrIYPQFTw94QM1QgX+9Fra/XOiM+6xjyZ7iSb62Pd/GvLWFUJ/UwMcsQ/JicU8YA=,iv:TKd2f7vx8Qqf364hh5EyGMSy7ChwCcckBK69VAmXMRg=,tag:fuiUxBtHnMOUFPhlcBDomw==,type:str]
+    lastmodified: "2026-06-10T16:43:08Z"
+    mac: ENC[AES256_GCM,data:Jz2CUtz4+tW0+e3aSwDjlfXgnt6T71w/GHxUwn8vnkMRdOKLY/TEA2wuCLP+OFR5/UM3G3w+oYcTxWATSZa/PyfL30IpdEGBaApyrCVdXm42+7nBerYHAYeVvg/s5HqLrXaPhqYH2MsFL6+bMizT8toxrqREAmuqMKkkheE3YK0=,iv:iTNUI/okkisEuxmuNt6nYyNxnNfqtP7UY/jULN9PkfA=,tag:jeNhCqxxNFZ7bEWX5NQKig==,type:str]
     unencrypted_suffix: _unencrypted
     version: 3.13.0

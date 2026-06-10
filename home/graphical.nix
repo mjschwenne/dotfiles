@@ -77,6 +77,7 @@ let
     graphviz
     viu
     claude-code
+    nh
 
     # Wayland Utilities
     awww.packages.${stdenv.hostPlatform.system}.default
@@ -90,6 +91,8 @@ let
   ];
   masterPkgs = with pkgs-master; [
     proton-vpn
+    proton-vpn-cli
+    python314Packages.proton-vpn-daemon
   ];
   stablePkgs = with pkgs-stable; [ ];
 in

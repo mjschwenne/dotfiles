@@ -18,6 +18,7 @@
     proselint
     harper
     codebook
+    rumdl
 
     # make
     checkmake
@@ -46,15 +47,26 @@
     yaml-language-server
   ];
 
-  xdg.configFile."proselint/config.json".text =
-    # json
-    ''
-      {
-        "checks": {
-          "annotations.misc": false,
-          "lexical_illusions.misc": false,
-          "typography.symbols": false
+  xdg.configFile = {
+    "rumdl/rumdl.toml".text = # toml
+      ''
+        [global]
+        extend-enable = ["MD060", "MD063"]
+
+        [MD013]
+        line-length = 80
+        reflow = true
+        reflow-mode = "normalize"
+      '';
+    "proselint/config.json".text = # json
+      ''
+        {
+          "checks": {
+            "annotations.misc": false,
+            "lexical_illusions.misc": false,
+            "typography.symbols": false
+          }
         }
-      }
-    '';
+      '';
+  };
 }

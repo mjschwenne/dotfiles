@@ -32,7 +32,8 @@
               enable-recursive-minibuffers t
               use-dialog-box nil
               scroll-margin 8 hscroll-margin 8
-              scroll-conservatively 101)
+              scroll-conservatively 101
+              treesit-font-lock-level 4)
 
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path (expand-file-name "autoloads" user-emacs-directory))
@@ -152,7 +153,16 @@
      vterm
      which-key))
   :config
-  (evil-collection-init))
+  (evil-collection-init)
+  ;; ]l/[l → ]d/[d ("diagnostic"). Leave ]q/[q alone — that's vim-canonical.
+  (general-define-key
+   :states 'normal
+   :keymaps 'evil-collection-unimpaired-mode-map
+   "]l" nil  "[l" nil  "]L" nil  "[L" nil
+   "]d" '("next diagnostic"  . evil-collection-unimpaired-next-error)
+   "[d" '("prev diagnostic"  . evil-collection-unimpaired-previous-error)
+   "]D" '("last diagnostic"  . evil-collection-unimpaired-last-error)
+   "[D" '("first diagnostic" . evil-collection-unimpaired-first-error)))
 
 (use-package evil-args
   :after evil
@@ -176,16 +186,19 @@
 
 (use-package evil-surround
   :after evil
-  :hook (emacs-startup . global-evil-surround-mode))
+  :defer nil
+  :config (global-evil-surround-mode))
 
 (use-package evil-embrace
   :after evil-surround
+  :defer nil
   :config
   (add-hook 'org-mode-hook #'embrace-org-mode-hook)
   (evil-embrace-enable-evil-surround-integration))
 
 (use-package evil-exchange
   :after evil
+  :defer nil
   :config (evil-exchange-install))
 
 (use-package evil-goggles
@@ -196,6 +209,7 @@
 
 (use-package evil-indent-plus
   :after evil
+  :defer nil
   :config (evil-indent-plus-default-bindings))
 
 (use-package evil-lion
@@ -227,6 +241,73 @@
   :config
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
+
+(use-package evil-textobj-tree-sitter
+  :after evil
+  :defer nil
+  ;; AUCTeX's LaTeX-mode and fish-mode aren't treesit-native, so spin up a
+  ;; parser by hand. nix-ts-mode already sets one up.
+  :hook ((LaTeX-mode . mjs/latex-treesit-setup-h)
+         (fish-mode  . mjs/fish-treesit-setup-h))
+  :init
+  (defun mjs/latex-treesit-setup-h () (treesit-parser-create 'latex))
+  (defun mjs/fish-treesit-setup-h  () (treesit-parser-create 'fish))
+  :config
+  (dolist (entry '((LaTeX-mode  . "latex")
+                   (fish-mode   . "fish")
+                   (nix-mode    . "nix")
+                   (nix-ts-mode . "nix")))
+    (add-to-list 'evil-textobj-tree-sitter-major-mode-language-alist entry))
+
+  ;; The package picks the elisp-tree-sitter path unless major-mode ends in
+  ;; `-ts-mode'. Force the treesit path whenever a parser is attached so
+  ;; hand-rolled modes (fish-mode, LaTeX-mode) actually work.
+  (advice-add 'evil-textobj-tree-sitter--use-builtin-treesitter
+              :before-until
+              (lambda () (and (treesit-parser-list) t)))
+
+  ;; Inner / outer text objects. Letters chosen to avoid evil-args (a/A) and
+  ;; evil-indent-plus (i/I/J). ]x next start, [x prev start, ]X next end,
+  ;; [X prev end. Cons cells carry which-key labels.
+  ;; `tobj' must be a macro because `evil-textobj-tree-sitter-get-textobj' is.
+  (cl-macrolet ((tobj (label name)
+                  `(cons ,label (evil-textobj-tree-sitter-get-textobj ,name))))
+    (cl-flet ((goto (label name &optional prev end)
+                (cons label
+                      (lambda () (interactive)
+                        (evil-textobj-tree-sitter-goto-textobj name prev end)))))
+      (general-define-key
+       :keymaps 'evil-outer-text-objects-map
+       "f" (tobj "function"    "function.outer")
+       "t" (tobj "class"       "class.outer")
+       "c" (tobj "comment"     "comment.outer")
+       "C" (tobj "call"        "call.outer")
+       "T" (tobj "test"        "test.outer")
+       "k" (tobj "conditional" "conditional.outer")
+       "l" (tobj "loop"        "loop.outer"))
+      (general-define-key
+       :keymaps 'evil-inner-text-objects-map
+       "f" (tobj "function"    "function.inner")
+       "t" (tobj "class"       "class.inner")
+       "c" (tobj "comment"     "comment.inner")
+       "C" (tobj "call"        "call.inner")
+       "T" (tobj "test"        "test.inner")
+       "k" (tobj "conditional" "conditional.inner")
+       "l" (tobj "loop"        "loop.inner"))
+      (general-define-key
+       :states '(normal motion)
+       "]f" (goto "next function"     "function.outer")
+       "[f" (goto "prev function"     "function.outer" t)
+       "]F" (goto "next function end" "function.outer" nil t)
+       "[F" (goto "prev function end" "function.outer" t   t)
+       "]t" (goto "next class"        "class.outer")
+       "[t" (goto "prev class"        "class.outer" t)
+       "]c" (goto "next comment"      "comment.outer")
+       "[c" (goto "prev comment"      "comment.outer" t)
+       "]k" (goto "next conditional"  "conditional.outer")
+       "[k" (goto "prev conditional"  "conditional.outer" t)
+       "]l" (goto "next loop"         "loop.outer")
+       "[l" (goto "prev loop"         "loop.outer" t)))))
 
 (use-package evil-visualstar
   :commands (evil-visualstar/begin-search
@@ -387,16 +468,15 @@
   :hook (prog-mode . hl-todo-mode))
 
 (use-package anzu
-  :after evil
   :defer nil
-  :hook (emacs-startup . global-anzu-mode)
   :custom ((anzu-mode-lighter "")
            (anzu-cons-mode-line-p nil))
   :custom-face
   (anzu-mode-line ((t  :foreground ,(plist-get base16-stylix-theme-colors :base05))))
-  :config (require 'evil-anzu))
+  :config (global-anzu-mode 1))
 
-(use-package evil-anzu)
+(use-package evil-anzu
+  :defer nil)
 
 (use-package telephone-line
   :defer nil
@@ -759,6 +839,11 @@
   :config
   (advice-add #'register-preview :override #'consult-register-window))
 
+(use-package consult-flycheck
+  :commands (consult-flycheck)
+  :general (mjs-leader-def :keymaps 'override
+             "s d" '("Diagnostic" . consult-flycheck)))
+
 (use-package embark
   :commands embark-act embark-dwim embark-bindings
   :init (mjs-leader-def :keymaps 'override
@@ -898,7 +983,7 @@ advice."
   :commands diff-hl-flydiff-mode)
 
 (use-package diff-hl
-  :hook (emacs-startup . global-diff-hl-mode)
+  :demand t
   :commands diff-hl-stage-current-hunk diff-hl-revert-hunk diff-hl-next-hunk diff-hl-previous-hunk
   :custom-face (diff-hl-insert ((t (:background "unspecified"))))
   (diff-hl-delete ((t (:background "unspecified"))))
@@ -908,12 +993,15 @@ advice."
            (diff-hl-global-modes '(not image-mode pdf-view-mode))
            (vc-git-diff-switches '("--histogram"))
            (diff-hl-flydiff-delay 0.5)
-           (diff-hl-update-async t)
+           (diff-hl-update-async nil)
            (diff-hl-show-staged-changes nil))
   :hook (diff-hl-mode . diff-hl-flydiff-mode)
   :hook (vc-dir-mode . turn-on-diff-hl-mode)
   :hook (dired-mode . mjs/diff-hl-enable-maybe-h)
   :hook (diff-hl-flydiff-mode . mjs/diff-hl-init-flydiff-mode-h)
+  :general (:states '(normal motion)
+                    "]h" '("next hunk" . diff-hl-next-hunk)
+                    "[h" '("prev hunk" . diff-hl-previous-hunk))
   :init
   (let* ((width 2)
          (bitmap (vector (1- (expt 2 width)))))
@@ -931,6 +1019,7 @@ Respects `diff-hl-disable-on-remote'."
                  (file-remote-p default-directory))
       (diff-hl-dired-mode +1)))
   :config
+  (global-diff-hl-mode 1)
   (defun mjs/diff-hl-save-excursion-a (fn &rest args)
     "Suppresses unexpected cursor movement by `diff-hl-revert-hunk'."
     (let ((pt (point)))
@@ -1322,24 +1411,24 @@ are rendered at the correct size and not huge."
                                 (:discard (:and (:not (:tag "children") :tag "hide")))
                                 (:name "Holding"
                                        :todo "HOLD"
-                                       :order 5)
+                                       :order 6)
                                 (:name "Inbox"
                                        :tag "inbox")
                                 (:name "Reading"
                                        :tag "read"
-                                       :order 2)
+                                       :order 3)
                                 (:name "Pollux"
                                        :and (:category "PLX" :todo ("TODO" "NEXT"))
+                                       :order 4)
+                                (:name "CS 400"
+                                       :category "CS400"
                                        :order 1)
-                                (:name "TA"
-                                       :category "TA"
-                                       :order 3)
+                                (:name "Starling"
+                                       :category "STAR"
+                                       :order 2)
                                 (:name "SACM"
                                        :category "SACM"
-                                       :order 3)
-                                (:name "Grackle"
-                                       :and (:category "GRC" :todo ("TODO" "NEXT"))
-                                       :order 4)
+                                       :order 5)
                                 (:auto-category t
                                                 :order 100)
                                 ))))
@@ -2414,9 +2503,34 @@ With a prefix ARG, remove start location."
     (set (make-local-variable 'normal-auto-fill-function)
          #'mjs/typst-ts-editing-auto-fill-function)
     (auto-fill-mode))
-  :hook (typst-ts-mode . mjs/typst-ts-setup-auto-fill-h)
+  (defvar-local mjs/typst-tinymist-init-options
+      '(:preview (:background
+                  (:enabled :json-false
+                            :args ["--data-plane-host=127.0.0.1:0"
+                                   "--invert-colors=never"
+                                   "--open"])
+                  :browsing
+                  (:args ["--data-plane-host=127.0.0.1:0"
+                          "--invert-colors=never"
+                          "--open"]))
+                 :lint (:enabled t)
+                 :formatterProseWrap :json-false
+                 :formatterPrintWidth 80)
+    "InitializationOptions sent to tinymist on connect.
+Override buffer-locally via dir-locals to customize per-project.")
+  (defun mjs/typst-ts-format-on-save-h ()
+    "Format typst buffers on save when eglot is managing them."
+    (add-hook 'before-save-hook
+              (lambda ()
+                (when (and (featurep 'eglot) (eglot-managed-p))
+                  (eglot-format-buffer)))
+              nil t))
+  :hook ((typst-ts-mode . mjs/typst-ts-setup-auto-fill-h)
+         (typst-ts-mode . mjs/typst-ts-format-on-save-h)
+         (typst-ts-mode . eglot-ensure))
   :custom
   (typst-ts-mode-enable-raw-blocks-highlight t)
+  (typst-ts-indent-offset 2)
   :general (mjs-local-leader-def :keymaps 'typst-ts-mode-map
              "c" '("Compile" . typst-ts-compile)
              "#" '("Renumber List" . typst-ts-editing-item-list-renumber)
@@ -2446,11 +2560,13 @@ With a prefix ARG, remove start location."
              "x" '("Kill Watch" . typst-ts-watch-stop))
   :config
   (put 'tp--master-file 'safe-local-variable #'stringp)
+  (put 'mjs/typst-tinymist-init-options 'safe-local-variable #'listp)
   (require 'typst-preview)
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
-                 `((typst-ts-mode) . ,(eglot-alternatives
-                                       '("tinymist" "typst-lsp"))))))
+                 `((typst-ts-mode)
+                   . ("tinymist" :initializationOptions
+                      ,(lambda (_server) mjs/typst-tinymist-init-options))))))
 
 (use-package websocket)
 (use-package typst-preview
@@ -2855,6 +2971,16 @@ With a prefix ARG, remove start location."
 
 (use-package protobuf-mode
   :mode ("\\.proto\\'" . protobuf-mode))
+
+(use-package nix-ts-mode
+  :mode "\\.nix\\'"
+  :config
+  (with-eval-after-load 'eglot
+    (dolist (mode '((nix-ts-mode . ("nixd"))))
+      (add-to-list 'eglot-server-programs mode))))
+
+(use-package fish-mode
+  :mode "\\.fish\\'")
 
 (use-package go-mode
   :mode ("\\.go\\'" . go-ts-mode)

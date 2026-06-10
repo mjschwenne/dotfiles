@@ -9,6 +9,7 @@
       "make"
       "fish"
       "java"
+      "xml"
       "proto"
       "toml"
       "justfile"
@@ -75,7 +76,7 @@
         working_directory = "current_project_directory";
       };
       hour_format = "hour24";
-      vim_mode = true;
+      helix_mode = true;
       load_direnv = "shell_hook";
       base_keymap = "VSCode";
       show_whitespaces = "trailing";

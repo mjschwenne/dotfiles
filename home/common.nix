@@ -100,6 +100,7 @@
     bat
     fd
     fswatch
+    vimgolf
   ];
 
   # This value determines the home Manager release that your
