@@ -66,7 +66,7 @@
       enable = true;
       package = pkgs.caddy.withPlugins {
         plugins = [ "github.com/caddy-dns/porkbun@v0.3.1" ];
-        hash = "sha256-pt4jyNcfacZKxzRH7zW7l2/+YfmVKWxGD4JTyWpvD1E=";
+        hash = "sha256-FV8NZIWVK7kZusP+up4dvLoxYD66dra6FYxFGnsk8O0=";
       };
       environmentFile = "${config.sops.secrets."caddy/envfile".path}";
       extraConfig = ''
@@ -76,21 +76,19 @@
             @blocked not remote_ip 100.64.0.0/10
 
             tls {
+                resolvers 1.1.1.1 8.8.8.8
                 dns porkbun {
                     api_key {env.PORKBUN_API_KEY}
                     api_secret_key {env.PORKBUN_API_PASSWORD}
                 }
-                propagation_delay -1s
+                propagation_delay 60s
+                propagation_timeout 5m
             }
 
             respond @blocked "Unauthorized" 403
         }
       '';
       virtualHosts = {
-        # "cloud.schwennesen.org".extraConfig = ''
-        #   import ts_host
-        #   reverse_proxy localhost:19000
-        # '';
         "photos.schwennesen.org".extraConfig = ''
           import ts_host
           reverse_proxy localhost:2283
@@ -104,7 +102,6 @@
   };
   systemd.services.caddy.after = [ "mjs-tailscale-up.service" ];
 
-  programs.kdeconnect.enable = true;
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It's perfectly fine and recommended to leave
