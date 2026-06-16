@@ -13,6 +13,9 @@
       max-icon-size = 64;
       margin = 2;
       default-timeout = 3000;
+      "mode=do-not-disturb" = {
+        invisible = 1;
+      };
     };
   };
 

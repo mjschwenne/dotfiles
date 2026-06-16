@@ -59,6 +59,11 @@ in
       auto-format = true
 
       [[language]]
+      name = "markdown"
+      auto-format = true
+      soft-wrap = { enable = true }
+
+      [[language]]
       name = "typst"
       language-servers = ["tinymist", "codebook", "harper-ls"]
       auto-format = true

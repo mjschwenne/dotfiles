@@ -12,5 +12,6 @@
   home.packages = with pkgs; [
     keymapp
     obs-studio
+    kdePackages.kdenlive
   ];
 }

@@ -32,6 +32,7 @@
           };
         };
       };
+      edit_predictions.provider = "none";
       lsp = {
         nix = {
           binary = {

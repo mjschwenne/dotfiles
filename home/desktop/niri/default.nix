@@ -586,6 +586,7 @@
           Mod+Alt+Shift+M hotkey-overlay-title="Stop Screen Mirroring" { spawn "pkill" "wl-mirror"; }
           Mod+Alt+T { spawn "${tailscale-status}/bin/tailscale-status"; }
           Mod+Alt+Shift+T { spawn "${tailscale-toggle}/bin/tailscale-exit-toggle"; }
+          Mod+Alt+D hotkey-overlay-title="Toggle Do Not Distrub" { spawn "${pkgs.mako}/bin/makoctl" "mode" "-t" "do-not-disturb"; }
           // Applications such as remote-desktop clients and software KVM switches may
           // request that niri stops processing the keyboard shortcuts defined here
           // so they may, for example, forward the key presses as-is to a remote machine.

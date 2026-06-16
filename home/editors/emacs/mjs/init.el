@@ -2974,6 +2974,7 @@ Override buffer-locally via dir-locals to customize per-project.")
 
 (use-package nix-ts-mode
   :mode "\\.nix\\'"
+  :hook (nix-ts-mode . eglot-ensure)
   :config
   (with-eval-after-load 'eglot
     (dolist (mode '((nix-ts-mode . ("nixd"))))
