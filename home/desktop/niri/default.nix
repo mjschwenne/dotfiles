@@ -29,7 +29,10 @@
       brightness-notify = import ./scripts/brightness-notify.nix { inherit pkgs; };
       window-switcher = import ./scripts/window-switcher.nix { inherit pkgs; };
       power-menu = import ./scripts/power-menu.nix { inherit pkgs stasis-pkg; };
-      mjs-fuzzel = import ./scripts/mjs-fuzzel.nix { inherit pkgs; };
+      mjs-fuzzel = import ./scripts/mjs-fuzzel.nix {
+        inherit pkgs;
+        showBattery = osConfig.networking.hostName != "terra";
+      };
       tailscale-status = import ./scripts/tailscale-status.nix { inherit pkgs; };
       stasis-pause-menu = import ./scripts/stasis-pause-menu.nix { inherit pkgs stasis-pkg; };
       tailscale-toggle =

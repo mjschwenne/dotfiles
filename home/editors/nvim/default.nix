@@ -60,7 +60,7 @@
           };
         };
         lsp-format.enable = true;
-        hardtime.enable = true;
+        hardtime.enable = false;
         guess-indent.enable = true;
         lz-n.enable = true;
         numbertoggle.enable = true;
