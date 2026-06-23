@@ -4,8 +4,11 @@
     enable = true;
     plugins = with pkgs.obs-studio-plugins; [
       wlrobs
-      obs-pipewire-audio-capture
       obs-backgroundremoval
+      obs-pipewire-audio-capture
+      obs-vaapi # optional AMD hardware acceleration
+      obs-gstreamer
+      obs-vkcapture
     ];
   };
 }

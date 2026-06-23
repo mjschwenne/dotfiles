@@ -450,6 +450,7 @@
           // - Flatpak Firefox (app-id is "org.mozilla.firefox")
           match app-id=r#"firefox$"# title="^Picture-in-Picture$"
           match app-id=r#"librewolf$"# title="^Picture-in-Picture$"
+          match app-id=r#"librewolf$"# title=r#"^Extension: (NoScript) - .*$"#
           open-floating true
       }
 

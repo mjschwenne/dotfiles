@@ -7,11 +7,11 @@
     ./common.nix
     ./graphical.nix
     ./applications
+    ./applications/obs
   ];
 
   home.packages = with pkgs; [
     keymapp
-    obs-studio
     kdePackages.kdenlive
   ];
 }

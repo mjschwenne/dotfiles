@@ -67,6 +67,7 @@
         nix.enable = true;
         nix-develop.enable = true;
         friendly-snippets.enable = true;
+        csvview.enable = true;
         mini = {
           enable = true;
           modules = {
