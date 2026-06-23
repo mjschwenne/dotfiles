@@ -125,7 +125,6 @@ in
     gtk3.extraConfig = {
       gtk-decoration-layout = "appmenu:none";
     };
-    gtk4.theme = config.gtk.theme;
   };
   home.sessionVariables = {
     GNOME_KEYRING_CONTROL = "/run/user/1000/keyring";
