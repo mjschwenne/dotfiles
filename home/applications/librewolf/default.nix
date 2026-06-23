@@ -1,8 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-master, ... }:
 {
 
   programs.librewolf = {
     enable = true;
+    package = pkgs-master.librewolf-bin;
     policies = {
       ExtensionSettings = {
         "*".installation_mode = "blocked";

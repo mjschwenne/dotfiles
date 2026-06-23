@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-master,
   lib,
   config,
   osConfig,
@@ -562,7 +563,7 @@
           Mod+Ctrl+Z hotkey-overlay-title="Power Menu" { spawn "${power-menu}/bin/power-menu"; }
 
           // LAUNCH APPLICATIONS
-          Mod+B hotkey-overlay-title="Browser: librewolf" { spawn "${pkgs.librewolf}/bin/librewolf"; }
+          Mod+B hotkey-overlay-title="Browser: librewolf" { spawn "${pkgs-master.librewolf-bin}/bin/librewolf"; }
           Mod+Shift+B hotkey-overlay-title="Browser: firefox" { spawn "${pkgs.firefox}/bin/firefox"; }
           Mod+E hotkey-overlay-title="Emacs" { spawn "emacs"; }
           Mod+P hotkey-overlay-title="Password Manager" { spawn "${pkgs.keepassxc}/bin/keepassxc"; }
