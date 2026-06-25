@@ -4,9 +4,11 @@
   pkgs-master,
   pkgs-stable,
   awww,
+  stasis,
   ...
 }:
 let
+
   packages = with pkgs; [
     # Web browsers
     firefox
@@ -135,7 +137,16 @@ in
   # Packages and fonts that should be installed to the user profile.
   fonts.fontconfig.enable = true;
 
-  home.packages = packages ++ masterPkgs ++ stablePkgs;
+  home.packages =
+    packages
+    ++ masterPkgs
+    ++ stablePkgs
+    ++ [
+      (import ./desktop/niri/scripts/woke.nix {
+        inherit pkgs;
+        stasis-pkg = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
+      })
+    ];
 
   services = {
     gnome-keyring.enable = true;
