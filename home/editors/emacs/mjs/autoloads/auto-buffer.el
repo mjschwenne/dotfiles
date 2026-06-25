@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;;###autoload
 (defun mjs/restart-server ()
   "Restart the emacs daemon"

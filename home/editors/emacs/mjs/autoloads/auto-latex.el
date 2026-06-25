@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;;###autoload
 (defun mjs/preview-scale-adjustment ()
   (setq preview-scale-function
@@ -47,10 +49,10 @@
 (defun mjs/yas-next-field-or-cdlatex nil
   "Jump to the next Yas field correctly with cdlatex active"
   (interactive)
-    (if (or (bound-and-true-p cdlatex-mode)
-            (bound-and-true-p org-cdlatex-mode))
-        (cdlatex-tab)
-      (yas-next-field-or-maybe-expand)))
+  (if (or (bound-and-true-p cdlatex-mode)
+          (bound-and-true-p org-cdlatex-mode))
+      (cdlatex-tab)
+    (yas-next-field-or-maybe-expand)))
 
 ;;;###autoload
 (defun lazytab-position-cursor-and-edit ()
