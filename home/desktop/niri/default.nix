@@ -418,7 +418,7 @@
       }
 
       window-rule {
-             match app-id=r#"^spotify$"#
+             match app-id=r#"^Spotify$"#
              match app-id=r#"^vesktop$"#
              match app-id=r#"^thunderbird$"#
              match app-id=r#"^org\.remmina\.Remmina"#
