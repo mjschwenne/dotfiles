@@ -37,5 +37,5 @@
     };
   };
 
-  home.programs = with pkgs; [ spotify-player ];
+  home.packages = with pkgs; [ spotify-player ];
 }

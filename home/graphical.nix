@@ -104,6 +104,7 @@ in
     ./applications
   ];
 
+  home.pointerCursor.enable = true;
   stylix = {
     cursor = {
       package = pkgs.bibata-cursors;
