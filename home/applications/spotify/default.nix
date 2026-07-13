@@ -1,4 +1,9 @@
-{ spicetify-nix, pkgs, ... }:
+{
+  spicetify-nix,
+  pkgs,
+  stylix,
+  ...
+}:
 {
   imports = [ spicetify-nix.homeManagerModules.default ];
 
@@ -31,4 +36,6 @@
       icon = "spotify-client";
     };
   };
+
+  home.programs = with pkgs; [ spotify-player ];
 }

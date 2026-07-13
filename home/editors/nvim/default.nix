@@ -46,6 +46,7 @@
         jdtls.enable = true;
         tinymist.enable = true;
         superhtml.enable = true;
+        eslint.enable = true;
         cssls.enable = true;
       };
       plugins = {
