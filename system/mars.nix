@@ -58,7 +58,14 @@
       enable = true;
       hostName = "schwennesen.org";
       # TODO: Update foundry to v14 after Delian Tomb
-      package = foundry.packages.${pkgs.stdenv.hostPlatform.system}.foundryvtt_13;
+      package = (pkgs.callPackage "${foundry}/pkgs/foundryvtt" { }).overrideAttrs (
+        old:
+        old
+        // {
+          majorVersion = "13";
+          releaseType = "stable";
+        }
+      );
       proxySSL = true;
       proxyPort = 443;
     };
@@ -66,7 +73,7 @@
       enable = true;
       package = pkgs.caddy.withPlugins {
         plugins = [ "github.com/caddy-dns/porkbun@v0.3.1" ];
-        hash = "sha256-FV8NZIWVK7kZusP+up4dvLoxYD66dra6FYxFGnsk8O0=";
+        hash = "sha256-JtzeWz9GdW/+1Qft5nU9diPkFQvPGxQkgR8n8w+ryoI=";
       };
       environmentFile = "${config.sops.secrets."caddy/envfile".path}";
       extraConfig = ''
