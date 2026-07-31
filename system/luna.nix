@@ -2,7 +2,8 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   imports = [
     # Include the results of the hardware scan.
     ./luna-hardware.nix
@@ -12,15 +13,15 @@
 
   hardware.microsoft-surface.kernelVersion = "stable";
   boot.kernelPatches = [
-    {
-      name = "rust-1.91-fix";
-      patch = ./patches/rust-fix.patch;
-    }
+    # {
+    #   name = "rust-1.91-fix";
+    #   patch = ./patches/rust-fix.patch;
+    # }
   ];
 
   networking.hostName = "luna"; # Define your hostname.
 
-  users.users.mjs.extraGroups = ["surface-control"];
+  users.users.mjs.extraGroups = [ "surface-control" ];
   services.iptsd = {
     enable = true;
     config.Touchscreen.DisableOnStylus = true;

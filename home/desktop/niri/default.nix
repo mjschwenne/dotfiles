@@ -117,6 +117,16 @@
                   backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
               }
             '';
+          "luna" =
+            # kdl
+            ''
+              output "eDP-1" {
+                  mode "2736x1824"
+                  scale 2
+                  transform "normal"
+                  position x=0 y=0
+              }
+            '';
         }
         ."${osConfig.networking.hostName}" or "";
     in
@@ -169,7 +179,7 @@
           }
 
           tablet {
-              map-to-output "DP-3"
+              map-to-output "eDP-1"
           }
 
           // Uncomment this to make the mouse warp to the center of newly focused windows.
