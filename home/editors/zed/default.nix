@@ -10,12 +10,14 @@
       "fish"
       "java"
       "xml"
+      "html"
       "proto"
       "toml"
       "justfile"
       "ocaml"
       "haskell"
       "typst"
+      "emmet"
     ];
     userSettings = {
       auto_update = false;
@@ -44,6 +46,9 @@
             exportPdf = "onSave";
             outputPath = "$root/$name";
           };
+        };
+        vscode-html-language-server = {
+          settings.html.autoClosingTags = true;
         };
       };
       terminal = {
@@ -77,7 +82,7 @@
         working_directory = "current_project_directory";
       };
       hour_format = "hour24";
-      helix_mode = true;
+      vim_mode = true;
       load_direnv = "shell_hook";
       base_keymap = "VSCode";
       show_whitespaces = "trailing";

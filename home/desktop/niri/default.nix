@@ -494,9 +494,16 @@
           match app-id="^xdg-desktop-portal-gtk$"
           match title="^KeePassXC - Browser Access Request$"
           match app-id=r#"^org\.keepassxc\.KeePassXC$"# title=r#"Unlock Database - KeePassXC"#
-          match app-id=r#"^thunderbird$"# title=r#"^Write"#
           match app-id=r#"^thunderbird$"# title=r#"^New Event"#
           match app-id=r#"^Zotero$"# title=r#"^Progress"#
+          open-floating true
+      }
+
+      window-rule {
+          match app-id=r#"^thunderbird$"# title=r#"^Write"#
+          min-height 1000
+          min-width 1000
+          default-floating-position x=500 y=100
           open-floating true
       }
 
