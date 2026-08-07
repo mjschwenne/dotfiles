@@ -70,7 +70,6 @@ let
     # CLI Utilities
     pandoc
     hugo
-    btop
     bluez
     inotify-tools
     ledger

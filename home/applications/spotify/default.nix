@@ -1,7 +1,6 @@
 {
   spicetify-nix,
   pkgs,
-  stylix,
   ...
 }:
 {
@@ -36,6 +35,4 @@
       icon = "spotify-client";
     };
   };
-
-  home.packages = with pkgs; [ spotify-player ];
 }
