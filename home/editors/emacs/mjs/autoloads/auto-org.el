@@ -753,4 +753,29 @@ Prompt for CONTEXT from CONTEXT-PLIST."
    #'mjs/org-roam-filter-context-fn
    :templates (mjs/org-roam-templates-context-fn)))
 
+;;;###autoload
+(defun mjs/citar-org-format-note (key entry)
+  "Format a note from KEY and ENTRY."
+  (let* ((template (citar--get-template 'note))
+         (note-meta (when template
+                      (citar-format--entry template entry)))
+         (filepath (expand-file-name
+                    (concat key ".org")
+                    (car citar-notes-paths)))
+         (buffer (find-file filepath)))
+    (with-current-buffer buffer
+      ;; This just overrides other template insertion.
+      (erase-buffer)
+      (insert "#+filetags: :bib:\n#+title: ")
+      (when template (insert note-meta))
+      (save-buffer)
+      (org-id-get-create)
+      (insert "\n\n[cite:@")
+      (insert key)
+      (insert "]\n\n* Summary\n\n|\n\n* Impression & Impact\n")
+      (search-backward "|")
+      (delete-char 1)
+      (when (fboundp 'evil-insert)
+        (evil-insert 1)))))
+
 (provide 'auto-org)

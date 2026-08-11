@@ -2307,6 +2307,8 @@ With a prefix ARG, remove start location."
 (use-package citar
   :after oc
   :custom (citar-bibliography org-cite-global-bibliography)
+  (citar-notes-paths '("~/Documents/projects/bib-notes"))
+  (citar-note-format-function #'mjs/citar-org-format-note)
   :init
   (put 'citar-bibliography 'safe-local-variable #'listp)
   :config
@@ -2504,18 +2506,18 @@ With a prefix ARG, remove start location."
          #'mjs/typst-ts-editing-auto-fill-function)
     (auto-fill-mode))
   (defvar-local mjs/typst-tinymist-init-options
-      '(:preview (:background
-                  (:enabled :json-false
-                            :args ["--data-plane-host=127.0.0.1:0"
-                                   "--invert-colors=never"
-                                   "--open"])
-                  :browsing
-                  (:args ["--data-plane-host=127.0.0.1:0"
-                          "--invert-colors=never"
-                          "--open"]))
-                 :lint (:enabled t)
-                 :formatterProseWrap :json-false
-                 :formatterPrintWidth 80)
+    '(:preview (:background
+                (:enabled :json-false
+                          :args ["--data-plane-host=127.0.0.1:0"
+                                 "--invert-colors=never"
+                                 "--open"])
+                :browsing
+                (:args ["--data-plane-host=127.0.0.1:0"
+                        "--invert-colors=never"
+                        "--open"]))
+               :lint (:enabled t)
+               :formatterProseWrap :json-false
+               :formatterPrintWidth 80)
     "InitializationOptions sent to tinymist on connect.
 Override buffer-locally via dir-locals to customize per-project.")
   (defun mjs/typst-ts-format-on-save-h ()
