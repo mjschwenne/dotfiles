@@ -5,6 +5,10 @@
 
 #let data = json(sys.inputs.data)
 
+// Every string in the JSON except `date` is Typst markup produced by
+// journal-extract.el, so it has to be evaluated rather than printed.
+#let md(s) = if s == none { none } else { eval(s, mode: "markup") }
+
 #set page(paper: "a5", margin: (x: 13mm, top: 12mm, bottom: 12mm))
 #set text(size: 10pt)
 #set par(leading: 0.65em, spacing: 0.9em)
@@ -29,10 +33,10 @@
 }
 
 #let task-row(task) = {
-  let parts = (badge(task.todo),)
-  if task.priority != none { parts.push(strong(task.priority)) }
-  if task.deadline != none { parts.push(emph(task.deadline)) }
-  parts.push(task.heading)
+  let parts = (badge(md(task.todo)),)
+  if task.priority != none { parts.push(strong(md(task.priority))) }
+  if task.deadline != none { parts.push(emph(md(task.deadline))) }
+  if task.heading != none { parts.push(md(task.heading)) }
   block(below: 4pt, parts.join(h(5pt)))
 }
 
@@ -53,7 +57,7 @@
 #for task in data.planned { task-row(task) }
 #if data.plan_text != "" {
   v(3mm)
-  eval(data.plan_text, mode: "markup")
+  md(data.plan_text)
 }
 
 = Review
@@ -66,7 +70,7 @@
 = Work Reflection
 #if data.reflection != "" {
   v(3mm)
-  eval(data.reflection, mode: "markup")
+  md(data.reflection)
 } else {
   ruled-lines(6)
 }
@@ -74,7 +78,7 @@
 = Plan for Tomorrow
 #if data.tomorrow != "" {
   v(3mm)
-  eval(data.tomorrow, mode: "markup")
+  md(data.tomorrow)
 } else {
   ruled-lines(6)
 }
