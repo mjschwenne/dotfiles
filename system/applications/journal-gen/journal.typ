@@ -5,6 +5,10 @@
 
 #let data = json(sys.inputs.data)
 
+// Set on days with no org file at all (weekends, holidays). The journal
+// sections are meaningless then, so the page is just dated ruled paper.
+#let blank = "blank" in data and data.blank
+
 // Every string in the JSON except `date` is Typst markup produced by
 // journal-extract.el, so it has to be evaluated rather than printed.
 #let md(s) = if s == none { none } else { eval(s, mode: "markup") }
@@ -53,39 +57,43 @@
 
 #text(size: 15pt, weight: "bold", data.date)
 
-= Planning
-#for task in data.planned { task-row(task) }
-#if data.plan_text != "" {
-  v(3mm)
-  md(data.plan_text)
-}
+#if blank [
+  #block(height: 1fr, width: 100%, clip: true, ruled-lines(30))
+] else [
+  = Planning
+  #for task in data.planned { task-row(task) }
+  #if data.plan_text != "" {
+    v(3mm)
+    md(data.plan_text)
+  }
 
-= Review
-#if data.completed.len() > 0 {
-  for task in data.completed { task-row(task) }
-} else [
-  #text(fill: luma(150), style: "italic")[No completed tasks.]
+  = Review
+  #if data.completed.len() > 0 {
+    for task in data.completed { task-row(task) }
+  } else [
+    #text(fill: luma(150), style: "italic")[No completed tasks.]
+  ]
+
+  = Work Reflection
+  #if data.reflection != "" {
+    v(3mm)
+    md(data.reflection)
+  } else {
+    ruled-lines(6)
+  }
+
+  = Plan for Tomorrow
+  #if data.tomorrow != "" {
+    v(3mm)
+    md(data.tomorrow)
+  } else {
+    ruled-lines(6)
+  }
+
+  = Personal Reflection
+
+  #block(height: 1fr, width: 100%, clip: true, ruled-lines(18))
 ]
-
-= Work Reflection
-#if data.reflection != "" {
-  v(3mm)
-  md(data.reflection)
-} else {
-  ruled-lines(6)
-}
-
-= Plan for Tomorrow
-#if data.tomorrow != "" {
-  v(3mm)
-  md(data.tomorrow)
-} else {
-  ruled-lines(6)
-}
-
-= Personal Reflection
-
-#block(height: 1fr, width: 100%, clip: true, ruled-lines(18))
 
 // ── Final page: blank ruled paper ────────────────────────────────────────────
 // The Supernote repeats the last page when writing past the end of a PDF,
