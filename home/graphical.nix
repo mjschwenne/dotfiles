@@ -18,8 +18,6 @@ let
     slack
     zoom-us
     kbfs
-    keybase
-    keybase-gui
     signal-desktop
 
     # Network Utilities
@@ -151,7 +149,6 @@ in
   services = {
     gnome-keyring.enable = true;
     gpg-agent.pinentry.package = pkgs.pinentry-gnome3;
-    keybase.enable = true;
     kbfs.enable = true;
   };
 
