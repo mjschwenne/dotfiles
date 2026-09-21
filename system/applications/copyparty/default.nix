@@ -7,6 +7,8 @@
       i = "0.0.0.0";
       p = [ 3923 ];
       rproxy = -1;
+      acao = "https://org.schwennesen.org";
+      acam = "GET,HEAD,OPTIONS,PUT,DELETE,PROPFIND,MKCOL,MOVE,COPY";
     };
 
     accounts = {

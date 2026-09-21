@@ -14,6 +14,7 @@
     ./applications/immich
     ./applications/copyparty
     ./applications/journal-gen
+    ./applications/organice
     foundry.nixosModules.foundryvtt
   ];
 
@@ -104,7 +105,16 @@
           import ts_host
           reverse_proxy localhost:3923
         '';
+        "org.schwennesen.org".extraConfig = ''
+          import ts_host
+          reverse_proxy localhost:5000
+        '';
       };
+    };
+    organice = {
+      enable = true;
+      port = 5000;
+      webdavUrl = "https://files.schwennesen.org/webdav";
     };
   };
   systemd.services.caddy.after = [ "mjs-tailscale-up.service" ];
