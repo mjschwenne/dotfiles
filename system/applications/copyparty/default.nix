@@ -25,6 +25,7 @@
           e2d = true;
           dots = true;
           dotsrch = true;
+          daw = true; # Needed for organice
         };
       };
     };
