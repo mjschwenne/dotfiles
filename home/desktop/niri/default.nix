@@ -48,7 +48,7 @@
         import ./scripts/tailscale-toggle.nix {
           inherit pkgs;
           exitNode = mullvadExitNode;
-        };
+       };
       outputs =
         {
           "terra" =

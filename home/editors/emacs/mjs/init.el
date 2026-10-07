@@ -33,7 +33,10 @@
               use-dialog-box nil
               scroll-margin 8 hscroll-margin 8
               scroll-conservatively 101
-              treesit-font-lock-level 4)
+              treesit-font-lock-level 4
+              menu-bar-mode -1)
+
+(menu-bar-mode -1)
 
 ;; Setup autoloads, I'm currently targeting user facing functions not required to load the system
 (add-to-list 'load-path (expand-file-name "autoloads" user-emacs-directory))
@@ -627,6 +630,21 @@
   :commands (dashboard-open)
   ;; :hook (emacs-startup . dashboard-open)
   :defer nil
+  :init
+  (defvar mjs/dashboard--initial-buffer-shown nil
+    "Non-nil once `initial-buffer-choice' has run for the startup frame.")
+  (defun mjs/dashboard-initial-buffer ()
+    "Return the dashboard, unless Emacs was started on a file.
+`command-line-1' has already visited any file or directory arguments and
+left the last of them current by the time it consults
+`initial-buffer-choice', so handing that buffer back lays the arguments
+out the way a dashboard-less Emacs would.  Later calls, such as
+`emacsclient -c' with no file, always get the dashboard."
+    (let ((startup (prog1 (not mjs/dashboard--initial-buffer-shown)
+                     (setq mjs/dashboard--initial-buffer-shown t))))
+      (if (and startup (or (buffer-file-name) (derived-mode-p 'dired-mode)))
+          (current-buffer)
+        (get-buffer-create dashboard-buffer-name))))
   :config
   (dashboard-setup-startup-hook)
   (mjs-leader-def :keymaps 'override
@@ -645,7 +663,7 @@
                      (projects . 5)))
   (dashboard-item-names '(("Recent Files:" . "Recently Opened:")))
   (dashboard-footer-icon (nerd-icons-sucicon "nf-custom-emacs"))
-  (initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name))))
+  (initial-buffer-choice #'mjs/dashboard-initial-buffer))
 
 (use-package popper
   :defer nil
@@ -3076,6 +3094,9 @@ Won't forward the buffer to chained formatters if successful."
   (mjs-leader-def :keymaps 'override
     "g" '("Git" . magit-status))
   :hook (magit-post-refresh . diff-hl-magit-post-refresh))
+
+(use-package kdl-mode
+  :mode "\\.kdl\\'")
 
 ;; Restore garbage collection and file name handler after init
 (add-hook 'emacs-startup-hook

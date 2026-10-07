@@ -74,6 +74,34 @@
         }
       ];
     };
+    pipewire.extraConfig.pipewire."91-echo-cancel" = {
+      "context.modules" = [
+        {
+          name = "libpipewire-module-echo-cancel";
+          args = {
+            "library.name" = "aec/libspa-aec-webrtc";
+            "monitor.mode" = true;
+            "node.latency" = "1024/48000";
+            "audio.channels" = 1;
+            "audio.position" = [ "MONO" ];
+            "capture.props" = {
+              "node.target" =
+                "alsa_input.usb-Generic_Blue_Microphones_LT_2509031133389D0100BC_111000-00.analog-stereo";
+              "node.passive" = true;
+            };
+            "source.props" = {
+              "node.name" = "echo_cancel_source";
+              "node.description" = "Blue Mic (echo cancelled)";
+            };
+            "aec.args" = {
+              "webrtc.gain_control" = false;
+              "webrtc.noise_suppression" = true;
+              "webrtc.high_pass_filter" = true; # helps most with the bass bleed above
+            };
+          };
+        }
+      ];
+    };
     tailscale.authKeyFile = config.sops.secrets."terra/tailscale".path;
   };
   # Variables needed to run sway

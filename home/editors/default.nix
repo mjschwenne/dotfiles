@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lem, ... }:
 {
   imports = [
     ./emacs
@@ -10,6 +10,10 @@
 
   # System-wide checkers and linters shared between nvim and emacs
   home.packages = with pkgs; [
+    # Lem
+    # lem.packages.${pkgs.stdenv.hostPlatform.system}.lem-webview
+    lem.packages.${pkgs.stdenv.hostPlatform.system}.lem-ncurses
+
     # nix
     nixd
     nixfmt
