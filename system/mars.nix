@@ -74,7 +74,7 @@
       enable = true;
       package = pkgs.caddy.withPlugins {
         plugins = [ "github.com/caddy-dns/porkbun@v0.3.1" ];
-        hash = "sha256-JtzeWz9GdW/+1Qft5nU9diPkFQvPGxQkgR8n8w+ryoI=";
+        hash = "sha256-iFuoa6k2r3jUPazHHujhB4bBq3Fz0Mv0Tjsr+gxMYQQ=";
       };
       environmentFile = "${config.sops.secrets."caddy/envfile".path}";
       extraConfig = ''
@@ -114,7 +114,7 @@
     organice = {
       enable = true;
       port = 5000;
-      webdavUrl = "https://files.schwennesen.org/webdav";
+      webdavUrl = "https://files.schwennesen.org";
     };
   };
   systemd.services.caddy.after = [ "mjs-tailscale-up.service" ];

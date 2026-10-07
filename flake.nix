@@ -55,6 +55,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    lem.url = "github:lem-project/lem";
+
     # Nvim configuration
     nixvim = {
       url = "github:nix-community/nixvim";
