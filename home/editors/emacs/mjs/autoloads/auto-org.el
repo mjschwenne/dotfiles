@@ -392,7 +392,7 @@ has the effect of displaying consistency graphs for these habits."
 ;;;###autoload
 (defun mjs/class-capture ()
   (let* ((class (completing-read "Class: "
-                                 '("edpol355")
+                                 '("linguis301")
                                  nil t))
          (file-name (expand-file-name
                      (concat "classes/" class "/"
