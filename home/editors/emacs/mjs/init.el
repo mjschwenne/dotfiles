@@ -2409,6 +2409,7 @@ With a prefix ARG, remove start location."
          (LaTeX-mode . mjs/preview-scale-adjustment)
          (LaTeX-mode . auto-fill-mode)
          (LaTeX-mode . mjs/latex-disable-apheleia-h)
+         (LaTeX-mode . eglot-ensure)
          (after-save . mjs/latex-compile-on-save-h))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
            (TeX-command-default "LaTeX")
@@ -2426,6 +2427,9 @@ With a prefix ARG, remove start location."
                               "C-S-e" #'mjs/latex-math-from-calc)
   (add-to-list 'TeX-command-list '("Make" "make" TeX-run-compile nil t))
   (require 'citar-latex)
+  (with-eval-after-load 'eglot
+    (dolist (mode '((LaTeX-mode . ("texlab"))))
+      (add-to-list 'eglot-server-programs mode)))
   :general
   (:states 'insert :keymaps 'LaTeX-mode-map
            "C-S-c" #'citar-insert-citation)
