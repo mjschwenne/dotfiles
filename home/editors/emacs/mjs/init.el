@@ -1365,7 +1365,7 @@ are rendered at the correct size and not huge."
                          (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'deadline)] ")
                          (org-deadline-warning-days 7)
                          (org-super-agenda-groups
-                          '((:discard (:category ("PLX" "GRC" "TA" "SACM" "RES")))
+                          '((:discard (:tags ("@work")))
                             (:name "Today"
                                    :scheduled today
                                    :deadline today
@@ -1382,7 +1382,7 @@ are rendered at the correct size and not huge."
                              (org-super-agenda-groups
                               '((:name "Habits"
                                        :habit t)
-                                (:discard (:category ("PLX" "GRC" "TA" "SACM" "RES")))
+                                (:discard (:category ("@work")))
                                 (:discard (:and (:not (:tag "children") :tag "hide")))
                                 (:name "Holding"
                                        :todo "HOLD"
@@ -1408,7 +1408,7 @@ are rendered at the correct size and not huge."
                          (org-agenda-prefix-format " %i %-12:c [%(mjs/agenda-time-format 'deadline)] ")
                          (org-deadline-warning-days 7)
                          (org-super-agenda-groups
-                          '((:discard (:category ("DOT" "EMACS" "TTRPG" "Web" "TASKS" "PER")))
+                          '((:discard (:tag ("@home")))
                             (:name "Today"
                                    :scheduled today
                                    :deadline today
@@ -1425,28 +1425,28 @@ are rendered at the correct size and not huge."
                              (org-super-agenda-groups
                               '((:name "Habits"
                                        :habit t)
-                                (:discard (:category ("DOT" "EMACS" "TTRPG" "Web" "TASKS" "PER")))
+                                (:discard (:tag ("@home")))
                                 (:discard (:and (:not (:tag "children") :tag "hide")))
                                 (:name "Holding"
                                        :todo "HOLD"
-                                       :order 6)
+                                       :order 7)
                                 (:name "Inbox"
                                        :tag "inbox")
                                 (:name "Reading"
                                        :tag "read"
-                                       :order 3)
+                                       :order 5)
+                                (:name "Tumble"
+                                       :and (:category "TBL" :todo ("TODO" "NEXT"))
+                                       :order 4)
                                 (:name "Pollux"
                                        :and (:category "PLX" :todo ("TODO" "NEXT"))
                                        :order 4)
-                                (:name "CS 400"
-                                       :category "CS400"
-                                       :order 1)
                                 (:name "Starling"
                                        :category "STAR"
                                        :order 2)
                                 (:name "SACM"
                                        :category "SACM"
-                                       :order 5)
+                                       :order 6)
                                 (:auto-category t
                                                 :order 100)
                                 ))))
