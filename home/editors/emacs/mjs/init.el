@@ -2696,6 +2696,10 @@ Override buffer-locally via dir-locals to customize per-project.")
   :diminish evil-markdown-mode
   :config (add-hook 'evil-markdown-mode-hook #'evil-normalize-keymaps))
 
+(use-package markdown-modern
+  :ensure nil
+  :mode ("\\.md\\'" . markdown-modern-mode))
+
 (use-package quarto-mode
   :mode ("\\.qmd\\'" . poly-quarto-mode))
 

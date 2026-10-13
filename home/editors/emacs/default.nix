@@ -58,6 +58,10 @@ let
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) trivialBuild websocket;
         };
+        markdown-modern = pkgs.callPackage ./emacs-pkgs/markdown-modern.nix {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) trivialBuild;
+        };
       };
 
     # Optionally provide extra packages not in the configuration file.
@@ -70,6 +74,7 @@ let
         epkgs.treesit-grammars.with-all-grammars
         epkgs.peg
         epkgs.typst-preview
+        epkgs.markdown-modern
       ]
       ++ (config.programs.emacs.extraPackages epkgs);
   };
