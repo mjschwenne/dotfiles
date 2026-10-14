@@ -75,23 +75,24 @@ let
             mupdf-headless
             ;
           inherit (epkgs) melpaBuild;
-      };
+        };
 
-    # Optionally provide extra packages not in the configuration file.
-    extraEmacsPackages =
-      epkgs:
-      [
-        epkgs.org-modern-indent
-        epkgs.autothemer
-        epkgs.vterm
-        epkgs.treesit-grammars.with-all-grammars
-        epkgs.peg
-        epkgs.typst-preview
-        epkgs.markdown-modern
-        epkgs.consult-ripfd
-        epkgs.emacs-reader
-      ]
-      ++ (config.programs.emacs.extraPackages epkgs);
+        # Optionally provide extra packages not in the configuration file.
+        extraEmacsPackages =
+          epkgs:
+          [
+            epkgs.org-modern-indent
+            epkgs.autothemer
+            epkgs.vterm
+            epkgs.treesit-grammars.with-all-grammars
+            epkgs.peg
+            epkgs.typst-preview
+            epkgs.markdown-modern
+            epkgs.consult-ripfd
+            epkgs.emacs-reader
+          ]
+          ++ (config.programs.emacs.extraPackages epkgs);
+      };
   };
 in
 {
