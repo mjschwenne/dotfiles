@@ -62,6 +62,16 @@ let
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) trivialBuild;
         };
+        emacs-reader = pkgs.callPackage ./emacs-pkgs/emacs-reader.nix {
+          inherit (pkgs)
+            fetchFromGitea
+            gcc
+            gnumake
+            pkg-config
+            mupdf-headless
+            ;
+          inherit (epkgs) melpaBuild;
+        };
       };
 
     # Optionally provide extra packages not in the configuration file.
@@ -75,6 +85,7 @@ let
         epkgs.peg
         epkgs.typst-preview
         epkgs.markdown-modern
+        epkgs.emacs-reader
       ]
       ++ (config.programs.emacs.extraPackages epkgs);
   };
@@ -84,6 +95,11 @@ in
     enable = true;
     package = emacs;
   };
+
+  home.packages = with pkgs; [
+    emacsPackages.pdf-tools
+    imagemagick
+  ];
 
   services.emacs = {
     enable = true;

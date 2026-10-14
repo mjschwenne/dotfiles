@@ -2018,13 +2018,17 @@ the characters."
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
 
+(use-package reader
+  :ensure nil)
+
 (use-package pdf-tools
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
   :diminish (pdf-view-themed-minor-mode . " ")
   :custom ((pdf-view-display-size 'fit-page)
            (pdf-view-use-scaling t)
-           (pdf-view-use-imagemagick nil))
+           (pdf-view-use-imagemagick t)
+           (global-auto-revert-ignore-modes '(pdf-view-mode)))
   :init
   (defun mjs/pdf-view-setup-leader-keys-h ()
     "Set up leader key bindings for pdf-view-mode."
@@ -2050,7 +2054,7 @@ the characters."
   (defun mjs/pdf-view-setup-cursor-and-theme-h ()
     "Set cursor and enable themed mode for pdf-view."
     (set (make-local-variable 'evil-default-cursor) (list nil))
-    (pdf-view-themed-minor-mode))
+    (pdf-view-themed-minor-mode 0))
   (defun mjs/pdf-view-remove-visual-mark-h ()
     "Remove `evil-visual-activate-hook' from `activate-mark-hook'."
     (remove-hook 'activate-mark-hook 'evil-visual-activate-hook t))
@@ -2102,7 +2106,18 @@ the characters."
        (mapconcat #'identity txt))))
   (add-hook 'pdf-annot-edit-contents-minor-mode-hook #'mjs/pdf-annot-update-header))
 
+(use-package pdf-isearch
+  :ensure nil
+  :commands pdf-isearch-minor-mode
+  :hook (pdf-view-mode . pdf-isearch-minor-mode))
+
+(use-package pdf-sync
+  :ensure nil
+  :commands pdf-sync-minor-mode
+  :hook (pdf-view-mode . pdf-sync-minor-mode))
+
 (use-package saveplace-pdf-view
+  :init (save-place-mode)
   :after pdf-view)
 
 (use-package org-noter)
@@ -2410,7 +2425,8 @@ With a prefix ARG, remove start location."
          (LaTeX-mode . auto-fill-mode)
          (LaTeX-mode . mjs/latex-disable-apheleia-h)
          (LaTeX-mode . eglot-ensure)
-         (after-save . mjs/latex-compile-on-save-h))
+         (after-save . mjs/latex-compile-on-save-h)
+         (TeX-after-compilation-finished-functions . #'TeX-revert-document-buffer))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
            (TeX-command-default "LaTeX")
            (TeX-check-TeX nil)
