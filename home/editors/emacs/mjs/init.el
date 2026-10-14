@@ -441,7 +441,9 @@
   :hook (prog-mode . ligature-mode)
   (text-mode . ligature-mode))
 
-(when window-system (global-hl-line-mode 1))
+(when window-system
+  (add-hook 'prog-mode-hook #'hl-line-mode)
+  (add-hook 'text-mode-hook #'hl-line-mode))
 
 (use-package rainbow-mode
   :diminish "󰙸 "
@@ -468,7 +470,8 @@
      ("FIXME". ,(plist-get base16-stylix-theme-colors :base08))
      ("FAIL" . ,(plist-get base16-stylix-theme-colors :base08))
      ))
-  :hook (prog-mode . hl-todo-mode))
+  :hook (prog-mode . hl-todo-mode)
+  (LaTeX-mode . hl-todo-mode))
 
 (use-package anzu
   :defer nil
@@ -946,8 +949,8 @@ If any function returns non-nil, the mode will not be activated."
 
 (use-package indent-bars
   :unless noninteractive
-  :hook (((prog-mode conf-mode) . mjs/indent-bars-init-maybe-h)
-         (enable-theme-functions . #'indent-bars-reset-styles))
+  :commands indent-bars-mode
+  :hook (((prog-mode conf-mode) . mjs/indent-bars-init-maybe-h))
   :init (defun mjs/indent-bars-init-maybe-h ()
           "Enable `indent-bars-mode' depending on `mjs/indent-bars-inhibit-functions'."
           (unless (run-hook-with-args-until-success 'mjs/indent-bars-inhibit-functions)
@@ -1663,7 +1666,7 @@ are rendered at the correct size and not huge."
 (use-package org-super-agenda
   :custom (org-tags-exclude-from-inheritance '("children"))
   :config (setq org-super-agenda-header-map nil)
-  :hook (emacs-startup org-super-agenda-mode))
+  :hook (emacs-startup . org-super-agenda-mode))
 
 (use-package org-ql
   :commands org-ql-select org-ql-query org-ql-defpred org-dblock-write:mjs-org-ql
@@ -2003,6 +2006,17 @@ the characters."
   :custom ((flycheck-global-modes t)
            (flycheck-indication-mode 'right-fringe)
            (flycheck-mode-line)
+           ;; Flycheck 37 made `flycheck-display-errors-via-eldoc' the default.
+           ;; It documents *interactively* (`eldoc-print-current-symbol-info'
+           ;; with INTERACTIVE t), which is what authorizes
+           ;; `eldoc-display-in-buffer' to pop the " *eldoc*" window.  Flycheck
+           ;; guards that with a one-shot buffer-local flag, but the guard loses
+           ;; a race against eldoc's own idle-timer request whenever an async
+           ;; source (eglot/texlab) is registered: whichever display pass
+           ;; finishes first eats the flag, leaving the other unguarded.  The
+           ;; window then lands on top of the LaTeX PDF.  Keep the pre-37
+           ;; echo-area display, which never asks eldoc for anything.
+           (flycheck-display-errors-function #'flycheck-display-error-messages)
            (flycheck-disabled-checkers '(org-lint)))
                                         ; FIXME: After https://github.com/flycheck/flycheck/pull/2165
   :config
@@ -2028,13 +2042,17 @@ the characters."
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
 
+(use-package reader
+  :ensure nil)
+
 (use-package pdf-tools
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
   :diminish (pdf-view-themed-minor-mode . " ")
   :custom ((pdf-view-display-size 'fit-page)
            (pdf-view-use-scaling t)
-           (pdf-view-use-imagemagick nil))
+           (pdf-view-use-imagemagick t)
+           (global-auto-revert-ignore-modes '(pdf-view-mode)))
   :init
   (defun mjs/pdf-view-setup-leader-keys-h ()
     "Set up leader key bindings for pdf-view-mode."
@@ -2060,7 +2078,7 @@ the characters."
   (defun mjs/pdf-view-setup-cursor-and-theme-h ()
     "Set cursor and enable themed mode for pdf-view."
     (set (make-local-variable 'evil-default-cursor) (list nil))
-    (pdf-view-themed-minor-mode))
+    (pdf-view-themed-minor-mode 0))
   (defun mjs/pdf-view-remove-visual-mark-h ()
     "Remove `evil-visual-activate-hook' from `activate-mark-hook'."
     (remove-hook 'activate-mark-hook 'evil-visual-activate-hook t))
@@ -2112,7 +2130,20 @@ the characters."
        (mapconcat #'identity txt))))
   (add-hook 'pdf-annot-edit-contents-minor-mode-hook #'mjs/pdf-annot-update-header))
 
+(use-package pdf-isearch
+  :ensure nil
+  :commands pdf-isearch-minor-mode
+  :hook (pdf-view-mode . pdf-isearch-minor-mode))
+
+(use-package pdf-sync
+  :ensure nil
+  :commands (pdf-sync-minor-mode pdf-sync-forward-search)
+  :hook (pdf-view-mode . pdf-sync-minor-mode)
+  :general (mjs-local-leader-def :keymaps 'LaTeX-mode-map
+             "s" '("Sync" . pdf-sync-forward-search)))
+
 (use-package saveplace-pdf-view
+  :init (save-place-mode)
   :after pdf-view)
 
 (use-package org-noter)
@@ -2412,6 +2443,16 @@ With a prefix ARG, remove start location."
     "Compile LaTeX document on save."
     (when (derived-mode-p 'LaTeX-mode)
       (TeX-command-run-all nil)))
+  (defun mjs/TeX-pdf-tools-sync-view ()
+    "Load pdf-tools, then hand off to `TeX-pdf-tools-sync-view'.
+`TeX-view' and `TeX-pdf-tools-sync-view' are both AUCTeX functions, so
+pdf-tools cannot autoload them.  Sitting in `TeX-view-program-list'
+instead, this wrapper covers every route into the View command,
+including the one `TeX-command-run-all' takes."
+    (interactive)
+    (require 'pdf-tools)
+    (require 'pdf-sync)
+    (TeX-pdf-tools-sync-view))
   :hook ((LaTeX-mode . mjs/latex-mode-set-name-h)
          (LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . TeX-fold-mode)
@@ -2424,7 +2465,7 @@ With a prefix ARG, remove start location."
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
            (TeX-command-default "LaTeX")
            (TeX-check-TeX nil)
-           (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)
+           (TeX-view-program-list '(("PDF Tools" mjs/TeX-pdf-tools-sync-view)
                                     ("Zathura" "zathura --synctex-forward :: %o")))
            (TeX-view-program-selection '((output-pdf "PDF Tools")))
            (TeX-source-correlate-start-server t)
@@ -2435,11 +2476,13 @@ With a prefix ARG, remove start location."
   :init (require 'auctex)
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
-  (add-to-list 'TeX-command-list '("Make" "make" TeX-run-compile nil t))
+  (add-to-list 'TeX-command-list '("Make" "make" TeX-run-TeX nil t))
   (require 'citar-latex)
   (with-eval-after-load 'eglot
     (dolist (mode '((LaTeX-mode . ("texlab"))))
       (add-to-list 'eglot-server-programs mode)))
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+  (add-hook 'TeX-after-compilation-finished-functions (lambda (path) (message "%s" path)))
   :general
   (:states 'insert :keymaps 'LaTeX-mode-map
            "C-S-c" #'citar-insert-citation)
@@ -2449,7 +2492,6 @@ With a prefix ARG, remove start location."
     "e" '("Insert Environment" . LaTeX-environment)
     "i" '("Indent Line" . LaTeX-indent-line)
     "m" '("Insert Macro" . TeX-insert-macro)
-    "s" '("Insert Section" . LaTeX-section)
     "t" '("Insert Citation" . citar-insert-citation)
     "v" '("View PDF" . TeX-view)))
 
@@ -3093,12 +3135,8 @@ Won't forward the buffer to chained formatters if successful."
     "Set vterm-specific local variables."
     (setq confirm-kill-processes nil
           hscroll-margin 0))
-  (defun mjs/vterm-disable-hl-line-h ()
-    "Disable `hl-line-mode' in vterm buffers."
-    (hl-line-mode -1))
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . mjs/vterm-set-local-vars-h)
-  :hook (vterm-mode . mjs/vterm-disable-hl-line-h)
   :general
   (mjs-leader-def :keymaps 'override
     "t t" '("Terminal" . vterm))
