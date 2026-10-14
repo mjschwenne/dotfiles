@@ -441,7 +441,9 @@
   :hook (prog-mode . ligature-mode)
   (text-mode . ligature-mode))
 
-(when window-system (global-hl-line-mode 1))
+(when window-system
+  (add-hook 'prog-mode-hook #'hl-line-mode)
+  (add-hook 'text-mode-hook #'hl-line-mode))
 
 (use-package rainbow-mode
   :diminish "󰙸 "
@@ -468,7 +470,8 @@
      ("FIXME". ,(plist-get base16-stylix-theme-colors :base08))
      ("FAIL" . ,(plist-get base16-stylix-theme-colors :base08))
      ))
-  :hook (prog-mode . hl-todo-mode))
+  :hook (prog-mode . hl-todo-mode)
+  (LaTeX-mode . hl-todo-mode))
 
 (use-package anzu
   :defer nil
@@ -2113,8 +2116,10 @@ the characters."
 
 (use-package pdf-sync
   :ensure nil
-  :commands pdf-sync-minor-mode
-  :hook (pdf-view-mode . pdf-sync-minor-mode))
+  :commands (pdf-sync-minor-mode pdf-sync-forward-search)
+  :hook (pdf-view-mode . pdf-sync-minor-mode)
+  :general (mjs-local-leader-def :keymaps 'LaTeX-mode-map
+             "s" '("Sync" . pdf-sync-forward-search)))
 
 (use-package saveplace-pdf-view
   :init (save-place-mode)
@@ -2417,6 +2422,16 @@ With a prefix ARG, remove start location."
     "Compile LaTeX document on save."
     (when (derived-mode-p 'LaTeX-mode)
       (TeX-command-run-all nil)))
+  (defun mjs/TeX-pdf-tools-sync-view ()
+    "Load pdf-tools, then hand off to `TeX-pdf-tools-sync-view'.
+`TeX-view' and `TeX-pdf-tools-sync-view' are both AUCTeX functions, so
+pdf-tools cannot autoload them.  Sitting in `TeX-view-program-list'
+instead, this wrapper covers every route into the View command,
+including the one `TeX-command-run-all' takes."
+    (interactive)
+    (require 'pdf-tools)
+    (require 'pdf-sync)
+    (TeX-pdf-tools-sync-view))
   :hook ((LaTeX-mode . mjs/latex-mode-set-name-h)
          (LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . TeX-fold-mode)
@@ -2430,7 +2445,7 @@ With a prefix ARG, remove start location."
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
            (TeX-command-default "LaTeX")
            (TeX-check-TeX nil)
-           (TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)
+           (TeX-view-program-list '(("PDF Tools" mjs/TeX-pdf-tools-sync-view)
                                     ("Zathura" "zathura --synctex-forward :: %o")))
            (TeX-view-program-selection '((output-pdf "PDF Tools")))
            (TeX-source-correlate-start-server t)
@@ -2455,7 +2470,6 @@ With a prefix ARG, remove start location."
     "e" '("Insert Environment" . LaTeX-environment)
     "i" '("Indent Line" . LaTeX-indent-line)
     "m" '("Insert Macro" . TeX-insert-macro)
-    "s" '("Insert Section" . LaTeX-section)
     "t" '("Insert Citation" . citar-insert-citation)
     "v" '("View PDF" . TeX-view)))
 
@@ -3099,12 +3113,8 @@ Won't forward the buffer to chained formatters if successful."
     "Set vterm-specific local variables."
     (setq confirm-kill-processes nil
           hscroll-margin 0))
-  (defun mjs/vterm-disable-hl-line-h ()
-    "Disable `hl-line-mode' in vterm buffers."
-    (hl-line-mode -1))
   :hook (vterm-mode . hide-mode-line-mode)
   :hook (vterm-mode . mjs/vterm-set-local-vars-h)
-  :hook (vterm-mode . mjs/vterm-disable-hl-line-h)
   :general
   (mjs-leader-def :keymaps 'override
     "t t" '("Terminal" . vterm))
