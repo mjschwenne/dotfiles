@@ -939,8 +939,8 @@ If any function returns non-nil, the mode will not be activated."
 
 (use-package indent-bars
   :unless noninteractive
-  :hook (((prog-mode conf-mode) . mjs/indent-bars-init-maybe-h)
-         (enable-theme-functions . #'indent-bars-reset-styles))
+  :commands indent-bars-mode
+  :hook (((prog-mode conf-mode) . mjs/indent-bars-init-maybe-h))
   :init (defun mjs/indent-bars-init-maybe-h ()
           "Enable `indent-bars-mode' depending on `mjs/indent-bars-inhibit-functions'."
           (unless (run-hook-with-args-until-success 'mjs/indent-bars-inhibit-functions)
@@ -1656,7 +1656,7 @@ are rendered at the correct size and not huge."
 (use-package org-super-agenda
   :custom (org-tags-exclude-from-inheritance '("children"))
   :config (setq org-super-agenda-header-map nil)
-  :hook (emacs-startup org-super-agenda-mode))
+  :hook (emacs-startup . org-super-agenda-mode))
 
 (use-package org-ql
   :commands org-ql-select org-ql-query org-ql-defpred org-dblock-write:mjs-org-ql
@@ -2440,8 +2440,7 @@ including the one `TeX-command-run-all' takes."
          (LaTeX-mode . auto-fill-mode)
          (LaTeX-mode . mjs/latex-disable-apheleia-h)
          (LaTeX-mode . eglot-ensure)
-         (after-save . mjs/latex-compile-on-save-h)
-         (TeX-after-compilation-finished-functions . #'TeX-revert-document-buffer))
+         (after-save . mjs/latex-compile-on-save-h))
   :custom ((TeX-newline-function #'reindent-then-newline-and-indent)
            (TeX-command-default "LaTeX")
            (TeX-check-TeX nil)
@@ -2456,11 +2455,13 @@ including the one `TeX-command-run-all' takes."
   :init (require 'auctex)
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
-  (add-to-list 'TeX-command-list '("Make" "make" TeX-run-compile nil t))
+  (add-to-list 'TeX-command-list '("Make" "make" TeX-run-TeX nil t))
   (require 'citar-latex)
   (with-eval-after-load 'eglot
     (dolist (mode '((LaTeX-mode . ("texlab"))))
       (add-to-list 'eglot-server-programs mode)))
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+  (add-hook 'TeX-after-compilation-finished-functions (lambda (path) (message "%s" path)))
   :general
   (:states 'insert :keymaps 'LaTeX-mode-map
            "C-S-c" #'citar-insert-citation)
