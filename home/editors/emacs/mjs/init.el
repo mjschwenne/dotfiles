@@ -1996,6 +1996,17 @@ the characters."
   :custom ((flycheck-global-modes t)
            (flycheck-indication-mode 'right-fringe)
            (flycheck-mode-line)
+           ;; Flycheck 37 made `flycheck-display-errors-via-eldoc' the default.
+           ;; It documents *interactively* (`eldoc-print-current-symbol-info'
+           ;; with INTERACTIVE t), which is what authorizes
+           ;; `eldoc-display-in-buffer' to pop the " *eldoc*" window.  Flycheck
+           ;; guards that with a one-shot buffer-local flag, but the guard loses
+           ;; a race against eldoc's own idle-timer request whenever an async
+           ;; source (eglot/texlab) is registered: whichever display pass
+           ;; finishes first eats the flag, leaving the other unguarded.  The
+           ;; window then lands on top of the LaTeX PDF.  Keep the pre-37
+           ;; echo-area display, which never asks eldoc for anything.
+           (flycheck-display-errors-function #'flycheck-display-error-messages)
            (flycheck-disabled-checkers '(org-lint)))
                                         ; FIXME: After https://github.com/flycheck/flycheck/pull/2165
   :config
