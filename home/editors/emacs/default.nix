@@ -62,6 +62,10 @@ let
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) trivialBuild;
         };
+        consult-ripfd = pkgs.callPackage ./emacs-pkgs/consult-ripfd.nix {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) trivialBuild consult;
+        };
       };
 
     # Optionally provide extra packages not in the configuration file.
@@ -75,6 +79,7 @@ let
         epkgs.peg
         epkgs.typst-preview
         epkgs.markdown-modern
+        epkgs.consult-ripfd
       ]
       ++ (config.programs.emacs.extraPackages epkgs);
   };

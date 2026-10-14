@@ -34,19 +34,6 @@
       };
     };
 
-    kitty = {
-      enable = false;
-      shellIntegration = {
-        enableFishIntegration = true;
-        mode = "no-cursor";
-      };
-      settings = {
-        disable_ligatures = "never";
-        cursor_shape = "block";
-        share_connections = "no";
-      };
-    };
-
     ghostty = {
       enable = true;
       enableFishIntegration = true;
@@ -62,96 +49,10 @@
         notify-on-command-finish = "unfocused";
         notify-on-command-finish-action = "no-bell,notify";
         notify-on-command-finish-after = "60s";
+        keybind = [
+          "ctrl+enter=unbind"
+        ];
       };
-    };
-
-    wezterm = {
-      enable = false;
-      package = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      extraConfig =
-        let
-          preferred_adapter = {
-            "terra" =
-              # lua
-              ''
-                webgpu_preferred_adapter = {
-                  backend = "Vulkan",
-                  device = 29822,
-                  device_type = "DiscreteGpu",
-                  driver = "radv",
-                  driver_info = "Mesa 24.1.1",
-                  name = "AMD Radeon RX 7800 XT (RADV NAVI32)",
-                  vendor = 4098,
-                },
-              '';
-            "mars" =
-              # lua
-              ''
-                webgpu_preferred_adapter = {
-                  backend = "Vulkan",
-                  device = 26880,
-                  device_type = "DiscreteGpu",
-                  driver = "radv",
-                  driver_info = "Mesa 24.0.5",
-                  name = "AMD Radeon R5 M465 Series (RADV ICELAND)",
-                  vendor = 4098,
-                },
-              '';
-            "venus" =
-              # lua
-              ''
-                webgpu_preferred_adapter = {
-                      backend = "Vulkan",
-                      device = 32069,
-                      device_type = "IntegratedGpu",
-                      driver_info = "Mesa 25.0.1",
-                      name = "Intel(R) Graphics (MTL)",
-                      vendor = 32902
-                },
-              '';
-            "luna" =
-              # lua
-              ''
-                webgpu_preferred_adapter = {
-                      backend = "Vulkan",
-                      device = 26880,
-                      device_type = "DiscreteGpu",
-                      driver = "radv",
-                      driver_info = "Mesa 24.0.5",
-                      name = "AMD Radeon R5 M465 Series (RADV ICELAND)",
-                      vendor = 4098,
-                },
-              '';
-            # Copied from Terra to suppress error.
-            # Not planning on using wezterm on sol.
-            "sol" = /* lua */ ''
-              webgpu_preferred_adapter = {
-                backend = "Vulkan",
-                device = 29822,
-                device_type = "DiscreteGpu",
-                driver = "radv",
-                driver_info = "Mesa 24.1.1",
-                name = "AMD Radeon RX 7800 XT (RADV NAVI32)",
-                vendor = 4098,
-              },
-            '';
-          };
-        in
-        /* lua */ ''
-          local wezterm = require 'wezterm'
-          return {
-            front_end = "WebGpu",
-            ${preferred_adapter."${osConfig.networking.hostName}"}
-            font_size = 12.0,
-            enable_tab_bar = false,
-            default_prog = { "fish", "-l" },
-            enable_wayland = true,
-            check_for_updates = false,
-            keys = {
-              {key="Enter", mods="SHIFT", action=wezterm.action{SendString="\x1b\r"}},
-            },
-          }
-        '';
     };
   };
 }

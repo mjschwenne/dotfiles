@@ -607,8 +607,10 @@
   (mjs-leader-def :keymaps 'override
     "P"   '(nil :which-key "Project")
     "P F" '("Find File (Other)" . projectile-find-file-other-window)
-    "P s" '("Search (rg)"       . projectile-ripgrep)
-    "P g" '("Grep"              . projectile-grep)
+    "P s" '("Search"            . projectile-ripgrep)
+    "P S" `("Search (regex)"    . ,(lambda () (interactive) (let ((current-prefix-arg '(4)))
+                                                         (call-interactively #'projectile-ripgrep))
+                                     ))
     "P k" '("Kill Buffers"      . projectile-kill-buffers)
     "P i" '("Invalidate Cache"  . projectile-invalidate-cache)
     "P c" '("Compile"           . projectile-compile-project)
@@ -625,6 +627,14 @@
     "P b" '("Switch Buffer"     . consult-projectile-switch-to-buffer)
     "P d" '("Find Dir"          . consult-projectile-find-dir)
     "P r" '("Recent Files"      . consult-projectile-recentf)))
+
+(use-package rg)
+
+(use-package consult-ripfd
+  :ensure nil
+  :commands (consult-ripfd)
+  :general (mjs-leader-def :keymaps 'override
+             "P l" '("Live search" . consult-ripfd)))
 
 (use-package dashboard
   :commands (dashboard-open)

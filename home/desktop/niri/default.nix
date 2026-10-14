@@ -48,7 +48,7 @@
         import ./scripts/tailscale-toggle.nix {
           inherit pkgs;
           exitNode = mullvadExitNode;
-       };
+        };
       outputs =
         {
           "terra" =
@@ -583,7 +583,7 @@
           // LAUNCH APPLICATIONS
           Mod+B hotkey-overlay-title="Browser: librewolf" { spawn "${pkgs-master.librewolf-bin}/bin/librewolf"; }
           Mod+Shift+B hotkey-overlay-title="Browser: firefox" { spawn "${pkgs.firefox}/bin/firefox"; }
-          Mod+E hotkey-overlay-title="Emacs" { spawn "emacs"; }
+          Mod+E hotkey-overlay-title="Emacs" { spawn "emacsclient" "-c"; }
           Mod+P hotkey-overlay-title="Password Manager" { spawn "${pkgs.keepassxc}/bin/keepassxc"; }
           // Other then my top four, use Control as an application prefix.
           // Unfortunately, this can't be an exclusive prefix
