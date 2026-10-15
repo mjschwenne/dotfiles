@@ -612,7 +612,7 @@
     "P F" '("Find File (Other)" . projectile-find-file-other-window)
     "P s" '("Search"            . projectile-ripgrep)
     "P S" `("Search (regex)"    . ,(lambda () (interactive) (let ((current-prefix-arg '(4)))
-                                                         (call-interactively #'projectile-ripgrep))
+                                                              (call-interactively #'projectile-ripgrep))
                                      ))
     "P k" '("Kill Buffers"      . projectile-kill-buffers)
     "P i" '("Invalidate Cache"  . projectile-invalidate-cache)
@@ -2429,6 +2429,7 @@ With a prefix ARG, remove start location."
   :hook ((org-mode . citar-capf-setup)
          (LaTeX-mode . citar-capf-setup)))
 
+
 (use-package latex
   :ensure auctex
   :mode ("\\.tex\\'" . LaTeX-mode)
@@ -2481,8 +2482,11 @@ including the one `TeX-command-run-all' takes."
   (with-eval-after-load 'eglot
     (dolist (mode '((LaTeX-mode . ("texlab"))))
       (add-to-list 'eglot-server-programs mode)))
+  (with-eval-after-load "tex-mode"
+    (setq tex--prettify-symbols-alist
+          (cons '("\\epsilon" . 949)
+                (assoc-delete-all "\\epsilon" tex--prettify-symbols-alist #'equal))))
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
-  (add-hook 'TeX-after-compilation-finished-functions (lambda (path) (message "%s" path)))
   :general
   (:states 'insert :keymaps 'LaTeX-mode-map
            "C-S-c" #'citar-insert-citation)
