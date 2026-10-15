@@ -25,7 +25,7 @@
     # Master branch, for when packages haven't migrated to the unstable branch
     nixpkgs-master.url = "github:NixOS/nixpkgs";
     # Stable branch, for when packages need to be rolled back
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -244,5 +244,12 @@
           ];
         };
       };
+
+      # Entry point for `nix fmt`. nixfmt-tree is nixfmt wrapped in treefmt,
+      # which is what lets a bare `nix fmt` traverse the tree; plain pkgs.nixfmt
+      # is a single-file formatter and deprecates being handed a directory.
+      # Use `nix fmt -- --ci` to fail on changes, but note it rewrites files
+      # before failing rather than checking without touching them.
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
     };
 }

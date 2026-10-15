@@ -26,7 +26,7 @@
       icat = "wezterm imgcat";
       nix-dev = ''nix develop -c "nu"'';
       # ssh = ''kitty +kitten ssh -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}'';
-      scp = ''scp -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}'';
+      scp = "scp -i ${osConfig.sops.secrets."${osConfig.networking.hostName}/ssh/key".path}";
     };
     settings = {
       buffer_editor = "nvim";

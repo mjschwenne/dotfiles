@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # Setup the required secrets
   sops.secrets = {
     "${config.networking.hostName}/caddy/envfile".owner = "caddy";
@@ -15,7 +16,7 @@
     caddy = {
       enable = true;
       package = pkgs.caddy.withPlugins {
-        plugins = ["github.com/caddy-dns/porkbun@v0.3.1"];
+        plugins = [ "github.com/caddy-dns/porkbun@v0.3.1" ];
         hash = "sha256-yJyTf2VFh0FKgzIIPxNAlSz0t/lm6dQmRl04823Mij4=";
       };
       environmentFile = config.sops.secrets."${config.networking.hostName}/caddy/envfile".path;
@@ -44,18 +45,19 @@
       };
     };
   };
-  systemd.services.caddy.after = ["mjs-tailscale-up.service"];
+  systemd.services.caddy.after = [ "mjs-tailscale-up.service" ];
 
   services.xserver.enable = true;
   services.xserver.desktopManager.kodi = {
     enable = true;
-    package = pkgs.kodi.withPackages (kodiPkgs:
-      with kodiPkgs; [
+    package = pkgs.kodi.withPackages (
+      kodiPkgs: with kodiPkgs; [
         inputstreamhelper
         inputstream-adaptive
         requests
         joystick
-      ]);
+      ]
+    );
   };
   services.displayManager.autoLogin.user = "kodi";
   services.xserver.displayManager.lightdm.greeter.enable = false;
@@ -64,7 +66,12 @@
 
   users.extraUsers.kodi = {
     isNormalUser = true;
-    extraGroups = ["data" "video" "audio" "input"];
+    extraGroups = [
+      "data"
+      "video"
+      "audio"
+      "input"
+    ];
   };
 
   programs.kdeconnect.enable = true;
@@ -77,7 +84,7 @@
 
   # HARDWARE TRANSCODING
   nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
   };
   hardware.graphics = {
     enable = true;

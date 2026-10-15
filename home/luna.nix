@@ -1,3 +1,7 @@
-{...}: {
-  imports = [./common.nix ./graphical.nix ./applications/obs];
+{ ... }: {
+  imports = [
+    ./common.nix
+    ./graphical.nix
+    ./applications/obs
+  ];
 }

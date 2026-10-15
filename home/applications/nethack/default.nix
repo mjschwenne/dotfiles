@@ -1,6 +1,6 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   home = {
-    packages = with pkgs; [nethack];
+    packages = with pkgs; [ nethack ];
     file.".nethackrc".text = ''
       OPTIONS=windowtype:curses
       OPTIONS=popup_dialog

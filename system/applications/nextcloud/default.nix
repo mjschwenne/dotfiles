@@ -3,7 +3,8 @@
   pkgs-stable,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ./nextcloud-extras.nix
   ];
@@ -23,7 +24,7 @@
   };
   users.users.nginx.isSystemUser = true;
   users.users.nginx.group = "nginx";
-  users.groups.nginx = {};
+  users.groups.nginx = { };
   services = {
     nginx.virtualHosts = {
       "cloud.schwennesen.org" = {
@@ -106,7 +107,10 @@
       };
 
       settings = {
-        trusted_proxies = ["192.168.0.206" "127.0.0.1"];
+        trusted_proxies = [
+          "192.168.0.206"
+          "127.0.0.1"
+        ];
         overwriteprotocol = "https";
         default_phone_region = "US";
         mail_smtpmode = "smtp";
@@ -151,9 +155,9 @@
     enable = true;
     description = "Prontonmail Bridge Server";
     serviceConfig.Type = "simple";
-    serviceConfig.ExecStart = ''protonmail-bridge --noninteractive'';
-    path = [pkgs.pass];
-    wantedBy = ["multi-user.target"];
-    after = ["network.target"];
+    serviceConfig.ExecStart = "protonmail-bridge --noninteractive";
+    path = [ pkgs.pass ];
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
   };
 }

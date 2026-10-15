@@ -1,7 +1,8 @@
 {
   stdenv,
   fetchFromGitHub,
-}: {
+}:
+{
   sddm-sugar = stdenv.mkDerivation rec {
     pname = "sddm-sugar-candy-theme";
     version = "a1fae51";

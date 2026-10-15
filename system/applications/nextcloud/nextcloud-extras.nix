@@ -4,9 +4,9 @@
   lib,
   options,
   ...
-}: let
-  inherit
-    (lib)
+}:
+let
+  inherit (lib)
     optionalString
     escapeShellArg
     types
@@ -19,7 +19,8 @@
     mkForce
     ;
 
-  mkIfElse = p: yes: no:
+  mkIfElse =
+    p: yes: no:
     mkMerge [
       (mkIf p yes)
       (mkIf (!p) no)
@@ -27,11 +28,12 @@
   cfg = config.services.nextcloud;
   fpm = config.services.phpfpm.pools.nextcloud;
   webserver = config.services.${cfg.webserver};
-in {
+in
+{
   options = {
     services.nextcloud = {
       ensureUsers = mkOption {
-        default = {};
+        default = { };
         description = lib.mdDoc ''
           List of user accounts which get automatically created if they don't
           exist yet. This option does not delete accounts which are not listed
@@ -47,28 +49,33 @@ in {
             email = "user2@localhost";
           };
         };
-        type = types.attrsOf (types.submodule {
-          options = {
-            passwordFile = mkOption {
-              type = types.path;
-              example = "/path/to/file";
-              default = null;
-              description = lib.mdDoc ''
-                Specifies the path to a file containing the
-                clear text password for the user.
-              '';
+        type = types.attrsOf (
+          types.submodule {
+            options = {
+              passwordFile = mkOption {
+                type = types.path;
+                example = "/path/to/file";
+                default = null;
+                description = lib.mdDoc ''
+                  Specifies the path to a file containing the
+                  clear text password for the user.
+                '';
+              };
+              email = mkOption {
+                type = types.str;
+                example = "user1@localhost";
+                default = null;
+              };
             };
-            email = mkOption {
-              type = types.str;
-              example = "user1@localhost";
-              default = null;
-            };
-          };
-        });
+          }
+        );
       };
 
       webserver = mkOption {
-        type = types.enum ["nginx" "caddy"];
+        type = types.enum [
+          "nginx"
+          "caddy"
+        ];
         default = "nginx";
         description = ''
           Whether to use nginx or caddy for virtual host management.
@@ -92,8 +99,9 @@ in {
     systemd.services.nextcloud-ensure-users = {
       enable = true;
       script = ''
-        ${optionalString (cfg.ensureUsers != {}) ''
-          ${concatStringsSep "\n" (mapAttrsToList (name: cfg: ''
+        ${optionalString (cfg.ensureUsers != { }) ''
+          ${concatStringsSep "\n" (
+            mapAttrsToList (name: cfg: ''
               if ${config.services.nextcloud.occ}/bin/nextcloud-occ user:info "${name}" | grep "user not found"; then
                 export OC_PASS="$(cat ${escapeShellArg cfg.passwordFile})"
                 ${config.services.nextcloud.occ}/bin/nextcloud-occ user:add --password-from-env "${name}"
@@ -101,12 +109,12 @@ in {
               ${optionalString (cfg.email != null) ''
                 ${config.services.nextcloud.occ}/bin/nextcloud-occ user:setting "${name}" settings email "${cfg.email}"
               ''}
-            '')
-            cfg.ensureUsers)}
+            '') cfg.ensureUsers
+          )}
         ''}
       '';
-      wantedBy = ["multi-user.target"];
-      after = ["nextcloud-setup.service"];
+      wantedBy = [ "multi-user.target" ];
+      after = [ "nextcloud-setup.service" ];
     };
 
     systemd.services.nextcloud-extra-occ-commands = {
@@ -114,8 +122,8 @@ in {
       script = ''
         ${cfg.extraOCCCommands}
       '';
-      wantedBy = ["multi-user.target"];
-      after = ["nextcloud-setup.service"];
+      wantedBy = [ "multi-user.target" ];
+      after = [ "nextcloud-setup.service" ];
     };
 
     services.phpfpm.pools.nextcloud.settings = {
@@ -123,46 +131,43 @@ in {
       "listen.group" = webserver.group;
     };
 
-    users.groups.nextcloud.members = ["nextcloud" webserver.user];
+    users.groups.nextcloud.members = [
+      "nextcloud"
+      webserver.user
+    ];
 
     services.nginx =
-      mkIfElse (cfg.webserver == "caddy") {
-        enable = mkForce false;
-      } {
-        enable = true;
-        virtualHosts.${cfg.hostName}.locations. "~ \\.php(?:$|/)" = {
-          extraConfig = lib.mkForce ''
-            # legacy support (i.e. static files and directories in cfg.package)
-            rewrite ^/(?!index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|ocs-provider\/.+|.+\/richdocumentscode\/proxy) /index.php$request_uri;
-            include ${config.services.nginx.package}/conf/fastcgi.conf;
-            fastcgi_split_path_info ^(.+?\.php)(\\/.*)$;
-            set $path_info $fastcgi_path_info;
-            try_files $fastcgi_script_name =404;
-            fastcgi_param PATH_INFO $path_info;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_param HTTPS ${
-              if cfg.https
-              then "on"
-              else "off"
-            };
-            fastcgi_param modHeadersAvailable true;
-            fastcgi_param front_controller_active true;
-            fastcgi_pass unix:${fpm.socket};
-            fastcgi_intercept_errors on;
-            fastcgi_request_buffering on;
-            fastcgi_read_timeout ${builtins.toString cfg.fastcgiTimeout}s;
-            chunked_transfer_encoding on;
-          '';
+      mkIfElse (cfg.webserver == "caddy")
+        {
+          enable = mkForce false;
+        }
+        {
+          enable = true;
+          virtualHosts.${cfg.hostName}.locations."~ \\.php(?:$|/)" = {
+            extraConfig = lib.mkForce ''
+              # legacy support (i.e. static files and directories in cfg.package)
+              rewrite ^/(?!index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|ocs-provider\/.+|.+\/richdocumentscode\/proxy) /index.php$request_uri;
+              include ${config.services.nginx.package}/conf/fastcgi.conf;
+              fastcgi_split_path_info ^(.+?\.php)(\\/.*)$;
+              set $path_info $fastcgi_path_info;
+              try_files $fastcgi_script_name =404;
+              fastcgi_param PATH_INFO $path_info;
+              fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+              fastcgi_param HTTPS ${if cfg.https then "on" else "off"};
+              fastcgi_param modHeadersAvailable true;
+              fastcgi_param front_controller_active true;
+              fastcgi_pass unix:${fpm.socket};
+              fastcgi_intercept_errors on;
+              fastcgi_request_buffering on;
+              fastcgi_read_timeout ${builtins.toString cfg.fastcgiTimeout}s;
+              chunked_transfer_encoding on;
+            '';
+          };
         };
-      };
 
     services.caddy = lib.mkIf (cfg.webserver == "caddy") {
       enable = mkDefault true;
-      virtualHosts."${
-        if cfg.https
-        then "https"
-        else "http"
-      }://${cfg.hostName}" = {
+      virtualHosts."${if cfg.https then "https" else "http"}://${cfg.hostName}" = {
         extraConfig = ''
           encode zstd gzip
 

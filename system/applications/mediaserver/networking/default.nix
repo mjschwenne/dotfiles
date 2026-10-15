@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # Media server networking
   # This will configure a split DNS using NextDNS
   # to direct traffic between tailscale and protonvpn
@@ -14,10 +15,13 @@
   };
 
   networking = {
-    nameservers = ["127.0.0.1" "::1"];
+    nameservers = [
+      "127.0.0.1"
+      "::1"
+    ];
     wg-quick.interfaces.wg-proton = {
-      address = ["10.2.0.2/32"];
-      dns = ["10.2.0.1"];
+      address = [ "10.2.0.2/32" ];
+      dns = [ "10.2.0.1" ];
       privateKeyFile = config.sops.secrets."${config.networking.hostName}/protonvpn".path;
       postUp = ''
         ${pkgs.iproute2}/bin/ip route add 100.64.0.0/10 dev tailscale0
@@ -30,7 +34,7 @@
       peers = [
         {
           publicKey = "Gme1WiCEJZZusmIlg1aqItLaxDhdMl51xypUy43oMmc=";
-          allowedIPs = ["0.0.0.0/0"];
+          allowedIPs = [ "0.0.0.0/0" ];
           endpoint = "154.47.25.206:51820";
         }
       ];
@@ -41,12 +45,15 @@
       enable = true;
       arguments = [
         "-config-file"
-        ''${config.sops.secrets."nextdns/proton".path}''
+        "${config.sops.secrets."nextdns/proton".path}"
       ];
     };
     tailscale = {
       enable = true;
-      extraUpFlags = ["--ssh" "--accept-dns=false"];
+      extraUpFlags = [
+        "--ssh"
+        "--accept-dns=false"
+      ];
       authKeyFile = config.sops.secrets."${config.networking.hostName}/tailscale".path;
     };
   };
@@ -55,13 +62,16 @@
   systemd.services = {
     mjs-tailscale-up = {
       enable = true;
-      after = ["tailscale.service" "sys-subsystem-net-devices.tailscale0.device"];
-      wantedBy = ["multi-user.target"];
+      after = [
+        "tailscale.service"
+        "sys-subsystem-net-devices.tailscale0.device"
+      ];
+      wantedBy = [ "multi-user.target" ];
       serviceConfig.Type = "oneshot";
       script = ''
         timeout 60s ${pkgs.bash}/bin/bash -c "until ${pkgs.tailscale}/bin/tailscale status --peers=false; do sleep 1; done"
       '';
     };
-    wg-quick-wg-proton.after = ["mjs-tailscale-up.service"];
+    wg-quick-wg-proton.after = [ "mjs-tailscale-up.service" ];
   };
 }

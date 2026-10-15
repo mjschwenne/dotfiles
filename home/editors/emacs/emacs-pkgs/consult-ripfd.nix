@@ -12,6 +12,6 @@ trivialBuild rec {
     rev = "f64ae7a4b30c605ec839b73d8e0768a73810a7de";
     hash = "sha256-sPb8PNhJCQ13CtFj/7JELU5ZsxwDs6+pMnxBRyvDcOA=";
   };
-  propagatedUserEnvPkgs = [consult];
+  propagatedUserEnvPkgs = [ consult ];
   buildInputs = propagatedUserEnvPkgs;
 }

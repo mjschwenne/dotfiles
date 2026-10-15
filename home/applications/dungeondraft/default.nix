@@ -1,3 +1,3 @@
-{pkgs, ...}: {
-  home.packages = [(pkgs.callPackage ./dungeondraft.nix {})];
+{ pkgs, ... }: {
+  home.packages = [ (pkgs.callPackage ./dungeondraft.nix { }) ];
 }

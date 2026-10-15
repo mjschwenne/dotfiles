@@ -1,12 +1,7 @@
 {
-  lib,
   pkgs,
-  nixpkgs,
   ...
 }@inputs:
-let
-  mullvadExitNode = "us-den-wg-203.mullvad.ts.net";
-in
 {
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -33,7 +28,6 @@ in
 
   nixpkgs.config = {
     permittedInsecurePackages = [
-      # "freeimage-unstable-2021-11-01"
     ];
 
     # Allow unfree packages
@@ -176,8 +170,6 @@ in
     (aspellWithDicts (
       dicts: with dicts; [
         en
-        en-computers
-        en-science
       ]
     ))
 

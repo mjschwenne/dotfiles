@@ -263,73 +263,74 @@ in
       fuzzelScript = mkFuzzelScript manualSyncScripts cfg.syncDirs;
     in
     {
-    home.packages =
-      with pkgs;
-      [
-        rclone
-        inotify-tools
-        libnotify
-      ]
-      ++ (optionals cfg.enableManualSync (manualSyncScripts ++ [ fuzzelScript ]));
+      home.packages =
+        with pkgs;
+        [
+          rclone
+          inotify-tools
+          libnotify
+        ]
+        ++ (optionals cfg.enableManualSync (manualSyncScripts ++ [ fuzzelScript ]));
 
-    # Create systemd services for each sync directory
-    systemd.user.services =
-      # Oneshot services for each folder being synced
-      listToAttrs (
+      # Create systemd services for each sync directory
+      systemd.user.services =
+        # Oneshot services for each folder being synced
+        listToAttrs (
+          map (
+            syncConfig:
+            nameValuePair "rclone-sync-${syncConfig.name}" {
+              Unit = {
+                Description = "Rclone sync for ${syncConfig.name}";
+                After = [ "network-online.target" ];
+              };
+
+              Service = {
+                Type = "oneshot";
+                ExecStart = "${mkSyncScript syncConfig}";
+              };
+            }
+          ) cfg.syncDirs
+        )
+        # Long-running watcher for realtime folders
+        // listToAttrs (
+          map (
+            syncConfig:
+            nameValuePair "rclone-sync-${syncConfig.name}-watch" {
+              Unit = {
+                Description = "Rclone realtime sync for ${syncConfig.name}";
+                After = [ "network-online.target" ];
+              };
+
+              Service = {
+                Type = "simple";
+                ExecStart = "${mkRealtimeSyncScript syncConfig}";
+                Restart = "always";
+                RestartSec = 10;
+              };
+
+              Install.WantedBy = [ "default.target" ];
+            }
+          ) (filter (s: s.mode == "realtime") cfg.syncDirs)
+        );
+
+      # Create systemd timers for timer-mode syncs
+      systemd.user.timers = listToAttrs (
         map (
           syncConfig:
           nameValuePair "rclone-sync-${syncConfig.name}" {
-            Unit = {
-              Description = "Rclone sync for ${syncConfig.name}";
-              After = [ "network-online.target" ];
+            Unit.Description = "Timer for rclone sync ${syncConfig.name}";
+
+            Timer = {
+              Unit = "rclone-sync-${syncConfig.name}.service";
+              OnCalendar = if syncConfig.mode == "realtime" then "*:0/5" else syncConfig.calendar;
+              Persistent = true;
+              RandomizedDelaySec = "1min";
             };
 
-            Service = {
-              Type = "oneshot";
-              ExecStart = "${mkSyncScript syncConfig}";
-            };
+            Install.WantedBy = [ "timers.target" ];
           }
         ) cfg.syncDirs
-      )
-      # Long-running watcher for realtime folders
-      // listToAttrs (
-        map (
-          syncConfig:
-          nameValuePair "rclone-sync-${syncConfig.name}-watch" {
-            Unit = {
-              Description = "Rclone realtime sync for ${syncConfig.name}";
-              After = [ "network-online.target" ];
-            };
-
-            Service = {
-              Type = "simple";
-              ExecStart = "${mkRealtimeSyncScript syncConfig}";
-              Restart = "always";
-              RestartSec = 10;
-            };
-
-            Install.WantedBy = [ "default.target" ];
-          }
-        ) (filter (s: s.mode == "realtime") cfg.syncDirs)
       );
-
-    # Create systemd timers for timer-mode syncs
-    systemd.user.timers = listToAttrs (
-      map (
-        syncConfig:
-        nameValuePair "rclone-sync-${syncConfig.name}" {
-          Unit.Description = "Timer for rclone sync ${syncConfig.name}";
-
-          Timer = {
-            Unit = "rclone-sync-${syncConfig.name}.service";
-            OnCalendar = if syncConfig.mode == "realtime" then "*:0/5" else syncConfig.calendar;
-            Persistent = true;
-            RandomizedDelaySec = "1min";
-          };
-
-          Install.WantedBy = [ "timers.target" ];
-        }
-      ) cfg.syncDirs
-    );
-  });
+    }
+  );
 }

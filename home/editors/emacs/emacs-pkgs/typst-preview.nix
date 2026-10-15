@@ -13,6 +13,6 @@ trivialBuild rec {
     hash = "sha256-rxXgIoILnxyn543keCkpuv80TLaSATN1T7hCvnM8inU=";
   };
 
-  propagatedUserEnvPkgs = [websocket];
+  propagatedUserEnvPkgs = [ websocket ];
   buildInputs = propagatedUserEnvPkgs;
 }

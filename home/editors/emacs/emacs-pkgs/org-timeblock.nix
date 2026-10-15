@@ -14,6 +14,9 @@ trivialBuild rec {
     sha256 = "1p0ry4kx98fp15zhfd3dpdw0k27x1w48ljwasnx2dgjz7bkkirrl";
   };
 
-  propagatedUserEnvPkgs = [org-ql persist];
+  propagatedUserEnvPkgs = [
+    org-ql
+    persist
+  ];
   buildInputs = propagatedUserEnvPkgs;
 }

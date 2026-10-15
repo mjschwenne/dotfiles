@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     # Include the results of the hardware scan.
     ./sol-hardware.nix
@@ -28,12 +29,15 @@
     logind.lidSwitch = "ignore";
     tailscale = {
       authKeyFile = config.sops.secrets."sol/tailscale".path;
-      extraUpFlags = ["--ssh" "--exit-node-allow-lan-access"];
+      extraUpFlags = [
+        "--ssh"
+        "--exit-node-allow-lan-access"
+      ];
     };
   };
 
   # Turn off screen after 60 seconds of inactivity
-  boot.kernelParams = ["consoleblank=60"];
+  boot.kernelParams = [ "consoleblank=60" ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

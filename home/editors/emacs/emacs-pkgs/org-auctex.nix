@@ -13,6 +13,6 @@ trivialBuild rec {
     sha256 = "1z02vfimmkrl2422rmk63sgfgg9hryh556h3sz093az74v1j3h3h";
   };
 
-  propagatedUserEnvPkgs = [auctex];
+  propagatedUserEnvPkgs = [ auctex ];
   buildInputs = propagatedUserEnvPkgs;
 }

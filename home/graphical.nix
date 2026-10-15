@@ -86,12 +86,12 @@ let
     kanshi
     wayland-logout
 
-    zotero
   ];
   masterPkgs = with pkgs-master; [
     proton-vpn
     proton-vpn-cli
     python314Packages.proton-vpn-daemon
+    zotero
   ];
   stablePkgs = with pkgs-stable; [ ];
 in
