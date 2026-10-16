@@ -4,12 +4,12 @@
 }:
 trivialBuild {
   pname = "typst-ts-mode";
-  version = "unstable-2025-10-01";
+  version = "unstable-2026-10-15";
   src = fetchFromGitea {
     domain = "codeberg.org";
     owner = "meow_king";
     repo = "typst-ts-mode";
-    rev = "7c2ef0d5bd2b5a8727fe6d00938c47ba562e0c94";
-    hash = "sha256-D+QEfEYlxJICcdUCleWpe7+HxePLSSmV7zAwvyTL0+Q=";
+    rev = "ee17b331ebfa8d8b7c2f54a1c39ab3d76e134706";
+    hash = "sha256-RFWr/OOgugcRm6PqPt+eWg/Rnm5fX7k4TjiaB+6H7XI=";
   };
 }

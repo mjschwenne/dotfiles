@@ -4,11 +4,11 @@
 }:
 trivialBuild {
   pname = "org-modern-indent";
-  version = "unstable-2025-04-12";
+  version = "unstable-2026-10-15";
   src = fetchFromGitHub {
     owner = "jdtsmith";
     repo = "org-modern-indent";
-    rev = "9973bd3b91e4733a3edd1fca232208c837c05473";
-    sha256 = "09bg1shw06ddlxq678abr9q6g9wfc6b483xi0iwldxk4qbgzgpdj";
+    rev = "86bd83ee1ad95f123810eb3b116beb543db1960a";
+    sha256 = "sha256-vQzYk5qejCBehpbxkMceOMsmeLyjnAstpezZw/ZR1jQ=";
   };
 }
