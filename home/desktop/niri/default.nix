@@ -515,6 +515,13 @@
           max-width 400
       }
 
+      window-rule {
+          match app-id=r#"^(zoom|us.zoom.Zoom)"#
+          exclude title=r#"^Zoom Workplace - "#
+          exclude title=r#"^Meeting$"#
+          open-floating true
+      }
+
       // Example: enable rounded corners for all windows.
       // (This example rule is commented out with a "/-" in front.)
       window-rule {
