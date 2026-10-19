@@ -2478,6 +2478,7 @@ including the one `TeX-command-run-all' takes."
   :config (general-define-key :states '(insert normal) :map 'LaTeX-mode-map
                               "C-S-e" #'mjs/latex-math-from-calc)
   (add-to-list 'TeX-command-list '("Make" "make" TeX-run-TeX nil t))
+  (put 'texmathp-search-n-paragraphs 'safe-local-variable #'numberp)
   (require 'citar-latex)
   (with-eval-after-load 'eglot
     (dolist (mode '((LaTeX-mode . ("texlab"))))
@@ -2529,6 +2530,7 @@ including the one `TeX-command-run-all' takes."
   :custom (texmathp-tex-commands '(("bmatrix" env-on)
                                    ("pmatrix" env-on)
                                    ("mathpar" env-on)
+                                   ("mathparpagebreakable" env-on)
                                    ("syntax" env-on)))
   (cdlatex-env-alist '(("proof" "\\begin{proof}\n?\n\\end{proof}" nil)
                        ("par" "\\begin{mathpar}\n?\n\\end{mathpar}" nil)
