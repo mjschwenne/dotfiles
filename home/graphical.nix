@@ -13,6 +13,7 @@ let
     # Web browsers
     firefox
     brave
+    zotero
 
     # Instant Communications
     slack
@@ -91,7 +92,6 @@ let
     proton-vpn
     proton-vpn-cli
     python314Packages.proton-vpn-daemon
-    zotero
   ];
   stablePkgs = with pkgs-stable; [ ];
 in

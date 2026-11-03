@@ -3,7 +3,7 @@
   pkgs,
   stylix,
   ...
-}:
+}@inputs:
 {
   imports = [
     stylix.homeModules.stylix
@@ -15,6 +15,22 @@
   home = {
     username = "mjs";
     homeDirectory = "/home/mjs";
+  };
+
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      permittedInsecurePackages = [
+        # FIXME: Required for zotero, remove at next Zotero major release
+        "firefox-esr-140-bin-unwrapped-140.17.0esr"
+      ];
+    };
+    overlays = [
+      inputs.emacs-overlay.overlay
+      inputs.copyparty.overlays.default
+      inputs.niri.overlays.default
+      inputs.ghostty.overlays.default
+    ];
   };
 
   stylix = {
@@ -46,6 +62,8 @@
         terminal = 12;
       };
     };
+    # Disable rofi since I don't use it and it generates nixos warnings
+    targets.rofi.enable = false;
   };
 
   programs.ssh = {

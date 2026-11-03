@@ -11,6 +11,7 @@
           fastfetch -c examples/8.jsonc
       }
     '';
+    loadSessionVariables = true;
     environmentVariables = {
       SHELL = "${pkgs.nushell}/bin/nu";
     };

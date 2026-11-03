@@ -133,7 +133,7 @@
           inherit system;
         };
       };
-      useGlobalPkgs = true;
+      # useGlobalPkgs = true;
       useUserPackages = true;
       extraSpecialArgs = inputs // {
         pkgs-master = import inputs.nixpkgs-master {
@@ -162,7 +162,10 @@
             home-manager.nixosModules.home-manager
             {
               home-manager = {
-                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                inherit # useGlobalPkgs
+                  useUserPackages
+                  extraSpecialArgs
+                  ;
                 users.mjs = import ./home/terra.nix;
               };
               nixpkgs.overlays = overlays;
@@ -180,7 +183,10 @@
             home-manager.nixosModules.home-manager
             {
               home-manager = {
-                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                inherit # useGlobalPkgs
+                  useUserPackages
+                  extraSpecialArgs
+                  ;
                 users.mjs = import ./home/venus.nix;
               };
               nixpkgs.overlays = overlays;
@@ -199,7 +205,10 @@
             home-manager.nixosModules.home-manager
             {
               home-manager = {
-                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                inherit # useGlobalPkgs
+                  useUserPackages
+                  extraSpecialArgs
+                  ;
                 users.mjs = import ./home/mars.nix;
               };
               nixpkgs.overlays = overlays;
@@ -218,7 +227,10 @@
             home-manager.nixosModules.home-manager
             {
               home-manager = {
-                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                inherit # useGlobalPkgs
+                  useUserPackages
+                  extraSpecialArgs
+                  ;
                 users.mjs = import ./home/luna.nix;
               };
               nixpkgs.overlays = overlays;
@@ -236,7 +248,10 @@
             home-manager.nixosModules.home-manager
             {
               home-manager = {
-                inherit useGlobalPkgs useUserPackages extraSpecialArgs;
+                inherit # useGlobalPkgs
+                  useUserPackages
+                  extraSpecialArgs
+                  ;
                 users.mjs = import ./home/sol.nix;
               };
               nixpkgs.overlays = overlays;
