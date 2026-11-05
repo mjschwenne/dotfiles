@@ -834,11 +834,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788728641,
-        "narHash": "sha256-ZW42vyRKhuNWkBRTsQtEEOFUGaHh5zfEiZOsdVOnJEk=",
+        "lastModified": 1793723758,
+        "narHash": "sha256-R0jZxT6BAwQSo5EgW+nJoOs4m1H06jaKG9HJNQ0VuIA=",
         "owner": "saltnpepper97",
         "repo": "stasis",
-        "rev": "aa1dde4d058fc7476c7d4d266af7bfc422110355",
+        "rev": "6856c95669af95d61268c18d8556c14bbec6a369",
         "type": "github"
       },
       "original": {
