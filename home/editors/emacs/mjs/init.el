@@ -2441,10 +2441,12 @@ With a prefix ARG, remove start location."
   (defun mjs/latex-disable-apheleia-h ()
     "Disable `apheleia-mode' in LaTeX buffers."
     (apheleia-mode -1))
+  (defvar mjs/latex--compiling nil)
   (defun mjs/latex-compile-on-save-h ()
     "Compile LaTeX document on save."
-    (when (derived-mode-p 'LaTeX-mode)
-      (TeX-command-run-all nil)))
+    (when (and (derived-mode-p 'LaTeX-mode) (not mjs/latex--compiling))
+      (let ((mjs/latex--compiling t))
+        (TeX-command-run-all nil))))
   (defun mjs/TeX-pdf-tools-sync-view ()
     "Load pdf-tools, then hand off to `TeX-pdf-tools-sync-view'.
 `TeX-view' and `TeX-pdf-tools-sync-view' are both AUCTeX functions, so

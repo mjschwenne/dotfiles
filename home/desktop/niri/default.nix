@@ -8,6 +8,117 @@
   stasis,
   ...
 }:
+let
+  stasis-pkg = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
+  mirror-script = import ./scripts/mirror.nix { inherit pkgs; };
+  wallpaper-script = import ./scripts/wallpaper.nix {
+    inherit pkgs;
+    awww = awww.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  };
+  volume-notify = import ./scripts/volume-notify.nix { inherit pkgs; };
+  brightness-notify = import ./scripts/brightness-notify.nix { inherit pkgs; };
+  window-switcher = import ./scripts/window-switcher.nix { inherit pkgs; };
+  power-menu = import ./scripts/power-menu.nix { inherit pkgs stasis-pkg; };
+  mjs-fuzzel = import ./scripts/mjs-fuzzel.nix {
+    inherit pkgs;
+    showBattery = osConfig.networking.hostName != "terra";
+  };
+  tailscale-status = import ./scripts/tailscale-status.nix { inherit pkgs; };
+  stasis-pause-menu = import ./scripts/stasis-pause-menu.nix { inherit pkgs stasis-pkg; };
+  tailscale-toggle =
+    let
+      mullvadExitNode =
+        let
+          flags = osConfig.services.tailscale.extraUpFlags;
+          exitNodeFlags = builtins.filter (lib.hasPrefix "--exit-node=") flags;
+        in
+        lib.removePrefix "--exit-node=" (builtins.head exitNodeFlags);
+    in
+    import ./scripts/tailscale-toggle.nix {
+      inherit pkgs;
+      exitNode = mullvadExitNode;
+    };
+  outputs =
+    {
+      "terra" =
+        # kdl
+        ''
+          output "DP-3" {
+              mode "3840x2160"
+              scale 1.6
+              transform "normal"
+              position x=0 y=0
+              background-color "${config.lib.stylix.colors.withHashtag.base00}"
+              backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+              focus-at-startup
+          }
+
+          output "DP-4" {
+              mode "3840x2160"
+              scale 1.6
+              transform "normal"
+              position x=2400 y=0
+              background-color "${config.lib.stylix.colors.withHashtag.base00}"
+              backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+          }
+        '';
+      "venus" =
+        # kdl
+        ''
+           output "DP-1" {
+               mode "3840x2160"
+               scale 1.6
+               transform "normal"
+               position x=0 y=0
+               background-color "${config.lib.stylix.colors.withHashtag.base00}"
+               backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+               focus-at-startup
+           }
+
+           output "eDP-1" {
+               mode "1920x1200"
+               scale 1
+               transform "normal"
+               position x=2400 y=0
+               background-color "${config.lib.stylix.colors.withHashtag.base00}"
+               backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+          }
+        '';
+      "mars" =
+        # kdl
+        ''
+          output "DP-1" {
+              mode "3840x2160"
+              scale 1.6
+              transform "normal"
+              position x=0 y=0
+              background-color "${config.lib.stylix.colors.withHashtag.base00}"
+              backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+              focus-at-startup
+          }
+
+          output "eDP-1" {
+              mode "1920x1080"
+              scale 1
+              transform "normal"
+              position x=2400 y=0
+              background-color "${config.lib.stylix.colors.withHashtag.base00}"
+              backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
+          }
+        '';
+      "luna" =
+        # kdl
+        ''
+          output "eDP-1" {
+              mode "2736x1824"
+              scale 2
+              transform "normal"
+              position x=0 y=0
+          }
+        '';
+    }
+    ."${osConfig.networking.hostName}" or "";
+in
 {
   home.packages = with pkgs; [
     niri
@@ -16,120 +127,10 @@
     pwmenu
     iwmenu
     bzmenu
+    wallpaper-script
   ];
 
   xdg.configFile."niri/config.kdl".text =
-    let
-      stasis-pkg = stasis.packages.${pkgs.stdenv.hostPlatform.system}.stasis;
-      mirror-script = import ./scripts/mirror.nix { inherit pkgs; };
-      wallpaper-script = import ./scripts/wallpaper.nix {
-        inherit pkgs;
-        awww = awww.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      };
-      volume-notify = import ./scripts/volume-notify.nix { inherit pkgs; };
-      brightness-notify = import ./scripts/brightness-notify.nix { inherit pkgs; };
-      window-switcher = import ./scripts/window-switcher.nix { inherit pkgs; };
-      power-menu = import ./scripts/power-menu.nix { inherit pkgs stasis-pkg; };
-      mjs-fuzzel = import ./scripts/mjs-fuzzel.nix {
-        inherit pkgs;
-        showBattery = osConfig.networking.hostName != "terra";
-      };
-      tailscale-status = import ./scripts/tailscale-status.nix { inherit pkgs; };
-      stasis-pause-menu = import ./scripts/stasis-pause-menu.nix { inherit pkgs stasis-pkg; };
-      tailscale-toggle =
-        let
-          mullvadExitNode =
-            let
-              flags = osConfig.services.tailscale.extraUpFlags;
-              exitNodeFlags = builtins.filter (lib.hasPrefix "--exit-node=") flags;
-            in
-            lib.removePrefix "--exit-node=" (builtins.head exitNodeFlags);
-        in
-        import ./scripts/tailscale-toggle.nix {
-          inherit pkgs;
-          exitNode = mullvadExitNode;
-        };
-      outputs =
-        {
-          "terra" =
-            # kdl
-            ''
-              output "DP-3" {
-                  mode "3840x2160"
-                  scale 1.6
-                  transform "normal"
-                  position x=0 y=0
-                  background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                  backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-                  focus-at-startup
-              }
-
-              output "DP-4" {
-                  mode "3840x2160"
-                  scale 1.6
-                  transform "normal"
-                  position x=2400 y=0
-                  background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                  backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-              }
-            '';
-          "venus" =
-            # kdl
-            ''
-               output "DP-1" {
-                   mode "3840x2160"
-                   scale 1.6
-                   transform "normal"
-                   position x=0 y=0
-                   background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                   backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-                   focus-at-startup
-               }
-
-               output "eDP-1" {
-                   mode "1920x1200"
-                   scale 1
-                   transform "normal"
-                   position x=2400 y=0
-                   background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                   backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-              }
-            '';
-          "mars" =
-            # kdl
-            ''
-              output "DP-1" {
-                  mode "3840x2160"
-                  scale 1.6
-                  transform "normal"
-                  position x=0 y=0
-                  background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                  backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-                  focus-at-startup
-              }
-
-              output "eDP-1" {
-                  mode "1920x1080"
-                  scale 1
-                  transform "normal"
-                  position x=2400 y=0
-                  background-color "${config.lib.stylix.colors.withHashtag.base00}"
-                  backdrop-color "${config.lib.stylix.colors.withHashtag.base01}"
-              }
-            '';
-          "luna" =
-            # kdl
-            ''
-              output "eDP-1" {
-                  mode "2736x1824"
-                  scale 2
-                  transform "normal"
-                  position x=0 y=0
-              }
-            '';
-        }
-        ."${osConfig.networking.hostName}" or "";
-    in
     # kdl
     ''
       // This config is in the KDL format: https://kdl.dev
