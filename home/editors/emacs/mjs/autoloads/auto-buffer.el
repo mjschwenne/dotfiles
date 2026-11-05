@@ -17,10 +17,10 @@
       (message "No buffers to kill")
     (save-some-buffers)
     (delete-other-windows)
-    (when (memq (current-buffer) buffer-list)
-      ;; :TODO: replace with switching to dashboard buffer
-      (switch-to-buffer (get-scratch-buffer-create)))
+    ;; Try killing all eglot buffers first
+    (eglot-shutdown-all)
     (mapc #'kill-buffer buffer-list)
+    (dashboard-open)
     (message "Killed %d buffers"
              (- (length buffer-list)
                 (length (cl-remove-if-not #'buffer-live-p buffer-list))))))
